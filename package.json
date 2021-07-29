@@ -1,0 +1,25 @@
+{
+  "name": "bad-links-in-markdown",
+  "version": "1.0.0",
+  "description": "A script which identifies link in markdown files which no longer work",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "find-bad-links": "node ./bad-links-in-markdown"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Alequin/bad-links-in-markdown.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Alequin/bad-links-in-markdown/issues"
+  },
+  "homepage": "https://github.com/Alequin/bad-links-in-markdown#readme",
+  "dependencies": {
+    "commander": "^8.1.0",
+    "lodash": "^4.17.21",
+    "node-fetch": "^2.6.1"
+  }
+}
