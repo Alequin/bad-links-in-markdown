@@ -1,17 +1,13 @@
-import fs from "fs";
 import { flatten, flow, groupBy, mapValues } from "lodash";
+import { readFileLines } from "../utils";
 
-export const identifyLinksWithBadHeaderTags = (workingLinks) => {
-  return workingLinks.filter((linkObject) => {
-    const linesInMarkdownFile = getLinesInMarkdownFile(linkObject.fullPath);
+export const identifyMarkdownLinksWithBadHeaderTags = (links) => {
+  return links.filter((linkObject) => {
+    const linesInMarkdownFile = readFileLines(linkObject.fullPath);
+
     const headerTagsFromFile = getHeaderTagsFromFile(linesInMarkdownFile);
     return !headerTagsFromFile.includes(linkObject.tag);
   });
-};
-
-const getLinesInMarkdownFile = (fullPath) => {
-  const targetMarkdown = fs.readFileSync(fullPath).toString();
-  return targetMarkdown.split(/\n|\r\n/);
 };
 
 const getHeaderTagsFromFile = (linesInMarkdownFile) => {
