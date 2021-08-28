@@ -1,4 +1,5 @@
 const { isEmpty, last } = require("lodash");
+const path = require("path");
 const findMissingLinksWithFileExtensions = require("./find-missing-links-with-file-extensions");
 const findMissingLinksWithoutFileExtensions = require("./find-missing-links-without-file-extensions");
 
@@ -7,26 +8,24 @@ const identifyInvalidLocalLinks = (fileObjects) => {
     .map(({ fullPath, directory, links }) => {
       const localLinks = links
         .filter(isLocalLink)
-        .map(appendRawFileName)
-        .map(appendRelativePath);
+        .map(addRawFileNameToObject)
+        .map(addRawLinkToObject)
+        .map(addFullPathToObject(directory));
 
-      const missingLinksWithFileExtensions = findMissingLinksWithFileExtensions(
-        localLinks.filter(doesIncludeFileExtension),
-        directory
-      );
-
-      const missingLinksWithoutFileExtensions =
-        findMissingLinksWithoutFileExtensions(
+      const missingLinks = [
+        ...findMissingLinksWithFileExtensions(
+          localLinks.filter(doesIncludeFileExtension),
+          directory
+        ),
+        ...findMissingLinksWithoutFileExtensions(
           localLinks.filter(doesNotIncludeFileExtension),
           directory
-        );
+        ),
+      ].map(({ markdownLink }) => markdownLink);
 
       return {
         filePath: fullPath,
-        missingLinks: [
-          ...missingLinksWithoutFileExtensions,
-          ...missingLinksWithFileExtensions,
-        ],
+        missingLinks: missingLinks,
       };
     })
     .filter(({ missingLinks }) => !isEmpty(missingLinks));
@@ -38,29 +37,38 @@ const isLocalLink = ({ link }) =>
   doesLinkStartWithRelativePath(link) ||
   IS_LOCAL_LINK_WITHOUT_PATH_REGEX.test(link);
 
-const doesLinkStartWithRelativePath = (link) =>
-  link.startsWith("./") || link.startsWith("../");
-
 // https://www.computerhope.com/jargon/f/fileext.htm
 const FILE_EXTENSION_REGEX = /.*\.[\w\d]*$/;
 const doesIncludeFileExtension = ({ link }) => FILE_EXTENSION_REGEX.test(link);
 const doesNotIncludeFileExtension = (linkWithTag) =>
   !doesIncludeFileExtension(linkWithTag);
 
-const appendRawFileName = (linkObject) => {
+const addRawFileNameToObject = (linkObject) => {
   return {
     ...linkObject,
     name: last(linkObject.link.replace(/\\|\//g, " ").split(" ")),
   };
 };
 
-const appendRelativePath = (linkObject) => {
+const addRawLinkToObject = (linkObject) => {
   return {
     ...linkObject,
-    link: doesLinkStartWithRelativePath(linkObject.link)
-      ? linkObject.link
-      : `./${linkObject.link}`,
+    rawLink: linkObject.link,
   };
 };
+
+const addFullPathToObject = (directory) => (linkObject) => {
+  const relativeLink = doesLinkStartWithRelativePath(linkObject.link)
+    ? linkObject.link
+    : `./${linkObject.link}`;
+
+  return {
+    ...linkObject,
+    fullPath: path.resolve(directory, relativeLink),
+  };
+};
+
+const doesLinkStartWithRelativePath = (link) =>
+  link.startsWith("./") || link.startsWith("../");
 
 module.exports = identifyInvalidLocalLinks;

@@ -21,7 +21,7 @@ const badLinksInMarkdown = async (topLevelDirectory) => {
       const [link, tag] = linkWithTag.startsWith("#")
         ? [linkWithTag, undefined]
         : linkWithTag.split("#");
-      return { link, tag };
+      return { markdownLink, link, tag };
     });
 
     return {

@@ -22,11 +22,9 @@ describe("bad-links-in-markdown", () => {
           badLocalLinks: [
             {
               filePath,
-              missingLinks: [
-                path.resolve(testDirectory, "./path/to/missing/file.md")
-              ]
-            }
-          ]
+              missingLinks: ["[I am a local link](./path/to/missing/file.md)"],
+            },
+          ],
         });
       }, testDirectory);
     });
@@ -49,7 +47,7 @@ describe("bad-links-in-markdown", () => {
 
       await runTestWithDirectoryCleanup(async () => {
         expect(await badLinksInMarkdown(testDirectory)).toEqual({
-          badLocalLinks: []
+          badLocalLinks: [],
         });
       }, testDirectory);
     });
@@ -66,11 +64,9 @@ describe("bad-links-in-markdown", () => {
           badLocalLinks: [
             {
               filePath,
-              missingLinks: [
-                path.resolve(testDirectory, "./path/to/missing/file")
-              ]
-            }
-          ]
+              missingLinks: ["[I am a local link](./path/to/missing/file)"],
+            },
+          ],
         });
       }, testDirectory);
     });
@@ -93,7 +89,7 @@ describe("bad-links-in-markdown", () => {
 
       await runTestWithDirectoryCleanup(async () => {
         expect(await badLinksInMarkdown(testDirectory)).toEqual({
-          badLocalLinks: []
+          badLocalLinks: [],
         });
       }, testDirectory);
     });
@@ -110,9 +106,9 @@ describe("bad-links-in-markdown", () => {
           badLocalLinks: [
             {
               filePath,
-              missingLinks: [path.resolve(testDirectory, "file.md")]
-            }
-          ]
+              missingLinks: ["[I am a local link](file.md)"],
+            },
+          ],
         });
       }, testDirectory);
     });
@@ -133,7 +129,7 @@ describe("bad-links-in-markdown", () => {
 
       await runTestWithDirectoryCleanup(async () => {
         expect(await badLinksInMarkdown(testDirectory)).toEqual({
-          badLocalLinks: []
+          badLocalLinks: [],
         });
       }, testDirectory);
     });
@@ -150,9 +146,9 @@ describe("bad-links-in-markdown", () => {
           badLocalLinks: [
             {
               filePath,
-              missingLinks: [path.resolve(testDirectory, "file")]
-            }
-          ]
+              missingLinks: [`[I am a local link](file)`],
+            },
+          ],
         });
       }, testDirectory);
     });
@@ -173,7 +169,7 @@ describe("bad-links-in-markdown", () => {
 
       await runTestWithDirectoryCleanup(async () => {
         expect(await badLinksInMarkdown(testDirectory)).toEqual({
-          badLocalLinks: []
+          badLocalLinks: [],
         });
       }, testDirectory);
     });
@@ -204,12 +200,12 @@ const newTestDirectory = async () => {
   return testDirectory;
 };
 
-const getPathToNewTestFile = testDirectory =>
+const getPathToNewTestFile = (testDirectory) =>
   path.resolve(testDirectory, `./${`${uniqueName()}.md`}`);
 
 const uniqueName = () => `test-${uniqueId()}`;
 
-const forceRemoveDir = async directory =>
-  new Promise(resolve =>
+const forceRemoveDir = async (directory) =>
+  new Promise((resolve) =>
     fs.rm(directory, { recursive: true, force: true }, resolve)
   );

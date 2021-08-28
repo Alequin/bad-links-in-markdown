@@ -1,5 +1,4 @@
 const fs = require("fs");
-const getFullPathsToLinks = require("./get-full-paths-to-links");
 
 const findMissingLinksWithoutFileExtensions = (
   linksWithoutFileExtensions,
@@ -7,14 +6,12 @@ const findMissingLinksWithoutFileExtensions = (
 ) => {
   const filesInDirectory = fs.readdirSync(directory);
 
-  const badLinks = linksWithoutFileExtensions.filter(
-    (file) =>
+  return linksWithoutFileExtensions.filter(
+    (linkObject) =>
       !filesInDirectory.some((fileInDirectory) =>
-        fileInDirectory.includes(file.name)
+        fileInDirectory.includes(linkObject.name)
       )
   );
-
-  return getFullPathsToLinks(badLinks, directory);
 };
 
 module.exports = findMissingLinksWithoutFileExtensions;
