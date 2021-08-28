@@ -4,7 +4,7 @@ const { isEmpty, flatMap } = require("lodash");
 const fetch = require("node-fetch");
 const topLevelDirectoryFromConsoleArgs = require("./src/top-level-directory-from-console-args");
 const findAllMarkdownFiles = require("./src/find-all-markdown-files");
-const identifyInvalidLinksToOtherFiles = require("./src/identify-invailid-links-to-other-files");
+const identifyInvalidLocalLinks = require("./src/identify-invalid-local-links");
 const identifyInvalidLinksToWebSites = require("./src/identify-invalid-links-to-web-sites");
 
 const MARKDOWN_LINK_REGEX = /\[.*?\]\(.*?\)/g;
@@ -31,7 +31,7 @@ const badLinksInMarkdown = async topLevelDirectory => {
   });
 
   return {
-    badLocalLinks: identifyInvalidLinksToOtherFiles(markdownFilesWithLinks)
+    badLocalLinks: identifyInvalidLocalLinks(markdownFilesWithLinks)
   };
   // await identifyInvalidLinksToWebSites(markdownFilesWithLinks);
 };

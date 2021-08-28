@@ -2,7 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const { isEmpty, last } = require("lodash");
 
-const identifyInvalidLinksToOtherFiles = fileObjects => {
+const identifyInvalidLocalLinks = fileObjects => {
   return fileObjects
     .map(({ fullPath, directory, links }) => {
       const localLinks = links
@@ -91,4 +91,4 @@ const findMissingLinksWithoutFileExtensions = (
 const getFullPathsToLinks = (links, directory) =>
   links.map(({ link }) => path.resolve(directory, link));
 
-module.exports = identifyInvalidLinksToOtherFiles;
+module.exports = identifyInvalidLocalLinks;
