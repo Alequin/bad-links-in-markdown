@@ -21,11 +21,14 @@ const identifyInvalidLocalLinks = (fileObjects) => {
           localLinks.filter(doesNotIncludeFileExtension),
           directory
         ),
-      ].map(({ markdownLink }) => markdownLink);
+      ];
 
       return {
         filePath: fullPath,
-        missingLinks: missingLinks,
+        missingLinks: missingLinks.map(({ markdownLink, reason }) => ({
+          link: markdownLink,
+          reason,
+        })),
       };
     })
     .filter(({ missingLinks }) => !isEmpty(missingLinks));

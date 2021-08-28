@@ -2,6 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const { uniqueId } = require("lodash");
 const badLinksInMarkdown = require("./bad-links-in-markdown");
+const badLinkReasons = require("./src/identify-invalid-local-links/bad-link-reasons");
 
 const TOP_LEVEL_DIRECTORY = path.resolve(__dirname, "./test-markdown-files");
 
@@ -22,7 +23,12 @@ describe("bad-links-in-markdown", () => {
           badLocalLinks: [
             {
               filePath,
-              missingLinks: ["[I am a local link](./path/to/missing/file.md)"],
+              missingLinks: [
+                {
+                  link: "[I am a local link](./path/to/missing/file.md)",
+                  reason: badLinkReasons.FILE_NOT_FOUND,
+                },
+              ],
             },
           ],
         });
@@ -64,7 +70,12 @@ describe("bad-links-in-markdown", () => {
           badLocalLinks: [
             {
               filePath,
-              missingLinks: ["[I am a local link](./path/to/missing/file)"],
+              missingLinks: [
+                {
+                  link: "[I am a local link](./path/to/missing/file)",
+                  reason: badLinkReasons.FILE_NOT_FOUND,
+                },
+              ],
             },
           ],
         });
@@ -106,7 +117,12 @@ describe("bad-links-in-markdown", () => {
           badLocalLinks: [
             {
               filePath,
-              missingLinks: ["[I am a local link](file.md)"],
+              missingLinks: [
+                {
+                  link: "[I am a local link](file.md)",
+                  reason: badLinkReasons.FILE_NOT_FOUND,
+                },
+              ],
             },
           ],
         });
@@ -146,7 +162,12 @@ describe("bad-links-in-markdown", () => {
           badLocalLinks: [
             {
               filePath,
-              missingLinks: [`[I am a local link](file)`],
+              missingLinks: [
+                {
+                  link: `[I am a local link](file)`,
+                  reason: badLinkReasons.FILE_NOT_FOUND,
+                },
+              ],
             },
           ],
         });
@@ -200,7 +221,10 @@ describe("bad-links-in-markdown", () => {
               {
                 filePath: fileContainingLink,
                 missingLinks: [
-                  `[I am a local link](./${fileNameToLinkTo}.md#main-title)`,
+                  {
+                    link: `[I am a local link](./${fileNameToLinkTo}.md#main-title)`,
+                    reason: badLinkReasons.HEADER_TAG_NOT_FOUND,
+                  },
                 ],
               },
             ],
@@ -311,7 +335,10 @@ describe("bad-links-in-markdown", () => {
               {
                 filePath: fileContainingLink,
                 missingLinks: [
-                  `[I am a local link](./${fileNameToLinkTo}.md#main-title)`,
+                  {
+                    link: `[I am a local link](./${fileNameToLinkTo}.md#main-title)`,
+                    reason: badLinkReasons.HEADER_TAG_NOT_FOUND,
+                  },
                 ],
               },
             ],
@@ -341,7 +368,10 @@ describe("bad-links-in-markdown", () => {
               {
                 filePath: fileContainingLink,
                 missingLinks: [
-                  `[I am a local link](./${fileNameToLinkTo}.md#foo-bar-baz-3)`,
+                  {
+                    link: `[I am a local link](./${fileNameToLinkTo}.md#foo-bar-baz-3)`,
+                    reason: badLinkReasons.HEADER_TAG_NOT_FOUND,
+                  },
                 ],
               },
             ],
@@ -397,7 +427,10 @@ describe("bad-links-in-markdown", () => {
               {
                 filePath: fileContainingLink,
                 missingLinks: [
-                  `[I am a local link](./${fileNameToLinkTo}.md#main-title)`,
+                  {
+                    link: `[I am a local link](./${fileNameToLinkTo}.md#main-title)`,
+                    reason: badLinkReasons.HEADER_TAG_NOT_FOUND,
+                  },
                 ],
               },
             ],

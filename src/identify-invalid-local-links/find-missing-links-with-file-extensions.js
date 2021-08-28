@@ -1,5 +1,6 @@
 const fs = require("fs");
 const { partition, flow, groupBy, mapValues, flatMap } = require("lodash");
+const badLinkReasons = require("./bad-link-reasons");
 
 const findMissingLinksWithFileExtensions = (linksWithFileExtensions) => {
   const [badLinks, workingLinks] = partition(
@@ -7,7 +8,16 @@ const findMissingLinksWithFileExtensions = (linksWithFileExtensions) => {
     (linkObject) => !fs.existsSync(linkObject.fullPath)
   );
 
-  return [...badLinks, ...identifyLinksWithBadHeaderTags(workingLinks)];
+  return [
+    ...badLinks.map((linkObject) => ({
+      ...linkObject,
+      reason: badLinkReasons.FILE_NOT_FOUND,
+    })),
+    ...identifyLinksWithBadHeaderTags(workingLinks).map((linkObject) => ({
+      ...linkObject,
+      reason: badLinkReasons.HEADER_TAG_NOT_FOUND,
+    })),
+  ];
 };
 
 const identifyLinksWithBadHeaderTags = (workingLinks) => {

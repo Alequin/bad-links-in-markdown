@@ -3,6 +3,7 @@ const path = require("path");
 const fetch = require("node-fetch");
 const findAllMarkdownFiles = require("./src/find-all-markdown-files");
 const identifyInvalidLocalLinks = require("./src/identify-invalid-local-links/identify-invalid-local-links");
+const { mapValues, isEmpty } = require("lodash");
 
 const MARKDOWN_LINK_REGEX = /\[.*?\]\(.*?\)/g;
 
