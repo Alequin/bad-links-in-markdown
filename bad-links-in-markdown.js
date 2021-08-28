@@ -7,31 +7,35 @@ const findAllMarkdownFiles = require("./src/find-all-markdown-files");
 const identifyInvalidLinksToOtherFiles = require("./src/identify-invailid-links-to-other-files");
 const identifyInvalidLinksToWebSites = require("./src/identify-invalid-links-to-web-sites");
 
-const run = async () => {
-  const topLevelDirectory = topLevelDirectoryFromConsoleArgs();
+const MARKDOWN_LINK_REGEX = /\[.*?\]\(.*?\)/g;
 
+const badLinksInMarkdown = async topLevelDirectory => {
   const allMarkdownFiles = findAllMarkdownFiles(topLevelDirectory);
 
-  const markdownFilesWithLinks = allMarkdownFiles.map(file => {
-    const fileContents = fs.readFileSync(file.fullPath).toString();
-    const fullLinks = fileContents.match(/\[.*?\]\(.*?\)/g) || [];
+  const markdownFilesWithLinks = allMarkdownFiles.slice(0, 1).map(file => {
+    const markdown = fs.readFileSync(file.fullPath).toString();
+    const fullLinks = markdown.match(MARKDOWN_LINK_REGEX) || [];
+
+    const links = fullLinks.map(markdownLink => {
+      const linkWithTag = markdownLink.match(/[(](.*)[)]/)[1];
+      const [link, tag] = linkWithTag.startsWith("#")
+        ? [linkWithTag, undefined]
+        : linkWithTag.split("#");
+      return { link, tag };
+    });
 
     return {
       ...file,
-      links: fullLinks.map(markdownLink => {
-        const link = markdownLink.match(/[(](.*)[)]/)[1];
-        return link.startsWith("#") ? link : link.replace(/#.*$/, "");
-      })
+      links
     };
   });
 
-  identifyInvalidLinksToOtherFiles(markdownFilesWithLinks);
-  await identifyInvalidLinksToWebSites(markdownFilesWithLinks);
+  return {
+    badLocalLinks: identifyInvalidLinksToOtherFiles(markdownFilesWithLinks)
+  };
+  // await identifyInvalidLinksToWebSites(markdownFilesWithLinks);
 };
 
-run()
-  .then(() => process.exit())
-  .catch(error => {
-    console.error(error);
-    process.exit(1);
-  });
+module.exports = badLinksInMarkdown;
+
+const linkWithTag = link => {};
