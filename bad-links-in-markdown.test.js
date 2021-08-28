@@ -322,6 +322,29 @@ describe("bad-links-in-markdown", () => {
       }, testDirectory);
     });
 
+    it("Ignores local links which point at files which exist, even when the name includes multiple delimiters", async () => {
+      const testDirectory = await newTestDirectory();
+
+      const fileNameToLinkTo = uniqueName();
+      const filePathToLinkTo = path.resolve(
+        testDirectory,
+        `./${fileNameToLinkTo}.config.foobar.woohoo.md`
+      );
+      fs.writeFileSync(filePathToLinkTo, `foo bar baz`);
+
+      const fileContainingLink = getPathToNewTestFile(testDirectory);
+      fs.writeFileSync(
+        fileContainingLink,
+        `[I am a local link](./${fileNameToLinkTo}.config.foobar.woohoo.md)`
+      );
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [],
+        });
+      }, testDirectory);
+    });
+
     describe("when links include tags", () => {
       it("Identifies a local link that points at a file that exists but does not contain the targeted header tag", async () => {
         const testDirectory = await newTestDirectory();
