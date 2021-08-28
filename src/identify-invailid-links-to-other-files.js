@@ -3,33 +3,35 @@ const path = require("path");
 const { isEmpty } = require("lodash");
 
 const identifyInvalidLinksToOtherFiles = fileObjects =>
-  fileObjects.map(({ fullPath, directory, links }) => {
-    const localLinks = links.filter(
-      ({ link }) => link.startsWith("./") || link.startsWith("../")
-    );
-
-    const missingLinksWithFileExtensions = findMissingLinksWithFileExtensions(
-      localLinks.filter(doesIncludeFileExtension),
-      directory
-    );
-    const missingLinksWithoutFileExtensions =
-      findMissingLinksWithoutFileExtensions(
-        localLinks.filter(doesNotIncludeFileExtension),
-        directory
+  fileObjects
+    .map(({ fullPath, directory, links }) => {
+      const localLinks = links.filter(
+        ({ link }) => link.startsWith("./") || link.startsWith("../")
       );
 
-    const missingLinks = [
-      ...missingLinksWithoutFileExtensions,
-      ...missingLinksWithFileExtensions
-    ];
+      const missingLinksWithFileExtensions = findMissingLinksWithFileExtensions(
+        localLinks.filter(doesIncludeFileExtension),
+        directory
+      );
+      const missingLinksWithoutFileExtensions =
+        findMissingLinksWithoutFileExtensions(
+          localLinks.filter(doesNotIncludeFileExtension),
+          directory
+        );
 
-    return (
-      !isEmpty(missingLinks) && {
+      const missingLinks = [
+        ...missingLinksWithoutFileExtensions,
+        ...missingLinksWithFileExtensions
+      ];
+
+      if (isEmpty(missingLinks)) return null;
+
+      return {
         filePath: fullPath,
         missingLinks
-      }
-    );
-  });
+      };
+    })
+    .filter(Boolean);
 
 // https://www.computerhope.com/jargon/f/fileext.htm
 const FILE_EXTENSION_REGEX = /.*\.[\w\d]*$/;
