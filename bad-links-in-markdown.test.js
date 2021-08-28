@@ -85,7 +85,7 @@ describe("bad-links-in-markdown", () => {
       }, testDirectory);
     });
 
-    it("Ignores local links which point at files which exist even when the link is missing an extension", async () => {
+    it("Identifies local links which point at files which exist but the link is missing an extension", async () => {
       const testDirectory = await newTestDirectory();
 
       const fileNameToLinkTo = uniqueName();
@@ -103,7 +103,17 @@ describe("bad-links-in-markdown", () => {
 
       await runTestWithDirectoryCleanup(async () => {
         expect(await badLinksInMarkdown(testDirectory)).toEqual({
-          badLocalLinks: [],
+          badLocalLinks: [
+            {
+              filePath: fileContainingLink,
+              missingLinks: [
+                {
+                  link: `[I am a local link](./${fileNameToLinkTo})`,
+                  reasons: [badLinkReasons.MISSING_FILE_EXTENSION],
+                },
+              ],
+            },
+          ],
         });
       }, testDirectory);
     });
@@ -180,7 +190,7 @@ describe("bad-links-in-markdown", () => {
       }, testDirectory);
     });
 
-    it("Ignores local links which point at files which exist even when the link does not contain a file extension and when the file path does not include either absolute or relative path", async () => {
+    it("Identifies local links which point at files that exist but link does not contain a file extension or either absolute or relative path", async () => {
       const testDirectory = await newTestDirectory();
 
       const fileNameToLinkTo = uniqueName();
@@ -196,7 +206,17 @@ describe("bad-links-in-markdown", () => {
 
       await runTestWithDirectoryCleanup(async () => {
         expect(await badLinksInMarkdown(testDirectory)).toEqual({
-          badLocalLinks: [],
+          badLocalLinks: [
+            {
+              filePath,
+              missingLinks: [
+                {
+                  link: `[I am a local link](${fileNameToLinkTo})`,
+                  reasons: [badLinkReasons.MISSING_FILE_EXTENSION],
+                },
+              ],
+            },
+          ],
         });
       }, testDirectory);
     });

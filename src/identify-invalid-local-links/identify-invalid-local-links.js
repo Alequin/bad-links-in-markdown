@@ -9,7 +9,6 @@ export const identifyInvalidLocalLinks = (fileObjects) => {
       const localLinks = links
         .filter(isLocalLink)
         .map(addRawFileNameToObject)
-        .map(addRawLinkToObject)
         .map(addFullPathToObject(directory));
 
       const missingLinks = [
@@ -50,13 +49,6 @@ const addRawFileNameToObject = (linkObject) => {
   return {
     ...linkObject,
     name: last(linkObject.link.replace(/\\|\//g, " ").split(" ")),
-  };
-};
-
-const addRawLinkToObject = (linkObject) => {
-  return {
-    ...linkObject,
-    rawLink: linkObject.link,
   };
 };
 

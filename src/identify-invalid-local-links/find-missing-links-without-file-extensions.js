@@ -22,9 +22,13 @@ export const findMissingLinksWithoutFileExtensions = (
       matchedFile.endsWith(".md")
     );
 
-  const markdownLinksWithBadHeaderTags = identifyMarkdownLinksWithBadHeaderTags(
-    markdownFilesWithMatchedFiles.filter(({ tag }) => tag)
+  const [taggedMarkdownFiles, untaggedMarkdownFiles] = partition(
+    markdownFilesWithMatchedFiles,
+    ({ tag }) => tag
   );
+
+  const markdownLinksWithBadHeaderTags =
+    identifyMarkdownLinksWithBadHeaderTags(taggedMarkdownFiles);
 
   return [
     ...badLinks.map((linkObject) => ({
@@ -33,6 +37,10 @@ export const findMissingLinksWithoutFileExtensions = (
         badLinkReasons.FILE_NOT_FOUND,
         badLinkReasons.MISSING_FILE_EXTENSION,
       ],
+    })),
+    ...untaggedMarkdownFiles.map((linkObject) => ({
+      ...linkObject,
+      reasons: [badLinkReasons.MISSING_FILE_EXTENSION],
     })),
     ...otherFileTypesWithMatchedFiles.map((linkObject) => ({
       ...linkObject,
