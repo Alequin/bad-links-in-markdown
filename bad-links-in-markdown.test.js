@@ -284,6 +284,44 @@ describe("bad-links-in-markdown", () => {
       }, testDirectory);
     });
 
+    it("Identifies a local link that points is missing a file extension and could potentially refer to two separate files", async () => {
+      const testDirectory = await newTestDirectory();
+
+      const fileNameToLinkTo = uniqueName();
+      const markdownFileToLinkTo = path.resolve(
+        testDirectory,
+        `./${fileNameToLinkTo}.md`
+      );
+      fs.writeFileSync(markdownFileToLinkTo, `# foo bar baz`);
+      const javascriptFileToLinkTo = path.resolve(
+        testDirectory,
+        `./${fileNameToLinkTo}.js`
+      );
+      fs.writeFileSync(javascriptFileToLinkTo, `const foo = () => {}`);
+
+      const fileContainingLink = getPathToNewTestFile(testDirectory);
+      fs.writeFileSync(
+        fileContainingLink,
+        `[I am a local link](./${fileNameToLinkTo})`
+      );
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [
+            {
+              filePath: fileContainingLink,
+              missingLinks: [
+                {
+                  link: `[I am a local link](./${fileNameToLinkTo})`,
+                  reasons: [badLinkReasons.MISSING_FILE_EXTENSION],
+                },
+              ],
+            },
+          ],
+        });
+      }, testDirectory);
+    });
+
     describe("when links include tags", () => {
       it("Identifies a local link that points at a file that exists but does not contain the targeted header tag", async () => {
         const testDirectory = await newTestDirectory();
