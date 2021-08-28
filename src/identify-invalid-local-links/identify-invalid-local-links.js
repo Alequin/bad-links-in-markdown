@@ -67,6 +67,7 @@ const addFullPathToObject = (directory) => (linkObject) => {
 
   return {
     ...linkObject,
+    directory,
     fullPath: path.resolve(directory, relativeLink),
   };
 };
