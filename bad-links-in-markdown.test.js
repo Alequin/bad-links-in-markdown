@@ -10,12 +10,13 @@ describe("bad-links-in-markdown", () => {
 
   it("Can identify a local link point at a file that does not exist", async () => {
     const filePath = getFilePathToTestFile();
-    try {
-      fs.writeFileSync(
-        filePath,
-        `[I am a local link](./path/to/missing/file.md)`
-      );
 
+    fs.writeFileSync(
+      filePath,
+      `[I am a local link](./path/to/missing/file.md)`
+    );
+
+    await runTestWithFile(filePath, async () => {
       expect(await badLinksInMarkdown(topLevelDirectory)).toEqual({
         badLocalLinks: [
           {
@@ -32,13 +33,23 @@ describe("bad-links-in-markdown", () => {
           }
         ]
       });
-    } catch (error) {
-      throw error;
-    } finally {
-      fs.unlinkSync(filePath);
-    }
+    });
   });
-
-  const getFilePathToTestFile = () =>
-    path.resolve(topLevelDirectory, `./${`test-file-${uniqueId()}.md`}`);
 });
+
+/**
+ * A function used to run a test with a file that will be cleaned up once
+ * the tests is complete, regardless of the tests success or failure
+ */
+const runTestWithFile = async (testFile, testCallback) => {
+  try {
+    await testCallback();
+  } catch (error) {
+    throw error;
+  } finally {
+    fs.unlinkSync(testFile);
+  }
+};
+
+const getFilePathToTestFile = () =>
+  path.resolve(topLevelDirectory, `./${`test-file-${uniqueId()}.md`}`);
