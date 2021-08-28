@@ -1,7 +1,7 @@
 import { isEmpty, last } from "lodash";
 import path from "path";
 import { findMissingLinksWithFileExtensions } from "./find-missing-links-with-file-extensions";
-import { findMissingLinksWithoutFileExtensions } from "./find-missing-links-without-file-extensions";
+import { markLinksWithoutExtensionsAsBad } from "./mark-links-without-extensions-as-bad";
 
 export const identifyInvalidLocalLinks = (fileObjects) => {
   return fileObjects
@@ -16,7 +16,7 @@ export const identifyInvalidLocalLinks = (fileObjects) => {
           localLinks.filter(doesIncludeFileExtension),
           directory
         ),
-        ...findMissingLinksWithoutFileExtensions(
+        ...markLinksWithoutExtensionsAsBad(
           localLinks.filter(doesNotIncludeFileExtension),
           directory
         ),

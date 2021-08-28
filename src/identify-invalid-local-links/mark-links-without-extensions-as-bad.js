@@ -3,17 +3,12 @@ import { partition } from "lodash";
 import { badLinkReasons } from "./bad-link-reasons";
 import { identifyMarkdownLinksWithBadHeaderTags } from "./identify-markdown-links-with-bad-header-tags";
 
-export const findMissingLinksWithoutFileExtensions = (
+export const markLinksWithoutExtensionsAsBad = (
   linksWithoutFileExtensions,
   directory
 ) => {
-  const linksWithMatchedFile = addMatchingFilesInDirectoryToLinks(
-    linksWithoutFileExtensions,
-    directory
-  );
-
   const [linksWithMatchedFiles, badLinks] = partition(
-    linksWithMatchedFile,
+    addMatchingFilesInDirectoryToLinks(linksWithoutFileExtensions, directory),
     ({ matchedFile }) => matchedFile
   );
 
@@ -27,6 +22,11 @@ export const findMissingLinksWithoutFileExtensions = (
     ({ tag }) => tag
   );
 
+  const linksWhichAreOnlyMissingAFileExtension = [
+    ...otherFileTypesWithMatchedFiles,
+    ...untaggedMarkdownFiles,
+  ];
+
   const markdownLinksWithBadHeaderTags =
     identifyMarkdownLinksWithBadHeaderTags(taggedMarkdownFiles);
 
@@ -38,11 +38,7 @@ export const findMissingLinksWithoutFileExtensions = (
         badLinkReasons.MISSING_FILE_EXTENSION,
       ],
     })),
-    ...untaggedMarkdownFiles.map((linkObject) => ({
-      ...linkObject,
-      reasons: [badLinkReasons.MISSING_FILE_EXTENSION],
-    })),
-    ...otherFileTypesWithMatchedFiles.map((linkObject) => ({
+    ...linksWhichAreOnlyMissingAFileExtension.map((linkObject) => ({
       ...linkObject,
       reasons: [badLinkReasons.MISSING_FILE_EXTENSION],
     })),
