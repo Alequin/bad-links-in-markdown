@@ -26,7 +26,7 @@ describe("bad-links-in-markdown", () => {
               missingLinks: [
                 {
                   link: "[I am a local link](./path/to/missing/file.md)",
-                  reason: badLinkReasons.FILE_NOT_FOUND,
+                  reasons: [badLinkReasons.FILE_NOT_FOUND],
                 },
               ],
             },
@@ -73,7 +73,7 @@ describe("bad-links-in-markdown", () => {
               missingLinks: [
                 {
                   link: "[I am a local link](./path/to/missing/file)",
-                  reason: badLinkReasons.FILE_NOT_FOUND,
+                  reasons: [badLinkReasons.FILE_NOT_FOUND],
                 },
               ],
             },
@@ -120,7 +120,7 @@ describe("bad-links-in-markdown", () => {
               missingLinks: [
                 {
                   link: "[I am a local link](file.md)",
-                  reason: badLinkReasons.FILE_NOT_FOUND,
+                  reasons: [badLinkReasons.FILE_NOT_FOUND],
                 },
               ],
             },
@@ -165,7 +165,7 @@ describe("bad-links-in-markdown", () => {
               missingLinks: [
                 {
                   link: `[I am a local link](file)`,
-                  reason: badLinkReasons.FILE_NOT_FOUND,
+                  reasons: [badLinkReasons.FILE_NOT_FOUND],
                 },
               ],
             },
@@ -213,7 +213,7 @@ describe("bad-links-in-markdown", () => {
               missingLinks: [
                 {
                   link: "[I am a local link](./path/to/missing/file.js)",
-                  reason: badLinkReasons.FILE_NOT_FOUND,
+                  reasons: [badLinkReasons.FILE_NOT_FOUND],
                 },
               ],
             },
@@ -269,7 +269,7 @@ describe("bad-links-in-markdown", () => {
               missingLinks: [
                 {
                   link: `[I am a local link](./${fileNameToLinkTo})`,
-                  reason: badLinkReasons.MISSING_FILE_EXTENSION,
+                  reasons: [badLinkReasons.MISSING_FILE_EXTENSION],
                 },
               ],
             },
@@ -306,7 +306,7 @@ describe("bad-links-in-markdown", () => {
                 missingLinks: [
                   {
                     link: `[I am a local link](./${fileNameToLinkTo}.md#main-title)`,
-                    reason: badLinkReasons.HEADER_TAG_NOT_FOUND,
+                    reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
                   },
                 ],
               },
@@ -420,7 +420,7 @@ describe("bad-links-in-markdown", () => {
                 missingLinks: [
                   {
                     link: `[I am a local link](./${fileNameToLinkTo}.md#main-title)`,
-                    reason: badLinkReasons.HEADER_TAG_NOT_FOUND,
+                    reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
                   },
                 ],
               },
@@ -453,7 +453,7 @@ describe("bad-links-in-markdown", () => {
                 missingLinks: [
                   {
                     link: `[I am a local link](./${fileNameToLinkTo}.md#foo-bar-baz-3)`,
-                    reason: badLinkReasons.HEADER_TAG_NOT_FOUND,
+                    reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
                   },
                 ],
               },
@@ -512,7 +512,7 @@ describe("bad-links-in-markdown", () => {
                 missingLinks: [
                   {
                     link: `[I am a local link](./${fileNameToLinkTo}.md#main-title)`,
-                    reason: badLinkReasons.HEADER_TAG_NOT_FOUND,
+                    reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
                   },
                 ],
               },
@@ -548,7 +548,7 @@ describe("bad-links-in-markdown", () => {
                 missingLinks: [
                   {
                     link: `[I am a local link](./${fileNameToLinkTo}#different-header)`,
-                    reason: badLinkReasons.HEADER_TAG_NOT_FOUND,
+                    reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
                   },
                 ],
               },
@@ -630,7 +630,7 @@ describe("bad-links-in-markdown", () => {
                 missingLinks: [
                   {
                     link: `[I am a local link](./${fileNameToLinkTo}.js#L100)`,
-                    reason: badLinkReasons.INVALID_TARGET_LINE_NUMBER,
+                    reasons: [badLinkReasons.INVALID_TARGET_LINE_NUMBER],
                   },
                 ],
               },
@@ -663,7 +663,7 @@ describe("bad-links-in-markdown", () => {
                 missingLinks: [
                   {
                     link: `[I am a local link](./${fileNameToLinkTo}#L1)`,
-                    reason: badLinkReasons.MISSING_FILE_EXTENSION,
+                    reasons: [badLinkReasons.MISSING_FILE_EXTENSION],
                   },
                 ],
               },

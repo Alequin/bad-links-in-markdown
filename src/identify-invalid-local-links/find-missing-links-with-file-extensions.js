@@ -21,15 +21,15 @@ export const findMissingLinksWithFileExtensions = (linksWithFileExtensions) => {
   return [
     ...badLinks.map((linkObject) => ({
       ...linkObject,
-      reason: badLinkReasons.FILE_NOT_FOUND,
+      reasons: [badLinkReasons.FILE_NOT_FOUND],
     })),
     ...markdownLinksWithBadTags.map((linkObject) => ({
       ...linkObject,
-      reason: badLinkReasons.HEADER_TAG_NOT_FOUND,
+      reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
     })),
     ...linkWithBadTargetLineNumbers.map((linkObject) => ({
       ...linkObject,
-      reason: badLinkReasons.INVALID_TARGET_LINE_NUMBER,
+      reasons: [badLinkReasons.INVALID_TARGET_LINE_NUMBER],
     })),
   ];
 };

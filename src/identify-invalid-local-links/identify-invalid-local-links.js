@@ -25,9 +25,9 @@ export const identifyInvalidLocalLinks = (fileObjects) => {
 
       return {
         filePath: fullPath,
-        missingLinks: missingLinks.map(({ markdownLink, reason }) => ({
+        missingLinks: missingLinks.map(({ markdownLink, reasons }) => ({
           link: markdownLink,
-          reason,
+          reasons,
         })),
       };
     })
