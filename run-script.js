@@ -1,4 +1,4 @@
-const badLinksInMarkdown = require("./bad-links-in-markdown");
+import badLinksInMarkdown from "./bad-links-in-markdown";
 
 const run = async () => {
   const result = badLinksInMarkdown(topLevelDirectoryFromConsoleArgs());
@@ -6,7 +6,7 @@ const run = async () => {
 
 badLinksInMarkdown()
   .then(() => process.exit())
-  .catch(error => {
+  .catch((error) => {
     console.error(error);
     process.exit(1);
   });

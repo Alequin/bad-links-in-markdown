@@ -1,13 +1,10 @@
-const fs = require("fs");
-const path = require("path");
-const fetch = require("node-fetch");
-const findAllMarkdownFiles = require("./src/find-all-markdown-files");
-const identifyInvalidLocalLinks = require("./src/identify-invalid-local-links/identify-invalid-local-links");
-const { mapValues, isEmpty } = require("lodash");
+import fs from "fs";
+import { findAllMarkdownFiles } from "./src/find-all-markdown-files";
+import { identifyInvalidLocalLinks } from "./src/identify-invalid-local-links/identify-invalid-local-links";
 
 const MARKDOWN_LINK_REGEX = /\[.*?\]\(.*?\)/g;
 
-const badLinksInMarkdown = async (topLevelDirectory) => {
+export const badLinksInMarkdown = async (topLevelDirectory) => {
   const allMarkdownFiles = findAllMarkdownFiles(topLevelDirectory);
 
   const markdownFilesWithLinks = allMarkdownFiles.map((file) => {
@@ -34,6 +31,6 @@ const badLinksInMarkdown = async (topLevelDirectory) => {
   // await identifyInvalidLinksToWebSites(markdownFilesWithLinks);
 };
 
-module.exports = badLinksInMarkdown;
-
-const linkWithTag = (link) => {};
+if (module === require.main) {
+  console.log("hey");
+}

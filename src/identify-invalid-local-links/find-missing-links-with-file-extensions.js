@@ -1,8 +1,8 @@
-const fs = require("fs");
-const { partition, flow, groupBy, mapValues, flatMap } = require("lodash");
-const badLinkReasons = require("./bad-link-reasons");
+import fs from "fs";
+import { flatMap, flow, groupBy, mapValues, partition } from "lodash";
+import { badLinkReasons } from "./bad-link-reasons";
 
-const findMissingLinksWithFileExtensions = (linksWithFileExtensions) => {
+export const findMissingLinksWithFileExtensions = (linksWithFileExtensions) => {
   const [badLinks, workingLinks] = partition(
     linksWithFileExtensions,
     (linkObject) => !fs.existsSync(linkObject.fullPath)
@@ -53,5 +53,3 @@ const markdownHeaderToTag = flow(
   (header) => header.replace(/-+/g, "-"), // replace occurrences of multiple hyphens with singular hyphens
   (header) => header.replace(/[^\w-]/g, "") // remove chars which are not alpha-numeric or dashes
 );
-
-module.exports = findMissingLinksWithFileExtensions;

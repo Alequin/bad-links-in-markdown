@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest --runInBand",
-    "find-bad-links": "node ./bad-links-in-markdown"
+    "find-bad-links": "npx babel-node ./bad-links-in-markdown"
   },
   "repository": {
     "type": "git",
@@ -18,9 +18,13 @@
   },
   "homepage": "https://github.com/Alequin/bad-links-in-markdown#readme",
   "dependencies": {
+    "@babel/core": "^7.15.0",
+    "@babel/node": "^7.14.9",
+    "@babel/preset-env": "^7.15.0",
     "commander": "^8.1.0",
     "jest": "^27.0.6",
     "lodash": "^4.17.21",
-    "node-fetch": "^2.6.1"
+    "node-fetch": "^2.6.1",
+    "regenerator-runtime": "^0.13.9"
   }
 }

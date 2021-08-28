@@ -1,7 +1,7 @@
-const path = require("path");
-const program = require("commander");
+import path from "path";
+import program from "commander";
 
-const topLevelDirectoryFromConsoleArgs = () => {
+export const topLevelDirectoryFromConsoleArgs = () => {
   program.requiredOption(
     "--directory <file-path>",
     "the top level directory to start reviewing markdown files from (all child directories will also be checked)"
@@ -12,4 +12,4 @@ const topLevelDirectoryFromConsoleArgs = () => {
   return path.resolve(directory);
 };
 
-module.exports = topLevelDirectoryFromConsoleArgs;
+export default topLevelDirectoryFromConsoleArgs;

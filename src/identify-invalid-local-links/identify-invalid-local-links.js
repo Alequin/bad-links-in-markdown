@@ -1,9 +1,9 @@
-const { isEmpty, last } = require("lodash");
-const path = require("path");
-const findMissingLinksWithFileExtensions = require("./find-missing-links-with-file-extensions");
-const findMissingLinksWithoutFileExtensions = require("./find-missing-links-without-file-extensions");
+import { isEmpty, last } from "lodash";
+import path from "path";
+import { findMissingLinksWithFileExtensions } from "./find-missing-links-with-file-extensions";
+import { findMissingLinksWithoutFileExtensions } from "./find-missing-links-without-file-extensions";
 
-const identifyInvalidLocalLinks = (fileObjects) => {
+export const identifyInvalidLocalLinks = (fileObjects) => {
   return fileObjects
     .map(({ fullPath, directory, links }) => {
       const localLinks = links
@@ -73,5 +73,3 @@ const addFullPathToObject = (directory) => (linkObject) => {
 
 const doesLinkStartWithRelativePath = (link) =>
   link.startsWith("./") || link.startsWith("../");
-
-module.exports = identifyInvalidLocalLinks;

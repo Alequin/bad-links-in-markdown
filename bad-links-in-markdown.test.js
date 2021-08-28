@@ -1,8 +1,8 @@
-const fs = require("fs");
-const path = require("path");
-const { uniqueId } = require("lodash");
-const badLinksInMarkdown = require("./bad-links-in-markdown");
-const badLinkReasons = require("./src/identify-invalid-local-links/bad-link-reasons");
+import fs from "fs";
+import path from "path";
+import { uniqueId } from "lodash";
+import { badLinksInMarkdown } from "./bad-links-in-markdown";
+import { badLinkReasons } from "./src/identify-invalid-local-links/bad-link-reasons";
 
 const TOP_LEVEL_DIRECTORY = path.resolve(__dirname, "./test-markdown-files");
 
@@ -451,8 +451,9 @@ const runTestWithDirectoryCleanup = async (testCallback, directoryToDelete) => {
   } catch (error) {
     throw error;
   } finally {
-    if (directoryToDelete && fs.existsSync(directoryToDelete))
-      await forceRemoveDir(directoryToDelete);
+    if (!directoryToDelete || !fs.existsSync(directoryToDelete))
+      throw new Error("must have a directory to clean up");
+    await forceRemoveDir(directoryToDelete);
   }
 };
 

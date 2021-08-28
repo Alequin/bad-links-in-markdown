@@ -1,12 +1,12 @@
-const fs = require("fs");
-const path = require("path");
-const { flatMap } = require("lodash");
+import fs from "fs";
+import path from "path";
+import { flatMap } from "lodash";
 
-const findAllMarkdownFiles = directory => {
-  const itemsInCurrentDirectory = fs.readdirSync(directory).map(name => ({
+export const findAllMarkdownFiles = (directory) => {
+  const itemsInCurrentDirectory = fs.readdirSync(directory).map((name) => ({
     name,
     directory,
-    fullPath: path.resolve(directory, `./${name}`)
+    fullPath: path.resolve(directory, `./${name}`),
   }));
 
   const markdownFiles = itemsInCurrentDirectory.filter(({ name }) =>
@@ -21,8 +21,6 @@ const findAllMarkdownFiles = directory => {
 
   return [
     ...markdownFiles,
-    ...flatMap(otherDirectoriesToSearch, findAllMarkdownFiles) // Find markdown files in all the other directories. If there are no others does nothing
+    ...flatMap(otherDirectoriesToSearch, findAllMarkdownFiles), // Find markdown files in all the other directories. If there are no others does nothing
   ];
 };
-
-module.exports = findAllMarkdownFiles;

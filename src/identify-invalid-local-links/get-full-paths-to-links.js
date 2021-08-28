@@ -1,6 +1,4 @@
-const path = require("path");
+import path from "path";
 
-const getFullPathsToLinks = (links, directory) =>
+export const getFullPathsToLinks = (links, directory) =>
   links.map(({ link }) => path.resolve(directory, link));
-
-module.exports = getFullPathsToLinks;

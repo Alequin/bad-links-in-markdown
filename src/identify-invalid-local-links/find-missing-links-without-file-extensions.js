@@ -1,7 +1,7 @@
-const fs = require("fs");
-const badLinkReasons = require("./bad-link-reasons");
+import fs from "fs";
+import { badLinkReasons } from "./bad-link-reasons";
 
-const findMissingLinksWithoutFileExtensions = (
+export const findMissingLinksWithoutFileExtensions = (
   linksWithoutFileExtensions,
   directory
 ) => {
@@ -19,5 +19,3 @@ const findMissingLinksWithoutFileExtensions = (
       reason: badLinkReasons.FILE_NOT_FOUND,
     }));
 };
-
-module.exports = findMissingLinksWithoutFileExtensions;
