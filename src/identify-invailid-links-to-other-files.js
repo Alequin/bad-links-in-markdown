@@ -1,37 +1,43 @@
 const fs = require("fs");
 const path = require("path");
-const { isEmpty } = require("lodash");
+const { isEmpty, last } = require("lodash");
 
-const identifyInvalidLinksToOtherFiles = fileObjects =>
-  fileObjects
+const identifyInvalidLinksToOtherFiles = fileObjects => {
+  return fileObjects
     .map(({ fullPath, directory, links }) => {
-      const localLinks = links.filter(
-        ({ link }) => link.startsWith("./") || link.startsWith("../")
-      );
+      const localLinks = links.filter(isLocalLink).map(appendRawFileName);
 
       const missingLinksWithFileExtensions = findMissingLinksWithFileExtensions(
         localLinks.filter(doesIncludeFileExtension),
         directory
       );
+
       const missingLinksWithoutFileExtensions =
         findMissingLinksWithoutFileExtensions(
           localLinks.filter(doesNotIncludeFileExtension),
           directory
         );
 
-      const missingLinks = [
-        ...missingLinksWithoutFileExtensions,
-        ...missingLinksWithFileExtensions
-      ];
-
-      if (isEmpty(missingLinks)) return null;
-
       return {
         filePath: fullPath,
-        missingLinks
+        missingLinks: [
+          ...missingLinksWithoutFileExtensions,
+          ...missingLinksWithFileExtensions
+        ]
       };
     })
-    .filter(Boolean);
+    .filter(({ missingLinks }) => !isEmpty(missingLinks));
+};
+
+const isLocalLink = ({ link }) =>
+  link.startsWith("./") || link.startsWith("../");
+
+const appendRawFileName = linkObject => {
+  return {
+    ...linkObject,
+    name: last(linkObject.link.replace(/\\|\//g, " ").split(" "))
+  };
+};
 
 // https://www.computerhope.com/jargon/f/fileext.htm
 const FILE_EXTENSION_REGEX = /.*\.[\w\d]*$/;
@@ -52,12 +58,16 @@ const findMissingLinksWithoutFileExtensions = (
   linksWithoutFileExtensions,
   directory
 ) => {
-  const linksWithFullPaths = getFullPathsToLinks(
-    linksWithoutFileExtensions,
-    directory
+  const filesInDirectory = fs.readdirSync(directory);
+
+  const badLinks = linksWithoutFileExtensions.filter(
+    file =>
+      !filesInDirectory.some(fileInDirectory =>
+        fileInDirectory.includes(file.name)
+      )
   );
 
-  return [];
+  return getFullPathsToLinks(badLinks, directory);
 };
 
 const getFullPathsToLinks = (links, directory) =>

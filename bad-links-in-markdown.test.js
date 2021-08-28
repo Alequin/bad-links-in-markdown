@@ -7,65 +7,94 @@ const TOP_LEVEL_DIRECTORY = path.resolve(__dirname, "./test-markdown-files");
 
 describe("bad-links-in-markdown", () => {
   it("Can identify a local link that point at a file that does not exist", async () => {
-    const filePath = getFilePathToTestFile();
+    const testDirectory = await newTestDirectory();
+
+    const filePath = getPathToNewTestFile(testDirectory);
 
     fs.writeFileSync(
       filePath,
       `[I am a local link](./path/to/missing/file.md)`
     );
 
-    await runTestWithFileCleanup(async () => {
-      expect(await badLinksInMarkdown(TOP_LEVEL_DIRECTORY)).toEqual({
+    await runTestWithDirectoryCleanup(async () => {
+      expect(await badLinksInMarkdown(testDirectory)).toEqual({
         badLocalLinks: [
           {
-            filePath: path.resolve(TOP_LEVEL_DIRECTORY, "./test-file-1.md"),
+            filePath,
             missingLinks: [
-              path.resolve(TOP_LEVEL_DIRECTORY, "./path/to/missing/file.md")
+              path.resolve(testDirectory, "./path/to/missing/file.md")
             ]
           }
         ]
       });
-    }, [filePath]);
+    }, testDirectory);
   });
 
   it("Ignores local links which point at files which exist", async () => {
-    const fileNameToLinkTo = "link-file-574947.md";
+    const testDirectory = await newTestDirectory();
+
+    const fileNameToLinkTo = uniqueName();
     const filePathToLinkTo = path.resolve(
-      TOP_LEVEL_DIRECTORY,
-      `./${fileNameToLinkTo}`
+      testDirectory,
+      `./${fileNameToLinkTo}.md`
     );
     fs.writeFileSync(filePathToLinkTo, `foo bar baz`);
 
-    const fileContainingLink = getFilePathToTestFile();
+    const fileContainingLink = getPathToNewTestFile(testDirectory);
+    fs.writeFileSync(
+      fileContainingLink,
+      `[I am a local link](./${fileNameToLinkTo}.md)`
+    );
+
+    await runTestWithDirectoryCleanup(async () => {
+      expect(await badLinksInMarkdown(testDirectory)).toEqual({
+        badLocalLinks: []
+      });
+    }, testDirectory);
+  });
+
+  it("Can identify a local link that point at a file that does not exist even when the link does not contain a file extension", async () => {
+    const testDirectory = await newTestDirectory();
+
+    const filePath = getPathToNewTestFile(testDirectory);
+
+    fs.writeFileSync(filePath, `[I am a local link](./path/to/missing/file)`);
+
+    await runTestWithDirectoryCleanup(async () => {
+      expect(await badLinksInMarkdown(testDirectory)).toEqual({
+        badLocalLinks: [
+          {
+            filePath,
+            missingLinks: [
+              path.resolve(testDirectory, "./path/to/missing/file")
+            ]
+          }
+        ]
+      });
+    }, testDirectory);
+  });
+
+  it("Ignores local links which point at files which exist even when the link is missing an extension", async () => {
+    const testDirectory = await newTestDirectory();
+
+    const fileNameToLinkTo = uniqueName();
+    const filePathToLinkTo = path.resolve(
+      testDirectory,
+      `./${fileNameToLinkTo}.md`
+    );
+    fs.writeFileSync(filePathToLinkTo, `foo bar baz`);
+
+    const fileContainingLink = getPathToNewTestFile(testDirectory);
     fs.writeFileSync(
       fileContainingLink,
       `[I am a local link](./${fileNameToLinkTo})`
     );
 
-    await runTestWithFileCleanup(async () => {
-      expect(await badLinksInMarkdown(TOP_LEVEL_DIRECTORY)).toEqual({
+    await runTestWithDirectoryCleanup(async () => {
+      expect(await badLinksInMarkdown(testDirectory)).toEqual({
         badLocalLinks: []
       });
-    }, [fileContainingLink, filePathToLinkTo]);
-  });
-
-  it("Can identify a local link that point at a file that does not exist even when the link does not contain a file extension", async () => {
-    const filePath = getFilePathToTestFile();
-
-    fs.writeFileSync(filePath, `[I am a local link](./path/to/missing/file)`);
-
-    await runTestWithFileCleanup(async () => {
-      expect(await badLinksInMarkdown(TOP_LEVEL_DIRECTORY)).toEqual({
-        badLocalLinks: [
-          {
-            filePath: path.resolve(TOP_LEVEL_DIRECTORY, "./test-file-1.md"),
-            missingLinks: [
-              path.resolve(TOP_LEVEL_DIRECTORY, "./path/to/missing/file")
-            ]
-          }
-        ]
-      });
-    }, [filePath]);
+    }, testDirectory);
   });
 });
 
@@ -73,15 +102,32 @@ describe("bad-links-in-markdown", () => {
  * A function used to run a test with a file that will be cleaned up once
  * the tests is complete, regardless of the tests success or failure
  */
-const runTestWithFileCleanup = async (testCallback, testFiles = []) => {
+const runTestWithDirectoryCleanup = async (testCallback, directoryToDelete) => {
   try {
     await testCallback();
   } catch (error) {
     throw error;
   } finally {
-    testFiles.forEach(testFile => fs.unlinkSync(testFile));
+    if (directoryToDelete && fs.existsSync(directoryToDelete))
+      await forceRemoveDir(directoryToDelete);
   }
 };
 
-const getFilePathToTestFile = () =>
-  path.resolve(TOP_LEVEL_DIRECTORY, `./${`test-file-${uniqueId()}.md`}`);
+const newTestDirectory = async () => {
+  const testDirectory = path.resolve(TOP_LEVEL_DIRECTORY, `./${uniqueName()}`);
+
+  if (fs.existsSync(testDirectory)) await forceRemoveDir(testDirectory);
+  fs.mkdirSync(testDirectory);
+
+  return testDirectory;
+};
+
+const getPathToNewTestFile = testDirectory =>
+  path.resolve(testDirectory, `./${`${uniqueName()}.md`}`);
+
+const uniqueName = () => `test-${uniqueId()}`;
+
+const forceRemoveDir = async directory =>
+  new Promise(resolve =>
+    fs.rm(directory, { recursive: true, force: true }, resolve)
+  );

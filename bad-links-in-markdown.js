@@ -12,7 +12,7 @@ const MARKDOWN_LINK_REGEX = /\[.*?\]\(.*?\)/g;
 const badLinksInMarkdown = async topLevelDirectory => {
   const allMarkdownFiles = findAllMarkdownFiles(topLevelDirectory);
 
-  const markdownFilesWithLinks = allMarkdownFiles.slice(0, 1).map(file => {
+  const markdownFilesWithLinks = allMarkdownFiles.map(file => {
     const markdown = fs.readFileSync(file.fullPath).toString();
     const fullLinks = markdown.match(MARKDOWN_LINK_REGEX) || [];
 
