@@ -6,7 +6,7 @@ const badLinksInMarkdown = require("./bad-links-in-markdown");
 const TOP_LEVEL_DIRECTORY = path.resolve(__dirname, "./test-markdown-files");
 
 describe("bad-links-in-markdown", () => {
-  it("Can identify a local link that point at a file that does not exist", async () => {
+  it("Can identify a local link that points at a file that does not exist", async () => {
     const testDirectory = await newTestDirectory();
 
     const filePath = getPathToNewTestFile(testDirectory);
@@ -53,7 +53,7 @@ describe("bad-links-in-markdown", () => {
     }, testDirectory);
   });
 
-  it("Can identify a local link that point at a file that does not exist even when the link does not contain a file extension", async () => {
+  it("Can identify a local link that points at a file that does not exist even when the link does not contain a file extension", async () => {
     const testDirectory = await newTestDirectory();
 
     const filePath = getPathToNewTestFile(testDirectory);
@@ -89,6 +89,46 @@ describe("bad-links-in-markdown", () => {
       fileContainingLink,
       `[I am a local link](./${fileNameToLinkTo})`
     );
+
+    await runTestWithDirectoryCleanup(async () => {
+      expect(await badLinksInMarkdown(testDirectory)).toEqual({
+        badLocalLinks: []
+      });
+    }, testDirectory);
+  });
+
+  it("Can identify a local link that points at a file that does not exist when the file path points the the same directory and does not include either absolute or relative path", async () => {
+    const testDirectory = await newTestDirectory();
+
+    const filePath = getPathToNewTestFile(testDirectory);
+
+    fs.writeFileSync(filePath, `[I am a local link](file.md)`);
+
+    await runTestWithDirectoryCleanup(async () => {
+      expect(await badLinksInMarkdown(testDirectory)).toEqual({
+        badLocalLinks: [
+          {
+            filePath,
+            missingLinks: [path.resolve(testDirectory, "file.md")]
+          }
+        ]
+      });
+    }, testDirectory);
+  });
+
+  it("Ignores local links which point at files which exist when the file path points the the same directory and does not include either absolute or relative path", async () => {
+    const testDirectory = await newTestDirectory();
+
+    const fileNameToLinkTo = uniqueName();
+    const filePathToLinkTo = path.resolve(
+      testDirectory,
+      `./${fileNameToLinkTo}.md`
+    );
+    fs.writeFileSync(filePathToLinkTo, `foo bar baz`);
+
+    const filePath = getPathToNewTestFile(testDirectory);
+
+    fs.writeFileSync(filePath, `[I am a local link](${fileNameToLinkTo}.md)`);
 
     await runTestWithDirectoryCleanup(async () => {
       expect(await badLinksInMarkdown(testDirectory)).toEqual({

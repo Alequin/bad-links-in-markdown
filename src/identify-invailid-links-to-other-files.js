@@ -5,7 +5,10 @@ const { isEmpty, last } = require("lodash");
 const identifyInvalidLinksToOtherFiles = fileObjects => {
   return fileObjects
     .map(({ fullPath, directory, links }) => {
-      const localLinks = links.filter(isLocalLink).map(appendRawFileName);
+      const localLinks = links
+        .filter(isLocalLink)
+        .map(appendRawFileName)
+        .map(appendRelativePath);
 
       const missingLinksWithFileExtensions = findMissingLinksWithFileExtensions(
         localLinks.filter(doesIncludeFileExtension),
@@ -29,8 +32,11 @@ const identifyInvalidLinksToOtherFiles = fileObjects => {
     .filter(({ missingLinks }) => !isEmpty(missingLinks));
 };
 
+// https://www.computerhope.com/jargon/f/fileext.htm
+const IS_LOCAL_LINK_WITHOUT_PATH_REGEX = /w*\.[\w\d]*$/;
 const isLocalLink = ({ link }) =>
-  link.startsWith("./") || link.startsWith("../");
+  doesLinkStartWithRelativePath(link) ||
+  IS_LOCAL_LINK_WITHOUT_PATH_REGEX.test(link);
 
 const appendRawFileName = linkObject => {
   return {
@@ -38,6 +44,18 @@ const appendRawFileName = linkObject => {
     name: last(linkObject.link.replace(/\\|\//g, " ").split(" "))
   };
 };
+
+const appendRelativePath = linkObject => {
+  return {
+    ...linkObject,
+    link: doesLinkStartWithRelativePath(linkObject.link)
+      ? linkObject.link
+      : `./${linkObject.link}`
+  };
+};
+
+const doesLinkStartWithRelativePath = link =>
+  link.startsWith("./") || link.startsWith("../");
 
 // https://www.computerhope.com/jargon/f/fileext.htm
 const FILE_EXTENSION_REGEX = /.*\.[\w\d]*$/;
