@@ -29,16 +29,21 @@ export const findMissingLinksWithoutFileExtensions = (
   return [
     ...badLinks.map((linkObject) => ({
       ...linkObject,
-      reasons: [badLinkReasons.FILE_NOT_FOUND],
+      reasons: [
+        badLinkReasons.FILE_NOT_FOUND,
+        badLinkReasons.MISSING_FILE_EXTENSION,
+      ],
     })),
-    // Only markdown files can exclude the extension and still work (TODO - confirm this)
     ...otherFileTypesWithMatchedFiles.map((linkObject) => ({
       ...linkObject,
       reasons: [badLinkReasons.MISSING_FILE_EXTENSION],
     })),
     ...markdownLinksWithBadHeaderTags.map((linkObject) => ({
       ...linkObject,
-      reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
+      reasons: [
+        badLinkReasons.HEADER_TAG_NOT_FOUND,
+        badLinkReasons.MISSING_FILE_EXTENSION,
+      ],
     })),
   ];
 };

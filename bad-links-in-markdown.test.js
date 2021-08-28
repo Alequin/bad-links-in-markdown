@@ -73,7 +73,10 @@ describe("bad-links-in-markdown", () => {
               missingLinks: [
                 {
                   link: "[I am a local link](./path/to/missing/file)",
-                  reasons: [badLinkReasons.FILE_NOT_FOUND],
+                  reasons: [
+                    badLinkReasons.FILE_NOT_FOUND,
+                    badLinkReasons.MISSING_FILE_EXTENSION,
+                  ],
                 },
               ],
             },
@@ -165,7 +168,10 @@ describe("bad-links-in-markdown", () => {
               missingLinks: [
                 {
                   link: `[I am a local link](file)`,
-                  reasons: [badLinkReasons.FILE_NOT_FOUND],
+                  reasons: [
+                    badLinkReasons.FILE_NOT_FOUND,
+                    badLinkReasons.MISSING_FILE_EXTENSION,
+                  ],
                 },
               ],
             },
@@ -548,7 +554,10 @@ describe("bad-links-in-markdown", () => {
                 missingLinks: [
                   {
                     link: `[I am a local link](./${fileNameToLinkTo}#different-header)`,
-                    reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
+                    reasons: [
+                      badLinkReasons.HEADER_TAG_NOT_FOUND,
+                      badLinkReasons.MISSING_FILE_EXTENSION,
+                    ],
                   },
                 ],
               },
