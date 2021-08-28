@@ -33,7 +33,7 @@ const identifyInvalidLinksToOtherFiles = fileObjects => {
 };
 
 // https://www.computerhope.com/jargon/f/fileext.htm
-const IS_LOCAL_LINK_WITHOUT_PATH_REGEX = /w*\.[\w\d]*$/;
+const IS_LOCAL_LINK_WITHOUT_PATH_REGEX = /w*|w*\.[\w\d]*$/;
 const isLocalLink = ({ link }) =>
   doesLinkStartWithRelativePath(link) ||
   IS_LOCAL_LINK_WITHOUT_PATH_REGEX.test(link);
