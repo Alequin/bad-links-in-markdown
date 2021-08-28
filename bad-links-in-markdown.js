@@ -1,11 +1,8 @@
 const fs = require("fs");
 const path = require("path");
-const { isEmpty, flatMap } = require("lodash");
 const fetch = require("node-fetch");
-const topLevelDirectoryFromConsoleArgs = require("./src/top-level-directory-from-console-args");
 const findAllMarkdownFiles = require("./src/find-all-markdown-files");
 const identifyInvalidLocalLinks = require("./src/identify-invalid-local-links/identify-invalid-local-links");
-const identifyInvalidLinksToWebSites = require("./src/identify-invalid-links-to-web-sites");
 
 const MARKDOWN_LINK_REGEX = /\[.*?\]\(.*?\)/g;
 
