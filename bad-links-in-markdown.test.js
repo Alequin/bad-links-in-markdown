@@ -743,6 +743,60 @@ describe("bad-links-in-markdown", () => {
       }, testDirectory);
     });
   });
+
+  describe("identify-invalid-local-links and the link is a reference link", () => {
+    it("Identifies a reference link that points at a file that does not exist", async () => {
+      const testDirectory = await newTestDirectory();
+
+      const filePath = getPathToNewTestFile(testDirectory);
+
+      fs.writeFileSync(
+        filePath,
+        `Here is some text\n[and then a link to a file][1]\n\n[1]: ./path/to/missing/file.md`
+      );
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [
+            {
+              filePath,
+              missingLinks: [
+                {
+                  link: "[1]: ./path/to/missing/file.md",
+                  reasons: [badLinkReasons.FILE_NOT_FOUND],
+                },
+              ],
+            },
+          ],
+        });
+      }, testDirectory);
+    });
+
+    it("Ignores reference links which point at files which exist", async () => {
+      const testDirectory = await newTestDirectory();
+
+      const fileNameToLinkTo = uniqueName();
+      const filePathToLinkTo = path.resolve(
+        testDirectory,
+        `./${fileNameToLinkTo}.md`
+      );
+      fs.writeFileSync(filePathToLinkTo, `foo bar baz`);
+
+      const fileContainingLink = getPathToNewTestFile(testDirectory);
+      fs.writeFileSync(
+        fileContainingLink,
+        `Here is some text\n[and then a link to a file][1]\n\n[1]: ${fileNameToLinkTo}`
+      );
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [],
+        });
+      }, testDirectory);
+    });
+
+    // Todo more tests - copy from the first two describe blocks
+  });
 });
 
 /**
