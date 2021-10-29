@@ -344,403 +344,403 @@ describe("bad-links-in-markdown", () => {
         });
       }, testDirectory);
     });
+  });
 
-    describe("when links include tags", () => {
-      it("Identifies a local link that points at a file that exists but does not contain the targeted header tag", async () => {
-        const testDirectory = await newTestDirectory();
+  describe("identify-invalid-local-links and links include header tags", () => {
+    it("Identifies a local link that points at a file that exists but does not contain the targeted header tag", async () => {
+      const testDirectory = await newTestDirectory();
 
-        const fileNameToLinkTo = uniqueName();
-        const filePathToLinkTo = path.resolve(
-          testDirectory,
-          `./${fileNameToLinkTo}.md`
-        );
-        fs.writeFileSync(
-          filePathToLinkTo,
-          `# foo bar baz\na story of foo and bar\nand baz`
-        );
+      const fileNameToLinkTo = uniqueName();
+      const filePathToLinkTo = path.resolve(
+        testDirectory,
+        `./${fileNameToLinkTo}.md`
+      );
+      fs.writeFileSync(
+        filePathToLinkTo,
+        `# foo bar baz\na story of foo and bar\nand baz`
+      );
 
-        const fileContainingLink = getPathToNewTestFile(testDirectory);
-        fs.writeFileSync(
-          fileContainingLink,
-          `[I am a local link](./${fileNameToLinkTo}.md#main-title)`
-        );
+      const fileContainingLink = getPathToNewTestFile(testDirectory);
+      fs.writeFileSync(
+        fileContainingLink,
+        `[I am a local link](./${fileNameToLinkTo}.md#main-title)`
+      );
 
-        await runTestWithDirectoryCleanup(async () => {
-          expect(await badLinksInMarkdown(testDirectory)).toEqual({
-            badLocalLinks: [
-              {
-                filePath: fileContainingLink,
-                missingLinks: [
-                  {
-                    link: `[I am a local link](./${fileNameToLinkTo}.md#main-title)`,
-                    reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
-                  },
-                ],
-              },
-            ],
-          });
-        }, testDirectory);
-      });
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [
+            {
+              filePath: fileContainingLink,
+              missingLinks: [
+                {
+                  link: `[I am a local link](./${fileNameToLinkTo}.md#main-title)`,
+                  reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
+                },
+              ],
+            },
+          ],
+        });
+      }, testDirectory);
+    });
 
-      it("Ignores local links which point at files that exist and contain the targeted header", async () => {
-        const testDirectory = await newTestDirectory();
+    it("Ignores local links which point at files that exist and contain the targeted header", async () => {
+      const testDirectory = await newTestDirectory();
 
-        const fileNameToLinkTo = uniqueName();
-        const filePathToLinkTo = path.resolve(
-          testDirectory,
-          `./${fileNameToLinkTo}.md`
-        );
-        fs.writeFileSync(
-          filePathToLinkTo,
-          `# main-title\na story of foo and bar\nand baz`
-        );
+      const fileNameToLinkTo = uniqueName();
+      const filePathToLinkTo = path.resolve(
+        testDirectory,
+        `./${fileNameToLinkTo}.md`
+      );
+      fs.writeFileSync(
+        filePathToLinkTo,
+        `# main-title\na story of foo and bar\nand baz`
+      );
 
-        const fileContainingLink = getPathToNewTestFile(testDirectory);
-        fs.writeFileSync(
-          fileContainingLink,
-          `[I am a local link](./${fileNameToLinkTo}.md#main-title)`
-        );
+      const fileContainingLink = getPathToNewTestFile(testDirectory);
+      fs.writeFileSync(
+        fileContainingLink,
+        `[I am a local link](./${fileNameToLinkTo}.md#main-title)`
+      );
 
-        await runTestWithDirectoryCleanup(async () => {
-          expect(await badLinksInMarkdown(testDirectory)).toEqual({
-            badLocalLinks: [],
-          });
-        }, testDirectory);
-      });
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [],
+        });
+      }, testDirectory);
+    });
 
-      it("Ignores local links which point at files that exist and contain the targeted sub header", async () => {
-        const testDirectory = await newTestDirectory();
+    it("Ignores local links which point at files that exist and contain the targeted sub header", async () => {
+      const testDirectory = await newTestDirectory();
 
-        const fileNameToLinkTo = uniqueName();
-        const filePathToLinkTo = path.resolve(
-          testDirectory,
-          `./${fileNameToLinkTo}.md`
-        );
-        fs.writeFileSync(
-          filePathToLinkTo,
-          `# foo bar baz\na story of foo and bar\nand baz\n### Next Chapter\n baz and foo join forces`
-        );
+      const fileNameToLinkTo = uniqueName();
+      const filePathToLinkTo = path.resolve(
+        testDirectory,
+        `./${fileNameToLinkTo}.md`
+      );
+      fs.writeFileSync(
+        filePathToLinkTo,
+        `# foo bar baz\na story of foo and bar\nand baz\n### Next Chapter\n baz and foo join forces`
+      );
 
-        const fileContainingLink = getPathToNewTestFile(testDirectory);
-        fs.writeFileSync(
-          fileContainingLink,
-          `[I am a local link](./${fileNameToLinkTo}.md#next-chapter)`
-        );
+      const fileContainingLink = getPathToNewTestFile(testDirectory);
+      fs.writeFileSync(
+        fileContainingLink,
+        `[I am a local link](./${fileNameToLinkTo}.md#next-chapter)`
+      );
 
-        await runTestWithDirectoryCleanup(async () => {
-          expect(await badLinksInMarkdown(testDirectory)).toEqual({
-            badLocalLinks: [],
-          });
-        }, testDirectory);
-      });
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [],
+        });
+      }, testDirectory);
+    });
 
-      it("Ignores local links which point at files that exist and contain the targeted sub header which contains varying characters", async () => {
-        const testDirectory = await newTestDirectory();
+    it("Ignores local links which point at files that exist and contain the targeted sub header which contains varying characters", async () => {
+      const testDirectory = await newTestDirectory();
 
-        const fileNameToLinkTo = uniqueName();
-        const filePathToLinkTo = path.resolve(
-          testDirectory,
-          `./${fileNameToLinkTo}.md`
-        );
-        fs.writeFileSync(
-          filePathToLinkTo,
-          `# foo bar baz\na story of foo and bar\nand baz\n### Chapter (1)!!!!! alliances/are\\formed\n baz and foo join forces`
-        );
+      const fileNameToLinkTo = uniqueName();
+      const filePathToLinkTo = path.resolve(
+        testDirectory,
+        `./${fileNameToLinkTo}.md`
+      );
+      fs.writeFileSync(
+        filePathToLinkTo,
+        `# foo bar baz\na story of foo and bar\nand baz\n### Chapter (1)!!!!! alliances/are\\formed\n baz and foo join forces`
+      );
 
-        const fileContainingLink = getPathToNewTestFile(testDirectory);
-        fs.writeFileSync(
-          fileContainingLink,
-          `[I am a local link](./${fileNameToLinkTo}.md#chapter-1-alliancesareformed)`
-        );
+      const fileContainingLink = getPathToNewTestFile(testDirectory);
+      fs.writeFileSync(
+        fileContainingLink,
+        `[I am a local link](./${fileNameToLinkTo}.md#chapter-1-alliancesareformed)`
+      );
 
-        await runTestWithDirectoryCleanup(async () => {
-          expect(await badLinksInMarkdown(testDirectory)).toEqual({
-            badLocalLinks: [],
-          });
-        }, testDirectory);
-      });
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [],
+        });
+      }, testDirectory);
+    });
 
-      it("Identifies a local link that points at a file that exists but does not contain the targeted header tag", async () => {
-        const testDirectory = await newTestDirectory();
+    it("Identifies a local link that points at a file that exists but does not contain the targeted header tag", async () => {
+      const testDirectory = await newTestDirectory();
 
-        const fileNameToLinkTo = uniqueName();
-        const filePathToLinkTo = path.resolve(
-          testDirectory,
-          `./${fileNameToLinkTo}.md`
-        );
-        fs.writeFileSync(
-          filePathToLinkTo,
-          `# foo bar baz\na story of foo and bar\nand baz`
-        );
+      const fileNameToLinkTo = uniqueName();
+      const filePathToLinkTo = path.resolve(
+        testDirectory,
+        `./${fileNameToLinkTo}.md`
+      );
+      fs.writeFileSync(
+        filePathToLinkTo,
+        `# foo bar baz\na story of foo and bar\nand baz`
+      );
 
-        const fileContainingLink = getPathToNewTestFile(testDirectory);
-        fs.writeFileSync(
-          fileContainingLink,
-          `[I am a local link](./${fileNameToLinkTo}.md#main-title)`
-        );
+      const fileContainingLink = getPathToNewTestFile(testDirectory);
+      fs.writeFileSync(
+        fileContainingLink,
+        `[I am a local link](./${fileNameToLinkTo}.md#main-title)`
+      );
 
-        await runTestWithDirectoryCleanup(async () => {
-          expect(await badLinksInMarkdown(testDirectory)).toEqual({
-            badLocalLinks: [
-              {
-                filePath: fileContainingLink,
-                missingLinks: [
-                  {
-                    link: `[I am a local link](./${fileNameToLinkTo}.md#main-title)`,
-                    reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
-                  },
-                ],
-              },
-            ],
-          });
-        }, testDirectory);
-      });
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [
+            {
+              filePath: fileContainingLink,
+              missingLinks: [
+                {
+                  link: `[I am a local link](./${fileNameToLinkTo}.md#main-title)`,
+                  reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
+                },
+              ],
+            },
+          ],
+        });
+      }, testDirectory);
+    });
 
-      it("Identifies a local link that points at a file that exists but does not contain the targeted header tag that appears multiple times", async () => {
-        const testDirectory = await newTestDirectory();
+    it("Identifies a local link that points at a file that exists but does not contain the targeted header tag that appears multiple times", async () => {
+      const testDirectory = await newTestDirectory();
 
-        const fileNameToLinkTo = uniqueName();
-        const filePathToLinkTo = path.resolve(
-          testDirectory,
-          `./${fileNameToLinkTo}.md`
-        );
-        fs.writeFileSync(filePathToLinkTo, `# foo bar baz\n# foo bar baz`);
+      const fileNameToLinkTo = uniqueName();
+      const filePathToLinkTo = path.resolve(
+        testDirectory,
+        `./${fileNameToLinkTo}.md`
+      );
+      fs.writeFileSync(filePathToLinkTo, `# foo bar baz\n# foo bar baz`);
 
-        const fileContainingLink = getPathToNewTestFile(testDirectory);
-        fs.writeFileSync(
-          fileContainingLink,
-          `[I am a local link](./${fileNameToLinkTo}.md#foo-bar-baz-3)`
-        );
+      const fileContainingLink = getPathToNewTestFile(testDirectory);
+      fs.writeFileSync(
+        fileContainingLink,
+        `[I am a local link](./${fileNameToLinkTo}.md#foo-bar-baz-3)`
+      );
 
-        await runTestWithDirectoryCleanup(async () => {
-          expect(await badLinksInMarkdown(testDirectory)).toEqual({
-            badLocalLinks: [
-              {
-                filePath: fileContainingLink,
-                missingLinks: [
-                  {
-                    link: `[I am a local link](./${fileNameToLinkTo}.md#foo-bar-baz-3)`,
-                    reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
-                  },
-                ],
-              },
-            ],
-          });
-        }, testDirectory);
-      });
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [
+            {
+              filePath: fileContainingLink,
+              missingLinks: [
+                {
+                  link: `[I am a local link](./${fileNameToLinkTo}.md#foo-bar-baz-3)`,
+                  reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
+                },
+              ],
+            },
+          ],
+        });
+      }, testDirectory);
+    });
 
-      it("Ignores local links which point at files that exist and contain the targeted header that appears multiple times", async () => {
-        const testDirectory = await newTestDirectory();
+    it("Ignores local links which point at files that exist and contain the targeted header that appears multiple times", async () => {
+      const testDirectory = await newTestDirectory();
 
-        const fileNameToLinkTo = uniqueName();
-        const filePathToLinkTo = path.resolve(
-          testDirectory,
-          `./${fileNameToLinkTo}.md`
-        );
-        fs.writeFileSync(filePathToLinkTo, `# foo bar baz\n# foo bar baz`);
+      const fileNameToLinkTo = uniqueName();
+      const filePathToLinkTo = path.resolve(
+        testDirectory,
+        `./${fileNameToLinkTo}.md`
+      );
+      fs.writeFileSync(filePathToLinkTo, `# foo bar baz\n# foo bar baz`);
 
-        const fileContainingLink = getPathToNewTestFile(testDirectory);
-        fs.writeFileSync(
-          fileContainingLink,
-          `[I am a local link](./${fileNameToLinkTo}.md#foo-bar-baz-2)`
-        );
+      const fileContainingLink = getPathToNewTestFile(testDirectory);
+      fs.writeFileSync(
+        fileContainingLink,
+        `[I am a local link](./${fileNameToLinkTo}.md#foo-bar-baz-2)`
+      );
 
-        await runTestWithDirectoryCleanup(async () => {
-          expect(await badLinksInMarkdown(testDirectory)).toEqual({
-            badLocalLinks: [],
-          });
-        }, testDirectory);
-      });
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [],
+        });
+      }, testDirectory);
+    });
 
-      it("Identifies a local link that points at a file that exists but does not contain the targeted header tag, regardless of the type of new line character used", async () => {
-        const testDirectory = await newTestDirectory();
+    it("Identifies a local link that points at a file that exists but does not contain the targeted header tag, regardless of the type of new line character used", async () => {
+      const testDirectory = await newTestDirectory();
 
-        const fileNameToLinkTo = uniqueName();
-        const filePathToLinkTo = path.resolve(
-          testDirectory,
-          `./${fileNameToLinkTo}.md`
-        );
-        fs.writeFileSync(
-          filePathToLinkTo,
-          `a story of foo and bar\r\nand baz\r\n# foo bar baz\n`
-        );
+      const fileNameToLinkTo = uniqueName();
+      const filePathToLinkTo = path.resolve(
+        testDirectory,
+        `./${fileNameToLinkTo}.md`
+      );
+      fs.writeFileSync(
+        filePathToLinkTo,
+        `a story of foo and bar\r\nand baz\r\n# foo bar baz\n`
+      );
 
-        const fileContainingLink = getPathToNewTestFile(testDirectory);
-        fs.writeFileSync(
-          fileContainingLink,
-          `[I am a local link](./${fileNameToLinkTo}.md#main-title)`
-        );
+      const fileContainingLink = getPathToNewTestFile(testDirectory);
+      fs.writeFileSync(
+        fileContainingLink,
+        `[I am a local link](./${fileNameToLinkTo}.md#main-title)`
+      );
 
-        await runTestWithDirectoryCleanup(async () => {
-          expect(await badLinksInMarkdown(testDirectory)).toEqual({
-            badLocalLinks: [
-              {
-                filePath: fileContainingLink,
-                missingLinks: [
-                  {
-                    link: `[I am a local link](./${fileNameToLinkTo}.md#main-title)`,
-                    reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
-                  },
-                ],
-              },
-            ],
-          });
-        }, testDirectory);
-      });
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [
+            {
+              filePath: fileContainingLink,
+              missingLinks: [
+                {
+                  link: `[I am a local link](./${fileNameToLinkTo}.md#main-title)`,
+                  reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
+                },
+              ],
+            },
+          ],
+        });
+      }, testDirectory);
+    });
 
-      it("Identifies a local link that points at a file that exists but does not contain the targeted header tag, even when the file extension is not provided", async () => {
-        const testDirectory = await newTestDirectory();
+    it("Identifies a local link that points at a file that exists but does not contain the targeted header tag, even when the file extension is not provided", async () => {
+      const testDirectory = await newTestDirectory();
 
-        const fileNameToLinkTo = uniqueName();
-        const filePathToLinkTo = path.resolve(
-          testDirectory,
-          `./${fileNameToLinkTo}.md`
-        );
-        fs.writeFileSync(
-          filePathToLinkTo,
-          `# main-title\na story of foo and bar\nand baz`
-        );
+      const fileNameToLinkTo = uniqueName();
+      const filePathToLinkTo = path.resolve(
+        testDirectory,
+        `./${fileNameToLinkTo}.md`
+      );
+      fs.writeFileSync(
+        filePathToLinkTo,
+        `# main-title\na story of foo and bar\nand baz`
+      );
 
-        const fileContainingLink = getPathToNewTestFile(testDirectory);
-        fs.writeFileSync(
-          fileContainingLink,
-          `[I am a local link](./${fileNameToLinkTo}#different-header)`
-        );
+      const fileContainingLink = getPathToNewTestFile(testDirectory);
+      fs.writeFileSync(
+        fileContainingLink,
+        `[I am a local link](./${fileNameToLinkTo}#different-header)`
+      );
 
-        await runTestWithDirectoryCleanup(async () => {
-          expect(await badLinksInMarkdown(testDirectory)).toEqual({
-            badLocalLinks: [
-              {
-                filePath: fileContainingLink,
-                missingLinks: [
-                  {
-                    link: `[I am a local link](./${fileNameToLinkTo}#different-header)`,
-                    reasons: [
-                      badLinkReasons.HEADER_TAG_NOT_FOUND,
-                      badLinkReasons.MISSING_FILE_EXTENSION,
-                    ],
-                  },
-                ],
-              },
-            ],
-          });
-        }, testDirectory);
-      });
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [
+            {
+              filePath: fileContainingLink,
+              missingLinks: [
+                {
+                  link: `[I am a local link](./${fileNameToLinkTo}#different-header)`,
+                  reasons: [
+                    badLinkReasons.HEADER_TAG_NOT_FOUND,
+                    badLinkReasons.MISSING_FILE_EXTENSION,
+                  ],
+                },
+              ],
+            },
+          ],
+        });
+      }, testDirectory);
+    });
 
-      it("Ignores local links which point at files that exist and contain the targeted header, even when the file extension is not provided", async () => {
-        const testDirectory = await newTestDirectory();
+    it("Ignores local links which point at files that exist and contain the targeted header, even when the file extension is not provided", async () => {
+      const testDirectory = await newTestDirectory();
 
-        const fileNameToLinkTo = uniqueName();
-        const filePathToLinkTo = path.resolve(
-          testDirectory,
-          `./${fileNameToLinkTo}.md`
-        );
-        fs.writeFileSync(
-          filePathToLinkTo,
-          `# main-title\na story of foo and bar\nand baz`
-        );
+      const fileNameToLinkTo = uniqueName();
+      const filePathToLinkTo = path.resolve(
+        testDirectory,
+        `./${fileNameToLinkTo}.md`
+      );
+      fs.writeFileSync(
+        filePathToLinkTo,
+        `# main-title\na story of foo and bar\nand baz`
+      );
 
-        const fileContainingLink = getPathToNewTestFile(testDirectory);
-        fs.writeFileSync(
-          fileContainingLink,
-          `[I am a local link](./${fileNameToLinkTo}#main-title)`
-        );
+      const fileContainingLink = getPathToNewTestFile(testDirectory);
+      fs.writeFileSync(
+        fileContainingLink,
+        `[I am a local link](./${fileNameToLinkTo}#main-title)`
+      );
 
-        await runTestWithDirectoryCleanup(async () => {
-          expect(await badLinksInMarkdown(testDirectory)).toEqual({
-            badLocalLinks: [],
-          });
-        }, testDirectory);
-      });
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [],
+        });
+      }, testDirectory);
+    });
 
-      it("Ignores local links which point at javascript files which exist and have a valid line number", async () => {
-        const testDirectory = await newTestDirectory();
+    it("Ignores local links which point at javascript files which exist and have a valid line number", async () => {
+      const testDirectory = await newTestDirectory();
 
-        const fileNameToLinkTo = uniqueName();
-        const filePathToLinkTo = path.resolve(
-          testDirectory,
-          `./${fileNameToLinkTo}.js`
-        );
-        fs.writeFileSync(filePathToLinkTo, `foo bar baz\n`.repeat(1000));
+      const fileNameToLinkTo = uniqueName();
+      const filePathToLinkTo = path.resolve(
+        testDirectory,
+        `./${fileNameToLinkTo}.js`
+      );
+      fs.writeFileSync(filePathToLinkTo, `foo bar baz\n`.repeat(1000));
 
-        const fileContainingLink = getPathToNewTestFile(testDirectory);
-        fs.writeFileSync(
-          fileContainingLink,
-          `[I am a local link](./${fileNameToLinkTo}.js#L100)`
-        );
+      const fileContainingLink = getPathToNewTestFile(testDirectory);
+      fs.writeFileSync(
+        fileContainingLink,
+        `[I am a local link](./${fileNameToLinkTo}.js#L100)`
+      );
 
-        await runTestWithDirectoryCleanup(async () => {
-          expect(await badLinksInMarkdown(testDirectory)).toEqual({
-            badLocalLinks: [],
-          });
-        }, testDirectory);
-      });
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [],
+        });
+      }, testDirectory);
+    });
 
-      it("Identifies local links which point at javascript files which exist but do not have a valid line number", async () => {
-        const testDirectory = await newTestDirectory();
+    it("Identifies local links which point at javascript files which exist but do not have a valid line number", async () => {
+      const testDirectory = await newTestDirectory();
 
-        const fileNameToLinkTo = uniqueName();
-        const filePathToLinkTo = path.resolve(
-          testDirectory,
-          `./${fileNameToLinkTo}.js`
-        );
-        fs.writeFileSync(filePathToLinkTo, `foo bar baz\n`.repeat(10));
+      const fileNameToLinkTo = uniqueName();
+      const filePathToLinkTo = path.resolve(
+        testDirectory,
+        `./${fileNameToLinkTo}.js`
+      );
+      fs.writeFileSync(filePathToLinkTo, `foo bar baz\n`.repeat(10));
 
-        const fileContainingLink = getPathToNewTestFile(testDirectory);
-        fs.writeFileSync(
-          fileContainingLink,
-          `[I am a local link](./${fileNameToLinkTo}.js#L100)`
-        );
+      const fileContainingLink = getPathToNewTestFile(testDirectory);
+      fs.writeFileSync(
+        fileContainingLink,
+        `[I am a local link](./${fileNameToLinkTo}.js#L100)`
+      );
 
-        await runTestWithDirectoryCleanup(async () => {
-          expect(await badLinksInMarkdown(testDirectory)).toEqual({
-            badLocalLinks: [
-              {
-                filePath: fileContainingLink,
-                missingLinks: [
-                  {
-                    link: `[I am a local link](./${fileNameToLinkTo}.js#L100)`,
-                    reasons: [badLinkReasons.INVALID_TARGET_LINE_NUMBER],
-                  },
-                ],
-              },
-            ],
-          });
-        }, testDirectory);
-      });
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [
+            {
+              filePath: fileContainingLink,
+              missingLinks: [
+                {
+                  link: `[I am a local link](./${fileNameToLinkTo}.js#L100)`,
+                  reasons: [badLinkReasons.INVALID_TARGET_LINE_NUMBER],
+                },
+              ],
+            },
+          ],
+        });
+      }, testDirectory);
+    });
 
-      it("Identifies a local link that points at a javascript file that exists but the file extension is missing, even if the line number is valid", async () => {
-        const testDirectory = await newTestDirectory();
+    it("Identifies a local link that points at a javascript file that exists but the file extension is missing, even if the line number is valid", async () => {
+      const testDirectory = await newTestDirectory();
 
-        const fileNameToLinkTo = uniqueName();
-        const filePathToLinkTo = path.resolve(
-          testDirectory,
-          `./${fileNameToLinkTo}.js`
-        );
-        fs.writeFileSync(filePathToLinkTo, `foo bar baz`);
+      const fileNameToLinkTo = uniqueName();
+      const filePathToLinkTo = path.resolve(
+        testDirectory,
+        `./${fileNameToLinkTo}.js`
+      );
+      fs.writeFileSync(filePathToLinkTo, `foo bar baz`);
 
-        const fileContainingLink = getPathToNewTestFile(testDirectory);
-        fs.writeFileSync(
-          fileContainingLink,
-          `[I am a local link](./${fileNameToLinkTo}#L1)`
-        );
+      const fileContainingLink = getPathToNewTestFile(testDirectory);
+      fs.writeFileSync(
+        fileContainingLink,
+        `[I am a local link](./${fileNameToLinkTo}#L1)`
+      );
 
-        await runTestWithDirectoryCleanup(async () => {
-          expect(await badLinksInMarkdown(testDirectory)).toEqual({
-            badLocalLinks: [
-              {
-                filePath: fileContainingLink,
-                missingLinks: [
-                  {
-                    link: `[I am a local link](./${fileNameToLinkTo}#L1)`,
-                    reasons: [badLinkReasons.MISSING_FILE_EXTENSION],
-                  },
-                ],
-              },
-            ],
-          });
-        }, testDirectory);
-      });
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [
+            {
+              filePath: fileContainingLink,
+              missingLinks: [
+                {
+                  link: `[I am a local link](./${fileNameToLinkTo}#L1)`,
+                  reasons: [badLinkReasons.MISSING_FILE_EXTENSION],
+                },
+              ],
+            },
+          ],
+        });
+      }, testDirectory);
     });
   });
 });
