@@ -7,8 +7,8 @@ import { badLinkReasons } from "./src/identify-invalid-local-links/bad-link-reas
 const TOP_LEVEL_DIRECTORY = path.resolve(__dirname, "./test-markdown-files");
 
 describe("bad-links-in-markdown", () => {
-  describe("identify-invalid-local-links", () => {
-    it("Identifies a local link that points at a file that does not exist", async () => {
+  describe("identify-invalid-local-links and the link is an inline link", () => {
+    it("Identifies a local inline link that points at a file that does not exist", async () => {
       const testDirectory = await newTestDirectory();
 
       const filePath = getPathToNewTestFile(testDirectory);
@@ -32,7 +32,7 @@ describe("bad-links-in-markdown", () => {
       }, testDirectory);
     });
 
-    it("Ignores local links which point at files which exist", async () => {
+    it("Ignores local inline links which point at files which exist", async () => {
       const testDirectory = await newTestDirectory();
 
       const fileNameToLinkTo = uniqueName();
@@ -41,6 +41,48 @@ describe("bad-links-in-markdown", () => {
 
       const fileContainingLink = getPathToNewTestFile(testDirectory);
       fs.writeFileSync(fileContainingLink, `[I am a local link](./${fileNameToLinkTo}.md)`);
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [],
+        });
+      }, testDirectory);
+    });
+
+    it("Identifies an absolute local inline link that points at a file that does not exist", async () => {
+      const testDirectory = await newTestDirectory();
+
+      const filePath = getPathToNewTestFile(testDirectory);
+
+      const absolutePath = path.resolve(testDirectory, "./path/to/missing/file.md");
+      fs.writeFileSync(filePath, `[I am a local link](${absolutePath})`);
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [
+            {
+              filePath,
+              missingLinks: [
+                {
+                  link: `[I am a local link](${absolutePath})`,
+                  reasons: [badLinkReasons.FILE_NOT_FOUND],
+                },
+              ],
+            },
+          ],
+        });
+      }, testDirectory);
+    });
+
+    it("Ignores absolute local inline links which point at files which exist", async () => {
+      const testDirectory = await newTestDirectory();
+
+      const fileNameToLinkTo = uniqueName();
+      const filePathToLinkTo = path.resolve(testDirectory, `./${fileNameToLinkTo}.md`);
+      fs.writeFileSync(filePathToLinkTo, `foo bar baz`);
+
+      const fileContainingLink = getPathToNewTestFile(testDirectory);
+      fs.writeFileSync(fileContainingLink, `[I am a local link](${filePathToLinkTo})`);
 
       await runTestWithDirectoryCleanup(async () => {
         expect(await badLinksInMarkdown(testDirectory)).toEqual({
@@ -73,7 +115,7 @@ describe("bad-links-in-markdown", () => {
       }, testDirectory);
     });
 
-    it("Identifies local links which point at files which exist but the link is missing an extension", async () => {
+    it("Identifies local inline links which point at files which exist but the link is missing an extension", async () => {
       const testDirectory = await newTestDirectory();
 
       const fileNameToLinkTo = uniqueName();
@@ -124,7 +166,7 @@ describe("bad-links-in-markdown", () => {
       }, testDirectory);
     });
 
-    it("Ignores local links which point at files which exist when the file path does not include either absolute or relative path", async () => {
+    it("Ignores local inline links which point at files which exist when the file path does not include either absolute or relative path", async () => {
       const testDirectory = await newTestDirectory();
 
       const fileNameToLinkTo = uniqueName();
@@ -166,7 +208,7 @@ describe("bad-links-in-markdown", () => {
       }, testDirectory);
     });
 
-    it("Identifies local links which point at files that exist but link does not contain a file extension or either absolute or relative path", async () => {
+    it("Identifies local inline links which point at files that exist but link does not contain a file extension or either absolute or relative path", async () => {
       const testDirectory = await newTestDirectory();
 
       const fileNameToLinkTo = uniqueName();
@@ -218,7 +260,7 @@ describe("bad-links-in-markdown", () => {
       }, testDirectory);
     });
 
-    it("Ignores local links which point at javascript files which exist", async () => {
+    it("Ignores local inline links which point at javascript files which exist", async () => {
       const testDirectory = await newTestDirectory();
 
       const fileNameToLinkTo = uniqueName();
@@ -291,7 +333,7 @@ describe("bad-links-in-markdown", () => {
       }, testDirectory);
     });
 
-    it("Ignores local links which point at files which exist, even when the name includes multiple delimiters", async () => {
+    it("Ignores local inline links which point at files which exist, even when the name includes multiple delimiters", async () => {
       const testDirectory = await newTestDirectory();
 
       const fileNameToLinkTo = uniqueName();
@@ -315,8 +357,8 @@ describe("bad-links-in-markdown", () => {
     });
   });
 
-  describe("identify-invalid-local-links and links include header tags", () => {
-    it("Identifies a local link that points at a file that exists but does not contain the targeted header tag", async () => {
+  describe("identify-invalid-local-links and the link is an inline link which includes a header tag", () => {
+    it("Identifies an inline local link that points at a file that exists but does not contain the targeted header tag", async () => {
       const testDirectory = await newTestDirectory();
 
       const fileNameToLinkTo = uniqueName();
@@ -358,6 +400,50 @@ describe("bad-links-in-markdown", () => {
         fileContainingLink,
         `[I am a local link](./${fileNameToLinkTo}.md#main-title)`
       );
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [],
+        });
+      }, testDirectory);
+    });
+
+    it("Identifies an absolute inline local inline link that points at a file that exist but does not contain the targeted header tag", async () => {
+      const testDirectory = await newTestDirectory();
+
+      const fileNameToLinkTo = uniqueName();
+      const filePathToLinkTo = path.resolve(testDirectory, `./${fileNameToLinkTo}.md`);
+      fs.writeFileSync(filePathToLinkTo, `# foo bar baz\na story of foo and bar\nand baz`);
+
+      const fileContainingLink = getPathToNewTestFile(testDirectory);
+      fs.writeFileSync(fileContainingLink, `[I am a local link](${filePathToLinkTo}#main-title)`);
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [
+            {
+              filePath: fileContainingLink,
+              missingLinks: [
+                {
+                  link: `[I am a local link](${filePathToLinkTo}#main-title)`,
+                  reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
+                },
+              ],
+            },
+          ],
+        });
+      }, testDirectory);
+    });
+
+    it("Ignores absolute inline local inline links which point at files which exist and contain the targeted header tag", async () => {
+      const testDirectory = await newTestDirectory();
+
+      const fileNameToLinkTo = uniqueName();
+      const filePathToLinkTo = path.resolve(testDirectory, `./${fileNameToLinkTo}.md`);
+      fs.writeFileSync(filePathToLinkTo, `# main-title\na story of foo and bar\nand baz`);
+
+      const fileContainingLink = getPathToNewTestFile(testDirectory);
+      fs.writeFileSync(fileContainingLink, `[I am a local link](${filePathToLinkTo}#main-title)`);
 
       await runTestWithDirectoryCleanup(async () => {
         expect(await badLinksInMarkdown(testDirectory)).toEqual({
@@ -412,7 +498,7 @@ describe("bad-links-in-markdown", () => {
       }, testDirectory);
     });
 
-    it("Identifies a local link that points at a file that exists but does not contain the targeted header tag", async () => {
+    it("Identifies an inline local link that points at a file that exists but does not contain the targeted header tag", async () => {
       const testDirectory = await newTestDirectory();
 
       const fileNameToLinkTo = uniqueName();
@@ -442,7 +528,7 @@ describe("bad-links-in-markdown", () => {
       }, testDirectory);
     });
 
-    it("Identifies a local link that points at a file that exists but does not contain the targeted header tag that appears multiple times", async () => {
+    it("Identifies an inline local link that points at a file that exists but does not contain the targeted header tag that appears multiple times", async () => {
       const testDirectory = await newTestDirectory();
 
       const fileNameToLinkTo = uniqueName();
@@ -492,7 +578,7 @@ describe("bad-links-in-markdown", () => {
       }, testDirectory);
     });
 
-    it("Identifies a local link that points at a file that exists but does not contain the targeted header tag, regardless of the type of new line character used", async () => {
+    it("Identifies an inline local link that points at a file that exists but does not contain the targeted header tag, regardless of the type of new line character used", async () => {
       const testDirectory = await newTestDirectory();
 
       const fileNameToLinkTo = uniqueName();
@@ -522,7 +608,7 @@ describe("bad-links-in-markdown", () => {
       }, testDirectory);
     });
 
-    it("Identifies a local link that points at a file that exists but does not contain the targeted header tag, even when the file extension is not provided", async () => {
+    it("Identifies an inline local link that points at a file that exists but does not contain the targeted header tag, even when the file extension is not provided", async () => {
       const testDirectory = await newTestDirectory();
 
       const fileNameToLinkTo = uniqueName();
@@ -616,7 +702,7 @@ describe("bad-links-in-markdown", () => {
       }, testDirectory);
     });
 
-    it("Identifies a local link that points at a javascript file that exists but the file extension is missing, even if the line number is valid", async () => {
+    it("Identifies an inline local link that points at a javascript file that exists but the file extension is missing, even if the line number is valid", async () => {
       const testDirectory = await newTestDirectory();
 
       const fileNameToLinkTo = uniqueName();
@@ -692,10 +778,56 @@ describe("bad-links-in-markdown", () => {
       }, testDirectory);
     });
 
+    it("Identifies an absolute local inline link that points at a file that does not exist", async () => {
+      const testDirectory = await newTestDirectory();
+
+      const filePath = getPathToNewTestFile(testDirectory);
+
+      const absolutePath = path.resolve(testDirectory, "./path/to/missing/file.md");
+      fs.writeFileSync(
+        filePath,
+        `Here is some text\n[and then a link to a file][1]\n\n[1]: ${absolutePath}`
+      );
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [
+            {
+              filePath,
+              missingLinks: [
+                {
+                  link: `[1]: ${absolutePath}`,
+                  reasons: [badLinkReasons.FILE_NOT_FOUND],
+                },
+              ],
+            },
+          ],
+        });
+      }, testDirectory);
+    });
+
+    it("Ignores absolute local inline links which point at files which exist", async () => {
+      const testDirectory = await newTestDirectory();
+
+      const fileNameToLinkTo = uniqueName();
+      const filePathToLinkTo = path.resolve(testDirectory, `./${fileNameToLinkTo}.md`);
+      fs.writeFileSync(filePathToLinkTo, `foo bar baz`);
+
+      const fileContainingLink = getPathToNewTestFile(testDirectory);
+      fs.writeFileSync(
+        fileContainingLink,
+        `Here is some text\n[and then a link to a file][1]\n\n[1]: ${filePathToLinkTo}`
+      );
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [],
+        });
+      }, testDirectory);
+    });
+
     // Todo more tests - copy from the first two describe blocks
   });
-
-  it.todo("works with fully qualified links");
 });
 
 /**

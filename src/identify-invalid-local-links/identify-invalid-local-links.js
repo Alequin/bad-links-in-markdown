@@ -8,8 +8,9 @@ export const identifyInvalidLocalLinks = (fileObjects) => {
     .map(({ fullPath, directory, links }) => {
       const localLinks = links
         .filter(isLocalLink)
+        .map(addDirectoryToObject(directory))
         .map(addRawFileNameToObject)
-        .map(addFullPathToObject(directory));
+        .map(addFullPathToObject);
 
       const missingLinks = [
         ...findMissingLinksWithFileExtensions(
@@ -43,6 +44,13 @@ const FILE_EXTENSION_REGEX = /.*\.[\w\d]*$/;
 const doesIncludeFileExtension = ({ link }) => FILE_EXTENSION_REGEX.test(link);
 const doesNotIncludeFileExtension = (linkWithTag) => !doesIncludeFileExtension(linkWithTag);
 
+const addDirectoryToObject = (directory) => (linkObject) => {
+  return {
+    ...linkObject,
+    directory,
+  };
+};
+
 const addRawFileNameToObject = (linkObject) => {
   return {
     ...linkObject,
@@ -50,16 +58,22 @@ const addRawFileNameToObject = (linkObject) => {
   };
 };
 
-const addFullPathToObject = (directory) => (linkObject) => {
+const addFullPathToObject = (linkObject) => {
+  return {
+    ...linkObject,
+    fullPath: getLinkFullPath(linkObject),
+  };
+};
+
+const getLinkFullPath = (linkObject) => {
+  if (isLinkAbsolute(linkObject.link, linkObject.directory)) return linkObject.link;
+
   const relativeLink = doesLinkStartWithRelativePath(linkObject.link)
     ? linkObject.link
     : `./${linkObject.link}`;
-
-  return {
-    ...linkObject,
-    directory,
-    fullPath: path.resolve(directory, relativeLink),
-  };
+  return path.resolve(linkObject.directory, relativeLink);
 };
+
+const isLinkAbsolute = (link, directory) => link.includes(directory);
 
 const doesLinkStartWithRelativePath = (link) => link.startsWith("./") || link.startsWith("../");
