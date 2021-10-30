@@ -21,28 +21,29 @@ export const badLinksInMarkdown = async (topLevelDirectory) => {
 };
 
 const MARKDOWN_INLINE_LINK_REGEX = /\[.*?\]\(.*?\)/g;
+const INLINE_LINK_REGEX = /[(](.*)[)]/;
 const findInlineMarkdownLinks = (markdown) => {
-  const allInlineLinks = markdown.match(MARKDOWN_INLINE_LINK_REGEX) || [];
-  return allInlineLinks.map((inlineLink) => ({
-    markdownLink: inlineLink,
-    ...makeLinkObject(inlineLink.match(/[(](.*)[)]/)[1]),
-  }));
+  return match(markdown, MARKDOWN_INLINE_LINK_REGEX).map((inlineLink) =>
+    makeLinkObject(inlineLink, INLINE_LINK_REGEX)
+  );
 };
 
 const MARKDOWN_REFERENCE_LINK_REGEX = /\[.*?\]:.*/g;
+const REFERENCE_LINK_REGEX = /\[.*?\]:\s?(.*)$/;
 const findReferenceMarkdownLinks = (markdown) => {
-  const allReferenceLinks = markdown.match(MARKDOWN_REFERENCE_LINK_REGEX) || [];
-  return allReferenceLinks.map((referenceLink) => ({
-    markdownLink: referenceLink,
-    ...makeLinkObject(referenceLink.match(/\[.*?\]:\s?(.*)$/)[1]),
-  }));
+  return match(markdown, MARKDOWN_REFERENCE_LINK_REGEX).map((referenceLink) =>
+    makeLinkObject(referenceLink, REFERENCE_LINK_REGEX)
+  );
 };
 
-const makeLinkObject = (linkWithTag) => {
+const match = (markdown, regex) => markdown.match(regex) || [];
+
+const makeLinkObject = (markdownLink, linkRegex) => {
+  const linkWithTag = markdownLink.match(linkRegex)[1];
   const [link, tag] = linkWithTag.startsWith("#")
     ? [linkWithTag, undefined]
     : linkWithTag.split("#");
-  return { link, tag };
+  return { markdownLink, link, tag };
 };
 
 if (module === require.main) {

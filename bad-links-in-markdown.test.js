@@ -694,6 +694,8 @@ describe("bad-links-in-markdown", () => {
 
     // Todo more tests - copy from the first two describe blocks
   });
+
+  it.todo("works with fully qualified links");
 });
 
 /**
