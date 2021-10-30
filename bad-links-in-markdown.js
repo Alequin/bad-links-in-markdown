@@ -10,10 +10,7 @@ export const badLinksInMarkdown = async (topLevelDirectory) => {
 
     return {
       ...file,
-      links: [
-        ...findInlineMarkdownLinks(markdown),
-        ...findReferenceMarkdownLinks(markdown),
-      ],
+      links: [...findInlineMarkdownLinks(markdown), ...findReferenceMarkdownLinks(markdown)],
     };
   });
 
@@ -37,7 +34,7 @@ const findReferenceMarkdownLinks = (markdown) => {
   const allReferenceLinks = markdown.match(MARKDOWN_REFERENCE_LINK_REGEX) || [];
   return allReferenceLinks.map((referenceLink) => ({
     markdownLink: referenceLink,
-    ...makeLinkObject(referenceLink.match(/\[.*?\]:(.*)$/)[1]),
+    ...makeLinkObject(referenceLink.match(/\[.*?\]:\s?(.*)$/)[1]),
   }));
 };
 

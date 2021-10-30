@@ -36,14 +36,12 @@ export const identifyInvalidLocalLinks = (fileObjects) => {
 // https://www.computerhope.com/jargon/f/fileext.htm
 const IS_LOCAL_LINK_WITHOUT_PATH_REGEX = /w*|w*\.[\w\d]*$/;
 const isLocalLink = ({ link }) =>
-  doesLinkStartWithRelativePath(link) ||
-  IS_LOCAL_LINK_WITHOUT_PATH_REGEX.test(link);
+  doesLinkStartWithRelativePath(link) || IS_LOCAL_LINK_WITHOUT_PATH_REGEX.test(link);
 
 // https://www.computerhope.com/jargon/f/fileext.htm
 const FILE_EXTENSION_REGEX = /.*\.[\w\d]*$/;
 const doesIncludeFileExtension = ({ link }) => FILE_EXTENSION_REGEX.test(link);
-const doesNotIncludeFileExtension = (linkWithTag) =>
-  !doesIncludeFileExtension(linkWithTag);
+const doesNotIncludeFileExtension = (linkWithTag) => !doesIncludeFileExtension(linkWithTag);
 
 const addRawFileNameToObject = (linkObject) => {
   return {
@@ -64,5 +62,4 @@ const addFullPathToObject = (directory) => (linkObject) => {
   };
 };
 
-const doesLinkStartWithRelativePath = (link) =>
-  link.startsWith("./") || link.startsWith("../");
+const doesLinkStartWithRelativePath = (link) => link.startsWith("./") || link.startsWith("../");
