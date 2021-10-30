@@ -20,7 +20,7 @@ export const badLinksInMarkdown = async (topLevelDirectory) => {
   // await identifyInvalidLinksToWebSites(markdownFilesWithLinks);
 };
 
-const MARKDOWN_INLINE_LINK_REGEX = /\[.*?\]\(.*?\)/g;
+const MARKDOWN_INLINE_LINK_REGEX = /\[.*\]\(.*\)/g;
 const INLINE_LINK_REGEX = /[(](.*)[)]/;
 const findInlineMarkdownLinks = (markdown) => {
   return match(markdown, MARKDOWN_INLINE_LINK_REGEX).map((inlineLink) =>
@@ -28,8 +28,8 @@ const findInlineMarkdownLinks = (markdown) => {
   );
 };
 
-const MARKDOWN_REFERENCE_LINK_REGEX = /\[.*?\]:.*/g;
-const REFERENCE_LINK_REGEX = /\[.*?\]:\s?(.*)$/;
+const MARKDOWN_REFERENCE_LINK_REGEX = /\[.*\]:.*/g;
+const REFERENCE_LINK_REGEX = /\[.*\]:\s?(.*)$/;
 const findReferenceMarkdownLinks = (markdown) => {
   return match(markdown, MARKDOWN_REFERENCE_LINK_REGEX).map((referenceLink) =>
     makeLinkObject(referenceLink, REFERENCE_LINK_REGEX)

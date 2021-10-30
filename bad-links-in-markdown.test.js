@@ -826,8 +826,6 @@ describe("bad-links-in-markdown", () => {
       }, testDirectory);
     });
 
-    // ------
-
     it("Identifies a local reference link that points at a file that does not exist even when the link does not contain a file extension", async () => {
       const testDirectory = await newTestDirectory();
 
