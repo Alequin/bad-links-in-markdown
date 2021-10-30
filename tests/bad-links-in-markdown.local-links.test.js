@@ -1,12 +1,15 @@
 import fs from "fs";
 import path from "path";
-import { uniqueId } from "lodash";
-import { badLinksInMarkdown } from "./bad-links-in-markdown";
-import { badLinkReasons } from "./src/identify-invalid-local-links/bad-link-reasons";
+import { badLinksInMarkdown } from "../bad-links-in-markdown";
+import { badLinkReasons } from "../src/identify-invalid-local-links/bad-link-reasons";
+import {
+  getPathToNewTestFile,
+  newTestDirectory,
+  runTestWithDirectoryCleanup,
+  uniqueName,
+} from "./test-utils";
 
-const TOP_LEVEL_DIRECTORY = path.resolve(__dirname, "./test-markdown-files");
-
-describe("bad-links-in-markdown", () => {
+describe("bad-links-in-markdown - local links", () => {
   describe("identify-invalid-local-links and the link is an inline link", () => {
     it("Identifies a local inline link that points at a file that does not exist", async () => {
       const testDirectory = await newTestDirectory();
@@ -1516,36 +1519,3 @@ describe("bad-links-in-markdown", () => {
     });
   });
 });
-
-/**
- * A function used to run a test with a file that will be cleaned up once
- * the tests is complete, regardless of the tests success or failure
- */
-const runTestWithDirectoryCleanup = async (testCallback, directoryToDelete) => {
-  try {
-    await testCallback();
-  } catch (error) {
-    throw error;
-  } finally {
-    if (!directoryToDelete || !fs.existsSync(directoryToDelete))
-      throw new Error("must have a directory to clean up");
-    await forceRemoveDir(directoryToDelete);
-  }
-};
-
-const newTestDirectory = async () => {
-  const testDirectory = path.resolve(TOP_LEVEL_DIRECTORY, `./${uniqueName()}`);
-
-  if (fs.existsSync(testDirectory)) await forceRemoveDir(testDirectory);
-  fs.mkdirSync(testDirectory);
-
-  return testDirectory;
-};
-
-const getPathToNewTestFile = (testDirectory) =>
-  path.resolve(testDirectory, `./${`${uniqueName()}.md`}`);
-
-const uniqueName = () => `test-${uniqueId()}`;
-
-const forceRemoveDir = async (directory) =>
-  new Promise((resolve) => fs.rm(directory, { recursive: true, force: true }, resolve));
