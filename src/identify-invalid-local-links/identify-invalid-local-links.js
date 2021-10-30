@@ -1,18 +1,15 @@
 import { isEmpty, last } from "lodash";
 import path from "path";
 import { findMissingLinksWithFileExtensions } from "./find-missing-links-with-file-extensions";
+import { groupMatchingLinkObjectWithIssues } from "./group-matching-link-objects-with-issues";
 import { markLinksWithoutExtensionsAsBad } from "./mark-links-without-extensions-as-bad";
 
 export const identifyInvalidLocalLinks = (fileObjects) => {
   return fileObjects
-    .map(({ fullPath, directory, links }) => {
-      const localLinks = links
-        .filter(isLocalLink)
-        .map(addDirectoryToObject(directory))
-        .map(addRawFileNameToObject)
-        .map(addFullPathToObject);
+    .map(({ directory, links, sourceFilePath }) => {
+      const localLinks = prepareLinkObjects(links, directory);
 
-      const missingLinks = [
+      const missingLinks = groupMatchingLinkObjectWithIssues([
         ...findMissingLinksWithFileExtensions(
           localLinks.filter(doesIncludeFileExtension),
           directory
@@ -21,10 +18,10 @@ export const identifyInvalidLocalLinks = (fileObjects) => {
           localLinks.filter(doesNotIncludeFileExtension),
           directory
         ),
-      ];
+      ]);
 
       return {
-        filePath: fullPath,
+        filePath: sourceFilePath,
         missingLinks: missingLinks.map(({ markdownLink, reasons }) => ({
           link: markdownLink,
           reasons,
@@ -33,6 +30,13 @@ export const identifyInvalidLocalLinks = (fileObjects) => {
     })
     .filter(({ missingLinks }) => !isEmpty(missingLinks));
 };
+
+const prepareLinkObjects = (links, directory) =>
+  links
+    .filter(isLocalLink)
+    .map(addDirectoryToObject(directory))
+    .map(addRawFileNameToObject)
+    .map(addFullPathToObject);
 
 // https://www.computerhope.com/jargon/f/fileext.htm
 const IS_LOCAL_LINK_WITHOUT_PATH_REGEX = /w*|w*\.[\w\d]*$/;

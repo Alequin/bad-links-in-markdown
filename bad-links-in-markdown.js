@@ -6,7 +6,7 @@ export const badLinksInMarkdown = async (topLevelDirectory) => {
   const allMarkdownFiles = findAllMarkdownFiles(topLevelDirectory);
 
   const markdownFilesWithLinks = allMarkdownFiles.map((file) => {
-    const markdown = fs.readFileSync(file.fullPath).toString();
+    const markdown = fs.readFileSync(file.sourceFilePath).toString();
 
     return {
       ...file,

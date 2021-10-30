@@ -13,9 +13,6 @@ A script that identifies links in markdown files that no longer work
 
 ## TODO
 
-- local links
-  - Add a new bad-link-reason to say a single link may refer to two possible files
-  - Add a new bad-link-reason to say a header tag is found multiple times
 - image links
 - web links (to be consider)
 - html tag links

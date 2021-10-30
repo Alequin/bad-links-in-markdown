@@ -324,7 +324,10 @@ describe("bad-links-in-markdown", () => {
               missingLinks: [
                 {
                   link: `[I am a local link](./${fileNameToLinkTo})`,
-                  reasons: [badLinkReasons.MISSING_FILE_EXTENSION],
+                  reasons: [
+                    badLinkReasons.MISSING_FILE_EXTENSION,
+                    badLinkReasons.MULTIPLE_MATCHING_FILES,
+                  ],
                 },
               ],
             },
@@ -1086,7 +1089,10 @@ describe("bad-links-in-markdown", () => {
               missingLinks: [
                 {
                   link: `[1]: ./${fileNameToLinkTo}`,
-                  reasons: [badLinkReasons.MISSING_FILE_EXTENSION],
+                  reasons: [
+                    badLinkReasons.MISSING_FILE_EXTENSION,
+                    badLinkReasons.MULTIPLE_MATCHING_FILES,
+                  ],
                 },
               ],
             },
