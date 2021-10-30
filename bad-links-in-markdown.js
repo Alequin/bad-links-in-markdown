@@ -1,4 +1,5 @@
 import fs from "fs";
+import { partition } from "lodash";
 import { findAllMarkdownFiles } from "./src/find-all-markdown-files";
 import { identifyInvalidLocalLinks } from "./src/identify-invalid-local-links/identify-invalid-local-links";
 
@@ -20,7 +21,7 @@ export const badLinksInMarkdown = async (topLevelDirectory) => {
   // await identifyInvalidLinksToWebSites(markdownFilesWithLinks);
 };
 
-const MARKDOWN_INLINE_LINK_REGEX = /\[.*\]\(.*\)/g;
+const MARKDOWN_INLINE_LINK_REGEX = /!?\[.*\]\(.*\)/g;
 const INLINE_LINK_REGEX = /[(](.*)[)]/;
 const findInlineMarkdownLinks = (markdown) => {
   return match(markdown, MARKDOWN_INLINE_LINK_REGEX).map((inlineLink) =>
@@ -28,7 +29,7 @@ const findInlineMarkdownLinks = (markdown) => {
   );
 };
 
-const MARKDOWN_REFERENCE_LINK_REGEX = /\[.*\]:.*/g;
+const MARKDOWN_REFERENCE_LINK_REGEX = /!?\[.*\]:.*/g;
 const REFERENCE_LINK_REGEX = /\[.*\]:\s?(.*)$/;
 const findReferenceMarkdownLinks = (markdown) => {
   return match(markdown, MARKDOWN_REFERENCE_LINK_REGEX).map((referenceLink) =>
@@ -43,7 +44,7 @@ const makeLinkObject = (markdownLink, linkRegex) => {
   const [link, tag] = linkWithTag.startsWith("#")
     ? [linkWithTag, undefined]
     : linkWithTag.split("#");
-  return { markdownLink, link, tag };
+  return { markdownLink, link, tag, isImage: markdownLink.startsWith("!") };
 };
 
 if (module === require.main) {

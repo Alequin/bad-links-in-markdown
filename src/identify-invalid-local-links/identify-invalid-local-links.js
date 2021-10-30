@@ -70,14 +70,12 @@ const addFullPathToObject = (linkObject) => {
 };
 
 const getLinkFullPath = (linkObject) => {
-  if (isLinkAbsolute(linkObject.link, linkObject.directory)) return linkObject.link;
+  if (path.isAbsolute(linkObject.link)) return linkObject.link;
 
   const relativeLink = doesLinkStartWithRelativePath(linkObject.link)
     ? linkObject.link
     : `./${linkObject.link}`;
   return path.resolve(linkObject.directory, relativeLink);
 };
-
-const isLinkAbsolute = (link, directory) => link.includes(directory);
 
 const doesLinkStartWithRelativePath = (link) => link.startsWith("./") || link.startsWith("../");

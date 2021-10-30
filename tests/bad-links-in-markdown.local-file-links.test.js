@@ -9,7 +9,7 @@ import {
   uniqueName,
 } from "./test-utils";
 
-describe("bad-links-in-markdown - local links", () => {
+describe("bad-links-in-markdown - local file links", () => {
   describe("identify-invalid-local-links and the link is an inline link", () => {
     it("Identifies a local inline link that points at a file that does not exist", async () => {
       const testDirectory = await newTestDirectory();
