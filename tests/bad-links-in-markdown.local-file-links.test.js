@@ -26,7 +26,7 @@ describe("bad-links-in-markdown - local file links", () => {
               missingLinks: [
                 {
                   link: "[I am a local link](./path/to/missing/file.md)",
-                  reasons: expect.arrayContaining([badLinkReasons.FILE_NOT_FOUND]),
+                  reasons: [badLinkReasons.FILE_NOT_FOUND],
                 },
               ],
             },
@@ -68,10 +68,7 @@ describe("bad-links-in-markdown - local file links", () => {
               missingLinks: [
                 {
                   link: `[I am a local link](${absolutePath})`,
-                  reasons: expect.arrayContaining([
-                    badLinkReasons.FILE_NOT_FOUND,
-                    badLinkReasons.BAD_ABSOLUTE_LINK,
-                  ]),
+                  reasons: [badLinkReasons.FILE_NOT_FOUND, badLinkReasons.BAD_ABSOLUTE_LINK],
                 },
               ],
             },
@@ -115,7 +112,7 @@ describe("bad-links-in-markdown - local file links", () => {
               missingLinks: [
                 {
                   link: `[I am a local link](${filePathToLinkTo})`,
-                  reasons: expect.arrayContaining([badLinkReasons.BAD_ABSOLUTE_LINK]),
+                  reasons: [badLinkReasons.BAD_ABSOLUTE_LINK],
                 },
               ],
             },
@@ -139,10 +136,7 @@ describe("bad-links-in-markdown - local file links", () => {
               missingLinks: [
                 {
                   link: "[I am a local link](./path/to/missing/file)",
-                  reasons: expect.arrayContaining([
-                    badLinkReasons.MISSING_FILE_EXTENSION,
-                    badLinkReasons.FILE_NOT_FOUND,
-                  ]),
+                  reasons: [badLinkReasons.MISSING_FILE_EXTENSION, badLinkReasons.FILE_NOT_FOUND],
                 },
               ],
             },
@@ -169,7 +163,7 @@ describe("bad-links-in-markdown - local file links", () => {
               missingLinks: [
                 {
                   link: `[I am a local link](./${fileNameToLinkTo})`,
-                  reasons: expect.arrayContaining([badLinkReasons.MISSING_FILE_EXTENSION]),
+                  reasons: [badLinkReasons.MISSING_FILE_EXTENSION],
                 },
               ],
             },
@@ -193,7 +187,7 @@ describe("bad-links-in-markdown - local file links", () => {
               missingLinks: [
                 {
                   link: "[I am a local link](file.md)",
-                  reasons: expect.arrayContaining([badLinkReasons.FILE_NOT_FOUND]),
+                  reasons: [badLinkReasons.FILE_NOT_FOUND],
                 },
               ],
             },
@@ -235,10 +229,7 @@ describe("bad-links-in-markdown - local file links", () => {
               missingLinks: [
                 {
                   link: `[I am a local link](file)`,
-                  reasons: expect.arrayContaining([
-                    badLinkReasons.FILE_NOT_FOUND,
-                    badLinkReasons.MISSING_FILE_EXTENSION,
-                  ]),
+                  reasons: [badLinkReasons.MISSING_FILE_EXTENSION, badLinkReasons.FILE_NOT_FOUND],
                 },
               ],
             },
@@ -266,7 +257,7 @@ describe("bad-links-in-markdown - local file links", () => {
               missingLinks: [
                 {
                   link: `[I am a local link](${fileNameToLinkTo})`,
-                  reasons: expect.arrayContaining([badLinkReasons.MISSING_FILE_EXTENSION]),
+                  reasons: [badLinkReasons.MISSING_FILE_EXTENSION],
                 },
               ],
             },
@@ -290,7 +281,7 @@ describe("bad-links-in-markdown - local file links", () => {
               missingLinks: [
                 {
                   link: "[I am a local link](./path/to/missing/file.js)",
-                  reasons: expect.arrayContaining([badLinkReasons.FILE_NOT_FOUND]),
+                  reasons: [badLinkReasons.FILE_NOT_FOUND],
                 },
               ],
             },
@@ -334,7 +325,7 @@ describe("bad-links-in-markdown - local file links", () => {
               missingLinks: [
                 {
                   link: `[I am a local link](./${fileNameToLinkTo})`,
-                  reasons: expect.arrayContaining([badLinkReasons.MISSING_FILE_EXTENSION]),
+                  reasons: [badLinkReasons.MISSING_FILE_EXTENSION],
                 },
               ],
             },
@@ -363,10 +354,10 @@ describe("bad-links-in-markdown - local file links", () => {
               missingLinks: [
                 {
                   link: `[I am a local link](./${fileNameToLinkTo})`,
-                  reasons: expect.arrayContaining([
+                  reasons: [
                     badLinkReasons.MISSING_FILE_EXTENSION,
                     badLinkReasons.MULTIPLE_MATCHING_FILES,
-                  ]),
+                  ],
                 },
               ],
             },
@@ -397,6 +388,64 @@ describe("bad-links-in-markdown - local file links", () => {
         });
       }, testDirectory);
     });
+
+    it("Identifies local inline links which point at a file in another sub directory which exist but the link is missing an extension", async () => {
+      const testDirectory = await newTestDirectory();
+      const innerTestDirectory = path.resolve(testDirectory, "./inner-test");
+      fs.mkdirSync(innerTestDirectory);
+
+      const fileNameToLinkTo = uniqueName();
+      const filePathToLinkTo = path.resolve(testDirectory, `./inner-test/${fileNameToLinkTo}.md`);
+      fs.writeFileSync(filePathToLinkTo, `foo bar baz`);
+
+      const fileContainingLink = getPathToNewTestFile(testDirectory);
+      fs.writeFileSync(fileContainingLink, `[I am a local link](./inner-test/${fileNameToLinkTo})`);
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [
+            {
+              filePath: fileContainingLink,
+              missingLinks: [
+                {
+                  link: `[I am a local link](./inner-test/${fileNameToLinkTo})`,
+                  reasons: [badLinkReasons.MISSING_FILE_EXTENSION],
+                },
+              ],
+            },
+          ],
+        });
+      }, testDirectory);
+    });
+
+    it("Identifies local inline links which point at a file in another parent directory which exist but the link is missing an extension", async () => {
+      const testDirectory = await newTestDirectory();
+      const innerTestDirectory = path.resolve(testDirectory, "./inner-test");
+      fs.mkdirSync(innerTestDirectory);
+
+      const fileNameToLinkTo = uniqueName();
+      const filePathToLinkTo = path.resolve(testDirectory, `./${fileNameToLinkTo}.md`);
+      fs.writeFileSync(filePathToLinkTo, `foo bar baz`);
+
+      const fileContainingLink = getPathToNewTestFile(`${testDirectory}/inner-test`);
+      fs.writeFileSync(fileContainingLink, `[I am a local link](../${fileNameToLinkTo})`);
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [
+            {
+              filePath: fileContainingLink,
+              missingLinks: [
+                {
+                  link: `[I am a local link](../${fileNameToLinkTo})`,
+                  reasons: [badLinkReasons.MISSING_FILE_EXTENSION],
+                },
+              ],
+            },
+          ],
+        });
+      }, testDirectory);
+    });
   });
 
   describe("identify-invalid-local-links and the link is an inline link which includes a header tag", () => {
@@ -421,7 +470,7 @@ describe("bad-links-in-markdown - local file links", () => {
               missingLinks: [
                 {
                   link: `[I am a local link](./${fileNameToLinkTo}.md#main-title)`,
-                  reasons: expect.arrayContaining([badLinkReasons.HEADER_TAG_NOT_FOUND]),
+                  reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
                 },
               ],
             },
@@ -468,10 +517,7 @@ describe("bad-links-in-markdown - local file links", () => {
               missingLinks: [
                 {
                   link: `[I am a local link](${filePathToLinkTo}#main-title)`,
-                  reasons: expect.arrayContaining([
-                    badLinkReasons.HEADER_TAG_NOT_FOUND,
-                    badLinkReasons.BAD_ABSOLUTE_LINK,
-                  ]),
+                  reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND, badLinkReasons.BAD_ABSOLUTE_LINK],
                 },
               ],
             },
@@ -547,7 +593,7 @@ describe("bad-links-in-markdown - local file links", () => {
               missingLinks: [
                 {
                   link: `[I am a local link](./${fileNameToLinkTo}.md#main-title)`,
-                  reasons: expect.arrayContaining([badLinkReasons.HEADER_TAG_NOT_FOUND]),
+                  reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
                 },
               ],
             },
@@ -577,7 +623,7 @@ describe("bad-links-in-markdown - local file links", () => {
               missingLinks: [
                 {
                   link: `[I am a local link](./${fileNameToLinkTo}.md#foo-bar-baz-3)`,
-                  reasons: expect.arrayContaining([badLinkReasons.HEADER_TAG_NOT_FOUND]),
+                  reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
                 },
               ],
             },
@@ -627,7 +673,7 @@ describe("bad-links-in-markdown - local file links", () => {
               missingLinks: [
                 {
                   link: `[I am a local link](./${fileNameToLinkTo}.md#main-title)`,
-                  reasons: expect.arrayContaining([badLinkReasons.HEADER_TAG_NOT_FOUND]),
+                  reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
                 },
               ],
             },
@@ -657,10 +703,10 @@ describe("bad-links-in-markdown - local file links", () => {
               missingLinks: [
                 {
                   link: `[I am a local link](./${fileNameToLinkTo}#different-header)`,
-                  reasons: expect.arrayContaining([
-                    badLinkReasons.HEADER_TAG_NOT_FOUND,
+                  reasons: [
                     badLinkReasons.MISSING_FILE_EXTENSION,
-                  ]),
+                    badLinkReasons.HEADER_TAG_NOT_FOUND,
+                  ],
                 },
               ],
             },
@@ -687,7 +733,7 @@ describe("bad-links-in-markdown - local file links", () => {
               missingLinks: [
                 {
                   link: `[I am a local link](./${fileNameToLinkTo}#main-title)`,
-                  reasons: expect.arrayContaining([badLinkReasons.MISSING_FILE_EXTENSION]),
+                  reasons: [badLinkReasons.MISSING_FILE_EXTENSION],
                 },
               ],
             },
@@ -731,7 +777,7 @@ describe("bad-links-in-markdown - local file links", () => {
               missingLinks: [
                 {
                   link: `[I am a local link](./${fileNameToLinkTo}.js#L100)`,
-                  reasons: expect.arrayContaining([badLinkReasons.INVALID_TARGET_LINE_NUMBER]),
+                  reasons: [badLinkReasons.INVALID_TARGET_LINE_NUMBER],
                 },
               ],
             },
@@ -758,7 +804,7 @@ describe("bad-links-in-markdown - local file links", () => {
               missingLinks: [
                 {
                   link: `[I am a local link](./${fileNameToLinkTo}#L1)`,
-                  reasons: expect.arrayContaining([badLinkReasons.MISSING_FILE_EXTENSION]),
+                  reasons: [badLinkReasons.MISSING_FILE_EXTENSION],
                 },
               ],
             },
@@ -787,7 +833,7 @@ describe("bad-links-in-markdown - local file links", () => {
               missingLinks: [
                 {
                   link: "[1]: ./path/to/missing/file.md",
-                  reasons: expect.arrayContaining([badLinkReasons.FILE_NOT_FOUND]),
+                  reasons: [badLinkReasons.FILE_NOT_FOUND],
                 },
               ],
             },
@@ -835,10 +881,7 @@ describe("bad-links-in-markdown - local file links", () => {
               missingLinks: [
                 {
                   link: `[1]: ${absolutePath}`,
-                  reasons: expect.arrayContaining([
-                    badLinkReasons.FILE_NOT_FOUND,
-                    badLinkReasons.BAD_ABSOLUTE_LINK,
-                  ]),
+                  reasons: [badLinkReasons.FILE_NOT_FOUND, badLinkReasons.BAD_ABSOLUTE_LINK],
                 },
               ],
             },
@@ -868,7 +911,7 @@ describe("bad-links-in-markdown - local file links", () => {
               missingLinks: [
                 {
                   link: `[1]: ${filePathToLinkTo}`,
-                  reasons: expect.arrayContaining([badLinkReasons.BAD_ABSOLUTE_LINK]),
+                  reasons: [badLinkReasons.BAD_ABSOLUTE_LINK],
                 },
               ],
             },
@@ -915,10 +958,7 @@ describe("bad-links-in-markdown - local file links", () => {
               missingLinks: [
                 {
                   link: "[1]: ./path/to/missing/file",
-                  reasons: expect.arrayContaining([
-                    badLinkReasons.FILE_NOT_FOUND,
-                    badLinkReasons.MISSING_FILE_EXTENSION,
-                  ]),
+                  reasons: [badLinkReasons.MISSING_FILE_EXTENSION, badLinkReasons.FILE_NOT_FOUND],
                 },
               ],
             },
@@ -948,7 +988,7 @@ describe("bad-links-in-markdown - local file links", () => {
               missingLinks: [
                 {
                   link: `[1]: ./${fileNameToLinkTo}`,
-                  reasons: expect.arrayContaining([badLinkReasons.MISSING_FILE_EXTENSION]),
+                  reasons: [badLinkReasons.MISSING_FILE_EXTENSION],
                 },
               ],
             },
@@ -975,7 +1015,7 @@ describe("bad-links-in-markdown - local file links", () => {
               missingLinks: [
                 {
                   link: "[1]: file.md",
-                  reasons: expect.arrayContaining([badLinkReasons.FILE_NOT_FOUND]),
+                  reasons: [badLinkReasons.FILE_NOT_FOUND],
                 },
               ],
             },
@@ -1020,10 +1060,7 @@ describe("bad-links-in-markdown - local file links", () => {
               missingLinks: [
                 {
                   link: `[1]: file`,
-                  reasons: expect.arrayContaining([
-                    badLinkReasons.FILE_NOT_FOUND,
-                    badLinkReasons.MISSING_FILE_EXTENSION,
-                  ]),
+                  reasons: [badLinkReasons.MISSING_FILE_EXTENSION, badLinkReasons.FILE_NOT_FOUND],
                 },
               ],
             },
@@ -1054,7 +1091,7 @@ describe("bad-links-in-markdown - local file links", () => {
               missingLinks: [
                 {
                   link: `[1]: ${fileNameToLinkTo}`,
-                  reasons: expect.arrayContaining([badLinkReasons.MISSING_FILE_EXTENSION]),
+                  reasons: [badLinkReasons.MISSING_FILE_EXTENSION],
                 },
               ],
             },
@@ -1081,7 +1118,7 @@ describe("bad-links-in-markdown - local file links", () => {
               missingLinks: [
                 {
                   link: "[1]: ./path/to/missing/file.js",
-                  reasons: expect.arrayContaining([badLinkReasons.FILE_NOT_FOUND]),
+                  reasons: [badLinkReasons.FILE_NOT_FOUND],
                 },
               ],
             },
@@ -1131,7 +1168,7 @@ describe("bad-links-in-markdown - local file links", () => {
               missingLinks: [
                 {
                   link: `[1]: ./${fileNameToLinkTo}`,
-                  reasons: expect.arrayContaining([badLinkReasons.MISSING_FILE_EXTENSION]),
+                  reasons: [badLinkReasons.MISSING_FILE_EXTENSION],
                 },
               ],
             },
@@ -1163,10 +1200,10 @@ describe("bad-links-in-markdown - local file links", () => {
               missingLinks: [
                 {
                   link: `[1]: ./${fileNameToLinkTo}`,
-                  reasons: expect.arrayContaining([
+                  reasons: [
                     badLinkReasons.MISSING_FILE_EXTENSION,
                     badLinkReasons.MULTIPLE_MATCHING_FILES,
-                  ]),
+                  ],
                 },
               ],
             },
@@ -1197,6 +1234,70 @@ describe("bad-links-in-markdown - local file links", () => {
         });
       }, testDirectory);
     });
+
+    it("Identifies local reference links which point at a file in another sub directory which exist but the link is missing an extension", async () => {
+      const testDirectory = await newTestDirectory();
+      const innerTestDirectory = path.resolve(testDirectory, "./inner-test");
+      fs.mkdirSync(innerTestDirectory);
+
+      const fileNameToLinkTo = uniqueName();
+      const filePathToLinkTo = path.resolve(testDirectory, `./inner-test/${fileNameToLinkTo}.md`);
+      fs.writeFileSync(filePathToLinkTo, `foo bar baz`);
+
+      const fileContainingLink = getPathToNewTestFile(testDirectory);
+      fs.writeFileSync(
+        fileContainingLink,
+        `Here is some text\n[and then a link to a file][1]\n\n[1]: ./inner-test/${fileNameToLinkTo}`
+      );
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [
+            {
+              filePath: fileContainingLink,
+              missingLinks: [
+                {
+                  link: `[1]: ./inner-test/${fileNameToLinkTo}`,
+                  reasons: [badLinkReasons.MISSING_FILE_EXTENSION],
+                },
+              ],
+            },
+          ],
+        });
+      }, testDirectory);
+    });
+
+    it("Identifies local reference links which point at a file in another parent directory which exist but the link is missing an extension", async () => {
+      const testDirectory = await newTestDirectory();
+      const innerTestDirectory = path.resolve(testDirectory, "./inner-test");
+      fs.mkdirSync(innerTestDirectory);
+
+      const fileNameToLinkTo = uniqueName();
+      const filePathToLinkTo = path.resolve(testDirectory, `./${fileNameToLinkTo}.md`);
+      fs.writeFileSync(filePathToLinkTo, `foo bar baz`);
+
+      const fileContainingLink = getPathToNewTestFile(`${testDirectory}/inner-test`);
+      fs.writeFileSync(
+        fileContainingLink,
+        `Here is some text\n[and then a link to a file][1]\n\n[1]: ../${fileNameToLinkTo}`
+      );
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [
+            {
+              filePath: fileContainingLink,
+              missingLinks: [
+                {
+                  link: `[1]: ../${fileNameToLinkTo}`,
+                  reasons: [badLinkReasons.MISSING_FILE_EXTENSION],
+                },
+              ],
+            },
+          ],
+        });
+      }, testDirectory);
+    });
   });
 
   describe("identify-invalid-local-links and the link is an reference link which includes a header tag", () => {
@@ -1221,7 +1322,7 @@ describe("bad-links-in-markdown - local file links", () => {
               missingLinks: [
                 {
                   link: `[1]: ./${fileNameToLinkTo}.md#main-title`,
-                  reasons: expect.arrayContaining([badLinkReasons.HEADER_TAG_NOT_FOUND]),
+                  reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
                 },
               ],
             },
@@ -1271,7 +1372,7 @@ describe("bad-links-in-markdown - local file links", () => {
               missingLinks: [
                 {
                   link: `[1]: ./${fileNameToLinkTo}.md#main-title`,
-                  reasons: expect.arrayContaining([badLinkReasons.HEADER_TAG_NOT_FOUND]),
+                  reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
                 },
               ],
             },
@@ -1367,7 +1468,7 @@ describe("bad-links-in-markdown - local file links", () => {
               missingLinks: [
                 {
                   link: `[1]: ./${fileNameToLinkTo}.md#main-title`,
-                  reasons: expect.arrayContaining([badLinkReasons.HEADER_TAG_NOT_FOUND]),
+                  reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
                 },
               ],
             },
@@ -1397,7 +1498,7 @@ describe("bad-links-in-markdown - local file links", () => {
               missingLinks: [
                 {
                   link: `[1]: ./${fileNameToLinkTo}.md#foo-bar-baz-3`,
-                  reasons: expect.arrayContaining([badLinkReasons.HEADER_TAG_NOT_FOUND]),
+                  reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
                 },
               ],
             },
@@ -1447,7 +1548,7 @@ describe("bad-links-in-markdown - local file links", () => {
               missingLinks: [
                 {
                   link: `[1]: ./${fileNameToLinkTo}.md#main-title`,
-                  reasons: expect.arrayContaining([badLinkReasons.HEADER_TAG_NOT_FOUND]),
+                  reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
                 },
               ],
             },
@@ -1477,10 +1578,10 @@ describe("bad-links-in-markdown - local file links", () => {
               missingLinks: [
                 {
                   link: `[1]: ./${fileNameToLinkTo}#different-header`,
-                  reasons: expect.arrayContaining([
-                    badLinkReasons.HEADER_TAG_NOT_FOUND,
+                  reasons: [
                     badLinkReasons.MISSING_FILE_EXTENSION,
-                  ]),
+                    badLinkReasons.HEADER_TAG_NOT_FOUND,
+                  ],
                 },
               ],
             },
@@ -1510,7 +1611,7 @@ describe("bad-links-in-markdown - local file links", () => {
               missingLinks: [
                 {
                   link: `[1]: ./${fileNameToLinkTo}#main-title`,
-                  reasons: expect.arrayContaining([badLinkReasons.MISSING_FILE_EXTENSION]),
+                  reasons: [badLinkReasons.MISSING_FILE_EXTENSION],
                 },
               ],
             },
@@ -1560,7 +1661,7 @@ describe("bad-links-in-markdown - local file links", () => {
               missingLinks: [
                 {
                   link: `[1]: ./${fileNameToLinkTo}.js#L100`,
-                  reasons: expect.arrayContaining([badLinkReasons.INVALID_TARGET_LINE_NUMBER]),
+                  reasons: [badLinkReasons.INVALID_TARGET_LINE_NUMBER],
                 },
               ],
             },
@@ -1590,7 +1691,7 @@ describe("bad-links-in-markdown - local file links", () => {
               missingLinks: [
                 {
                   link: `[1]: ./${fileNameToLinkTo}#L1`,
-                  reasons: expect.arrayContaining([badLinkReasons.MISSING_FILE_EXTENSION]),
+                  reasons: [badLinkReasons.MISSING_FILE_EXTENSION],
                 },
               ],
             },
@@ -1599,6 +1700,4 @@ describe("bad-links-in-markdown - local file links", () => {
       }, testDirectory);
     });
   });
-
-  it.todo("can find matchFiles when the files are in different directories");
 });

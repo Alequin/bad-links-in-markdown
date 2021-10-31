@@ -14,12 +14,10 @@ export const identifyInvalidLocalLinks = (fileObjects) => {
 
       const missingLinks = groupMatchingLinkObjectWithIssues([
         ...findMissingLinksWithFileExtensions(
-          localLinks.filter(({ isLinkMissingFileExtension }) => !isLinkMissingFileExtension),
-          directory
+          localLinks.filter(({ isLinkMissingFileExtension }) => !isLinkMissingFileExtension)
         ),
         ...findLinksWithoutExtensionsAsBad(
-          localLinks.filter(({ isLinkMissingFileExtension }) => isLinkMissingFileExtension),
-          directory
+          localLinks.filter(({ isLinkMissingFileExtension }) => isLinkMissingFileExtension)
         ),
         ...findLinksWithBadHeaderTags(localLinks),
         ...findInvalidAbsoluteLinks.absoluteLinks(localLinks),
@@ -41,10 +39,11 @@ const prepareLinkObjects = (links, directory) =>
   links
     .filter(isLocalLink)
     .map(addDirectoryToObject(directory))
+    .map(addFullPathToObject)
     .map(addRawFileNameToObject)
     .map(addMatchingFilesInDirectoryToLinks)
     .map(addFileExtension)
-    .map(addFullPathToObject);
+    .map(appendFileExtensionToFullPath);
 
 // https://www.computerhope.com/jargon/f/fileext.htm
 const IS_LOCAL_LINK_WITHOUT_PATH_REGEX = /w*|w*\.[\w\d]*$/;
@@ -54,7 +53,7 @@ const isLocalLink = ({ link }) =>
 const addDirectoryToObject = (directory) => (linkObject) => {
   return {
     ...linkObject,
-    directory,
+    directory: directory,
   };
 };
 
@@ -66,15 +65,16 @@ const addRawFileNameToObject = (linkObject) => {
 };
 
 const addMatchingFilesInDirectoryToLinks = (linkObject) => {
-  const filesInDirectory = fs.readdirSync(linkObject.directory);
-
-  const matchedFile = filesInDirectory.find((fileInDirectory) =>
-    fileInDirectory.includes(linkObject.name)
-  );
+  const directoryToCheckForMatchingFiles = linkObject.fullPath.replace(linkObject.name, "");
+  const filesInDirectory =
+    fs.existsSync(directoryToCheckForMatchingFiles) &&
+    fs.readdirSync(directoryToCheckForMatchingFiles);
 
   return {
     ...linkObject,
-    matchedFile,
+    matchedFile: filesInDirectory
+      ? filesInDirectory.find((fileInDirectory) => fileInDirectory.includes(linkObject.name))
+      : null,
   };
 };
 
@@ -85,7 +85,7 @@ const addFileExtension = (linkObject) => {
   return {
     ...linkObject,
     rawLink: linkObject.link,
-    link: fileExtension ? linkObject.link : `${linkObject.link}${fileExtensionToUse}`,
+    link: fileExtension ? linkObject.link : `${linkObject.link}${fileExtensionToUse || ""}`,
     isLinkMissingFileExtension: !fileExtension,
     linkFileExtension: fileExtensionToUse,
   };
@@ -99,6 +99,15 @@ const addFullPathToObject = (linkObject) => {
   return {
     ...linkObject,
     fullPath: getLinkFullPath(linkObject),
+  };
+};
+
+const appendFileExtensionToFullPath = (linkObject) => {
+  if (!linkObject.isLinkMissingFileExtension) return linkObject;
+
+  return {
+    ...linkObject,
+    fullPath: `${linkObject.fullPath}${linkObject.linkFileExtension || ""}`,
   };
 };
 

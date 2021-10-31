@@ -20,7 +20,7 @@ describe("bad-links-in-markdown - local image links", () => {
             missingLinks: [
               {
                 link: "![picture](./path/to/missing/image.png)",
-                reasons: expect.arrayContaining([badLinkReasons.IMAGE_FILE_NOT_FOUND]),
+                reasons: [badLinkReasons.IMAGE_FILE_NOT_FOUND],
               },
             ],
           },
@@ -59,10 +59,10 @@ describe("bad-links-in-markdown - local image links", () => {
             missingLinks: [
               {
                 link: `![picture](/${absolutePath})`,
-                reasons: expect.arrayContaining([
+                reasons: [
                   badLinkReasons.IMAGE_FILE_NOT_FOUND,
                   badLinkReasons.BAD_ABSOLUTE_IMAGE_LINK,
-                ]),
+                ],
               },
             ],
           },
@@ -87,7 +87,7 @@ describe("bad-links-in-markdown - local image links", () => {
             missingLinks: [
               {
                 link: `![picture](/${absolutePath})`,
-                reasons: expect.arrayContaining([badLinkReasons.BAD_ABSOLUTE_IMAGE_LINK]),
+                reasons: [badLinkReasons.BAD_ABSOLUTE_IMAGE_LINK],
               },
             ],
           },
