@@ -1,5 +1,5 @@
 import { flatten, flow, groupBy, mapValues } from "lodash";
-import { readFileLines } from "../utils";
+import { readFileLines } from "../../utils";
 
 export const identifyMarkdownLinksWithBadHeaderTags = (links) => {
   return links.filter((linkObject) => {

@@ -4,7 +4,7 @@ import { badLinkReasons } from "./bad-link-reasons";
 import { identifyLinksWithMultiplePossibleMatchingFiles } from "./identify-links-with-multiple-possible-matching-files";
 import { identifyMarkdownLinksWithBadHeaderTags } from "./identify-markdown-links-with-bad-header-tags";
 
-export const markLinksWithoutExtensionsAsBad = (linksWithoutFileExtensions, directory) => {
+export const findLinksWithoutExtensionsAsBad = (linksWithoutFileExtensions, directory) => {
   const [linksWithMatchedFiles, badLinks] = partition(
     addMatchingFilesInDirectoryToLinks(linksWithoutFileExtensions, directory),
     ({ matchedFile }) => matchedFile

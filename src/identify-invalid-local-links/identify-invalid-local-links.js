@@ -1,9 +1,9 @@
 import { isEmpty, last } from "lodash";
 import path from "path";
-import { findInvalidAbsoluteLinks } from "./find-invalid-absolute-links";
-import { findMissingLinksWithFileExtensions } from "./find-missing-links-with-file-extensions";
+import { findMissingLinksWithFileExtensions } from "./find-bad-links/find-missing-links-with-file-extensions";
 import { groupMatchingLinkObjectWithIssues } from "./group-matching-link-objects-with-issues";
-import { markLinksWithoutExtensionsAsBad } from "./mark-links-without-extensions-as-bad";
+import { findLinksWithoutExtensionsAsBad } from "./find-bad-links/find-links-without-extensions-as-bad";
+import { findInvalidAbsoluteLinks } from "./find-bad-links/find-invalid-absolute-links";
 
 export const identifyInvalidLocalLinks = (fileObjects) => {
   return fileObjects
@@ -15,7 +15,7 @@ export const identifyInvalidLocalLinks = (fileObjects) => {
           localLinks.filter(doesIncludeFileExtension),
           directory
         ),
-        ...markLinksWithoutExtensionsAsBad(
+        ...findLinksWithoutExtensionsAsBad(
           localLinks.filter(doesNotIncludeFileExtension),
           directory
         ),
