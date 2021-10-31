@@ -3,7 +3,7 @@ import path from "path";
 import { findMissingLinksWithFileExtensions } from "./find-bad-links/find-missing-links-with-file-extensions";
 import { groupMatchingLinkObjectWithIssues } from "./group-matching-link-objects-with-issues";
 import { findLinksWithoutExtensionsAsBad } from "./find-bad-links/find-links-without-extensions-as-bad";
-import { findInvalidAbsoluteLinks } from "./find-bad-links/find-invalid-absolute-links";
+import * as findInvalidAbsoluteLinks from "./find-bad-links/find-invalid-absolute-links";
 
 export const identifyInvalidLocalLinks = (fileObjects) => {
   return fileObjects
@@ -19,7 +19,8 @@ export const identifyInvalidLocalLinks = (fileObjects) => {
           localLinks.filter(doesNotIncludeFileExtension),
           directory
         ),
-        ...findInvalidAbsoluteLinks(localLinks),
+        ...findInvalidAbsoluteLinks.absoluteLinks(localLinks),
+        ...findInvalidAbsoluteLinks.absoluteImageLinks(localLinks),
       ]);
 
       return {

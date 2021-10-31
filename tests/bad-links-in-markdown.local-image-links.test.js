@@ -49,7 +49,7 @@ describe("bad-links-in-markdown - local image links", () => {
     const filePath = getPathToNewTestFile(testDirectory);
 
     const absolutePath = path.resolve(testDirectory, "./path/to/missing/image.png");
-    fs.writeFileSync(filePath, `![picture](${absolutePath})`);
+    fs.writeFileSync(filePath, `![picture](/${absolutePath})`);
 
     await runTestWithDirectoryCleanup(async () => {
       expect(await badLinksInMarkdown(testDirectory)).toEqual({
@@ -58,8 +58,11 @@ describe("bad-links-in-markdown - local image links", () => {
             filePath,
             missingLinks: [
               {
-                link: `![picture](${absolutePath})`,
-                reasons: [badLinkReasons.IMAGE_FILE_NOT_FOUND],
+                link: `![picture](/${absolutePath})`,
+                reasons: [
+                  badLinkReasons.IMAGE_FILE_NOT_FOUND,
+                  badLinkReasons.BAD_ABSOLUTE_IMAGE_LINK,
+                ],
               },
             ],
           },
@@ -68,17 +71,27 @@ describe("bad-links-in-markdown - local image links", () => {
     }, testDirectory);
   });
 
-  it("Ignores an absolute local inline image link which point at images which exist", async () => {
+  it("Identifies an absolute local inline image link which point at images which exist as images cannot use absolute links", async () => {
     const testDirectory = await newTestDirectory();
 
     const filePath = getPathToNewTestFile(testDirectory);
 
     const absolutePath = path.resolve(testDirectory, "../dog.jpg");
-    fs.writeFileSync(filePath, `![picture](${absolutePath})`);
+    fs.writeFileSync(filePath, `![picture](/${absolutePath})`);
 
     await runTestWithDirectoryCleanup(async () => {
       expect(await badLinksInMarkdown(testDirectory)).toEqual({
-        badLocalLinks: [],
+        badLocalLinks: [
+          {
+            filePath,
+            missingLinks: [
+              {
+                link: `![picture](/${absolutePath})`,
+                reasons: [badLinkReasons.BAD_ABSOLUTE_IMAGE_LINK],
+              },
+            ],
+          },
+        ],
       });
     }, testDirectory);
   });
