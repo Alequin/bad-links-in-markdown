@@ -4,9 +4,9 @@ import { badLinkReasons } from "./bad-link-reasons";
 import { identifyLinksWithBadLineTags } from "./identify-links-with-bad-line-tags";
 import { identifyMarkdownLinksWithBadHeaderTags } from "./identify-markdown-links-with-bad-header-tags";
 
-export const findMissingLinksWithFileExtensions = (linksWithFileExtensions) => {
+export const findMissingLinksWithFileExtensions = (linkObjects) => {
   const [badLinks, workingLinks] = partition(
-    linksWithFileExtensions,
+    linkObjects,
     (linkObject) => !fs.existsSync(linkObject.fullPath)
   );
 

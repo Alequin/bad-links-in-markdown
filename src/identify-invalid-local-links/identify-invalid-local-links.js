@@ -1,5 +1,6 @@
 import { isEmpty, last } from "lodash";
 import path from "path";
+import { findInvalidAbsoluteLinks } from "./find-invalid-absolute-links";
 import { findMissingLinksWithFileExtensions } from "./find-missing-links-with-file-extensions";
 import { groupMatchingLinkObjectWithIssues } from "./group-matching-link-objects-with-issues";
 import { markLinksWithoutExtensionsAsBad } from "./mark-links-without-extensions-as-bad";
@@ -18,6 +19,7 @@ export const identifyInvalidLocalLinks = (fileObjects) => {
           localLinks.filter(doesNotIncludeFileExtension),
           directory
         ),
+        ...findInvalidAbsoluteLinks(localLinks),
       ]);
 
       return {
@@ -70,7 +72,10 @@ const addFullPathToObject = (linkObject) => {
 };
 
 const getLinkFullPath = (linkObject) => {
-  if (path.isAbsolute(linkObject.link)) return linkObject.link;
+  if (isAbsoluteLink(linkObject.link)) {
+    if (/^\w:/.test(linkObject.link)) return linkObject.link;
+    return linkObject.link.slice(1);
+  }
 
   const relativeLink = doesLinkStartWithRelativePath(linkObject.link)
     ? linkObject.link
@@ -78,4 +83,5 @@ const getLinkFullPath = (linkObject) => {
   return path.resolve(linkObject.directory, relativeLink);
 };
 
+const isAbsoluteLink = (link) => /^\/?\w:/.test(link);
 const doesLinkStartWithRelativePath = (link) => link.startsWith("./") || link.startsWith("../");
