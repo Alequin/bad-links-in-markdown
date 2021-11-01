@@ -66,15 +66,18 @@ const addRawFileNameToObject = (linkObject) => {
 
 const addMatchingFilesInDirectoryToLinks = (linkObject) => {
   const directoryToCheckForMatchingFiles = linkObject.fullPath.replace(linkObject.name, "");
-  const filesInDirectory =
-    fs.existsSync(directoryToCheckForMatchingFiles) &&
-    fs.readdirSync(directoryToCheckForMatchingFiles);
+  const filesInDirectory = fs.existsSync(directoryToCheckForMatchingFiles)
+    ? fs.readdirSync(directoryToCheckForMatchingFiles)
+    : null;
 
   return {
     ...linkObject,
-    matchedFile: filesInDirectory
-      ? filesInDirectory.find((fileInDirectory) => fileInDirectory.includes(linkObject.name))
-      : null,
+    matchedFileCount:
+      filesInDirectory?.filter((fileInDirectory) => fileInDirectory.includes(linkObject.name))
+        ?.length || null,
+    matchedFile:
+      filesInDirectory?.find((fileInDirectory) => fileInDirectory.includes(linkObject.name)) ||
+      null,
   };
 };
 

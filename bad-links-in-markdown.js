@@ -1,5 +1,4 @@
 import fs from "fs";
-import { flatMap, partition } from "lodash";
 import { findAllMarkdownFiles } from "./src/find-all-markdown-files";
 import { identifyInvalidLocalLinks } from "./src/identify-invalid-local-links/identify-invalid-local-links";
 

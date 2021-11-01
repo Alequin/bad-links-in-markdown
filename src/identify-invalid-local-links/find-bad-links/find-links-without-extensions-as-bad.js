@@ -9,8 +9,9 @@ export const findLinksWithoutExtensionsAsBad = (linksWithoutFileExtensions) => {
     ({ matchedFile }) => matchedFile
   );
 
-  const linksWithMultiplePossibleFiles =
-    identifyLinksWithMultiplePossibleMatchingFiles(linksWithMatchedFiles);
+  const linksWithMultiplePossibleFiles = linksWithMatchedFiles.filter(
+    ({ matchedFileCount }) => matchedFileCount >= 2
+  );
 
   return [
     ...linksWithoutFileExtensions.map((linkObject) => ({

@@ -121,7 +121,7 @@ describe("bad-links-in-markdown - local file links", () => {
       }, testDirectory);
     });
 
-    it("Identifies a local link that points at a file that does not exist even when the link does not contain a file extension", async () => {
+    it("Identifies a local inline link that points at a file that does not exist even when the link does not contain a file extension", async () => {
       const testDirectory = await newTestDirectory();
 
       const filePath = getPathToNewTestFile(testDirectory);
@@ -334,7 +334,7 @@ describe("bad-links-in-markdown - local file links", () => {
       }, testDirectory);
     });
 
-    it("Identifies a local link that is missing a file extension and could potentially refer to two separate files", async () => {
+    it("Identifies a local inline link that is missing a file extension and could potentially refer to two separate files", async () => {
       const testDirectory = await newTestDirectory();
 
       const fileNameToLinkTo = uniqueName();
@@ -446,6 +446,8 @@ describe("bad-links-in-markdown - local file links", () => {
         });
       }, testDirectory);
     });
+
+    it.todo("can identify multiple possible files in a sub directory");
   });
 
   describe("identify-invalid-local-links and the link is an inline link which includes a header tag", () => {
@@ -1298,6 +1300,8 @@ describe("bad-links-in-markdown - local file links", () => {
         });
       }, testDirectory);
     });
+
+    it.todo("can identify multiple possible files in a sub directory");
   });
 
   describe("identify-invalid-local-links and the link is an reference link which includes a header tag", () => {
