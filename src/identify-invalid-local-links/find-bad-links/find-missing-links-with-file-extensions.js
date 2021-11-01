@@ -16,9 +16,7 @@ export const findMissingLinksWithFileExtensions = (linkObjects) => {
   return [
     ...badLinks.map((linkObject) => ({
       ...linkObject,
-      reasons: [
-        linkObject.isImage ? badLinkReasons.IMAGE_FILE_NOT_FOUND : badLinkReasons.FILE_NOT_FOUND,
-      ],
+      reasons: [badLinkReasons.FILE_NOT_FOUND],
     })),
     ...linkWithBadTargetLineNumbers.map((linkObject) => ({
       ...linkObject,
