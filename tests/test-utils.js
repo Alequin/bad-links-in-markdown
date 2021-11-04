@@ -1,6 +1,7 @@
 import fs from "fs";
 import { uniqueId } from "lodash";
 import path from "path";
+import { isWindowsOs } from "../src/is-windows-os";
 
 const TOP_LEVEL_DIRECTORY = path.resolve(__dirname, "../test-markdown-files");
 
@@ -36,3 +37,7 @@ export const uniqueName = () => `test-${uniqueId()}`;
 
 const forceRemoveDir = async (directory) =>
   new Promise((resolve) => fs.rm(directory, { recursive: true, force: true }, resolve));
+
+export const transformAbsoluteLinkToMarkdownForCurrentOS = (absoluteLink) => {
+  return isWindowsOs() ? `/${absoluteLink}` : absoluteLink;
+};

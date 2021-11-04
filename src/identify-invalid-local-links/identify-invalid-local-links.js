@@ -1,6 +1,7 @@
 import fs from "fs";
 import { isEmpty, last } from "lodash";
 import path from "path";
+import { isWindowsOs } from "../is-windows-os";
 import * as findInvalidAbsoluteLinks from "./find-bad-links/find-invalid-absolute-links";
 import { findLinksWithBadHeaderTags } from "./find-bad-links/find-links-with-bad-header-tags";
 import { findLinksWithoutExtensionsAsBad } from "./find-bad-links/find-links-without-extensions-as-bad";
@@ -20,16 +21,23 @@ export const identifyInvalidLocalLinks = (fileObjects) => {
           localLinks.filter(({ isLinkMissingFileExtension }) => isLinkMissingFileExtension)
         ),
         ...findLinksWithBadHeaderTags(localLinks),
-        ...findInvalidAbsoluteLinks.absoluteLinks(localLinks),
-        ...findInvalidAbsoluteLinks.absoluteImageLinks(localLinks),
       ]);
+
+      const windowsSpecificMissingLinks = isWindowsOs()
+        ? [
+            ...findInvalidAbsoluteLinks.absoluteLinks(localLinks),
+            ...findInvalidAbsoluteLinks.absoluteImageLinks(localLinks),
+          ]
+        : [];
 
       return {
         filePath: sourceFilePath,
-        missingLinks: missingLinks.map(({ markdownLink, reasons }) => ({
-          link: markdownLink,
-          reasons,
-        })),
+        missingLinks: [...missingLinks, ...windowsSpecificMissingLinks].map(
+          ({ markdownLink, reasons }) => ({
+            link: markdownLink,
+            reasons,
+          })
+        ),
       };
     })
     .filter(({ missingLinks }) => !isEmpty(missingLinks));
@@ -101,7 +109,7 @@ const getFileExtension = (link) => link?.match(CAPTURE_FILE_EXTENSION_REGEX)?.[1
 const addFullPathToObject = (linkObject) => {
   return {
     ...linkObject,
-    fullPath: getLinkFullPath(linkObject),
+    fullPath: getFullPathFromAbsoluteLink(linkObject) || getFullPathFromRelativeLink(linkObject),
   };
 };
 
@@ -114,17 +122,20 @@ const appendFileExtensionToFullPath = (linkObject) => {
   };
 };
 
-const getLinkFullPath = (linkObject) => {
-  if (isAbsoluteLink(linkObject.link)) {
-    if (/^\w:/.test(linkObject.link)) return linkObject.link;
-    return linkObject.link.slice(1);
-  }
+const WINDOWS_ABSOLUTE_PATH_REGEX = /^\/?\w:/;
+const ABSOLUTE_PATH_REGEX = /^\//;
+const getFullPathFromAbsoluteLink = (linkObject) => {
+  if (isWindowsOs() && WINDOWS_ABSOLUTE_PATH_REGEX.test(link))
+    return linkObject.link.startsWith("/") ? linkObject.link.slice(1) : linkObject.link;
 
+  return ABSOLUTE_PATH_REGEX.test(linkObject.link) ? linkObject.link : null;
+};
+
+const getFullPathFromRelativeLink = (linkObject) => {
   const relativeLink = doesLinkStartWithRelativePath(linkObject.link)
     ? linkObject.link
     : `./${linkObject.link}`;
   return path.resolve(linkObject.directory, relativeLink);
 };
 
-const isAbsoluteLink = (link) => /^\/?\w:/.test(link);
 const doesLinkStartWithRelativePath = (link) => link.startsWith("./") || link.startsWith("../");
