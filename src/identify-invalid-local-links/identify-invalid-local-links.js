@@ -125,7 +125,7 @@ const appendFileExtensionToFullPath = (linkObject) => {
 const WINDOWS_ABSOLUTE_PATH_REGEX = /^\/?\w:/;
 const ABSOLUTE_PATH_REGEX = /^\//;
 const getFullPathFromAbsoluteLink = (linkObject) => {
-  if (isWindowsOs() && WINDOWS_ABSOLUTE_PATH_REGEX.test(link))
+  if (isWindowsOs() && WINDOWS_ABSOLUTE_PATH_REGEX.test(linkObject.link))
     return linkObject.link.startsWith("/") ? linkObject.link.slice(1) : linkObject.link;
 
   return ABSOLUTE_PATH_REGEX.test(linkObject.link) ? linkObject.link : null;
