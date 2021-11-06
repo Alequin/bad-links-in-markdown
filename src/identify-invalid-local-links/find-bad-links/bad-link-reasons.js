@@ -8,4 +8,6 @@ export const badLinkReasons = {
     "There are two files the link could be referencing. It is unclear which one it should link to",
   BAD_ABSOLUTE_LINK: "Absolute links on windows must start with a forward slash ('/')",
   BAD_ABSOLUTE_IMAGE_LINK: "Absolute links to image files do not work",
+  BAD_RELATIVE_LINK_SYNTAX:
+    "Relative link syntax can only step up by one parent direction at a time. '.../' is invalid",
 };

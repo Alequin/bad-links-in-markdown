@@ -398,6 +398,58 @@ describe("bad-links-in-markdown - local file links", () => {
       }, testDirectory);
     });
 
+    it("Identifies an issue with local inline links when they are relative links which attempts to link through multiple parent directories at once with invalid syntax", async () => {
+      const testDirectory = await newTestDirectory();
+      const firstInnerTestDirectory = path.resolve(testDirectory, "./inner-test-1");
+      const secondInnerTestDirectory = path.resolve(firstInnerTestDirectory, "./inner-test-2");
+      fs.mkdirSync(firstInnerTestDirectory);
+      fs.mkdirSync(secondInnerTestDirectory);
+
+      const fileNameToLinkTo = uniqueName();
+      const filePathToLinkTo = path.resolve(testDirectory, `./${fileNameToLinkTo}.md`);
+      fs.writeFileSync(filePathToLinkTo, `foo bar baz`);
+
+      const fileContainingLink = getPathToNewTestFile(`${testDirectory}/inner-test-1/inner-test-2`);
+      fs.writeFileSync(fileContainingLink, `[I am a local link](.../${fileNameToLinkTo}.md)`);
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [
+            {
+              filePath: fileContainingLink,
+              missingLinks: [
+                {
+                  link: `[I am a local link](.../${fileNameToLinkTo}.md)`,
+                  reasons: [badLinkReasons.BAD_RELATIVE_LINK_SYNTAX, badLinkReasons.FILE_NOT_FOUND],
+                },
+              ],
+            },
+          ],
+        });
+      }, testDirectory);
+    });
+
+    it("Ignores local inline links when they are relative links which link through multiple parent directories", async () => {
+      const testDirectory = await newTestDirectory();
+      const firstInnerTestDirectory = path.resolve(testDirectory, "./inner-test-1");
+      const secondInnerTestDirectory = path.resolve(firstInnerTestDirectory, "./inner-test-2");
+      fs.mkdirSync(firstInnerTestDirectory);
+      fs.mkdirSync(secondInnerTestDirectory);
+
+      const fileNameToLinkTo = uniqueName();
+      const filePathToLinkTo = path.resolve(testDirectory, `./${fileNameToLinkTo}.md`);
+      fs.writeFileSync(filePathToLinkTo, `foo bar baz`);
+
+      const fileContainingLink = getPathToNewTestFile(`${testDirectory}/inner-test-1/inner-test-2`);
+      fs.writeFileSync(fileContainingLink, `[I am a local link](../../${fileNameToLinkTo}.md)`);
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [],
+        });
+      }, testDirectory);
+    });
+
     it.todo("can identify multiple possible files in a sub directory");
   });
 
@@ -735,6 +787,31 @@ describe("bad-links-in-markdown - local file links", () => {
               ],
             },
           ],
+        });
+      }, testDirectory);
+    });
+
+    it("Ignores local inline links when they are relative links which link through multiple parent directories", async () => {
+      const testDirectory = await newTestDirectory();
+      const firstInnerTestDirectory = path.resolve(testDirectory, "./inner-test-1");
+      const secondInnerTestDirectory = path.resolve(firstInnerTestDirectory, "./inner-test-2");
+      fs.mkdirSync(firstInnerTestDirectory);
+      fs.mkdirSync(secondInnerTestDirectory);
+
+      const fileNameToLinkTo = uniqueName();
+      const filePathToLinkTo = path.resolve(testDirectory, `./${fileNameToLinkTo}.md`);
+      fs.writeFileSync(filePathToLinkTo, `# main-title\na story of foo and bar\nand baz`);
+
+      const fileContainingLink = getPathToNewTestFile(`${testDirectory}/inner-test-1/inner-test-2`);
+
+      fs.writeFileSync(
+        fileContainingLink,
+        `[I am a local link](../../${fileNameToLinkTo}.md#main-title)`
+      );
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [],
         });
       }, testDirectory);
     });
@@ -1169,6 +1246,64 @@ describe("bad-links-in-markdown - local file links", () => {
       }, testDirectory);
     });
 
+    it("Identifies an issue with local reference links when they are relative links which attempts to link through multiple parent directories at once with invalid syntax", async () => {
+      const testDirectory = await newTestDirectory();
+      const firstInnerTestDirectory = path.resolve(testDirectory, "./inner-test-1");
+      const secondInnerTestDirectory = path.resolve(firstInnerTestDirectory, "./inner-test-2");
+      fs.mkdirSync(firstInnerTestDirectory);
+      fs.mkdirSync(secondInnerTestDirectory);
+
+      const fileNameToLinkTo = uniqueName();
+      const filePathToLinkTo = path.resolve(testDirectory, `./${fileNameToLinkTo}.md`);
+      fs.writeFileSync(filePathToLinkTo, `foo bar baz`);
+
+      const fileContainingLink = getPathToNewTestFile(`${testDirectory}/inner-test-1/inner-test-2`);
+      fs.writeFileSync(
+        fileContainingLink,
+        `Here is some text\n[and then a link to a file][1]\n\n[1]: .../${fileNameToLinkTo}.md`
+      );
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [
+            {
+              filePath: fileContainingLink,
+              missingLinks: [
+                {
+                  link: `[1]: .../${fileNameToLinkTo}.md`,
+                  reasons: [badLinkReasons.BAD_RELATIVE_LINK_SYNTAX, badLinkReasons.FILE_NOT_FOUND],
+                },
+              ],
+            },
+          ],
+        });
+      }, testDirectory);
+    });
+
+    it("Ignores local reference links when they are relative links which link through multiple parent directories", async () => {
+      const testDirectory = await newTestDirectory();
+      const firstInnerTestDirectory = path.resolve(testDirectory, "./inner-test-1");
+      const secondInnerTestDirectory = path.resolve(firstInnerTestDirectory, "./inner-test-2");
+      fs.mkdirSync(firstInnerTestDirectory);
+      fs.mkdirSync(secondInnerTestDirectory);
+
+      const fileNameToLinkTo = uniqueName();
+      const filePathToLinkTo = path.resolve(testDirectory, `./${fileNameToLinkTo}.md`);
+      fs.writeFileSync(filePathToLinkTo, `foo bar baz`);
+
+      const fileContainingLink = getPathToNewTestFile(`${testDirectory}/inner-test-1/inner-test-2`);
+      fs.writeFileSync(
+        fileContainingLink,
+        `Here is some text\n[and then a link to a file][1]\n\n[1]: ../../${fileNameToLinkTo}.md`
+      );
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [],
+        });
+      }, testDirectory);
+    });
+
     it.todo("can identify multiple possible files in a sub directory");
   });
 
@@ -1568,6 +1703,31 @@ describe("bad-links-in-markdown - local file links", () => {
               ],
             },
           ],
+        });
+      }, testDirectory);
+    });
+
+    it("Ignores local reference links when they are relative links which link through multiple parent directories", async () => {
+      const testDirectory = await newTestDirectory();
+      const firstInnerTestDirectory = path.resolve(testDirectory, "./inner-test-1");
+      const secondInnerTestDirectory = path.resolve(firstInnerTestDirectory, "./inner-test-2");
+      fs.mkdirSync(firstInnerTestDirectory);
+      fs.mkdirSync(secondInnerTestDirectory);
+
+      const fileNameToLinkTo = uniqueName();
+      const filePathToLinkTo = path.resolve(testDirectory, `./${fileNameToLinkTo}.md`);
+      fs.writeFileSync(filePathToLinkTo, `# main-title\na story of foo and bar\nand baz`);
+
+      const fileContainingLink = getPathToNewTestFile(`${testDirectory}/inner-test-1/inner-test-2`);
+
+      fs.writeFileSync(
+        fileContainingLink,
+        `Here is some text\n[and then a link to a file][1]\n\n[1]: ../../${fileNameToLinkTo}.md#main-title`
+      );
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [],
         });
       }, testDirectory);
     });

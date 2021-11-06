@@ -241,6 +241,46 @@ describe("bad-links-in-markdown - local image links", () => {
       }, testDirectory);
     });
 
+    it("Identifies an issue with local inline links for images when they are relative links which attempts to link through multiple parent directories at once with invalid syntax", async () => {
+      const testDirectory = await newTestDirectory();
+      const firstInnerTestDirectory = path.resolve(testDirectory, "./inner-test-1");
+      fs.mkdirSync(firstInnerTestDirectory);
+
+      const fileContainingLink = getPathToNewTestFile(`${testDirectory}/inner-test-1`);
+      fs.writeFileSync(fileContainingLink, `[I am a local link](.../dog.jpg)`);
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [
+            {
+              filePath: fileContainingLink,
+              missingLinks: [
+                {
+                  link: `[I am a local link](.../dog.jpg)`,
+                  reasons: [badLinkReasons.BAD_RELATIVE_LINK_SYNTAX, badLinkReasons.FILE_NOT_FOUND],
+                },
+              ],
+            },
+          ],
+        });
+      }, testDirectory);
+    });
+
+    it("Ignores local inline links when they are relative links which link through multiple parent directories", async () => {
+      const testDirectory = await newTestDirectory();
+      const firstInnerTestDirectory = path.resolve(testDirectory, "./inner-test-1");
+      fs.mkdirSync(firstInnerTestDirectory);
+
+      const fileContainingLink = getPathToNewTestFile(`${testDirectory}/inner-test-1`);
+      fs.writeFileSync(fileContainingLink, `[I am a local link](../../dog.jpg)`);
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [],
+        });
+      }, testDirectory);
+    });
+
     it.todo("can identify multiple possible files in a sub directory");
   });
 
@@ -500,6 +540,52 @@ describe("bad-links-in-markdown - local image links", () => {
       fs.writeFileSync(
         filePath,
         `Here is some text\n![and then a link to a file][picture]\n\n[picture]: ./dog.foo.bar.jpg`
+      );
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [],
+        });
+      }, testDirectory);
+    });
+
+    it("Identifies an issue with local reference links for images when they are relative links which attempts to link through multiple parent directories at once with invalid syntax", async () => {
+      const testDirectory = await newTestDirectory();
+      const firstInnerTestDirectory = path.resolve(testDirectory, "./inner-test-1");
+      fs.mkdirSync(firstInnerTestDirectory);
+
+      const fileContainingLink = getPathToNewTestFile(`${testDirectory}/inner-test-1`);
+      fs.writeFileSync(
+        fileContainingLink,
+        `Here is some text\n![and then a link to a file][picture]\n\n[picture]: .../dog.jpg`
+      );
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [
+            {
+              filePath: fileContainingLink,
+              missingLinks: [
+                {
+                  link: `[picture]: .../dog.jpg`,
+                  reasons: [badLinkReasons.BAD_RELATIVE_LINK_SYNTAX, badLinkReasons.FILE_NOT_FOUND],
+                },
+              ],
+            },
+          ],
+        });
+      }, testDirectory);
+    });
+
+    it("Ignores local reference links when they are relative links which link through multiple parent directories", async () => {
+      const testDirectory = await newTestDirectory();
+      const firstInnerTestDirectory = path.resolve(testDirectory, "./inner-test-1");
+      fs.mkdirSync(firstInnerTestDirectory);
+
+      const fileContainingLink = getPathToNewTestFile(`${testDirectory}/inner-test-1`);
+      fs.writeFileSync(
+        fileContainingLink,
+        `Here is some text\n![and then a link to a file][picture]\n\n[picture]: ../../dog.jpg`
       );
 
       await runTestWithDirectoryCleanup(async () => {

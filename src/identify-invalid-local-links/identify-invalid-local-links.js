@@ -3,6 +3,7 @@ import { isEmpty, last, partition } from "lodash";
 import path from "path";
 import { isWindowsOs } from "../is-windows-os";
 import * as findInvalidAbsoluteLinks from "./find-bad-links/find-invalid-absolute-links";
+import { findInvalidRelativeLinkSyntax } from "./find-bad-links/find-invalid-relative-link-syntax";
 import { findLinksWithBadHeaderTags } from "./find-bad-links/find-links-with-bad-header-tags";
 import { findLinksWithoutExtensionsAsBad } from "./find-bad-links/find-links-without-extensions-as-bad";
 import { findMissingLinksWithFileExtensions } from "./find-bad-links/find-missing-links-with-file-extensions";
@@ -23,6 +24,7 @@ export const identifyInvalidLocalLinks = (fileObjects) => {
         ...findInvalidAbsoluteLinks.absoluteImageLinks(windowsAbsoluteLinks),
 
         // General
+        ...findInvalidRelativeLinkSyntax(linksToTest),
         ...findMissingLinksWithFileExtensions(
           linksToTest.filter(({ isLinkMissingFileExtension }) => !isLinkMissingFileExtension)
         ),
@@ -128,10 +130,11 @@ const getFullPathFromAbsoluteLink = (linkObject) => {
 };
 
 const getFullPathFromRelativeLink = (linkObject) => {
-  const relativeLink = doesLinkStartWithRelativePath(linkObject.link)
-    ? linkObject.link
-    : `./${linkObject.link}`;
-  return path.resolve(linkObject.directory, relativeLink);
+  return path.resolve(
+    linkObject.directory,
+    doesLinkStartWithRelativePath(linkObject.link) ? linkObject.link : `./${linkObject.link}`
+  );
 };
 
-const doesLinkStartWithRelativePath = (link) => link.startsWith("./") || link.startsWith("../");
+const IS_RELATIVE_LINK_REGEX = /^\.*/;
+const doesLinkStartWithRelativePath = (link) => IS_RELATIVE_LINK_REGEX.test(link);
