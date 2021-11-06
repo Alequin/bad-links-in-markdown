@@ -53,32 +53,6 @@ describe("bad-links-in-markdown - local file links", () => {
       }, testDirectory);
     });
 
-    // TODO - fix windows specific test
-    it.skip("Identifies an absolute local inline link that points at a file that does not exist", async () => {
-      const testDirectory = await newTestDirectory();
-
-      const filePath = getPathToNewTestFile(testDirectory);
-
-      const absolutePath = path.resolve(testDirectory, "./path/to/missing/file.md");
-      fs.writeFileSync(filePath, `[I am a local link](${absolutePath})`);
-
-      await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
-          badLocalLinks: [
-            {
-              filePath,
-              missingLinks: [
-                {
-                  link: `[I am a local link](${absolutePath})`,
-                  reasons: [badLinkReasons.FILE_NOT_FOUND, badLinkReasons.BAD_ABSOLUTE_LINK],
-                },
-              ],
-            },
-          ],
-        });
-      }, testDirectory);
-    });
-
     it("Ignores absolute local inline links which point at files which exist", async () => {
       const testDirectory = await newTestDirectory();
 
@@ -94,34 +68,6 @@ describe("bad-links-in-markdown - local file links", () => {
       await runTestWithDirectoryCleanup(async () => {
         expect(await badLinksInMarkdown(testDirectory)).toEqual({
           badLocalLinks: [],
-        });
-      }, testDirectory);
-    });
-
-    // TODO - fix windows specific test
-    it.skip("Identifies an invalid absolute local inline link that points at a file that exist", async () => {
-      const testDirectory = await newTestDirectory();
-
-      const fileNameToLinkTo = uniqueName();
-      const filePathToLinkTo = path.resolve(testDirectory, `./${fileNameToLinkTo}.md`);
-      fs.writeFileSync(filePathToLinkTo, `foo bar baz`);
-
-      const fileContainingLink = getPathToNewTestFile(testDirectory);
-      fs.writeFileSync(fileContainingLink, `[I am a local link](${filePathToLinkTo})`);
-
-      await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
-          badLocalLinks: [
-            {
-              filePath: fileContainingLink,
-              missingLinks: [
-                {
-                  link: `[I am a local link](${filePathToLinkTo})`,
-                  reasons: [badLinkReasons.BAD_ABSOLUTE_LINK],
-                },
-              ],
-            },
-          ],
         });
       }, testDirectory);
     });
@@ -506,34 +452,6 @@ describe("bad-links-in-markdown - local file links", () => {
       }, testDirectory);
     });
 
-    // TODO - fix windows specific test
-    it.skip("Identifies an absolute inline local link that points at a file that exist but does not contain the targeted header tag", async () => {
-      const testDirectory = await newTestDirectory();
-
-      const fileNameToLinkTo = uniqueName();
-      const filePathToLinkTo = path.resolve(testDirectory, `./${fileNameToLinkTo}.md`);
-      fs.writeFileSync(filePathToLinkTo, `# foo bar baz\na story of foo and bar\nand baz`);
-
-      const fileContainingLink = getPathToNewTestFile(testDirectory);
-      fs.writeFileSync(fileContainingLink, `[I am a local link](${filePathToLinkTo}#main-title)`);
-
-      await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
-          badLocalLinks: [
-            {
-              filePath: fileContainingLink,
-              missingLinks: [
-                {
-                  link: `[I am a local link](${filePathToLinkTo}#main-title)`,
-                  reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND, badLinkReasons.BAD_ABSOLUTE_LINK],
-                },
-              ],
-            },
-          ],
-        });
-      }, testDirectory);
-    });
-
     it("Ignores local links which point at files that exist and contain the targeted sub header", async () => {
       const testDirectory = await newTestDirectory();
 
@@ -866,66 +784,6 @@ describe("bad-links-in-markdown - local file links", () => {
       await runTestWithDirectoryCleanup(async () => {
         expect(await badLinksInMarkdown(testDirectory)).toEqual({
           badLocalLinks: [],
-        });
-      }, testDirectory);
-    });
-
-    // TODO - fix windows specific test
-    it.skip("Identifies an absolute local reference link that points at a file that does not exist", async () => {
-      const testDirectory = await newTestDirectory();
-
-      const filePath = getPathToNewTestFile(testDirectory);
-
-      const absolutePath = path.resolve(testDirectory, "./path/to/missing/file.md");
-      fs.writeFileSync(
-        filePath,
-        `Here is some text\n[and then a link to a file][1]\n\n[1]: ${absolutePath}`
-      );
-
-      await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
-          badLocalLinks: [
-            {
-              filePath,
-              missingLinks: [
-                {
-                  link: `[1]: ${absolutePath}`,
-                  reasons: [badLinkReasons.FILE_NOT_FOUND, badLinkReasons.BAD_ABSOLUTE_LINK],
-                },
-              ],
-            },
-          ],
-        });
-      }, testDirectory);
-    });
-
-    // TODO - fix windows specific test
-    it.skip("Identifies invalid absolute local reference links", async () => {
-      const testDirectory = await newTestDirectory();
-
-      const fileNameToLinkTo = uniqueName();
-      const filePathToLinkTo = path.resolve(testDirectory, `./${fileNameToLinkTo}.md`);
-      fs.writeFileSync(filePathToLinkTo, `foo bar baz`);
-
-      const fileContainingLink = getPathToNewTestFile(testDirectory);
-      fs.writeFileSync(
-        fileContainingLink,
-        `Here is some text\n[and then a link to a file][1]\n\n[1]: ${filePathToLinkTo}`
-      );
-
-      await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
-          badLocalLinks: [
-            {
-              filePath: fileContainingLink,
-              missingLinks: [
-                {
-                  link: `[1]: ${filePathToLinkTo}`,
-                  reasons: [badLinkReasons.BAD_ABSOLUTE_LINK],
-                },
-              ],
-            },
-          ],
         });
       }, testDirectory);
     });
