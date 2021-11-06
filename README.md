@@ -18,7 +18,10 @@ A script that identifies links in markdown files that no longer work
 ## TODO
 
 - Consider if absolute links can be handled by saying it starts with a "/" as that is common across linux and windows
-  - Still would need a way to identify absolute windows links without a "/" and marking them as bad 
+
+  - Still would need a way to identify absolute windows links without a "/" and marking them as bad
+
+- Confirm absolute image links on linux are invalid
 
 - image links
 - web links (to be consider)

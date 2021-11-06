@@ -1,5 +1,5 @@
 import fs from "fs";
-import { isEmpty, last } from "lodash";
+import { isEmpty, last, partition } from "lodash";
 import path from "path";
 import { isWindowsOs } from "../is-windows-os";
 import * as findInvalidAbsoluteLinks from "./find-bad-links/find-invalid-absolute-links";
@@ -8,36 +8,36 @@ import { findLinksWithoutExtensionsAsBad } from "./find-bad-links/find-links-wit
 import { findMissingLinksWithFileExtensions } from "./find-bad-links/find-missing-links-with-file-extensions";
 import { groupMatchingLinkObjectWithIssues } from "./group-matching-link-objects-with-issues";
 
+const WINDOWS_ABSOLUTE_PATH_REGEX = /^\/?\w:/;
 export const identifyInvalidLocalLinks = (fileObjects) => {
   return fileObjects
     .map(({ directory, links, sourceFilePath }) => {
-      const localLinks = prepareLinkObjects(links, directory);
+      const [windowsAbsoluteLinks, linksToTest] = partition(
+        prepareLinkObjects(links, directory),
+        ({ rawLink }) => isWindowsOs() && WINDOWS_ABSOLUTE_PATH_REGEX.test(rawLink)
+      );
 
       const missingLinks = groupMatchingLinkObjectWithIssues([
+        // Windows specific
+        ...findInvalidAbsoluteLinks.absoluteLinks(windowsAbsoluteLinks),
+        ...findInvalidAbsoluteLinks.absoluteImageLinks(windowsAbsoluteLinks),
+
+        // General
         ...findMissingLinksWithFileExtensions(
-          localLinks.filter(({ isLinkMissingFileExtension }) => !isLinkMissingFileExtension)
+          linksToTest.filter(({ isLinkMissingFileExtension }) => !isLinkMissingFileExtension)
         ),
         ...findLinksWithoutExtensionsAsBad(
-          localLinks.filter(({ isLinkMissingFileExtension }) => isLinkMissingFileExtension)
+          linksToTest.filter(({ isLinkMissingFileExtension }) => isLinkMissingFileExtension)
         ),
-        ...findLinksWithBadHeaderTags(localLinks),
+        ...findLinksWithBadHeaderTags(linksToTest),
       ]);
-
-      const windowsSpecificMissingLinks = isWindowsOs()
-        ? [
-            ...findInvalidAbsoluteLinks.absoluteLinks(localLinks),
-            ...findInvalidAbsoluteLinks.absoluteImageLinks(localLinks),
-          ]
-        : [];
 
       return {
         filePath: sourceFilePath,
-        missingLinks: [...missingLinks, ...windowsSpecificMissingLinks].map(
-          ({ markdownLink, reasons }) => ({
-            link: markdownLink,
-            reasons,
-          })
-        ),
+        missingLinks: missingLinks.map(({ markdownLink, reasons }) => ({
+          link: markdownLink,
+          reasons,
+        })),
       };
     })
     .filter(({ missingLinks }) => !isEmpty(missingLinks));
@@ -122,12 +122,8 @@ const appendFileExtensionToFullPath = (linkObject) => {
   };
 };
 
-const WINDOWS_ABSOLUTE_PATH_REGEX = /^\/?\w:/;
 const ABSOLUTE_PATH_REGEX = /^\//;
 const getFullPathFromAbsoluteLink = (linkObject) => {
-  if (isWindowsOs() && WINDOWS_ABSOLUTE_PATH_REGEX.test(linkObject.link))
-    return linkObject.link.startsWith("/") ? linkObject.link.slice(1) : linkObject.link;
-
   return ABSOLUTE_PATH_REGEX.test(linkObject.link) ? linkObject.link : null;
 };
 
