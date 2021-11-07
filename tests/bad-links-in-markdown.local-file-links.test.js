@@ -450,7 +450,86 @@ describe("bad-links-in-markdown - local file links", () => {
       }, testDirectory);
     });
 
-    it.todo("can identify multiple possible files in a sub directory");
+    it("Identifies a local inline link that is missing a file extension and could potentially refer to two separate files when the files are in a parent directory", async () => {
+      const testDirectory = await newTestDirectory();
+      const firstInnerTestDirectory = path.resolve(testDirectory, "./inner-test-1");
+      const secondInnerTestDirectory = path.resolve(firstInnerTestDirectory, "./inner-test-2");
+      fs.mkdirSync(firstInnerTestDirectory);
+      fs.mkdirSync(secondInnerTestDirectory);
+
+      const fileNameToLinkTo = uniqueName();
+      const markdownFileToLinkTo = path.resolve(testDirectory, `./${fileNameToLinkTo}.md`);
+      fs.writeFileSync(markdownFileToLinkTo, `# foo bar baz`);
+      const javascriptFileToLinkTo = path.resolve(testDirectory, `./${fileNameToLinkTo}.js`);
+      fs.writeFileSync(javascriptFileToLinkTo, `const foo = () => {}`);
+
+      const fileContainingLink = getPathToNewTestFile(`${testDirectory}/inner-test-1/inner-test-2`);
+      fs.writeFileSync(fileContainingLink, `[I am a local link](../../${fileNameToLinkTo})`);
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [
+            {
+              filePath: fileContainingLink,
+              missingLinks: [
+                {
+                  link: `[I am a local link](../../${fileNameToLinkTo})`,
+                  reasons: [
+                    badLinkReasons.MISSING_FILE_EXTENSION,
+                    badLinkReasons.MULTIPLE_MATCHING_FILES,
+                  ],
+                },
+              ],
+            },
+          ],
+        });
+      }, testDirectory);
+    });
+
+    it("Identifies a local inline link that is missing a file extension and could potentially refer to two separate files when the files are in a sub directory", async () => {
+      const testDirectory = await newTestDirectory();
+      const firstInnerTestDirectory = path.resolve(testDirectory, "./inner-test-1");
+      const secondInnerTestDirectory = path.resolve(firstInnerTestDirectory, "./inner-test-2");
+      fs.mkdirSync(firstInnerTestDirectory);
+      fs.mkdirSync(secondInnerTestDirectory);
+
+      const fileNameToLinkTo = uniqueName();
+      const markdownFileToLinkTo = path.resolve(
+        secondInnerTestDirectory,
+        `./${fileNameToLinkTo}.md`
+      );
+      fs.writeFileSync(markdownFileToLinkTo, `# foo bar baz`);
+      const javascriptFileToLinkTo = path.resolve(
+        secondInnerTestDirectory,
+        `./${fileNameToLinkTo}.js`
+      );
+      fs.writeFileSync(javascriptFileToLinkTo, `const foo = () => {}`);
+
+      const fileContainingLink = getPathToNewTestFile(testDirectory);
+      fs.writeFileSync(
+        fileContainingLink,
+        `[I am a local link](./inner-test-1/inner-test-2/${fileNameToLinkTo})`
+      );
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [
+            {
+              filePath: fileContainingLink,
+              missingLinks: [
+                {
+                  link: `[I am a local link](./inner-test-1/inner-test-2/${fileNameToLinkTo})`,
+                  reasons: [
+                    badLinkReasons.MISSING_FILE_EXTENSION,
+                    badLinkReasons.MULTIPLE_MATCHING_FILES,
+                  ],
+                },
+              ],
+            },
+          ],
+        });
+      }, testDirectory);
+    });
   });
 
   describe("identify-invalid-local-links and the link is an inline link which includes a header tag", () => {
@@ -1304,7 +1383,89 @@ describe("bad-links-in-markdown - local file links", () => {
       }, testDirectory);
     });
 
-    it.todo("can identify multiple possible files in a sub directory");
+    it("Identifies a local reference link that is missing a file extension and could potentially refer to two separate files when the files are in a parent directory", async () => {
+      const testDirectory = await newTestDirectory();
+      const firstInnerTestDirectory = path.resolve(testDirectory, "./inner-test-1");
+      const secondInnerTestDirectory = path.resolve(firstInnerTestDirectory, "./inner-test-2");
+      fs.mkdirSync(firstInnerTestDirectory);
+      fs.mkdirSync(secondInnerTestDirectory);
+
+      const fileNameToLinkTo = uniqueName();
+      const markdownFileToLinkTo = path.resolve(testDirectory, `./${fileNameToLinkTo}.md`);
+      fs.writeFileSync(markdownFileToLinkTo, `# foo bar baz`);
+      const javascriptFileToLinkTo = path.resolve(testDirectory, `./${fileNameToLinkTo}.js`);
+      fs.writeFileSync(javascriptFileToLinkTo, `const foo = () => {}`);
+
+      const fileContainingLink = getPathToNewTestFile(`${testDirectory}/inner-test-1/inner-test-2`);
+      fs.writeFileSync(
+        fileContainingLink,
+        `Here is some text\n[and then a link to a file][1]\n\n[1]: ../../${fileNameToLinkTo}`
+      );
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [
+            {
+              filePath: fileContainingLink,
+              missingLinks: [
+                {
+                  link: `[1]: ../../${fileNameToLinkTo}`,
+                  reasons: [
+                    badLinkReasons.MISSING_FILE_EXTENSION,
+                    badLinkReasons.MULTIPLE_MATCHING_FILES,
+                  ],
+                },
+              ],
+            },
+          ],
+        });
+      }, testDirectory);
+    });
+
+    it("Identifies a local reference link that is missing a file extension and could potentially refer to two separate files when the files are in a sub directory", async () => {
+      const testDirectory = await newTestDirectory();
+      const firstInnerTestDirectory = path.resolve(testDirectory, "./inner-test-1");
+      const secondInnerTestDirectory = path.resolve(firstInnerTestDirectory, "./inner-test-2");
+      fs.mkdirSync(firstInnerTestDirectory);
+      fs.mkdirSync(secondInnerTestDirectory);
+
+      const fileNameToLinkTo = uniqueName();
+      const markdownFileToLinkTo = path.resolve(
+        secondInnerTestDirectory,
+        `./${fileNameToLinkTo}.md`
+      );
+      fs.writeFileSync(markdownFileToLinkTo, `# foo bar baz`);
+      const javascriptFileToLinkTo = path.resolve(
+        secondInnerTestDirectory,
+        `./${fileNameToLinkTo}.js`
+      );
+      fs.writeFileSync(javascriptFileToLinkTo, `const foo = () => {}`);
+
+      const fileContainingLink = getPathToNewTestFile(testDirectory);
+      fs.writeFileSync(
+        fileContainingLink,
+        `Here is some text\n[and then a link to a file][1]\n\n[1]: ./inner-test-1/inner-test-2/${fileNameToLinkTo}`
+      );
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [
+            {
+              filePath: fileContainingLink,
+              missingLinks: [
+                {
+                  link: `[1]: ./inner-test-1/inner-test-2/${fileNameToLinkTo}`,
+                  reasons: [
+                    badLinkReasons.MISSING_FILE_EXTENSION,
+                    badLinkReasons.MULTIPLE_MATCHING_FILES,
+                  ],
+                },
+              ],
+            },
+          ],
+        });
+      }, testDirectory);
+    });
   });
 
   describe("identify-invalid-local-links and the link is an reference link which includes a header tag", () => {

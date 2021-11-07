@@ -280,8 +280,6 @@ describe("bad-links-in-markdown - local image links", () => {
         });
       }, testDirectory);
     });
-
-    it.todo("can identify multiple possible files in a sub directory");
   });
 
   describe("identify-invalid-local-links and the image link is a reference link", () => {
@@ -594,7 +592,5 @@ describe("bad-links-in-markdown - local image links", () => {
         });
       }, testDirectory);
     });
-
-    it.todo("can identify multiple possible files in a sub directory");
   });
 });
