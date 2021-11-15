@@ -111,6 +111,7 @@ const appendFileExtensionToFullPath = (linkObject) => {
 
   return {
     ...linkObject,
+    rawFullPath: linkObject.fullPath,
     fullPath: `${linkObject.fullPath}${linkObject.linkFileExtension || ""}`,
   };
 };

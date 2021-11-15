@@ -148,6 +148,22 @@ describe("bad-links-in-markdown - local file links", () => {
       }, testDirectory);
     });
 
+    it("Ignores local inline links with a link which point at a directory", async () => {
+      const testDirectory = await newTestDirectory();
+
+      const directoryToLinkTo = path.resolve(testDirectory, `./inner-dir`);
+      fs.mkdirSync(directoryToLinkTo);
+
+      const fileContainingLink = getPathToNewTestFile(testDirectory);
+      fs.writeFileSync(fileContainingLink, `[I am a local link](./inner-dir)`);
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [],
+        });
+      }, testDirectory);
+    });
+
     it("Identifies a local link that points at a file that does not exist when the file path does not include either absolute or relative path", async () => {
       const testDirectory = await newTestDirectory();
 
@@ -1335,6 +1351,25 @@ describe("bad-links-in-markdown - local file links", () => {
               ],
             },
           ],
+        });
+      }, testDirectory);
+    });
+
+    it("Ignores local reference links with a link which point at a directory", async () => {
+      const testDirectory = await newTestDirectory();
+
+      const directoryToLinkTo = path.resolve(testDirectory, `./inner-dir`);
+      fs.mkdirSync(directoryToLinkTo);
+
+      const fileContainingLink = getPathToNewTestFile(testDirectory);
+      fs.writeFileSync(
+        fileContainingLink,
+        `Here is some text\n[and then a link to a file][1]\n\n[1]: ./inner-dir`
+      );
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [],
         });
       }, testDirectory);
     });
