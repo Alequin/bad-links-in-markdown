@@ -66,6 +66,8 @@ const makeLinkObject = (markdownLink, linkRegex) => {
   return { markdownLink, link, tag };
 };
 
+const removeHashCharsFromStart = (string) => string.replace(/^#*/, "");
+
 if (module === require.main) {
   badLinksInMarkdown(topLevelDirectoryFromConsoleArgs())
     .then((result) => {
@@ -77,5 +79,3 @@ if (module === require.main) {
       process.exit(1);
     });
 }
-
-const removeHashCharsFromStart = (string) => string.replace(/^#*/, "");

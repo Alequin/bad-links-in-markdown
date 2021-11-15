@@ -656,6 +656,22 @@ describe("bad-links-in-markdown - local file links", () => {
         });
       }, testDirectory);
     });
+
+    it("Ignores local inline links which point which point at a web page", async () => {
+      const testDirectory = await newTestDirectory();
+
+      const fileContainingLink = getPathToNewTestFile(testDirectory);
+      fs.writeFileSync(
+        fileContainingLink,
+        `[I am a local link](http://www.google.com)`
+      );
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [],
+        });
+      }, testDirectory);
+    });
   });
 
   describe("identify-invalid-local-links and the link is an inline link which includes a header tag", () => {
@@ -1852,6 +1868,22 @@ describe("bad-links-in-markdown - local file links", () => {
       fs.writeFileSync(
         filePath,
         `[1]: Reloading NGINX Plus - high performance web server.`
+      );
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [],
+        });
+      }, testDirectory);
+    });
+
+    it("Ignores local reference links which point which point at a web page", async () => {
+      const testDirectory = await newTestDirectory();
+
+      const fileContainingLink = getPathToNewTestFile(testDirectory);
+      fs.writeFileSync(
+        fileContainingLink,
+        `Here is some text\n[and then a link to a file][1]\n\n[1]: http://www.google.com`
       );
 
       await runTestWithDirectoryCleanup(async () => {
