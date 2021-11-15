@@ -67,5 +67,13 @@ const makeLinkObject = (markdownLink, linkRegex) => {
 };
 
 if (module === require.main) {
-  console.log("hey");
+  badLinksInMarkdown(topLevelDirectoryFromConsoleArgs())
+    .then((result) => {
+      console.log(JSON.stringify(result, null, 2));
+      console.log(`Total bad local links: ${result.badLocalLinks.length}`);
+    })
+    .catch((error) => {
+      console.error(error);
+      process.exit(1);
+    });
 }
