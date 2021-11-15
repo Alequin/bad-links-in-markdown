@@ -1103,6 +1103,84 @@ describe("bad-links-in-markdown - local file links", () => {
         });
       }, testDirectory);
     });
+
+    it("Identifies an inline local link that points at a header tag in the current file that does not exist", async () => {
+      const testDirectory = await newTestDirectory();
+
+      const fileContainingLink = getPathToNewTestFile(testDirectory);
+      fs.writeFileSync(fileContainingLink, `[bad header](#main-title)`);
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [
+            {
+              filePath: fileContainingLink,
+              missingLinks: [
+                {
+                  link: `[bad header](#main-title)`,
+                  reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
+                },
+              ],
+            },
+          ],
+        });
+      }, testDirectory);
+    });
+
+    it("Ignores an inline local link that points at a header tag in the current file that exist", async () => {
+      const testDirectory = await newTestDirectory();
+
+      const fileContainingLink = getPathToNewTestFile(testDirectory);
+      fs.writeFileSync(
+        fileContainingLink,
+        `# Main Title\n[header](#main-title)`
+      );
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [],
+        });
+      }, testDirectory);
+    });
+
+    it("Identifies an inline local link that points at a sub header tag in the current file that does not exist", async () => {
+      const testDirectory = await newTestDirectory();
+
+      const fileContainingLink = getPathToNewTestFile(testDirectory);
+      fs.writeFileSync(fileContainingLink, `[bad header](##main-title)`);
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [
+            {
+              filePath: fileContainingLink,
+              missingLinks: [
+                {
+                  link: `[bad header](##main-title)`,
+                  reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
+                },
+              ],
+            },
+          ],
+        });
+      }, testDirectory);
+    });
+
+    it("Ignores an inline local link that points at a sub header tag in the current file that exist", async () => {
+      const testDirectory = await newTestDirectory();
+
+      const fileContainingLink = getPathToNewTestFile(testDirectory);
+      fs.writeFileSync(
+        fileContainingLink,
+        `# Main Title\n## Sub Header\n[header](##sub-header)`
+      );
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [],
+        });
+      }, testDirectory);
+    });
   });
 
   describe("identify-invalid-local-links and the link is a reference link", () => {
@@ -2283,6 +2361,90 @@ describe("bad-links-in-markdown - local file links", () => {
       fs.writeFileSync(
         fileContainingLink,
         `Here is some text\n[and then a link to a file][1]\n\n[1]: ../../${fileNameToLinkTo}.md#main-title`
+      );
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [],
+        });
+      }, testDirectory);
+    });
+
+    it("Identifies a local reference link that points at a header tag in the current file that does not exist", async () => {
+      const testDirectory = await newTestDirectory();
+
+      const fileContainingLink = getPathToNewTestFile(testDirectory);
+      fs.writeFileSync(
+        fileContainingLink,
+        `[foobar][bad header]\n[bad header]: #main-title`
+      );
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [
+            {
+              filePath: fileContainingLink,
+              missingLinks: [
+                {
+                  link: `[bad header]: #main-title`,
+                  reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
+                },
+              ],
+            },
+          ],
+        });
+      }, testDirectory);
+    });
+
+    it("Ignores a local reference link that points at a header tag in the current file that exist", async () => {
+      const testDirectory = await newTestDirectory();
+
+      const fileContainingLink = getPathToNewTestFile(testDirectory);
+      fs.writeFileSync(
+        fileContainingLink,
+        `# Main Title\n[foobar][good header]\n[good header]: #main-title`
+      );
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [],
+        });
+      }, testDirectory);
+    });
+
+    it("Identifies a local reference link that points at a sub header tag in the current file that does not exist", async () => {
+      const testDirectory = await newTestDirectory();
+
+      const fileContainingLink = getPathToNewTestFile(testDirectory);
+      fs.writeFileSync(
+        fileContainingLink,
+        `[foobar][bad header]\n[bad header]: ##main-title`
+      );
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [
+            {
+              filePath: fileContainingLink,
+              missingLinks: [
+                {
+                  link: `[bad header]: ##main-title`,
+                  reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
+                },
+              ],
+            },
+          ],
+        });
+      }, testDirectory);
+    });
+
+    it("Ignores a local reference link that points at a sub header tag in the current file that exist", async () => {
+      const testDirectory = await newTestDirectory();
+
+      const fileContainingLink = getPathToNewTestFile(testDirectory);
+      fs.writeFileSync(
+        fileContainingLink,
+        `# Main Title\n# Sub Header\n[foobar][good header]\n[good header]: ##sub-header`
       );
 
       await runTestWithDirectoryCleanup(async () => {

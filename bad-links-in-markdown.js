@@ -61,7 +61,7 @@ const match = (markdown, regex) => markdown.match(regex) || [];
 const makeLinkObject = (markdownLink, linkRegex) => {
   const linkWithTag = markdownLink.match(linkRegex)[1];
   const [link, tag] = linkWithTag.startsWith("#")
-    ? [linkWithTag, undefined]
+    ? [undefined, removeHashCharsFromStart(linkWithTag)]
     : linkWithTag.split("#");
   return { markdownLink, link, tag };
 };
@@ -77,3 +77,5 @@ if (module === require.main) {
       process.exit(1);
     });
 }
+
+const removeHashCharsFromStart = (string) => string.replace(/^#*/, "");

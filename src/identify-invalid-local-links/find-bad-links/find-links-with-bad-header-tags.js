@@ -4,10 +4,14 @@ import { readFileLines } from "../../utils";
 import { badLinkReasons } from "./bad-link-reasons";
 
 export const findLinksWithBadHeaderTags = (linkObjects) => {
-  const workingLinks = linkObjects.filter((linkObject) => fs.existsSync(linkObject.fullPath));
+  const workingLinks = linkObjects.filter((linkObject) =>
+    fs.existsSync(linkObject.fullPath)
+  );
 
   return identifyMarkdownLinksWithBadHeaderTags(
-    workingLinks.filter(({ tag, linkFileExtension }) => tag && linkFileExtension === ".md")
+    workingLinks.filter(
+      ({ tag, linkFileExtension }) => tag && linkFileExtension === ".md"
+    )
   ).map((linkObject) => ({
     ...linkObject,
     reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],

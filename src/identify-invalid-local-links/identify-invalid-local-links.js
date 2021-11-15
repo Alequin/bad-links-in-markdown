@@ -12,25 +12,16 @@ const WINDOWS_ABSOLUTE_PATH_REGEX = /^\/?\w:/;
 export const identifyInvalidLocalLinks = (fileObjects) => {
   return fileObjects
     .map(({ directory, links, sourceFilePath }) => {
-      const [windowsAbsoluteLinks, linksToTest] = partition(
-        prepareLinkObjects(links, directory),
-        ({ rawLink }) => isWindowsOs() && WINDOWS_ABSOLUTE_PATH_REGEX.test(rawLink)
+      const linkObjects = prepareLinkObjects(links, directory, sourceFilePath);
+
+      const [internalFileLinks, externalFileLinks] = partition(
+        linkObjects,
+        ({ isInternalFileLink }) => isInternalFileLink
       );
 
       const missingLinks = groupMatchingLinkObjectWithIssues([
-        // Windows specific
-        ...findInvalidAbsoluteLinks.absoluteLinks(windowsAbsoluteLinks),
-        ...findInvalidAbsoluteLinks.absoluteImageLinks(windowsAbsoluteLinks),
-
-        // General
-        ...findInvalidRelativeLinkSyntax(linksToTest),
-        ...findMissingLinksWithFileExtensions(
-          linksToTest.filter(({ isLinkMissingFileExtension }) => !isLinkMissingFileExtension)
-        ),
-        ...findLinksWithoutExtensionsAsBad(
-          linksToTest.filter(({ isLinkMissingFileExtension }) => isLinkMissingFileExtension)
-        ),
-        ...findLinksWithBadHeaderTags(linksToTest),
+        ...identifyInvalidInternalFileLinks(internalFileLinks),
+        ...identifyInvalidExternalFileLinks(externalFileLinks),
       ]);
 
       return {
@@ -42,4 +33,35 @@ export const identifyInvalidLocalLinks = (fileObjects) => {
       };
     })
     .filter(({ missingLinks }) => !isEmpty(missingLinks));
+};
+
+const identifyInvalidInternalFileLinks = (linkObjects) => {
+  return findLinksWithBadHeaderTags(linkObjects);
+};
+
+const identifyInvalidExternalFileLinks = (linkObjects) => {
+  const [windowsAbsoluteLinks, linksToTest] = partition(
+    linkObjects,
+    ({ rawLink }) => isWindowsOs() && WINDOWS_ABSOLUTE_PATH_REGEX.test(rawLink)
+  );
+
+  return [
+    // Windows specific
+    ...findInvalidAbsoluteLinks.absoluteLinks(windowsAbsoluteLinks),
+    ...findInvalidAbsoluteLinks.absoluteImageLinks(windowsAbsoluteLinks),
+
+    // General
+    ...findInvalidRelativeLinkSyntax(linksToTest),
+    ...findMissingLinksWithFileExtensions(
+      linksToTest.filter(
+        ({ isLinkMissingFileExtension }) => !isLinkMissingFileExtension
+      )
+    ),
+    ...findLinksWithoutExtensionsAsBad(
+      linksToTest.filter(
+        ({ isLinkMissingFileExtension }) => isLinkMissingFileExtension
+      )
+    ),
+    ...findLinksWithBadHeaderTags(linksToTest),
+  ];
 };
