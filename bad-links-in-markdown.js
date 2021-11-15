@@ -1,6 +1,8 @@
 import fs from "fs";
+import { isEmpty } from "lodash";
 import { findAllMarkdownFiles } from "./src/find-all-markdown-files";
 import { identifyInvalidLocalLinks } from "./src/identify-invalid-local-links/identify-invalid-local-links";
+import topLevelDirectoryFromConsoleArgs from "./src/top-level-directory-from-console-args";
 
 export const badLinksInMarkdown = async (topLevelDirectory) => {
   const allMarkdownFiles = findAllMarkdownFiles(topLevelDirectory);
@@ -10,7 +12,10 @@ export const badLinksInMarkdown = async (topLevelDirectory) => {
 
     return {
       ...file,
-      links: [...findInlineMarkdownLinks(markdown), ...findReferenceMarkdownLinks(markdown)],
+      links: [
+        ...findInlineMarkdownLinks(markdown),
+        ...findReferenceMarkdownLinks(markdown),
+      ],
     };
   });
 
@@ -33,7 +38,8 @@ const MARKDOWN_REFERENCE_LINK_REGEX = /!?\[.*\]:.*/g;
 const REFERENCE_LINK_REGEX = /\[.*\]:\s?(.*)$/;
 const REFERENCE_LINK_USAGE_REGEX = /!?\[.*\]\[.*\]/g;
 const findReferenceMarkdownLinks = (markdown) => {
-  const allReferenceUsages = markdown.match(REFERENCE_LINK_USAGE_REGEX);
+  const allReferenceUsages = match(markdown, REFERENCE_LINK_USAGE_REGEX);
+  if (isEmpty(allReferenceUsages)) return [];
 
   return match(markdown, MARKDOWN_REFERENCE_LINK_REGEX).map((referenceLink) => {
     const referenceText = referenceLink.match(/\[.*\]/)[0];
@@ -43,7 +49,9 @@ const findReferenceMarkdownLinks = (markdown) => {
 
     return {
       ...makeLinkObject(referenceLink, REFERENCE_LINK_REGEX),
-      isImage: matchingReferenceUsages.some((usage) => usage.startsWith("!")),
+      isImage: Boolean(
+        matchingReferenceUsages?.some((usage) => usage.startsWith("!"))
+      ),
     };
   });
 };
