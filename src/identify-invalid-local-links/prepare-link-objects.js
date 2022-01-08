@@ -1,6 +1,7 @@
 import fs from "fs";
 import { last } from "lodash";
 import path from "path";
+import { match } from "../match";
 
 export const prepareLinkObjects = (fileObject) =>
   fileObject.links
@@ -114,7 +115,7 @@ const addFileExtension = (linkObject) => {
 // https://www.computerhope.com/jargon/f/fileext.htm
 const CAPTURE_FILE_EXTENSION_REGEX = /(\.*\.[\w\d]*$)/;
 const getFileExtension = (link) =>
-  link?.match(CAPTURE_FILE_EXTENSION_REGEX)?.[1] || null;
+  match(link, CAPTURE_FILE_EXTENSION_REGEX)[1] || null;
 
 const appendFileExtensionToFullPath = (linkObject) => {
   if (!linkObject.isLinkMissingFileExtension) return linkObject;

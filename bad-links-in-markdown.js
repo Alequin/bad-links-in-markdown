@@ -2,6 +2,7 @@ import fs from "fs";
 import { isEmpty } from "lodash";
 import { findAllMarkdownFiles } from "./src/find-all-markdown-files";
 import { identifyInvalidLocalLinks } from "./src/identify-invalid-local-links/identify-invalid-local-links";
+import { match } from "./src/match";
 import topLevelDirectoryFromConsoleArgs from "./src/top-level-directory-from-console-args";
 
 export const badLinksInMarkdown = async (topLevelDirectory) => {
@@ -84,8 +85,6 @@ const makeLinkObject = (markdownLink, linkRegex) => {
     : linkWithTag.split("#");
   return { markdownLink, link, tag };
 };
-
-const match = (markdown, regex) => markdown.match(regex) || [];
 
 /**
  * Some tags include alt text which plays no role in the link to the file. This functions removes it
