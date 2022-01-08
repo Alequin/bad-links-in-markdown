@@ -12,7 +12,7 @@ import {
 
 describe("bad-links-in-markdown - local file links", () => {
   describe("identify-invalid-local-links and the link is an inline link", () => {
-    it("Identifies a local inline link that points at a file that does not exist", async () => {
+    it("Identifies local inline links that point at files that do not exist", async () => {
       const testDirectory = await newTestDirectory();
 
       const filePath = getPathToNewTestFile(testDirectory);
@@ -819,7 +819,7 @@ describe("bad-links-in-markdown - local file links", () => {
   });
 
   describe("identify-invalid-local-links and the link is an inline link which includes a header tag", () => {
-    it("Identifies an inline local link that points at a file that exists but does not contain the targeted header tag", async () => {
+    it("Identifies inline local linkS that points at a fileS that exists but do not contain the targeted header tag", async () => {
       const testDirectory = await newTestDirectory();
 
       const fileNameToLinkTo = uniqueName();
@@ -1344,7 +1344,7 @@ describe("bad-links-in-markdown - local file links", () => {
   });
 
   describe("identify-invalid-local-links and the link is a reference link", () => {
-    it("Identifies a reference link that points at a file that does not exist", async () => {
+    it("Identifies reference linkS that points at fileS that do not exist", async () => {
       const testDirectory = await newTestDirectory();
 
       const filePath = getPathToNewTestFile(testDirectory);

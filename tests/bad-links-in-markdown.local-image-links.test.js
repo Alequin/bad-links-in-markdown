@@ -35,7 +35,7 @@ describe("bad-links-in-markdown - local image links", () => {
       }, testDirectory);
     });
 
-    it("Ignores an local inline image link which points at an image which exist", async () => {
+    it("Ignores local inline image link which point at an images which exist", async () => {
       const testDirectory = await newTestDirectory();
 
       const filePath = getPathToNewTestFile(testDirectory);
@@ -444,7 +444,7 @@ describe("bad-links-in-markdown - local image links", () => {
   });
 
   describe("identify-invalid-local-links and the image link is a reference link", () => {
-    it("Identifies a local reference image link that points at an image that does not exist", async () => {
+    it("Identifies local reference image links that point at images that do not exist", async () => {
       const testDirectory = await newTestDirectory();
 
       const filePath = getPathToNewTestFile(testDirectory);
@@ -471,7 +471,7 @@ describe("bad-links-in-markdown - local image links", () => {
       }, testDirectory);
     });
 
-    it("Ignores an local reference image link which points at an image which exist", async () => {
+    it("Ignores local reference image links which points at images which exist", async () => {
       const testDirectory = await newTestDirectory();
 
       const filePath = getPathToNewTestFile(testDirectory);
@@ -851,7 +851,7 @@ describe("bad-links-in-markdown - local image links", () => {
       }, testDirectory);
     });
 
-    it("Identifies an issue with local reference links for images when they are relative links which attempts to link through multiple parent directories at once with invalid syntax", async () => {
+    it("Identifies an issue with local reference image links for images when they are relative links which attempts to link through multiple parent directories at once with invalid syntax", async () => {
       const testDirectory = await newTestDirectory();
       const firstInnerTestDirectory = path.resolve(
         testDirectory,
@@ -887,7 +887,7 @@ describe("bad-links-in-markdown - local image links", () => {
       }, testDirectory);
     });
 
-    it("Ignores local reference links when they are relative links which link through multiple parent directories", async () => {
+    it("Ignores local reference image links when they are relative links which link through multiple parent directories", async () => {
       const testDirectory = await newTestDirectory();
       const firstInnerTestDirectory = path.resolve(
         testDirectory,
