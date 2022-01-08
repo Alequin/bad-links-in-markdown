@@ -5,8 +5,8 @@ import { badLinkReasons } from "../src/identify-invalid-local-links/find-bad-lin
 import {
   getPathToNewTestFile,
   newTestDirectory,
+  newTestDirectoryWithName,
   runTestWithDirectoryCleanup,
-  transformAbsoluteLinkToMarkdownForCurrentOS,
   uniqueName,
 } from "./test-utils";
 
@@ -85,6 +85,135 @@ describe("bad-links-in-markdown - local file links", () => {
           badLocalLinks: [],
         });
       }, testDirectory);
+    });
+
+    it("Ignores absolute local inline links which point at nested files that exist", async () => {
+      const testDirectory = await newTestDirectoryWithName();
+
+      const firstNestedDirName = "test-dir-1";
+      const firstNestedDirPath = path.resolve(
+        testDirectory.path,
+        `./${firstNestedDirName}`
+      );
+      fs.mkdirSync(firstNestedDirPath);
+
+      const secondNestedDirName = "test-dir-2";
+      const secondNestedDirPath = path.resolve(
+        firstNestedDirPath,
+        `./${secondNestedDirName}`
+      );
+      fs.mkdirSync(secondNestedDirPath);
+
+      const fileNameToLinkTo = `${uniqueName()}.md`;
+      const filePathToLinkTo = path.resolve(
+        secondNestedDirPath,
+        `./${fileNameToLinkTo}`
+      );
+      fs.writeFileSync(filePathToLinkTo, `foo bar baz`);
+
+      const mockAbsoluteLink = `/${firstNestedDirName}/${secondNestedDirName}/${fileNameToLinkTo}`;
+
+      const fileContainingLink = getPathToNewTestFile(secondNestedDirPath);
+      fs.writeFileSync(
+        fileContainingLink,
+        `[I am a local link](${mockAbsoluteLink})`
+      );
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory.path)).toEqual({
+          badLocalLinks: [],
+        });
+      }, testDirectory.path);
+    });
+
+    it("identifies absolute local inline links which starts from outside the given directory", async () => {
+      const testDirectory = await newTestDirectoryWithName();
+
+      const fileNameToLinkTo = `${uniqueName()}.md`;
+      const filePathToLinkTo = path.resolve(
+        testDirectory.path,
+        `./${fileNameToLinkTo}`
+      );
+      fs.writeFileSync(filePathToLinkTo, `foo bar baz`);
+
+      const mockAbsoluteLink = `/${testDirectory.name}/${fileNameToLinkTo}`;
+
+      const fileContainingLink = getPathToNewTestFile(testDirectory.path);
+      fs.writeFileSync(
+        fileContainingLink,
+        `[I am a local link](${mockAbsoluteLink})`
+      );
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory.path)).toEqual({
+          badLocalLinks: [
+            {
+              filePath: fileContainingLink,
+              missingLinks: [
+                {
+                  link: `[I am a local link](${mockAbsoluteLink})`,
+                  reasons: [
+                    badLinkReasons.INVALID_ABSOLUTE_LINK,
+                    badLinkReasons.FILE_NOT_FOUND,
+                  ],
+                },
+              ],
+            },
+          ],
+        });
+      }, testDirectory.path);
+    });
+
+    it("identifies absolute local inline links which starts from within the given directory", async () => {
+      const testDirectory = await newTestDirectoryWithName();
+
+      const firstNestedDirName = "test-dir-1";
+      const firstNestedDirPath = path.resolve(
+        testDirectory.path,
+        `./${firstNestedDirName}`
+      );
+      fs.mkdirSync(firstNestedDirPath);
+
+      const secondNestedDirName = "test-dir-2";
+      const secondNestedDirPath = path.resolve(
+        firstNestedDirPath,
+        `./${secondNestedDirName}`
+      );
+      fs.mkdirSync(secondNestedDirPath);
+
+      const fileNameToLinkTo = `${uniqueName()}.md`;
+      const filePathToLinkTo = path.resolve(
+        secondNestedDirPath,
+        `./${fileNameToLinkTo}`
+      );
+      fs.writeFileSync(filePathToLinkTo, `foo bar baz`);
+
+      const mockAbsoluteLink = `/${secondNestedDirName}/${fileNameToLinkTo}`;
+
+      const fileContainingLink = getPathToNewTestFile(testDirectory.path);
+      fs.writeFileSync(
+        fileContainingLink,
+        `[I am a local link](${mockAbsoluteLink})`
+      );
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory.path)).toEqual({
+          badLocalLinks: [
+            {
+              filePath: fileContainingLink,
+              missingLinks: [
+                {
+                  link: `[I am a local link](${mockAbsoluteLink})`,
+                  reasons: [
+                    badLinkReasons.INVALID_ABSOLUTE_LINK,
+                    badLinkReasons.FILE_NOT_FOUND,
+                  ],
+                },
+              ],
+            },
+          ],
+        });
+      }, testDirectory.path);
     });
 
     it("Identifies a local inline link that points at a file that does not exist even when the link does not contain a file extension", async () => {
@@ -1288,6 +1417,135 @@ describe("bad-links-in-markdown - local file links", () => {
           badLocalLinks: [],
         });
       }, testDirectory);
+    });
+
+    it("Ignores absolute local reference links which point at nested files that exist", async () => {
+      const testDirectory = await newTestDirectoryWithName();
+
+      const firstNestedDirName = "test-dir-1";
+      const firstNestedDirPath = path.resolve(
+        testDirectory.path,
+        `./${firstNestedDirName}`
+      );
+      fs.mkdirSync(firstNestedDirPath);
+
+      const secondNestedDirName = "test-dir-2";
+      const secondNestedDirPath = path.resolve(
+        firstNestedDirPath,
+        `./${secondNestedDirName}`
+      );
+      fs.mkdirSync(secondNestedDirPath);
+
+      const fileNameToLinkTo = `${uniqueName()}.md`;
+      const filePathToLinkTo = path.resolve(
+        secondNestedDirPath,
+        `./${fileNameToLinkTo}`
+      );
+      fs.writeFileSync(filePathToLinkTo, `foo bar baz`);
+
+      const mockAbsoluteLink = `/${firstNestedDirName}/${secondNestedDirName}/${fileNameToLinkTo}`;
+
+      const fileContainingLink = getPathToNewTestFile(testDirectory.path);
+      fs.writeFileSync(
+        fileContainingLink,
+        `Here is some text\n[and then a link to a file][1]\n\n[1]: ${mockAbsoluteLink}`
+      );
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory.path)).toEqual({
+          badLocalLinks: [],
+        });
+      }, testDirectory.path);
+    });
+
+    it("identifies absolute local reference links which starts from outside the given directory", async () => {
+      const testDirectory = await newTestDirectoryWithName();
+
+      const fileNameToLinkTo = `${uniqueName()}.md`;
+      const filePathToLinkTo = path.resolve(
+        testDirectory.path,
+        `./${fileNameToLinkTo}`
+      );
+      fs.writeFileSync(filePathToLinkTo, `foo bar baz`);
+
+      const mockAbsoluteLink = `/${testDirectory.name}/${fileNameToLinkTo}`;
+
+      const fileContainingLink = getPathToNewTestFile(testDirectory.path);
+      fs.writeFileSync(
+        fileContainingLink,
+        `Here is some text\n[and then a link to a file][1]\n\n[1]: ${mockAbsoluteLink}`
+      );
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory.path)).toEqual({
+          badLocalLinks: [
+            {
+              filePath: fileContainingLink,
+              missingLinks: [
+                {
+                  link: `[1]: ${mockAbsoluteLink}`,
+                  reasons: [
+                    badLinkReasons.INVALID_ABSOLUTE_LINK,
+                    badLinkReasons.FILE_NOT_FOUND,
+                  ],
+                },
+              ],
+            },
+          ],
+        });
+      }, testDirectory.path);
+    });
+
+    it("identifies absolute local reference links which starts from within the given directory", async () => {
+      const testDirectory = await newTestDirectoryWithName();
+
+      const firstNestedDirName = "test-dir-1";
+      const firstNestedDirPath = path.resolve(
+        testDirectory.path,
+        `./${firstNestedDirName}`
+      );
+      fs.mkdirSync(firstNestedDirPath);
+
+      const secondNestedDirName = "test-dir-2";
+      const secondNestedDirPath = path.resolve(
+        firstNestedDirPath,
+        `./${secondNestedDirName}`
+      );
+      fs.mkdirSync(secondNestedDirPath);
+
+      const fileNameToLinkTo = `${uniqueName()}.md`;
+      const filePathToLinkTo = path.resolve(
+        secondNestedDirPath,
+        `./${fileNameToLinkTo}`
+      );
+      fs.writeFileSync(filePathToLinkTo, `foo bar baz`);
+
+      const mockAbsoluteLink = `/${secondNestedDirName}/${fileNameToLinkTo}`;
+
+      const fileContainingLink = getPathToNewTestFile(testDirectory.path);
+      fs.writeFileSync(
+        fileContainingLink,
+        `Here is some text\n[and then a link to a file][1]\n\n[1]: ${mockAbsoluteLink}`
+      );
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory.path)).toEqual({
+          badLocalLinks: [
+            {
+              filePath: fileContainingLink,
+              missingLinks: [
+                {
+                  link: `[1]: ${mockAbsoluteLink}`,
+                  reasons: [
+                    badLinkReasons.INVALID_ABSOLUTE_LINK,
+                    badLinkReasons.FILE_NOT_FOUND,
+                  ],
+                },
+              ],
+            },
+          ],
+        });
+      }, testDirectory.path);
     });
 
     it("Identifies a local reference link that points at a file that does not exist even when the link does not contain a file extension", async () => {

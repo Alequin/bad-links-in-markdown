@@ -11,4 +11,6 @@ export const badLinkReasons = {
     "This link is potentially a absolute link on a windows machine. These do not work on github",
   BAD_RELATIVE_LINK_SYNTAX:
     "Relative link syntax can only step up by one parent direction at a time. '.../' is invalid",
+  INVALID_ABSOLUTE_LINK:
+    "Absolute links must start from the root of the given directory",
 };

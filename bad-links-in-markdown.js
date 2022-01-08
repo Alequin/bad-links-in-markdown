@@ -12,6 +12,7 @@ export const badLinksInMarkdown = async (topLevelDirectory) => {
 
     return {
       ...file,
+      topLevelDirectory,
       links: [
         ...findInlineMarkdownLinks(markdown),
         ...findReferenceMarkdownLinks(markdown),

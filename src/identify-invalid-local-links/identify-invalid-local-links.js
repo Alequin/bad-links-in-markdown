@@ -9,8 +9,9 @@ import { prepareLinkObjects } from "./prepare-link-objects";
 
 export const identifyInvalidLocalLinks = (fileObjects) => {
   return fileObjects
-    .map(({ directory, links, sourceFilePath }) => {
-      const linkObjects = prepareLinkObjects(links, directory, sourceFilePath);
+    .map((fileObject) => {
+      const linkObjects = prepareLinkObjects(fileObject);
+      const { sourceFilePath } = fileObject;
 
       const [internalFileLinks, externalFileLinks] = partition(
         linkObjects,
@@ -18,7 +19,7 @@ export const identifyInvalidLocalLinks = (fileObjects) => {
       );
 
       const missingLinks = groupMatchingLinkObjectWithIssues([
-        ...identifyInvalidInternalFileLinks(internalFileLinks),
+        ...findLinksWithBadHeaderTags(internalFileLinks),
         ...identifyInvalidExternalFileLinks(externalFileLinks),
       ]);
 
@@ -33,16 +34,11 @@ export const identifyInvalidLocalLinks = (fileObjects) => {
     .filter(({ missingLinks }) => !isEmpty(missingLinks));
 };
 
-const identifyInvalidInternalFileLinks = (linkObjects) => {
-  return findLinksWithBadHeaderTags(linkObjects);
-};
-
 const identifyInvalidExternalFileLinks = (linkObjects) => {
   return [
-    // Windows specific
     ...findInvalidAbsoluteLinks.windowsAbsoluteLinks(linkObjects),
+    ...findInvalidAbsoluteLinks.badRootAbsoluteLinks(linkObjects),
 
-    // General
     ...findInvalidRelativeLinkSyntax(linkObjects),
     ...findMissingLinksWithFileExtensions(
       linkObjects.filter(

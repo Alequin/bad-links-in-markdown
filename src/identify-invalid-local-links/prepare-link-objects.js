@@ -2,16 +2,23 @@ import fs from "fs";
 import { last } from "lodash";
 import path from "path";
 
-export const prepareLinkObjects = (links, directory, sourceFilePath) =>
-  links
+export const prepareLinkObjects = (fileObject) =>
+  fileObject.links
     .filter(isLocalLink)
-    .map((linkObject) => ({ ...linkObject, directory, sourceFilePath }))
+    .map((linkObject) => ({
+      ...linkObject,
+      directory: fileObject.directory,
+      topLevelDirectory: fileObject.topLevelDirectory,
+      sourceFilePath: fileObject.sourceFilePath,
+    }))
     .map(addIsInternalFileLink)
+    .map(addIsAbsoluteLink)
     .map(addFullPathToObject)
     .map(addRawFileNameToObject)
     .map(addMatchingFilesInDirectoryToLinks)
     .map(addFileExtension)
-    .map(appendFileExtensionToFullPath);
+    .map(appendFileExtensionToFullPath)
+    .map((object) => Object.freeze(object));
 
 // https://www.computerhope.com/jargon/f/fileext.htm
 const IS_LOCAL_LINK_WITHOUT_PATH_REGEX = /w*|w*\.[\w\d]*$/;
@@ -27,6 +34,14 @@ const addIsInternalFileLink = (linkObject) => {
   };
 };
 
+const ABSOLUTE_PATH_REGEX = /^\//;
+const addIsAbsoluteLink = (linkObject) => {
+  return {
+    ...linkObject,
+    isAbsoluteLink: ABSOLUTE_PATH_REGEX.test(linkObject.link),
+  };
+};
+
 const addFullPathToObject = (linkObject) => {
   return linkObject.isInternalFileLink
     ? {
@@ -35,17 +50,10 @@ const addFullPathToObject = (linkObject) => {
       }
     : {
         ...linkObject,
-        fullPath:
-          getFullPathFromAbsoluteLink(linkObject) ||
-          getFullPathFromRelativeLink(linkObject),
+        fullPath: linkObject.isAbsoluteLink
+          ? path.resolve(linkObject.topLevelDirectory, `./${linkObject.link}`)
+          : getFullPathFromRelativeLink(linkObject),
       };
-};
-
-const ABSOLUTE_PATH_REGEX = /^\//;
-const getFullPathFromAbsoluteLink = (linkObject) => {
-  return ABSOLUTE_PATH_REGEX.test(linkObject.link)
-    ? path.resolve(linkObject.directory, `./${linkObject.link}`)
-    : null;
 };
 
 const getFullPathFromRelativeLink = (linkObject) => {

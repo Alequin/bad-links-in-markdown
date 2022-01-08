@@ -85,6 +85,7 @@ describe("bad-links-in-markdown - windows specific", () => {
                 link: `![picture](/${absolutePath})`,
                 reasons: [
                   badLinkReasons.POTENTIAL_WINDOWS_ABSOLUTE_LINK,
+                  badLinkReasons.INVALID_ABSOLUTE_LINK,
                   badLinkReasons.FILE_NOT_FOUND,
                 ],
               },
@@ -116,6 +117,7 @@ describe("bad-links-in-markdown - windows specific", () => {
                 link: `[picture]: /${absolutePath}`,
                 reasons: [
                   badLinkReasons.POTENTIAL_WINDOWS_ABSOLUTE_LINK,
+                  badLinkReasons.INVALID_ABSOLUTE_LINK,
                   badLinkReasons.FILE_NOT_FOUND,
                 ],
               },
@@ -147,6 +149,7 @@ describe("bad-links-in-markdown - windows specific", () => {
                 link: `[picture]: /${absolutePath}`,
                 reasons: [
                   badLinkReasons.POTENTIAL_WINDOWS_ABSOLUTE_LINK,
+                  badLinkReasons.INVALID_ABSOLUTE_LINK,
                   badLinkReasons.FILE_NOT_FOUND,
                 ],
               },
