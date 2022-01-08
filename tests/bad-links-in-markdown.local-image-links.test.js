@@ -442,14 +442,14 @@ describe("bad-links-in-markdown - local image links", () => {
       }, testDirectory);
     });
 
-    it("Identifies two local inline image links on the same file line that point at images that do not exist", async () => {
+    it("Identifies multiple local inline image links on the same file line that point at images that do not exist", async () => {
       const testDirectory = await newTestDirectory();
 
       const filePath = getPathToNewTestFile(testDirectory);
 
       fs.writeFileSync(
         filePath,
-        `![picture](./path/to/missing/image.png)![picture2](./path/to/missing/image.png)`
+        `![picture](./path/to/missing/image.png) and ![picture2](./path/to/missing/image.png)![picture3](./path/to/missing/image.png)(foobar)![picture4](./path/to/missing/image.png)`
       );
 
       await runTestWithDirectoryCleanup(async () => {
@@ -464,6 +464,14 @@ describe("bad-links-in-markdown - local image links", () => {
                 },
                 {
                   link: "![picture2](./path/to/missing/image.png)",
+                  reasons: [badLinkReasons.FILE_NOT_FOUND],
+                },
+                {
+                  link: "![picture3](./path/to/missing/image.png)",
+                  reasons: [badLinkReasons.FILE_NOT_FOUND],
+                },
+                {
+                  link: "![picture4](./path/to/missing/image.png)",
                   reasons: [badLinkReasons.FILE_NOT_FOUND],
                 },
               ],

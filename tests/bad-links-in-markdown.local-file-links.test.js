@@ -817,14 +817,15 @@ describe("bad-links-in-markdown - local file links", () => {
       }, testDirectory);
     });
 
-    it("Identifies two local inline links on the same file line that point at files that do not exist", async () => {
+    it("Identifies multiple local inline links on the same file line that point at files that do not exist", async () => {
       const testDirectory = await newTestDirectory();
 
       const filePath = getPathToNewTestFile(testDirectory);
+      `![picture](./path/to/missing/image.png) and ![picture2](./path/to/missing/image.png)![picture3](./path/to/missing/image.png)(foobar)![picture4](./path/to/missing/image.png)`;
 
       fs.writeFileSync(
         filePath,
-        `[I am a local link](./path/to/missing/file.md) and [I am another local link](./path/to/missing/file.md)`
+        `[I am a local link](./path/to/missing/file.md) and [I am another local link](./path/to/missing/file.md)[I am anotherx2 local link](./path/to/missing/file.md)(foobar)[I am anotherx3 local link](./path/to/missing/file.md)`
       );
 
       await runTestWithDirectoryCleanup(async () => {
@@ -839,6 +840,48 @@ describe("bad-links-in-markdown - local file links", () => {
                 },
                 {
                   link: "[I am another local link](./path/to/missing/file.md)",
+                  reasons: [badLinkReasons.FILE_NOT_FOUND],
+                },
+                {
+                  link: "[I am anotherx2 local link](./path/to/missing/file.md)",
+                  reasons: [badLinkReasons.FILE_NOT_FOUND],
+                },
+                {
+                  link: "[I am anotherx3 local link](./path/to/missing/file.md)",
+                  reasons: [badLinkReasons.FILE_NOT_FOUND],
+                },
+              ],
+            },
+          ],
+        });
+      }, testDirectory);
+    });
+
+    it("Identifies local inline links that point at files that do not exist when the link text includes parenthesis within it", async () => {
+      const testDirectory = await newTestDirectory();
+
+      const filePath = getPathToNewTestFile(testDirectory);
+
+      fs.writeFileSync(
+        filePath,
+        `
+        [I am a local link (its a good one) check it out](./path/to/missing/file.md)
+        [I am a local link (useful stuff)](./path/to/missing/file.md)
+        `
+      );
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [
+            {
+              filePath,
+              missingLinks: [
+                {
+                  link: "[I am a local link (its a good one) check it out](./path/to/missing/file.md)",
+                  reasons: [badLinkReasons.FILE_NOT_FOUND],
+                },
+                {
+                  link: "[I am a local link (useful stuff)](./path/to/missing/file.md)",
                   reasons: [badLinkReasons.FILE_NOT_FOUND],
                 },
               ],
