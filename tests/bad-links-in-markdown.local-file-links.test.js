@@ -816,6 +816,37 @@ describe("bad-links-in-markdown - local file links", () => {
         });
       }, testDirectory);
     });
+
+    it("Identifies two local inline links on the same file line that point at files that do not exist", async () => {
+      const testDirectory = await newTestDirectory();
+
+      const filePath = getPathToNewTestFile(testDirectory);
+
+      fs.writeFileSync(
+        filePath,
+        `[I am a local link](./path/to/missing/file.md) and [I am another local link](./path/to/missing/file.md)`
+      );
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [
+            {
+              filePath,
+              missingLinks: [
+                {
+                  link: "[I am a local link](./path/to/missing/file.md)",
+                  reasons: [badLinkReasons.FILE_NOT_FOUND],
+                },
+                {
+                  link: "[I am another local link](./path/to/missing/file.md)",
+                  reasons: [badLinkReasons.FILE_NOT_FOUND],
+                },
+              ],
+            },
+          ],
+        });
+      }, testDirectory);
+    });
   });
 
   describe("identify-invalid-local-links and the link is an inline link which includes a header tag", () => {

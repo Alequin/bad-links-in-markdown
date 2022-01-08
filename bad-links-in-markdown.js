@@ -26,13 +26,37 @@ export const badLinksInMarkdown = async (topLevelDirectory) => {
   // await identifyInvalidLinksToWebSites(markdownFilesWithLinks);
 };
 
-const MARKDOWN_INLINE_LINK_REGEX = /!?\[.*\]\(.*\)/g;
+const MARKDOWN_LINE_WITH_INLINE_LINK_REGEX = /!?\[.*\]\(.*\)/g;
 const INLINE_LINK_REGEX = /[(](.*)[)]/;
 const findInlineMarkdownLinks = (markdown) => {
-  return match(markdown, MARKDOWN_INLINE_LINK_REGEX).map((inlineLink) => ({
+  const allLinks = breakUpLinksOnSameLine(
+    match(markdown, MARKDOWN_LINE_WITH_INLINE_LINK_REGEX)
+  );
+
+  return allLinks.map((inlineLink) => ({
     ...makeLinkObject(inlineLink, INLINE_LINK_REGEX),
     isImage: inlineLink.startsWith("!"),
   }));
+};
+
+const breakUpLinksOnSameLine = (markdownLinesWithLinks) => {
+  return markdownLinesWithLinks
+    .map((lineWithLinks) => {
+      const splitLinks = lineWithLinks
+        .split(")") // break up links by their last char
+        .filter(Boolean) // remove empty strings
+        .map((link) => `${link})`); // re-add the last char closing bracket
+
+      return splitLinks.length === 1
+        ? lineWithLinks
+        : breakUpLinksOnSameLine(
+            splitLinks.map(
+              (segmentLink) =>
+                segmentLink.match(MARKDOWN_LINE_WITH_INLINE_LINK_REGEX)?.[0]
+            )
+          );
+    })
+    .flat(Number.MAX_SAFE_INTEGER);
 };
 
 const MARKDOWN_REFERENCE_LINK_REGEX = /!?\[.*\]:.*/g;

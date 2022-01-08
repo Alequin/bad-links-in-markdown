@@ -63,7 +63,38 @@ describe("bad-links-in-markdown - local file links", () => {
       }, testDirectory);
     });
 
-    it("Identifies inline local linkS that points at a fileS that exists but do not contain the targeted header tag, even when the link includes label text", async () => {
+    it("Identifies two local inline links on the same file line that point at files that do not exist, even when the link includes label text", async () => {
+      const testDirectory = await newTestDirectory();
+
+      const filePath = getPathToNewTestFile(testDirectory);
+
+      fs.writeFileSync(
+        filePath,
+        `[I am a local link](./path/to/missing/file.md ${labelText}) and [I am another local link](./path/to/missing/file.md ${labelText})`
+      );
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [
+            {
+              filePath,
+              missingLinks: [
+                {
+                  link: `[I am a local link](./path/to/missing/file.md ${labelText})`,
+                  reasons: [badLinkReasons.FILE_NOT_FOUND],
+                },
+                {
+                  link: `[I am another local link](./path/to/missing/file.md ${labelText})`,
+                  reasons: [badLinkReasons.FILE_NOT_FOUND],
+                },
+              ],
+            },
+          ],
+        });
+      }, testDirectory);
+    });
+
+    it("Identifies inline local links that points at a files that exists but do not contain the targeted header tag, even when the link includes label text", async () => {
       const testDirectory = await newTestDirectory();
 
       const fileNameToLinkTo = uniqueName();
@@ -339,6 +370,37 @@ describe("bad-links-in-markdown - local file links", () => {
               missingLinks: [
                 {
                   link: `![picture](./path/to/missing/image.png ${labelText})`,
+                  reasons: [badLinkReasons.FILE_NOT_FOUND],
+                },
+              ],
+            },
+          ],
+        });
+      }, testDirectory);
+    });
+
+    it("Identifies two local inline image links on the same file line that point at files that do not exist, even when the link includes label text", async () => {
+      const testDirectory = await newTestDirectory();
+
+      const filePath = getPathToNewTestFile(testDirectory);
+
+      fs.writeFileSync(
+        filePath,
+        `![picture](./path/to/missing/image.png ${labelText})  ![picture2](./path/to/missing/image.png ${labelText})`
+      );
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [
+            {
+              filePath,
+              missingLinks: [
+                {
+                  link: `![picture](./path/to/missing/image.png ${labelText})`,
+                  reasons: [badLinkReasons.FILE_NOT_FOUND],
+                },
+                {
+                  link: `![picture2](./path/to/missing/image.png ${labelText})`,
                   reasons: [badLinkReasons.FILE_NOT_FOUND],
                 },
               ],
