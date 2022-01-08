@@ -1,7 +1,6 @@
 import fs from "fs";
 import { uniqueId } from "lodash";
 import path from "path";
-import { isWindowsOs } from "../src/is-windows-os";
 
 const TOP_LEVEL_DIRECTORY = path.resolve(__dirname, "../test-markdown-files");
 
@@ -9,7 +8,10 @@ const TOP_LEVEL_DIRECTORY = path.resolve(__dirname, "../test-markdown-files");
  * A function used to run a test with a file that will be cleaned up once
  * the tests is complete, regardless of the tests success or failure
  */
-export const runTestWithDirectoryCleanup = async (testCallback, directoryToDelete) => {
+export const runTestWithDirectoryCleanup = async (
+  testCallback,
+  directoryToDelete
+) => {
   try {
     await testCallback();
   } catch (error) {
@@ -30,14 +32,26 @@ export const newTestDirectory = async () => {
   return testDirectory;
 };
 
+export const newTestDirectoryWithName = async () => {
+  const directoryName = uniqueName();
+  const directoryPath = path.resolve(TOP_LEVEL_DIRECTORY, `./${directoryName}`);
+
+  if (fs.existsSync(directoryPath)) await forceRemoveDir(directoryPath);
+  fs.mkdirSync(directoryPath);
+
+  return { name: directoryName, path: directoryPath };
+};
+
 export const getPathToNewTestFile = (testDirectory) =>
   path.resolve(testDirectory, `./${`${uniqueName()}.md`}`);
 
 export const uniqueName = () => `test-${uniqueId()}`;
 
 const forceRemoveDir = async (directory) =>
-  new Promise((resolve) => fs.rm(directory, { recursive: true, force: true }, resolve));
+  new Promise((resolve) =>
+    fs.rm(directory, { recursive: true, force: true }, resolve)
+  );
 
 export const transformAbsoluteLinkToMarkdownForCurrentOS = (absoluteLink) => {
-  return isWindowsOs() ? `/${absoluteLink}` : absoluteLink;
+  return absoluteLink;
 };

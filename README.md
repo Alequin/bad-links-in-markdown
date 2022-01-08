@@ -6,10 +6,10 @@ A script that identifies links in markdown files that no longer work
 
 # Key terms
 
-- **Local link**: A link which points to another file / location on the current machine
-- **Inline link**: any markdown link with appears inline in markdown. Contains the descriptive text and the raw link all in one place
+- **Local link**: A link which points to another file / location in the current git repository
+- **Inline link**: any markdown link which appears inline in markdown. Contains the descriptive text and the raw link all in one place
   - does this include html links?
-- **Reference link**: any markdown link defined elsewhere in the markdown document and then referenced at a later point
+- **Reference link**: any markdown link defined elsewhere in the markdown document and is then referenced at a later point
 - **Image link**: a markdown link used to display an image
   - `![image text](./path/to/image/file.png)`
 - **File link**: a markdown link used to link to any file

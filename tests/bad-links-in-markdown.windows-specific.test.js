@@ -1,7 +1,6 @@
 import fs from "fs";
 import { badLinksInMarkdown } from "../bad-links-in-markdown";
 import { badLinkReasons } from "../src/identify-invalid-local-links/find-bad-links/bad-link-reasons";
-import * as foo from "../src/is-windows-os";
 import {
   getPathToNewTestFile,
   newTestDirectory,
@@ -9,8 +8,6 @@ import {
 } from "./test-utils";
 
 describe("bad-links-in-markdown - windows specific", () => {
-  beforeAll(() => jest.spyOn(foo, "isWindowsOs").mockReturnValue(true));
-
   it("Identifies a windows absolute local inline link that does not start with a forward slash", async () => {
     const testDirectory = await newTestDirectory();
 
@@ -27,7 +24,10 @@ describe("bad-links-in-markdown - windows specific", () => {
             missingLinks: [
               {
                 link: `[I am a local link](${absolutePath})`,
-                reasons: [badLinkReasons.BAD_ABSOLUTE_LINK],
+                reasons: [
+                  badLinkReasons.POTENTIAL_WINDOWS_ABSOLUTE_LINK,
+                  badLinkReasons.FILE_NOT_FOUND,
+                ],
               },
             ],
           },
@@ -55,7 +55,10 @@ describe("bad-links-in-markdown - windows specific", () => {
             missingLinks: [
               {
                 link: `[1]: ${absolutePath}`,
-                reasons: [badLinkReasons.BAD_ABSOLUTE_LINK],
+                reasons: [
+                  badLinkReasons.POTENTIAL_WINDOWS_ABSOLUTE_LINK,
+                  badLinkReasons.FILE_NOT_FOUND,
+                ],
               },
             ],
           },
@@ -80,7 +83,10 @@ describe("bad-links-in-markdown - windows specific", () => {
             missingLinks: [
               {
                 link: `![picture](/${absolutePath})`,
-                reasons: [badLinkReasons.BAD_ABSOLUTE_IMAGE_LINK],
+                reasons: [
+                  badLinkReasons.POTENTIAL_WINDOWS_ABSOLUTE_LINK,
+                  badLinkReasons.FILE_NOT_FOUND,
+                ],
               },
             ],
           },
@@ -108,7 +114,10 @@ describe("bad-links-in-markdown - windows specific", () => {
             missingLinks: [
               {
                 link: `[picture]: /${absolutePath}`,
-                reasons: [badLinkReasons.BAD_ABSOLUTE_IMAGE_LINK],
+                reasons: [
+                  badLinkReasons.POTENTIAL_WINDOWS_ABSOLUTE_LINK,
+                  badLinkReasons.FILE_NOT_FOUND,
+                ],
               },
             ],
           },
@@ -136,7 +145,10 @@ describe("bad-links-in-markdown - windows specific", () => {
             missingLinks: [
               {
                 link: `[picture]: /${absolutePath}`,
-                reasons: [badLinkReasons.BAD_ABSOLUTE_IMAGE_LINK],
+                reasons: [
+                  badLinkReasons.POTENTIAL_WINDOWS_ABSOLUTE_LINK,
+                  badLinkReasons.FILE_NOT_FOUND,
+                ],
               },
             ],
           },

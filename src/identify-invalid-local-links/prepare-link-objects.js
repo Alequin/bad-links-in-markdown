@@ -43,7 +43,9 @@ const addFullPathToObject = (linkObject) => {
 
 const ABSOLUTE_PATH_REGEX = /^\//;
 const getFullPathFromAbsoluteLink = (linkObject) => {
-  return ABSOLUTE_PATH_REGEX.test(linkObject.link) ? linkObject.link : null;
+  return ABSOLUTE_PATH_REGEX.test(linkObject.link)
+    ? path.resolve(linkObject.directory, `./${linkObject.link}`)
+    : null;
 };
 
 const getFullPathFromRelativeLink = (linkObject) => {

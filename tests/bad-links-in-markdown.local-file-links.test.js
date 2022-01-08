@@ -4,9 +4,9 @@ import { badLinksInMarkdown } from "../bad-links-in-markdown";
 import { badLinkReasons } from "../src/identify-invalid-local-links/find-bad-links/bad-link-reasons";
 import {
   getPathToNewTestFile,
-  transformAbsoluteLinkToMarkdownForCurrentOS,
   newTestDirectory,
   runTestWithDirectoryCleanup,
+  transformAbsoluteLinkToMarkdownForCurrentOS,
   uniqueName,
 } from "./test-utils";
 
@@ -65,15 +65,14 @@ describe("bad-links-in-markdown - local file links", () => {
     it("Ignores absolute local inline links which point at files which exist", async () => {
       const testDirectory = await newTestDirectory();
 
-      const fileNameToLinkTo = uniqueName();
+      const fileNameToLinkTo = `${uniqueName()}.md`;
       const filePathToLinkTo = path.resolve(
         testDirectory,
-        `./${fileNameToLinkTo}.md`
+        `./${fileNameToLinkTo}`
       );
       fs.writeFileSync(filePathToLinkTo, `foo bar baz`);
 
-      const mockAbsoluteLink =
-        transformAbsoluteLinkToMarkdownForCurrentOS(filePathToLinkTo);
+      const mockAbsoluteLink = `/${fileNameToLinkTo}`;
 
       const fileContainingLink = getPathToNewTestFile(testDirectory);
       fs.writeFileSync(
@@ -1269,15 +1268,14 @@ describe("bad-links-in-markdown - local file links", () => {
     it("Ignores absolute local reference links which point at files which exist", async () => {
       const testDirectory = await newTestDirectory();
 
-      const fileNameToLinkTo = uniqueName();
+      const fileNameToLinkTo = `${uniqueName()}.md`;
       const filePathToLinkTo = path.resolve(
         testDirectory,
-        `./${fileNameToLinkTo}.md`
+        `./${fileNameToLinkTo}`
       );
       fs.writeFileSync(filePathToLinkTo, `foo bar baz`);
 
-      const mockAbsoluteLink =
-        transformAbsoluteLinkToMarkdownForCurrentOS(filePathToLinkTo);
+      const mockAbsoluteLink = `/${fileNameToLinkTo}`;
 
       const fileContainingLink = getPathToNewTestFile(testDirectory);
       fs.writeFileSync(
