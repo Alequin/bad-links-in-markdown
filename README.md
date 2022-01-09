@@ -1,6 +1,6 @@
 # bad-links-in-markdown
 
-A script that identifies links in markdown files that no longer work
+A script that identifies links in markdown files that no longer work. The script is designed to work against the top level directory in a github repository.
 
 `npm run find-bad-links -- --directory C:/path/to/top/level/directory`
 
@@ -17,6 +17,7 @@ A script that identifies links in markdown files that no longer work
 
 ## TODO
 
+- emails links e.g. <[test@gmail.com](mailto:test@gmail.com)>
 - html tag links
 - html tag image links
 - Confirm absolute image links on linux are invalid
@@ -25,3 +26,4 @@ A script that identifies links in markdown files that no longer work
 ### Syntax notes
 
 https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet#links
+https://www.markdownguide.org/basic-syntax/#links
