@@ -1,6 +1,12 @@
 # bad-links-in-markdown
 
-A script that identifies links in markdown files that no longer work. The script is designed to work against the top level directory in a github repository.
+A script that identifies links in markdown files that no longer work.
+
+The script:
+
+- Is designed to work against the top level directory in a github repository
+- Follows markdown syntax that is valid on github
+- Does not identify links which use invalid syntax
 
 `npm run find-bad-links -- --directory C:/path/to/top/level/directory`
 
