@@ -1,11 +1,13 @@
 import fs from "fs";
 import { last } from "lodash";
 import path from "path";
-import { match } from "../match";
+import { match } from "../utils/match";
+import { isLocalLink } from "../utils/link-type-checks";
+import { doesLinkStartWithRelativePath } from "../utils/does-link-start-with-relative-path";
 
 export const prepareLinkObjects = (fileObject) =>
   fileObject.links
-    .filter(isLocalLink)
+    .filter(({ link, tag }) => isLocalLink(link, tag))
     .map((linkObject) => ({
       ...linkObject,
       directory: fileObject.directory,
@@ -20,16 +22,6 @@ export const prepareLinkObjects = (fileObject) =>
     .map(addFileExtension)
     .map(appendFileExtensionToFullPath)
     .map((object) => Object.freeze(object));
-
-// https://www.computerhope.com/jargon/f/fileext.htm
-const IS_LOCAL_LINK_WITHOUT_PATH_REGEX = /w*|w*\.[\w\d]*$/;
-const isLocalLink = ({ link }) => {
-  return (
-    (doesLinkStartWithRelativePath(link) ||
-      IS_LOCAL_LINK_WITHOUT_PATH_REGEX.test(link)) &&
-    !link?.startsWith("http")
-  );
-};
 
 const addIsInternalFileLink = (linkObject) => {
   return {
@@ -129,7 +121,3 @@ const appendFileExtensionToFullPath = (linkObject) => {
     fullPath: `${linkObject.fullPath}${linkObject.linkFileExtension || ""}`,
   };
 };
-
-const IS_RELATIVE_LINK_REGEX = /^\.*/;
-const doesLinkStartWithRelativePath = (link) =>
-  IS_RELATIVE_LINK_REGEX.test(link);

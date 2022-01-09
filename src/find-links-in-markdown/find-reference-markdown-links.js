@@ -1,5 +1,5 @@
 import { isEmpty } from "lodash";
-import { match } from "../match";
+import { match } from "../utils/match";
 import { makeLinkObjectFromReferenceLink } from "./make-link-object";
 
 const MARKDOWN_REFERENCE_LINK_REGEX = /!?\[.*\]:.*/g;

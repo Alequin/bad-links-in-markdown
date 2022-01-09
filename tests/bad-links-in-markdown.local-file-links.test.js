@@ -840,26 +840,6 @@ describe("bad-links-in-markdown - local file links", () => {
         });
       }, testDirectory);
     });
-
-    it("Does not include inline web links in list of bad local links", async () => {
-      const testDirectory = await newTestDirectory();
-
-      const filePath = getPathToNewTestFile(testDirectory);
-
-      fs.writeFileSync(
-        filePath,
-        `
-        [I am a local link](http://www.google.com)
-        [foobar (eggs)](https://github.com/fun-repo)
-      `
-      );
-
-      await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
-          badLocalLinks: [],
-        });
-      }, testDirectory);
-    });
   });
 
   describe("identify-invalid-local-links and the link is an inline link which includes a header tag", () => {
@@ -2274,26 +2254,6 @@ describe("bad-links-in-markdown - local file links", () => {
       }, testDirectory);
     });
 
-    it("Does not include reference web links in the list of bad local links", async () => {
-      const testDirectory = await newTestDirectory();
-
-      const filePath = getPathToNewTestFile(testDirectory);
-
-      fs.writeFileSync(
-        filePath,
-        `
-        Here is some text\n[and then a link to a file][1]\n\n[1]: http://www.google.com
-        Here is some text\n[and then a link to a file][1]\n\n[1]: https://github.com/fun-repo
-        `
-      );
-
-      await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
-          badLocalLinks: [],
-        });
-      }, testDirectory);
-    });
-
     it("Identifies reference links that points at files that do not exist, even when the links contain spaces at the start and end", async () => {
       const testDirectory = await newTestDirectory();
 
@@ -2343,6 +2303,14 @@ describe("bad-links-in-markdown - local file links", () => {
         });
       }, testDirectory);
     });
+
+    it.todo(
+      "Identifies shorthand reference links that points at files that do not exist"
+    );
+
+    it.todo(
+      "Ignores shorthand reference links which point at files which exist"
+    );
   });
 
   describe("identify-invalid-local-links and the link is an reference link which includes a header tag", () => {

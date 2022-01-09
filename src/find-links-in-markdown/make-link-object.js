@@ -1,4 +1,4 @@
-import { match } from "../match";
+import { match } from "../utils/match";
 import { MARKDOWN_INLINE_LINK_REGEX } from "./markdown-inline-link-regex";
 
 export const makeLinkObjectFromInlineLink = ({ markdownLink, isImage }) => {

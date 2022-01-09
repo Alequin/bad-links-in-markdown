@@ -1,6 +1,6 @@
 import fs from "fs";
 import { flatten, flow, groupBy, mapValues } from "lodash";
-import { readFileLines } from "../../utils";
+import { readFileLines } from "../../utils/utils";
 import { badLinkReasons } from "./bad-link-reasons";
 
 export const findLinksWithBadHeaderTags = (linkObjects) => {
