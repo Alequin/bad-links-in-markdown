@@ -1,6 +1,6 @@
 import { flatten, flow, groupBy, mapValues } from "lodash";
 import { doesFileExist } from "../../utils/does-file-exist";
-import { readFileLines } from "../../utils/utils";
+import { readFileLines } from "../../utils/read-file-lines";
 import { badLinkReasons } from "./bad-link-reasons";
 
 export const findLinksWithBadHeaderTags = (linkObjects) => {

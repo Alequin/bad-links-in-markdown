@@ -1,4 +1,4 @@
-import { readFileLines } from "../../utils/utils";
+import { readFileLines } from "../../utils/read-file-lines";
 
 export const identifyLinksWithBadLineTags = (links) => {
   return links.filter((linkObject) => {
