@@ -11,7 +11,6 @@ export const identifyInvalidLocalLinks = (fileObjects) => {
   return fileObjects
     .map((fileObject) => {
       const linkObjects = prepareLinkObjects(fileObject);
-      const { sourceFilePath } = fileObject;
 
       const [internalFileLinks, externalFileLinks] = partition(
         linkObjects,
@@ -24,7 +23,7 @@ export const identifyInvalidLocalLinks = (fileObjects) => {
       ]);
 
       return {
-        filePath: sourceFilePath,
+        filePath: fileObject.sourceFilePath,
         missingLinks: missingLinks.map(({ markdownLink, reasons }) => ({
           link: markdownLink,
           reasons,

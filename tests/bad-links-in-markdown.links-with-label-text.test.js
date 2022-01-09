@@ -206,7 +206,7 @@ describe("bad-links-in-markdown - links with label text", () => {
       }, testDirectory);
     });
 
-    it("Identifies reference links that points at files that do not exist, even when the link includes label text", async () => {
+    it("Identifies reference links that point at files that do not exist, even when the link includes label text", async () => {
       const testDirectory = await newTestDirectory();
 
       const filePath = getPathToNewTestFile(testDirectory);

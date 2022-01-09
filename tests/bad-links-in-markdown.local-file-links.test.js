@@ -1430,7 +1430,7 @@ describe("bad-links-in-markdown - local file links", () => {
   });
 
   describe("identify-invalid-local-links and the link is a reference link", () => {
-    it("Identifies reference linkS that points at fileS that do not exist", async () => {
+    it("Identifies reference links that point at files that do not exist", async () => {
       const testDirectory = await newTestDirectory();
 
       const filePath = getPathToNewTestFile(testDirectory);
@@ -2254,7 +2254,7 @@ describe("bad-links-in-markdown - local file links", () => {
       }, testDirectory);
     });
 
-    it("Identifies reference links that points at files that do not exist, even when the links contain spaces at the start and end", async () => {
+    it("Identifies reference links that point at files that do not exist, even when the links contain spaces at the start and end", async () => {
       const testDirectory = await newTestDirectory();
 
       const filePath = getPathToNewTestFile(testDirectory);
@@ -2304,13 +2304,55 @@ describe("bad-links-in-markdown - local file links", () => {
       }, testDirectory);
     });
 
-    it.todo(
-      "Identifies shorthand reference links that points at files that do not exist"
-    );
+    it("Identifies shorthand reference links that point at files that do not exist", async () => {
+      const testDirectory = await newTestDirectory();
 
-    it.todo(
-      "Ignores shorthand reference links which point at files which exist"
-    );
+      const filePath = getPathToNewTestFile(testDirectory);
+
+      fs.writeFileSync(
+        filePath,
+        `Here is some text\n[1]\n\n[1]: ./path/to/missing/file.md`
+      );
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [
+            {
+              filePath,
+              missingLinks: [
+                {
+                  link: "[1]: ./path/to/missing/file.md",
+                  reasons: [badLinkReasons.FILE_NOT_FOUND],
+                },
+              ],
+            },
+          ],
+        });
+      }, testDirectory);
+    });
+
+    it("Ignores shorthand reference links which point at files that exist", async () => {
+      const testDirectory = await newTestDirectory();
+
+      const fileNameToLinkTo = uniqueName();
+      const filePathToLinkTo = path.resolve(
+        testDirectory,
+        `./${fileNameToLinkTo}.md`
+      );
+      fs.writeFileSync(filePathToLinkTo, `foo bar baz`);
+
+      const fileContainingLink = getPathToNewTestFile(testDirectory);
+      fs.writeFileSync(
+        fileContainingLink,
+        `Here is some text\n[1]\n\n[1]: ./${fileNameToLinkTo}.md`
+      );
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [],
+        });
+      }, testDirectory);
+    });
   });
 
   describe("identify-invalid-local-links and the link is an reference link which includes a header tag", () => {

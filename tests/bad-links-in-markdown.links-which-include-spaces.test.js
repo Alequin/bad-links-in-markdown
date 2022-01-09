@@ -123,7 +123,7 @@ describe("bad-links-in-markdown - links including spaces", () => {
     }, testDirectory);
   });
 
-  it("Identifies reference links that points at files that do not exist, even when the links contain spaces at the start and end", async () => {
+  it("Identifies reference links that point at files that do not exist, even when the links contain spaces at the start and end", async () => {
     const testDirectory = await newTestDirectory();
 
     const filePath = getPathToNewTestFile(testDirectory);

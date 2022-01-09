@@ -122,7 +122,7 @@ describe("bad-links-in-markdown - links including parenthesis", () => {
     }, testDirectory);
   });
 
-  it("Identifies reference links that points at files that do not exist, even when the links description text contains parentensis", async () => {
+  it("Identifies reference links that point at files that do not exist, even when the links description text contains parentensis", async () => {
     const testDirectory = await newTestDirectory();
 
     const filePath = getPathToNewTestFile(testDirectory);
