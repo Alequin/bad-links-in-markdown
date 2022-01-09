@@ -10,7 +10,7 @@ import {
   uniqueName,
 } from "./test-utils";
 
-describe("bad-links-in-markdown - local file links", () => {
+describe("bad-links-in-markdown - links including spaces", () => {
   it("Identifies local inline links that point at files that do not exist, even when the links contain spaces at the start and end", async () => {
     const testDirectory = await newTestDirectory();
 

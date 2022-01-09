@@ -9,7 +9,7 @@ import {
   uniqueName,
 } from "./test-utils";
 
-describe("bad-links-in-markdown - local file links", () => {
+describe("bad-links-in-markdown - links with label text", () => {
   describe.each([`"`, `'`])("When the quote mark used is %s", (quoteMark) => {
     const labelText = `${quoteMark}the links label text${quoteMark}`;
 

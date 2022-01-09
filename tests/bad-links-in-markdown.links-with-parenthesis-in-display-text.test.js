@@ -9,7 +9,7 @@ import {
   uniqueName,
 } from "./test-utils";
 
-describe("bad-links-in-markdown - local file links", () => {
+describe("bad-links-in-markdown - links including parenthesis", () => {
   it("Identifies local inline links that point at files that do not exist, even when the links description text contains parentensis", async () => {
     const testDirectory = await newTestDirectory();
 
