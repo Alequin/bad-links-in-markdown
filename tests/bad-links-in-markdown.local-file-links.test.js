@@ -841,40 +841,6 @@ describe("bad-links-in-markdown - local file links", () => {
       }, testDirectory);
     });
 
-    it("Identifies local inline links that point at files that do not exist when the link text includes parenthesis within it", async () => {
-      const testDirectory = await newTestDirectory();
-
-      const filePath = getPathToNewTestFile(testDirectory);
-
-      fs.writeFileSync(
-        filePath,
-        `
-        [I am a local link (its a good one) check it out](./path/to/missing/file.md)
-        [I am a local link (useful stuff)](./path/to/missing/file.md)
-        `
-      );
-
-      await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
-          badLocalLinks: [
-            {
-              filePath,
-              missingLinks: [
-                {
-                  link: "[I am a local link (its a good one) check it out](./path/to/missing/file.md)",
-                  reasons: [badLinkReasons.FILE_NOT_FOUND],
-                },
-                {
-                  link: "[I am a local link (useful stuff)](./path/to/missing/file.md)",
-                  reasons: [badLinkReasons.FILE_NOT_FOUND],
-                },
-              ],
-            },
-          ],
-        });
-      }, testDirectory);
-    });
-
     it("Does not include inline web links in list of bad local links", async () => {
       const testDirectory = await newTestDirectory();
 
