@@ -4,6 +4,7 @@ import path from "path";
 import { match } from "../utils/match";
 import { isLocalLink } from "../utils/link-type-checks";
 import { doesLinkStartWithRelativePath } from "../utils/does-link-start-with-relative-path";
+import { doesFileExist } from "../utils/does-file-exist";
 
 export const prepareLinkObjects = (fileObject) =>
   fileObject.links
@@ -73,7 +74,7 @@ const addMatchingFilesInDirectoryToLinks = (linkObject) => {
     linkObject.name,
     ""
   );
-  const filesInDirectory = fs.existsSync(directoryToCheckForMatchingFiles)
+  const filesInDirectory = doesFileExist(directoryToCheckForMatchingFiles)
     ? fs.readdirSync(directoryToCheckForMatchingFiles)
     : null;
 

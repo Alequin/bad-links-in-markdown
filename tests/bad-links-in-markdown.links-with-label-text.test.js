@@ -102,7 +102,7 @@ describe("bad-links-in-markdown - links with label text", () => {
       }, testDirectory);
     });
 
-    it("Identifies inline local links that points at a files that exists but do not contain the targeted header tag, even when the link includes label text", async () => {
+    it("Identifies inline local links that point at a files that exists but do not contain the targeted header tag, even when the link includes label text", async () => {
       const testDirectory = await newTestDirectory();
 
       const fileNameToLinkTo = uniqueName();
@@ -426,7 +426,7 @@ describe("bad-links-in-markdown - links with label text", () => {
       }, testDirectory);
     });
 
-    it("Ignores local inline image links which point at imagess that exist, even when the link includes label text", async () => {
+    it("Ignores local inline image links which point at images that exist, even when the link includes label text", async () => {
       const testDirectory = await newTestDirectory();
 
       const filePath = getPathToNewTestFile(testDirectory);

@@ -840,10 +840,27 @@ describe("bad-links-in-markdown - local file links", () => {
         });
       }, testDirectory);
     });
+
+    it.only("Ignores local inline links that point at files that do not exist when the link syntax is not valid", async () => {
+      const testDirectory = await newTestDirectory();
+
+      const filePath = getPathToNewTestFile(testDirectory);
+
+      fs.writeFileSync(
+        filePath,
+        `[I am a local link](./path/to/missing file.md)`
+      );
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [],
+        });
+      }, testDirectory);
+    });
   });
 
   describe("identify-invalid-local-links and the link is an inline link which includes a header tag", () => {
-    it("Identifies inline local linkS that points at a fileS that exists but do not contain the targeted header tag", async () => {
+    it("Identifies inline local links that point at a files that exists but do not contain the targeted header tag", async () => {
       const testDirectory = await newTestDirectory();
 
       const fileNameToLinkTo = uniqueName();
@@ -2245,6 +2262,26 @@ describe("bad-links-in-markdown - local file links", () => {
       fs.writeFileSync(
         filePath,
         `[1]: Reloading NGINX Plus - high performance web server.`
+      );
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [],
+        });
+      }, testDirectory);
+    });
+
+    it("Does not error if some of the markdown is written is a similar way to a reference link and the text appears twice in the file", async () => {
+      const testDirectory = await newTestDirectory();
+
+      const filePath = getPathToNewTestFile(testDirectory);
+
+      fs.writeFileSync(
+        filePath,
+        `
+        [1]: Reloading NGINX Plus - high performance web server.
+        [1]: Reloading NGINX Plus - high performance web server.
+        `
       );
 
       await runTestWithDirectoryCleanup(async () => {

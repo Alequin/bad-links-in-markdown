@@ -1,11 +1,11 @@
-import fs from "fs";
 import { flatten, flow, groupBy, mapValues } from "lodash";
+import { doesFileExist } from "../../utils/does-file-exist";
 import { readFileLines } from "../../utils/utils";
 import { badLinkReasons } from "./bad-link-reasons";
 
 export const findLinksWithBadHeaderTags = (linkObjects) => {
   const workingLinks = linkObjects.filter((linkObject) =>
-    fs.existsSync(linkObject.fullPath)
+    doesFileExist(linkObject.fullPath)
   );
 
   return identifyMarkdownLinksWithBadHeaderTags(

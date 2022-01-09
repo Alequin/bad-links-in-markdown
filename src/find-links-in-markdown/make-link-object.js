@@ -1,3 +1,4 @@
+import { isValidLink } from "../utils/link-type-checks";
 import { match } from "../utils/match";
 import { MARKDOWN_INLINE_LINK_REGEX } from "./markdown-inline-link-regex";
 
@@ -23,7 +24,10 @@ const makeLinkObject = ({ markdownLink, fullLink, isImage }) => {
   const [link, tag] = linkWithTag.startsWith("#")
     ? [undefined, removeHashCharsFromStart(linkWithTag)]
     : linkWithTag.split("#");
-  return Object.freeze({ markdownLink, link, tag, isImage });
+
+  return isValidLink(link, tag)
+    ? Object.freeze({ markdownLink, link, tag, isImage })
+    : null;
 };
 
 /**

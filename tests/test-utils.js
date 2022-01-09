@@ -1,6 +1,7 @@
 import fs from "fs";
 import { uniqueId } from "lodash";
 import path from "path";
+import { doesFileExist } from "../src/utils/does-file-exist";
 
 const TOP_LEVEL_DIRECTORY = path.resolve(__dirname, "../test-markdown-files");
 
@@ -17,7 +18,7 @@ export const runTestWithDirectoryCleanup = async (
   } catch (error) {
     throw error;
   } finally {
-    if (!directoryToDelete || !fs.existsSync(directoryToDelete))
+    if (!directoryToDelete || !doesFileExist(directoryToDelete))
       throw new Error("must have a directory to clean up");
     await forceRemoveDir(directoryToDelete);
   }
@@ -26,7 +27,7 @@ export const runTestWithDirectoryCleanup = async (
 export const newTestDirectory = async () => {
   const testDirectory = path.resolve(TOP_LEVEL_DIRECTORY, `./${uniqueName()}`);
 
-  if (fs.existsSync(testDirectory)) await forceRemoveDir(testDirectory);
+  if (doesFileExist(testDirectory)) await forceRemoveDir(testDirectory);
   fs.mkdirSync(testDirectory);
 
   return testDirectory;
@@ -36,7 +37,7 @@ export const newTestDirectoryWithName = async () => {
   const directoryName = uniqueName();
   const directoryPath = path.resolve(TOP_LEVEL_DIRECTORY, `./${directoryName}`);
 
-  if (fs.existsSync(directoryPath)) await forceRemoveDir(directoryPath);
+  if (doesFileExist(directoryPath)) await forceRemoveDir(directoryPath);
   fs.mkdirSync(directoryPath);
 
   return { name: directoryName, path: directoryPath };

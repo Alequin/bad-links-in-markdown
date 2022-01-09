@@ -1,7 +1,6 @@
-import fs from "fs";
+import { readFile } from "./read-file";
 
 export const readFileLines = (filePath) =>
-  fs
-    .readFileSync(filePath)
+  readFile(filePath)
     .toString()
     .split(/\n|\r\n/);

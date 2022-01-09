@@ -1,12 +1,12 @@
-import fs from "fs";
 import { partition } from "lodash";
+import { doesFileExist } from "../../utils/does-file-exist";
 import { badLinkReasons } from "./bad-link-reasons";
 import { identifyLinksWithBadLineTags } from "./identify-links-with-bad-line-tags";
 
 export const findMissingLinksWithFileExtensions = (linkObjects) => {
   const [badLinks, workingLinks] = partition(
     linkObjects,
-    (linkObject) => !fs.existsSync(linkObject.fullPath)
+    (linkObject) => !doesFileExist(linkObject.fullPath)
   );
 
   const linkWithBadTargetLineNumbers = identifyLinksWithBadLineTags(

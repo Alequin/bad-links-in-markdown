@@ -8,14 +8,9 @@ export const findReferenceMarkdownLinks = (markdown) => {
       const referenceText = match(referenceLink, /\[.*\]/)[0];
       const markdownWithoutLink = markdown.replace(referenceLink, "");
 
-      const isLinkUsed = markdownWithoutLink.includes(referenceText);
-      if (!isLinkUsed) return null;
-
-      const isLinkAnImage = markdownWithoutLink.includes(`!${referenceText}`);
-
       return makeLinkObjectFromReferenceLink({
         markdownLink: referenceLink,
-        isImage: isLinkAnImage,
+        isImage: markdownWithoutLink.includes(`!${referenceText}`),
       });
     })
     .filter(Boolean);

@@ -1,8 +1,8 @@
-import fs from "fs";
 import { findAllMarkdownFiles } from "./src/find-all-markdown-files";
 import { findLinksInMarkdown } from "./src/find-links-in-markdown/find-links-in-markdown";
 import { identifyInvalidLocalLinks } from "./src/identify-invalid-local-links/identify-invalid-local-links";
 import topLevelDirectoryFromConsoleArgs from "./src/top-level-directory-from-console-args";
+import { readFile } from "./src/utils/read-file";
 
 export const badLinksInMarkdown = async (topLevelDirectory) => {
   const allMarkdownFiles = findAllMarkdownFiles(topLevelDirectory);
@@ -11,9 +11,7 @@ export const badLinksInMarkdown = async (topLevelDirectory) => {
     return {
       ...file,
       topLevelDirectory,
-      links: findLinksInMarkdown(
-        fs.readFileSync(file.sourceFilePath).toString()
-      ),
+      links: findLinksInMarkdown(readFile(file.sourceFilePath).toString()),
     };
   });
 

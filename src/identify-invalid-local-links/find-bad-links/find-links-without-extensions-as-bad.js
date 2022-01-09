@@ -1,7 +1,6 @@
-import fs from "fs";
 import { partition } from "lodash";
+import { doesFileExist } from "../../utils/does-file-exist";
 import { badLinkReasons } from "./bad-link-reasons";
-import { identifyLinksWithMultiplePossibleMatchingFiles } from "./identify-links-with-multiple-possible-matching-files";
 
 export const findLinksWithoutExtensionsAsBad = (linksWithoutFileExtensions) => {
   const [linksWithMatchedFiles, badLinks] = partition(
@@ -14,7 +13,7 @@ export const findLinksWithoutExtensionsAsBad = (linksWithoutFileExtensions) => {
   );
 
   const extensionlessLinksWhichDontExist = linksWithoutFileExtensions.filter(
-    ({ rawFullPath }) => !fs.existsSync(rawFullPath)
+    ({ rawFullPath }) => !doesFileExist(rawFullPath)
   );
 
   return [
