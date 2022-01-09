@@ -1,16 +1,14 @@
 import { match } from "../match";
-import { makeLinkObject } from "./make-link-object";
+import { makeLinkObjectFromInlineLink } from "./make-link-object";
+import { MARKDOWN_INLINE_LINK_REGEX } from "./markdown-inline-link-regex";
 
-// https://newbedev.com/regex-match-markdown-link
-const MARKDOWN_INLINE_LINK_REGEX = /!?\[([^\[\]]*)\]\((.*?)\)/;
-const INLINE_LINK_REGEX = /[(](.*)[)]/;
 export const findInlineMarkdownLinks = (markdown) => {
-  const allLinks = extractInlineLinksFromMarkdown(markdown);
-
-  return allLinks.map((inlineLink) => ({
-    ...makeLinkObject(inlineLink, INLINE_LINK_REGEX),
-    isImage: inlineLink.startsWith("!"),
-  }));
+  return extractInlineLinksFromMarkdown(markdown).map((inlineLink) =>
+    makeLinkObjectFromInlineLink({
+      markdownLink: inlineLink,
+      isImage: inlineLink.startsWith("!"),
+    })
+  );
 };
 
 const extractInlineLinksFromMarkdown = (markdown) =>

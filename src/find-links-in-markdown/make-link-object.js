@@ -1,11 +1,29 @@
 import { match } from "../match";
+import { MARKDOWN_INLINE_LINK_REGEX } from "./markdown-inline-link-regex";
 
-export const makeLinkObject = (markdownLink, linkRegex) => {
-  const linkWithTag = removeLabelText(match(markdownLink, linkRegex)[1].trim());
+export const makeLinkObjectFromInlineLink = ({ markdownLink, isImage }) => {
+  return makeLinkObject({
+    markdownLink,
+    isImage,
+    fullLink: match(markdownLink, MARKDOWN_INLINE_LINK_REGEX)[2],
+  });
+};
+
+const REFERENCE_LINK_REGEX = /\[.*\]:\s?(.*)$/;
+export const makeLinkObjectFromReferenceLink = ({ markdownLink, isImage }) => {
+  return makeLinkObject({
+    markdownLink,
+    isImage,
+    fullLink: match(markdownLink, REFERENCE_LINK_REGEX)[1],
+  });
+};
+
+const makeLinkObject = ({ markdownLink, fullLink, isImage }) => {
+  const linkWithTag = removeLabelText(fullLink).trim();
   const [link, tag] = linkWithTag.startsWith("#")
     ? [undefined, removeHashCharsFromStart(linkWithTag)]
     : linkWithTag.split("#");
-  return Object.freeze({ markdownLink, link, tag });
+  return Object.freeze({ markdownLink, link, tag, isImage });
 };
 
 /**

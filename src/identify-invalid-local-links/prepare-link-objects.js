@@ -23,10 +23,13 @@ export const prepareLinkObjects = (fileObject) =>
 
 // https://www.computerhope.com/jargon/f/fileext.htm
 const IS_LOCAL_LINK_WITHOUT_PATH_REGEX = /w*|w*\.[\w\d]*$/;
-const isLocalLink = ({ link }) =>
-  (doesLinkStartWithRelativePath(link) ||
-    IS_LOCAL_LINK_WITHOUT_PATH_REGEX.test(link)) &&
-  !link?.startsWith("http");
+const isLocalLink = ({ link }) => {
+  return (
+    (doesLinkStartWithRelativePath(link) ||
+      IS_LOCAL_LINK_WITHOUT_PATH_REGEX.test(link)) &&
+    !link?.startsWith("http")
+  );
+};
 
 const addIsInternalFileLink = (linkObject) => {
   return {

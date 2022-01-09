@@ -801,22 +801,6 @@ describe("bad-links-in-markdown - local file links", () => {
       }, testDirectory);
     });
 
-    it("Ignores local inline links which point which point at a web page", async () => {
-      const testDirectory = await newTestDirectory();
-
-      const fileContainingLink = getPathToNewTestFile(testDirectory);
-      fs.writeFileSync(
-        fileContainingLink,
-        `[I am a local link](http://www.google.com)`
-      );
-
-      await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
-          badLocalLinks: [],
-        });
-      }, testDirectory);
-    });
-
     it("Identifies multiple local inline links on the same file line that point at files that do not exist", async () => {
       const testDirectory = await newTestDirectory();
 
@@ -896,56 +880,12 @@ describe("bad-links-in-markdown - local file links", () => {
 
       const filePath = getPathToNewTestFile(testDirectory);
 
-      fs.writeFileSync(filePath, `[I am a local link](http://www.google.com)`);
-
-      await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
-          badLocalLinks: [],
-        });
-      }, testDirectory);
-    });
-
-    it("Identifies local inline links that point at files that do not exist, even when the links include odd spacing at the start and end", async () => {
-      const testDirectory = await newTestDirectory();
-
-      const filePath = getPathToNewTestFile(testDirectory);
-
       fs.writeFileSync(
         filePath,
-        `[I am a local link](    ./path/to/missing/file.md    )`
-      );
-
-      await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
-          badLocalLinks: [
-            {
-              filePath,
-              missingLinks: [
-                {
-                  link: "[I am a local link](    ./path/to/missing/file.md    )",
-                  reasons: [badLinkReasons.FILE_NOT_FOUND],
-                },
-              ],
-            },
-          ],
-        });
-      }, testDirectory);
-    });
-
-    it("Ignores local inline links which point at files which exist", async () => {
-      const testDirectory = await newTestDirectory();
-
-      const fileNameToLinkTo = uniqueName();
-      const filePathToLinkTo = path.resolve(
-        testDirectory,
-        `./${fileNameToLinkTo}.md`
-      );
-      fs.writeFileSync(filePathToLinkTo, `foo bar baz`);
-
-      const fileContainingLink = getPathToNewTestFile(testDirectory);
-      fs.writeFileSync(
-        fileContainingLink,
-        `[I am a local link](    ./${fileNameToLinkTo}.md    )`
+        `
+        [I am a local link](http://www.google.com)
+        [foobar (eggs)](https://github.com/fun-repo)
+      `
       );
 
       await runTestWithDirectoryCleanup(async () => {
@@ -2368,22 +2308,6 @@ describe("bad-links-in-markdown - local file links", () => {
       }, testDirectory);
     });
 
-    it("Ignores local reference links which point which point at a web page", async () => {
-      const testDirectory = await newTestDirectory();
-
-      const fileContainingLink = getPathToNewTestFile(testDirectory);
-      fs.writeFileSync(
-        fileContainingLink,
-        `Here is some text\n[and then a link to a file][1]\n\n[1]: http://www.google.com`
-      );
-
-      await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
-          badLocalLinks: [],
-        });
-      }, testDirectory);
-    });
-
     it("Does not include reference web links in the list of bad local links", async () => {
       const testDirectory = await newTestDirectory();
 
@@ -2391,7 +2315,10 @@ describe("bad-links-in-markdown - local file links", () => {
 
       fs.writeFileSync(
         filePath,
-        `Here is some text\n[and then a link to a file][1]\n\n[1]: http://www.google.com`
+        `
+        Here is some text\n[and then a link to a file][1]\n\n[1]: http://www.google.com
+        Here is some text\n[and then a link to a file][1]\n\n[1]: https://github.com/fun-repo
+        `
       );
 
       await runTestWithDirectoryCleanup(async () => {
