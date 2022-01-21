@@ -841,7 +841,7 @@ describe("bad-links-in-markdown - local file links", () => {
       }, testDirectory);
     });
 
-    it.only("Ignores local inline links that point at files that do not exist when the link syntax is not valid", async () => {
+    it("Ignores local inline links that point at files that do not exist when the link syntax is not valid", async () => {
       const testDirectory = await newTestDirectory();
 
       const filePath = getPathToNewTestFile(testDirectory);
