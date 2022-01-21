@@ -1383,7 +1383,7 @@ describe("bad-links-in-markdown - local file links", () => {
       }, testDirectory);
     });
 
-    it("Identifies inline local links that point at a files that exists but do not contain the targeted header tag, even when the links contain spaces at the start and end", async () => {
+    it("Ignores local links which point at files that exist and contain the targeted header, even when the header includes non alpha-numeric characters", async () => {
       const testDirectory = await newTestDirectory();
 
       const fileNameToLinkTo = uniqueName();
@@ -1393,49 +1393,29 @@ describe("bad-links-in-markdown - local file links", () => {
       );
       fs.writeFileSync(
         filePathToLinkTo,
-        `# foo bar baz\na story of foo and bar\nand baz`
+        `# Foo Bar -> Bacon and eggs\na story of foo and bar\nand baz`
       );
 
       const fileContainingLink = getPathToNewTestFile(testDirectory);
       fs.writeFileSync(
         fileContainingLink,
-        `[I am a local link](    ./${fileNameToLinkTo}.md#main-title    )`
+        `[I am a local link](./${fileNameToLinkTo}.md#foo-bar---bacon-and-eggs)`
       );
 
       await runTestWithDirectoryCleanup(async () => {
         expect(await badLinksInMarkdown(testDirectory)).toEqual({
-          badLocalLinks: [
-            {
-              filePath: fileContainingLink,
-              missingLinks: [
-                {
-                  link: `[I am a local link](    ./${fileNameToLinkTo}.md#main-title    )`,
-                  reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
-                },
-              ],
-            },
-          ],
+          badLocalLinks: [],
         });
       }, testDirectory);
     });
 
-    it("Ignores local links which point at files that exist and contain the targeted header, even when the links contain spaces at the start and end", async () => {
+    it("Ignores an inline local link that points at a header tag in the current file that exist and include non alpha-numeric characters", async () => {
       const testDirectory = await newTestDirectory();
-
-      const fileNameToLinkTo = uniqueName();
-      const filePathToLinkTo = path.resolve(
-        testDirectory,
-        `./${fileNameToLinkTo}.md`
-      );
-      fs.writeFileSync(
-        filePathToLinkTo,
-        `# main-title\na story of foo and bar\nand baz`
-      );
 
       const fileContainingLink = getPathToNewTestFile(testDirectory);
       fs.writeFileSync(
         fileContainingLink,
-        `[I am a local link](    ./${fileNameToLinkTo}.md#main-title    )`
+        `# Foo Bar -> Bacon and eggs\n\n- [Foo Bar -> Bacon and eggs](#foo-bar---bacon-and-eggs)`
       );
 
       await runTestWithDirectoryCleanup(async () => {
@@ -2291,56 +2271,6 @@ describe("bad-links-in-markdown - local file links", () => {
       }, testDirectory);
     });
 
-    it("Identifies reference links that point at files that do not exist, even when the links contain spaces at the start and end", async () => {
-      const testDirectory = await newTestDirectory();
-
-      const filePath = getPathToNewTestFile(testDirectory);
-
-      fs.writeFileSync(
-        filePath,
-        `Here is some text\n[and then a link to a file][1]\n\n[1]:     ./path/to/missing/file.md     `
-      );
-
-      await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
-          badLocalLinks: [
-            {
-              filePath,
-              missingLinks: [
-                {
-                  link: "[1]:     ./path/to/missing/file.md     ",
-                  reasons: [badLinkReasons.FILE_NOT_FOUND],
-                },
-              ],
-            },
-          ],
-        });
-      }, testDirectory);
-    });
-
-    it("Ignores reference links which point at files which exist, even when the links contain spaces at the start and end", async () => {
-      const testDirectory = await newTestDirectory();
-
-      const fileNameToLinkTo = uniqueName();
-      const filePathToLinkTo = path.resolve(
-        testDirectory,
-        `./${fileNameToLinkTo}.md`
-      );
-      fs.writeFileSync(filePathToLinkTo, `foo bar baz`);
-
-      const fileContainingLink = getPathToNewTestFile(testDirectory);
-      fs.writeFileSync(
-        fileContainingLink,
-        `Here is some text\n[and then a link to a file][1]\n\n[1]:     ./${fileNameToLinkTo}.md     `
-      );
-
-      await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
-          badLocalLinks: [],
-        });
-      }, testDirectory);
-    });
-
     it("Identifies shorthand reference links that point at files that do not exist", async () => {
       const testDirectory = await newTestDirectory();
 
@@ -2984,7 +2914,7 @@ describe("bad-links-in-markdown - local file links", () => {
       }, testDirectory);
     });
 
-    it("Identifies an inline local link that points at a file that exists but does not contain the targeted header tag, even when the links contain spaces at the start and end", async () => {
+    it("Ignores local reference links which point at files that exist and contain the targeted header, even when the header includes non alpha-numeric characters", async () => {
       const testDirectory = await newTestDirectory();
 
       const fileNameToLinkTo = uniqueName();
@@ -2994,49 +2924,29 @@ describe("bad-links-in-markdown - local file links", () => {
       );
       fs.writeFileSync(
         filePathToLinkTo,
-        `# foo bar baz\na story of foo and bar\nand baz`
+        `# Foo Bar -> Bacon and eggs\na story of foo and bar\nand baz`
       );
 
       const fileContainingLink = getPathToNewTestFile(testDirectory);
       fs.writeFileSync(
         fileContainingLink,
-        `Here is some text\n[and then a link to a file][1]\n\n[1]:     ./${fileNameToLinkTo}.md#main-title     `
+        `[Foo Bar -> Bacon and eggs][1]\n\n[1]: ./${fileNameToLinkTo}.md#foo-bar---bacon-and-eggs`
       );
 
       await runTestWithDirectoryCleanup(async () => {
         expect(await badLinksInMarkdown(testDirectory)).toEqual({
-          badLocalLinks: [
-            {
-              filePath: fileContainingLink,
-              missingLinks: [
-                {
-                  link: `[1]:     ./${fileNameToLinkTo}.md#main-title     `,
-                  reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
-                },
-              ],
-            },
-          ],
+          badLocalLinks: [],
         });
       }, testDirectory);
     });
 
-    it("Ignores local reference links which point at files that exist and contain the targeted header, even when the links contain spaces at the start and end", async () => {
+    it("Ignores an local reference links that point at header tags in the current file that exist and include non alpha-numeric characters", async () => {
       const testDirectory = await newTestDirectory();
-
-      const fileNameToLinkTo = uniqueName();
-      const filePathToLinkTo = path.resolve(
-        testDirectory,
-        `./${fileNameToLinkTo}.md`
-      );
-      fs.writeFileSync(
-        filePathToLinkTo,
-        `# main-title\na story of foo and bar\nand baz`
-      );
 
       const fileContainingLink = getPathToNewTestFile(testDirectory);
       fs.writeFileSync(
         fileContainingLink,
-        `Here is some text\n[and then a link to a file][1]\n\n[1]:     ./${fileNameToLinkTo}.md#main-title    `
+        `# Foo Bar -> Bacon and eggs\n\n- [Foo Bar -> Bacon and eggs][1]\n\n[1]: #foo-bar---bacon-and-eggs`
       );
 
       await runTestWithDirectoryCleanup(async () => {

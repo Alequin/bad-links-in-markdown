@@ -23,6 +23,7 @@ const identifyMarkdownLinksWithBadHeaderTags = (links) => {
     const linesInMarkdownFile = readFileLines(linkObject.fullPath);
 
     const headerTagsFromFile = getHeaderTagsFromFile(linesInMarkdownFile);
+
     return !headerTagsFromFile.includes(linkObject.tag);
   });
 };
@@ -54,10 +55,10 @@ const differentiateDuplicateHeaders = (linksToHeaders) => {
 };
 
 // https://stackoverflow.com/questions/51221730/markdown-link-to-header
-const markdownHeaderToTag = flow(
-  (header) => header.toLowerCase(), // lower case all chars
-  (header) => header.replace(/[^\w-\s]/g, "").trim(), // remove chars which are not alpha-numeric or dashes
-  (header) => header.replace(/\s/g, "-"), // replace spaces with hyphens
-  (header) => header.replace(/-+/g, "-"), // replace occurrences of multiple hyphens with singular hyphens
-  (header) => header.replace(/[^\w-]/g, "") // remove chars which are not alpha-numeric or dashes
-);
+const markdownHeaderToTag = (header) => {
+  return header
+    .toLowerCase() // lower case all chars
+    .replace(/[^\w-\s]/g, "") // remove chars which are not alpha-numeric, dashes or spaces
+    .trim() // remove trailing white space
+    .replace(/\s/g, "-"); // replace spaces with hyphens
+};
