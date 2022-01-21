@@ -653,7 +653,7 @@ describe("bad-links-in-markdown - local file links", () => {
                   reasons: [
                     badLinkReasons.BAD_RELATIVE_LINK_SYNTAX,
                     badLinkReasons.FILE_NOT_FOUND,
-                  ],
+                  ].sort(),
                 },
               ],
             },
@@ -2106,7 +2106,7 @@ describe("bad-links-in-markdown - local file links", () => {
                   reasons: [
                     badLinkReasons.BAD_RELATIVE_LINK_SYNTAX,
                     badLinkReasons.FILE_NOT_FOUND,
-                  ],
+                  ].sort(),
                 },
               ],
             },

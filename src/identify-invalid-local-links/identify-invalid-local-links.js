@@ -1,4 +1,4 @@
-import { isEmpty, partition } from "lodash";
+import { isEmpty, orderBy, partition } from "lodash";
 import * as findInvalidAbsoluteLinks from "./find-bad-links/find-invalid-absolute-links";
 import { findInvalidRelativeLinkSyntax } from "./find-bad-links/find-invalid-relative-link-syntax";
 import { findLinksWithBadHeaderTags } from "./find-bad-links/find-links-with-bad-header-tags";
@@ -17,14 +17,17 @@ export const identifyInvalidLocalLinks = (fileObjects) => {
         ({ isInternalFileLink }) => isInternalFileLink
       );
 
-      const missingLinks = groupMatchingLinkObjectWithIssues([
+      const issues = groupMatchingLinkObjectWithIssues([
         ...findLinksWithBadHeaderTags(internalFileLinks),
         ...identifyInvalidExternalFileLinks(externalFileLinks),
-      ]);
+      ]).map((issue) => ({
+        ...issue,
+        reasons: issue.reasons.sort(),
+      }));
 
       return {
         filePath: fileObject.sourceFilePath,
-        missingLinks: missingLinks.map(({ markdownLink, reasons }) => ({
+        missingLinks: issues.map(({ markdownLink, reasons }) => ({
           link: markdownLink,
           reasons,
         })),
