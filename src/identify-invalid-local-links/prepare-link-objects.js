@@ -81,14 +81,13 @@ const addMatchingFilesInDirectoryToLinks = (linkObject) => {
   return {
     ...linkObject,
     matchedFileCount:
-      filesInDirectory?.filter((fileInDirectory) =>
-        fileInDirectory.includes(linkObject.name)
-      )?.length || null,
-    matchedFile:
-      filesInDirectory?.find((fileInDirectory) =>
-        fileInDirectory.includes(linkObject.name)
-      ) || null,
+      filesInDirectory?.filter(isMatchFile(linkObject))?.length || null,
+    matchedFile: filesInDirectory?.find(isMatchFile(linkObject)) || null,
   };
+};
+
+const isMatchFile = (linkObject) => (fileInDirectory) => {
+  return fileInDirectory.startsWith(linkObject.name);
 };
 
 const addFileExtension = (linkObject) => {

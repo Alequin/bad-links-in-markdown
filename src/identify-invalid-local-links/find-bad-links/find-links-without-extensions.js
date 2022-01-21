@@ -1,10 +1,11 @@
 import { partition } from "lodash";
 import { doesFileExist } from "../../utils/does-file-exist";
+import { isDirectory } from "../../utils/is-directory";
 import { badLinkReasons } from "./bad-link-reasons";
 
-export const findLinksWithoutExtensionsAsBad = (linksWithoutFileExtensions) => {
+export const findLinksWithoutExtensions = (linksWithoutFileExtensions) => {
   const [linksWithMatchedFiles, badLinks] = partition(
-    linksWithoutFileExtensions,
+    removeDirectoryLinkObjects(linksWithoutFileExtensions),
     ({ matchedFile }) => matchedFile
   );
 
@@ -31,3 +32,6 @@ export const findLinksWithoutExtensionsAsBad = (linksWithoutFileExtensions) => {
     })),
   ];
 };
+
+const removeDirectoryLinkObjects = (linkObjects) =>
+  linkObjects.filter(({ fullPath }) => !isDirectory(fullPath));

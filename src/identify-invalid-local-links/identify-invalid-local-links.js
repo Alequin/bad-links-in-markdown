@@ -2,7 +2,7 @@ import { isEmpty, partition } from "lodash";
 import * as findInvalidAbsoluteLinks from "./find-bad-links/find-invalid-absolute-links";
 import { findInvalidRelativeLinkSyntax } from "./find-bad-links/find-invalid-relative-link-syntax";
 import { findLinksWithBadHeaderTags } from "./find-bad-links/find-links-with-bad-header-tags";
-import { findLinksWithoutExtensionsAsBad } from "./find-bad-links/find-links-without-extensions-as-bad";
+import { findLinksWithoutExtensions } from "./find-bad-links/find-links-without-extensions";
 import { findMissingLinksWithFileExtensions } from "./find-bad-links/find-missing-links-with-file-extensions";
 import { groupMatchingLinkObjectWithIssues } from "./group-matching-link-objects-with-issues";
 import { prepareLinkObjects } from "./prepare-link-objects";
@@ -44,7 +44,7 @@ const identifyInvalidExternalFileLinks = (linkObjects) => {
         ({ isLinkMissingFileExtension }) => !isLinkMissingFileExtension
       )
     ),
-    ...findLinksWithoutExtensionsAsBad(
+    ...findLinksWithoutExtensions(
       linkObjects.filter(
         ({ isLinkMissingFileExtension }) => isLinkMissingFileExtension
       )
