@@ -1043,7 +1043,7 @@ describe("bad-links-in-markdown - local file links", () => {
       }, testDirectory);
     });
 
-    it("Ignores local links which point at files that exist and contain the targeted header that appears multiple times", async () => {
+    it("Ignores local links which point at files that exist and contain the targeted header that appears multiple times and the link points at the first header", async () => {
       const testDirectory = await newTestDirectory();
 
       const fileNameToLinkTo = uniqueName();
@@ -1056,7 +1056,70 @@ describe("bad-links-in-markdown - local file links", () => {
       const fileContainingLink = getPathToNewTestFile(testDirectory);
       fs.writeFileSync(
         fileContainingLink,
-        `[I am a local link](./${fileNameToLinkTo}.md#foo-bar-baz-2)`
+        `[I am a local link](./${fileNameToLinkTo}.md#foo-bar-baz)`
+      );
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [],
+        });
+      }, testDirectory);
+    });
+
+    it("Ignores local links which point at files that exist and contain the targeted header that appears multiple times and the link points at the second header", async () => {
+      const testDirectory = await newTestDirectory();
+
+      const fileNameToLinkTo = uniqueName();
+      const filePathToLinkTo = path.resolve(
+        testDirectory,
+        `./${fileNameToLinkTo}.md`
+      );
+      fs.writeFileSync(filePathToLinkTo, `# foo bar baz\n# foo bar baz`);
+
+      const fileContainingLink = getPathToNewTestFile(testDirectory);
+      fs.writeFileSync(
+        fileContainingLink,
+        `[I am a local link](./${fileNameToLinkTo}.md#foo-bar-baz-1)`
+      );
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [],
+        });
+      }, testDirectory);
+    });
+
+    it("Ignores local links which point headers that appears multiple times in the current file and the link points at the first header", async () => {
+      const testDirectory = await newTestDirectory();
+
+      const fileNameToLinkTo = uniqueName();
+      const filePathToLinkTo = path.resolve(
+        testDirectory,
+        `./${fileNameToLinkTo}.md`
+      );
+      fs.writeFileSync(
+        filePathToLinkTo,
+        `# foo bar baz\n# foo bar baz\n\n[I am a local link](#foo-bar-baz)`
+      );
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [],
+        });
+      }, testDirectory);
+    });
+
+    it("Ignores local links which point headers that appears multiple times in the current file and the link points at the second header", async () => {
+      const testDirectory = await newTestDirectory();
+
+      const fileNameToLinkTo = uniqueName();
+      const filePathToLinkTo = path.resolve(
+        testDirectory,
+        `./${fileNameToLinkTo}.md`
+      );
+      fs.writeFileSync(
+        filePathToLinkTo,
+        `# foo bar baz\n# foo bar baz\n\n[I am a local link](#foo-bar-baz-1)`
       );
 
       await runTestWithDirectoryCleanup(async () => {
@@ -2568,7 +2631,7 @@ describe("bad-links-in-markdown - local file links", () => {
       }, testDirectory);
     });
 
-    it("Ignores local reference links which point a file that exists, contains the targeted header and contains the specified instance", async () => {
+    it("Ignores local links which point at files that exist and contain the targeted header that appears multiple times and the link points at the first header", async () => {
       const testDirectory = await newTestDirectory();
 
       const fileNameToLinkTo = uniqueName();
@@ -2581,7 +2644,70 @@ describe("bad-links-in-markdown - local file links", () => {
       const fileContainingLink = getPathToNewTestFile(testDirectory);
       fs.writeFileSync(
         fileContainingLink,
-        `Here is some text\n[and then a link to a file][1]\n\n[1]: ./${fileNameToLinkTo}.md#foo-bar-baz-2`
+        `Here is some text\n[and then a link to a file][1]\n\n[1]: ./${fileNameToLinkTo}.md#foo-bar-baz`
+      );
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [],
+        });
+      }, testDirectory);
+    });
+
+    it("Ignores local reference links which point at files that exist and contain the targeted header that appears multiple times and the link points at the second header", async () => {
+      const testDirectory = await newTestDirectory();
+
+      const fileNameToLinkTo = uniqueName();
+      const filePathToLinkTo = path.resolve(
+        testDirectory,
+        `./${fileNameToLinkTo}.md`
+      );
+      fs.writeFileSync(filePathToLinkTo, `# foo bar baz\n# foo bar baz`);
+
+      const fileContainingLink = getPathToNewTestFile(testDirectory);
+      fs.writeFileSync(
+        fileContainingLink,
+        `Here is some text\n[and then a link to a file][1]\n\n[1]: ./${fileNameToLinkTo}.md#foo-bar-baz-1`
+      );
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [],
+        });
+      }, testDirectory);
+    });
+
+    it("Ignores local reference links which point headers that appears multiple times in the current file and the link points at the first header", async () => {
+      const testDirectory = await newTestDirectory();
+
+      const fileNameToLinkTo = uniqueName();
+      const filePathToLinkTo = path.resolve(
+        testDirectory,
+        `./${fileNameToLinkTo}.md`
+      );
+      fs.writeFileSync(
+        filePathToLinkTo,
+        `# foo bar baz\n# foo bar baz\n\n[header link][1]\n\n[1]: #foo-bar-baz`
+      );
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [],
+        });
+      }, testDirectory);
+    });
+
+    it("Ignores local reference links which point headers that appears multiple times in the current file and the link points at the second header", async () => {
+      const testDirectory = await newTestDirectory();
+
+      const fileNameToLinkTo = uniqueName();
+      const filePathToLinkTo = path.resolve(
+        testDirectory,
+        `./${fileNameToLinkTo}.md`
+      );
+      fs.writeFileSync(
+        filePathToLinkTo,
+        `# foo bar baz\n# foo bar baz\n\n[header link][1]\n\n[1]: #foo-bar-baz-1`
       );
 
       await runTestWithDirectoryCleanup(async () => {

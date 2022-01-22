@@ -44,14 +44,16 @@ const getHeaderTagsFromFile = (linesInMarkdownFile) => {
  */
 const differentiateDuplicateHeaders = (linksToHeaders) => {
   const groupedHeaders = groupBy(linksToHeaders, (header) => header);
-  const uniquedHeadersByName = Object.values(
-    mapValues(groupedHeaders, (repeatedHeaders) => {
-      if (repeatedHeaders.length === 1) return repeatedHeaders; // Don't add number if there is only one
-      return repeatedHeaders.map((header, index) => `${header}-${index + 1}`);
-    })
-  );
 
-  return flatten(uniquedHeadersByName);
+  return Object.values(
+    mapValues(groupedHeaders, (repeatedHeaders) =>
+      repeatedHeaders.map((header, index) =>
+        index > 0
+          ? `${header}-${index}` // Only append a number after the first header
+          : header
+      )
+    )
+  ).flat(Number.MAX_SAFE_INTEGER);
 };
 
 // https://stackoverflow.com/questions/51221730/markdown-link-to-header
