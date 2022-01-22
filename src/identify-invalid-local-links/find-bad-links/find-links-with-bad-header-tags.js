@@ -29,12 +29,13 @@ const identifyMarkdownLinksWithBadHeaderTags = (links) => {
 };
 
 const getHeaderTagsFromFile = (linesInMarkdownFile) => {
-  const linksToHeaders = linesInMarkdownFile
-    .filter((line) => line.startsWith("#"))
-    .map(markdownHeaderToTag);
-
-  return differentiateDuplicateHeaders(linksToHeaders);
+  return differentiateDuplicateHeaders(
+    linesInMarkdownFile.filter(isMarkdownHeader).map(markdownHeaderToTag)
+  );
 };
+
+const MARKDOWN_HEADER_REGEX = /^\s*#/;
+const isMarkdownHeader = (line) => MARKDOWN_HEADER_REGEX.test(line);
 
 /**
  * In markdown when header appear multiple times to differentiate them in links
