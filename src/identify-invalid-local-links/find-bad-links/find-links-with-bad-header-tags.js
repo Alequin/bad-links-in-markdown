@@ -29,9 +29,16 @@ const identifyMarkdownLinksWithBadHeaderTags = (links) => {
 };
 
 const getHeaderTagsFromFile = (linesInMarkdownFile) => {
-  return differentiateDuplicateHeaders(
-    linesInMarkdownFile.filter(isMarkdownHeader).map(markdownHeaderToTag)
+  const headers = linesInMarkdownFile.filter(isMarkdownHeader);
+
+  const headersAsTags = differentiateDuplicateHeaders(
+    headers.map(markdownHeaderToTag)
   );
+
+  return [
+    ...headersAsTags,
+    ...headersAsTags.map((header) => header.replace("_", "")), // account for variation of links for snake case headers
+  ];
 };
 
 const MARKDOWN_HEADER_REGEX = /^\s*#/;

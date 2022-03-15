@@ -1487,6 +1487,52 @@ describe("bad-links-in-markdown - local file links", () => {
         });
       }, testDirectory);
     });
+
+    it("Ignores local links which point at files that exist and contain the targeted header and the header is snake-case", async () => {
+      const testDirectory = await newTestDirectory();
+
+      const fileNameToLinkTo = uniqueName();
+      const filePathToLinkTo = path.resolve(
+        testDirectory,
+        `./${fileNameToLinkTo}.md`
+      );
+      fs.writeFileSync(
+        filePathToLinkTo,
+        `# main_title\na story of foo and bar\nand baz`
+      );
+
+      const fileContainingLink = getPathToNewTestFile(testDirectory);
+      fs.writeFileSync(
+        fileContainingLink,
+        `[I am a local link](./${fileNameToLinkTo}.md#maintitle)`
+      );
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [],
+        });
+      }, testDirectory);
+    });
+
+    it("Ignores local links which point at headers in the current file which are in snake-case", async () => {
+      const testDirectory = await newTestDirectory();
+
+      const fileNameToLinkTo = uniqueName();
+      const filePathToLinkTo = path.resolve(
+        testDirectory,
+        `./${fileNameToLinkTo}.md`
+      );
+      fs.writeFileSync(
+        filePathToLinkTo,
+        `# main_title\na story of foo and bar\nand baz\n[I am a local link](./${fileNameToLinkTo}.md#maintitle)`
+      );
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [],
+        });
+      }, testDirectory);
+    });
   });
 
   describe("identify-invalid-local-links and the link is a reference link", () => {
