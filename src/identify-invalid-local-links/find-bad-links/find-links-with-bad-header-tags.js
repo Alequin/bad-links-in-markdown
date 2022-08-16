@@ -24,8 +24,7 @@ const identifyMarkdownLinksWithBadHeaderTags = (links) => {
 
     const headers = linesInMarkdownFile
       .filter(isMarkdownHeader)
-      .map(removeCommandsFollowingHeader)
-      .map((header) => header.trim());
+      .map(removeCommandsFollowingHeader);
 
     const headerTagsFromFile = convertHeadersToLinkFormat(headers);
     return !headerTagsFromFile.includes(linkObject.tag);
@@ -39,7 +38,7 @@ const convertHeadersToLinkFormat = (headers) => {
 
   return [
     ...headersAsTags,
-    ...headersAsTags.map((header) => header.replace("_", "")), // account for variation of links for snake case headers
+    ...headersAsTags.map((header) => header.replaceAll("_", "")), // account for variation of links for snake case headers
   ];
 };
 
@@ -73,6 +72,7 @@ const markdownHeaderToTag = (header) => {
     .replace(/[^\w-\s]/g, "") // remove chars which are not alpha-numeric, dashes or spaces
     .trim() // remove trailing white space
     .replace(/\s/g, "-"); // replace spaces with hyphens
+  // .replace(/_/g, "-"); // replace underscores with hyphens
 };
 
 const removeCommandsFollowingHeader = (header) => {

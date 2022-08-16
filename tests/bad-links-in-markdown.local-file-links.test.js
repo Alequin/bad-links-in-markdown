@@ -1533,6 +1533,27 @@ describe("bad-links-in-markdown - local file links", () => {
         });
       }, testDirectory);
     });
+
+    it("Ignores local links which point at headers in the current file which consist of multiple text cases", async () => {
+      const testDirectory = await newTestDirectory();
+
+      const fileNameToLinkTo = uniqueName();
+      const filePathToLinkTo = path.resolve(
+        testDirectory,
+        `./${fileNameToLinkTo}.md`
+      );
+
+      fs.writeFileSync(
+        filePathToLinkTo,
+        `### The cat-tails cat_status_award metric\na story of foo and bar\nand baz\n[The cat-tails cat_status_award metric](#the-cat-tails-catstatusaward-metric)`
+      );
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [],
+        });
+      }, testDirectory);
+    });
   });
 
   describe("identify-invalid-local-links and the link is a reference link", () => {
