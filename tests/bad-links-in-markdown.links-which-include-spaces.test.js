@@ -5,7 +5,6 @@ import { badLinkReasons } from "../src/identify-invalid-local-links/find-bad-lin
 import {
   getPathToNewTestFile,
   newTestDirectory,
-  newTestDirectoryWithName,
   runTestWithDirectoryCleanup,
   uniqueName,
 } from "./test-utils";

@@ -22,15 +22,17 @@ const identifyMarkdownLinksWithBadHeaderTags = (links) => {
   return links.filter((linkObject) => {
     const linesInMarkdownFile = readFileLines(linkObject.fullPath);
 
-    const headerTagsFromFile = getHeaderTagsFromFile(linesInMarkdownFile);
+    const headers = linesInMarkdownFile
+      .filter(isMarkdownHeader)
+      .map(removeCommandsFollowingHeader)
+      .map((header) => header.trim());
 
+    const headerTagsFromFile = convertHeadersToLinkFormat(headers);
     return !headerTagsFromFile.includes(linkObject.tag);
   });
 };
 
-const getHeaderTagsFromFile = (linesInMarkdownFile) => {
-  const headers = linesInMarkdownFile.filter(isMarkdownHeader);
-
+const convertHeadersToLinkFormat = (headers) => {
   const headersAsTags = differentiateDuplicateHeaders(
     headers.map(markdownHeaderToTag)
   );
@@ -71,4 +73,9 @@ const markdownHeaderToTag = (header) => {
     .replace(/[^\w-\s]/g, "") // remove chars which are not alpha-numeric, dashes or spaces
     .trim() // remove trailing white space
     .replace(/\s/g, "-"); // replace spaces with hyphens
+};
+
+const removeCommandsFollowingHeader = (header) => {
+  const indexOfCommand = header.indexOf("<!");
+  return indexOfCommand >= 0 ? header.slice(0, indexOfCommand) : header;
 };
