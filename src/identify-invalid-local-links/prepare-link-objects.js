@@ -6,6 +6,32 @@ import { isLocalLink } from "../utils/link-type-checks";
 import { doesLinkStartWithRelativePath } from "../utils/does-link-start-with-relative-path";
 import { doesFileExist } from "../utils/does-file-exist";
 
+/**
+ * @param {{
+ * markdownLink: String
+ * link: String
+ * tag: String | undefined
+ * isImage: Boolean
+ * }} fileObject
+ * @returns {{
+ * markdownLink: String
+ * link: String
+ * tag: String | null
+ * isImage: Boolean
+ * directory: String
+ * topLevelDirectory: String
+ * sourceFilePath: String
+ * isInternalFileLink: Boolean
+ * isAbsoluteLink: Boolean
+ * fullPath: String
+ * name: String
+ * matchedFileCount: number | null
+ * matchedFile: String | null
+ * rawLink: String
+ * isLinkMissingFileExtension: Boolean
+ * linkFileExtension: String
+ * }}
+ */
 export const prepareLinkObjects = (fileObject) =>
   fileObject.links
     .filter(({ link, tag }) => isLocalLink(link, tag))
