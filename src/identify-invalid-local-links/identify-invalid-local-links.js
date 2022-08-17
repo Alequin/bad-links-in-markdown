@@ -1,5 +1,6 @@
 import { isEmpty, partition } from "lodash";
 import * as findInvalidAbsoluteLinks from "./find-bad-links/find-invalid-absolute-links";
+import { findInvalidImageExtensions } from "./find-bad-links/find-invalid-image-extensions";
 import { findInvalidRelativeLinkSyntax } from "./find-bad-links/find-invalid-relative-link-syntax";
 import { findLinksWithBadHeaderTags } from "./find-bad-links/find-links-with-bad-header-tags";
 import { findLinksWithoutExtensions } from "./find-bad-links/find-links-without-extensions";
@@ -56,5 +57,6 @@ const identifyInvalidExternalFileLinks = (linkObjects) => {
       )
     ),
     ...findLinksWithBadHeaderTags(linkObjects),
+    ...findInvalidImageExtensions(linkObjects),
   ];
 };

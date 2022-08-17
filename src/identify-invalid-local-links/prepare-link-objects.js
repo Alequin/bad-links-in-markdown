@@ -129,7 +129,7 @@ const addFileExtension = (linkObject) => {
       ? linkObject.link
       : `${linkObject.link}${fileExtensionToUse || ""}`,
     isLinkMissingFileExtension: !fileExtension,
-    linkFileExtension: fileExtensionToUse,
+    linkFileExtension: fileExtensionToUse, // TODO make it clear why isLinkMissingFileExtension might be false and linkFileExtension might be a value
   };
 };
 

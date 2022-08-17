@@ -44,7 +44,10 @@ The script:
 - html tag image links
 - Confirm absolute image links on linux are invalid
 - web links (to be considered)
-
+- identify invalid url links (analytics.google.com does not work in a markdown link but is a valid url)
+- Add an option to ignore missing extensions
+- make a helper script to display all valid headers in a markdown file
+- make images without alt tag show up, broken images only show up a broken when given an alt tag
 ### Syntax notes
 
 https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet#links

@@ -8,6 +8,7 @@ import {
   runTestWithDirectoryCleanup,
 } from "./test-utils";
 import path from "path";
+import { validImageExtensions } from "../src/config/valid-image-extensions";
 
 describe("bad-links-in-markdown - local image links", () => {
   describe("identify-invalid-local-links and the image link is an inline link", () => {
@@ -239,7 +240,7 @@ describe("bad-links-in-markdown - local image links", () => {
 
       const filePath = getPathToNewTestFile(testDirectory);
 
-      fs.writeFileSync(filePath, `![picture](image.md)`);
+      fs.writeFileSync(filePath, `![picture](image.png)`);
 
       await runTestWithDirectoryCleanup(async () => {
         expect(await badLinksInMarkdown(testDirectory)).toEqual({
@@ -248,7 +249,7 @@ describe("bad-links-in-markdown - local image links", () => {
               filePath,
               missingLinks: [
                 {
-                  link: "![picture](image.md)",
+                  link: "![picture](image.png)",
                   reasons: [badLinkReasons.FILE_NOT_FOUND],
                 },
               ],
@@ -277,7 +278,7 @@ describe("bad-links-in-markdown - local image links", () => {
       }, testDirectory);
     });
 
-    it("Identifies a local inline image link that points at a file that does not exist when the file path is missing and extension and does not include either absolute or relative path", async () => {
+    it("Identifies a local inline image link that points at a file that does not exist when the file path is missing and the extension is missing and does not include either absolute or relative path", async () => {
       const testDirectory = await newTestDirectory();
 
       const filePath = getPathToNewTestFile(testDirectory);
@@ -304,7 +305,7 @@ describe("bad-links-in-markdown - local image links", () => {
       }, testDirectory);
     });
 
-    it("Identifies local inline image links which point at files which exist when the file path is missing and extension and does not include either absolute or relative path", async () => {
+    it("Identifies local inline image links which point at files which exist when the file path is missing and extension is missing and does not include either absolute or relative path", async () => {
       const testDirectory = await newTestDirectory();
 
       const filePath = getPathToNewTestFile(testDirectory);
@@ -473,6 +474,50 @@ describe("bad-links-in-markdown - local image links", () => {
                 {
                   link: "![picture4](./path/to/missing/image.png)",
                   reasons: [badLinkReasons.FILE_NOT_FOUND],
+                },
+              ],
+            },
+          ],
+        });
+      }, testDirectory);
+    });
+
+    it.each(validImageExtensions)(
+      "Ignores a local inline image link that points at an existing image with an extension %s",
+      async (fileExtension) => {
+        const testDirectory = await newTestDirectory();
+
+        const filePath = getPathToNewTestFile(testDirectory);
+
+        fs.writeFileSync(
+          filePath,
+          `![picture](../test-images/dog${fileExtension})`
+        );
+
+        await runTestWithDirectoryCleanup(async () => {
+          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+            badLocalLinks: [],
+          });
+        }, testDirectory);
+      }
+    );
+
+    it("Identifies a local inline image link that points at an image that uses an invalid extension", async () => {
+      const testDirectory = await newTestDirectory();
+
+      const filePath = getPathToNewTestFile(testDirectory);
+
+      fs.writeFileSync(filePath, `![picture](../fake-audio.mp3)`);
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [
+            {
+              filePath,
+              missingLinks: [
+                {
+                  link: `![picture](../fake-audio.mp3)`,
+                  reasons: [badLinkReasons.INVALID_IMAGE_EXTENSIONS],
                 },
               ],
             },
@@ -945,6 +990,53 @@ describe("bad-links-in-markdown - local image links", () => {
       await runTestWithDirectoryCleanup(async () => {
         expect(await badLinksInMarkdown(testDirectory)).toEqual({
           badLocalLinks: [],
+        });
+      }, testDirectory);
+    });
+
+    it.each(validImageExtensions)(
+      "Ignores a local reference image link that points at an existing image with an extension %s",
+      async (fileExtension) => {
+        const testDirectory = await newTestDirectory();
+
+        const filePath = getPathToNewTestFile(testDirectory);
+
+        fs.writeFileSync(
+          filePath,
+          `Here is some text\n![and then a link to a file][picture]\n\n[picture]: ../test-images/dog${fileExtension}`
+        );
+
+        await runTestWithDirectoryCleanup(async () => {
+          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+            badLocalLinks: [],
+          });
+        }, testDirectory);
+      }
+    );
+
+    it("Identifies a local inline image link that points at an image that uses an invalid extension", async () => {
+      const testDirectory = await newTestDirectory();
+
+      const filePath = getPathToNewTestFile(testDirectory);
+
+      fs.writeFileSync(
+        filePath,
+        `Here is some text\n![and then a link to a file][picture]\n\n\n[picture]: ../fake-audio.mp3`
+      );
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [
+            {
+              filePath,
+              missingLinks: [
+                {
+                  link: `[picture]: ../fake-audio.mp3`,
+                  reasons: [badLinkReasons.INVALID_IMAGE_EXTENSIONS],
+                },
+              ],
+            },
+          ],
         });
       }, testDirectory);
     });

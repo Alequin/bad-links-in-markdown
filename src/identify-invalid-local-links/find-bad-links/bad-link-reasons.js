@@ -1,3 +1,5 @@
+import { validImageExtensions } from "../../config/valid-image-extensions";
+
 export const badLinkReasons = {
   FILE_NOT_FOUND: "File cannot be found",
   HEADER_TAG_NOT_FOUND: "Header tag cannot be found in the file",
@@ -13,4 +15,7 @@ export const badLinkReasons = {
     "Relative link syntax can only step up by one parent direction at a time. '.../' is invalid",
   INVALID_ABSOLUTE_LINK:
     "Absolute links must start from the root of the given directory",
+  INVALID_IMAGE_EXTENSIONS: `Image extension is not valid. The supported extensions are ${validImageExtensions.join(
+    ", "
+  )}`,
 };

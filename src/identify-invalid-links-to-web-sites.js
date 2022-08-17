@@ -1,4 +1,5 @@
 import fetch from "node-fetch";
+import { logger } from "./utils/logger";
 
 // TODO fix issue with github links: https://docs.github.com/en/enterprise-server@2.22/rest/reference/repos#get-repository-content
 export const identifyInvalidLinksToWebSites = async (fileObjects) => {
@@ -23,10 +24,10 @@ const linkResponseStatus = async (link) => {
 };
 
 const logErrorMessage = (fullPath, link, statusCode) => {
-  console.log(
+  logger.info(
     "A URL is not returning a healthy status code in the file ",
     fullPath
   );
-  console.log(link, statusCode);
-  console.log("-----------------------------------------");
+  logger.info(link, statusCode);
+  logger.info("-----------------------------------------");
 };
