@@ -485,10 +485,16 @@ describe("bad-links-in-markdown - local image links", () => {
 
     it.each(validImageExtensions)(
       "Ignores a local inline image link that points at an existing image with an extension %s",
-      async (fileExtension) => {
+      async (imageFileExtension) => {
         const testDirectory = await newTestDirectory();
 
+        const { fileName: imageFileName, filePath: imageFilePath } =
+          newTestFile(testDirectory, imageFileExtension);
+        fs.writeFileSync(imageFilePath, "");
+
         const filePath = newTestMarkdownFile(testDirectory);
+
+        fs.writeFileSync(filePath, `![picture](./${imageFileName})`);
 
         await runTestWithDirectoryCleanup(async () => {
           expect(await badLinksInMarkdown(testDirectory)).toEqual({
@@ -509,8 +515,6 @@ describe("bad-links-in-markdown - local image links", () => {
 
         const filePath = newTestMarkdownFile(testDirectory);
 
-        fs.writeFileSync(filePath, `![picture](./${imageFileName})`);
-
         await runTestWithDirectoryCleanup(async () => {
           expect(await badLinksInMarkdown(testDirectory)).toEqual({
             badLocalLinks: [],
@@ -522,9 +526,15 @@ describe("bad-links-in-markdown - local image links", () => {
     it("Identifies a local inline image link that points at an image that uses an invalid extension", async () => {
       const testDirectory = await newTestDirectory();
 
+      const { fileName: imageFileName, filePath: imageFilePath } = newTestFile(
+        testDirectory,
+        ".mp3"
+      );
+      fs.writeFileSync(imageFilePath, "");
+
       const filePath = newTestMarkdownFile(testDirectory);
 
-      fs.writeFileSync(filePath, `![picture](../fake-audio.mp3)`);
+      fs.writeFileSync(filePath, `![picture](./${imageFileName})`);
 
       await runTestWithDirectoryCleanup(async () => {
         expect(await badLinksInMarkdown(testDirectory)).toEqual({
@@ -533,7 +543,7 @@ describe("bad-links-in-markdown - local image links", () => {
               filePath,
               missingLinks: [
                 {
-                  link: `![picture](../fake-audio.mp3)`,
+                  link: `![picture](./${imageFileName})`,
                   reasons: [badLinkReasons.INVALID_IMAGE_EXTENSIONS],
                 },
               ],
@@ -1013,14 +1023,18 @@ describe("bad-links-in-markdown - local image links", () => {
 
     it.each(validImageExtensions)(
       "Ignores a local reference image link that points at an existing image with an extension %s",
-      async (fileExtension) => {
+      async (imageFileExtension) => {
         const testDirectory = await newTestDirectory();
+
+        const { fileName: imageFileName, filePath: imageFilePath } =
+          newTestFile(testDirectory, imageFileExtension);
+        fs.writeFileSync(imageFilePath, "");
 
         const filePath = newTestMarkdownFile(testDirectory);
 
         fs.writeFileSync(
           filePath,
-          `Here is some text\n![and then a link to a file][picture]\n\n[picture]: ../test-images/dog${fileExtension}`
+          `Here is some text\n![and then a link to a file][picture]\n\n[picture]: ${imageFileName}`
         );
 
         await runTestWithDirectoryCleanup(async () => {
@@ -1058,11 +1072,17 @@ describe("bad-links-in-markdown - local image links", () => {
     it("Identifies a local inline image link that points at an image that uses an invalid extension", async () => {
       const testDirectory = await newTestDirectory();
 
+      const { fileName: imageFileName, filePath: imageFilePath } = newTestFile(
+        testDirectory,
+        ".mp3"
+      );
+      fs.writeFileSync(imageFilePath, "");
+
       const filePath = newTestMarkdownFile(testDirectory);
 
       fs.writeFileSync(
         filePath,
-        `Here is some text\n![and then a link to a file][picture]\n\n\n[picture]: ../fake-audio.mp3`
+        `Here is some text\n![and then a link to a file][picture]\n\n\n[picture]: ./${imageFileName}`
       );
 
       await runTestWithDirectoryCleanup(async () => {
@@ -1072,7 +1092,7 @@ describe("bad-links-in-markdown - local image links", () => {
               filePath,
               missingLinks: [
                 {
-                  link: `[picture]: ../fake-audio.mp3`,
+                  link: `[picture]: ./${imageFileName}`,
                   reasons: [badLinkReasons.INVALID_IMAGE_EXTENSIONS],
                 },
               ],
