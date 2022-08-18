@@ -5,6 +5,7 @@ import {
   getPathToNewTestFile,
   newTestDirectory,
   newTestDirectoryWithName,
+  newTestFile,
   runTestWithDirectoryCleanup,
 } from "./test-utils";
 import path from "path";
@@ -489,10 +490,26 @@ describe("bad-links-in-markdown - local image links", () => {
 
         const filePath = getPathToNewTestFile(testDirectory);
 
-        fs.writeFileSync(
-          filePath,
-          `![picture](../test-images/dog${fileExtension})`
-        );
+        await runTestWithDirectoryCleanup(async () => {
+          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+            badLocalLinks: [],
+          });
+        }, testDirectory);
+      }
+    );
+
+    it.each(validImageExtensions.map((extension) => extension.toUpperCase()))(
+      "Ignores a local reference image link that points at an existing image with an extension %s, even when the casing is upper case",
+      async (imageFileExtension) => {
+        const testDirectory = await newTestDirectory();
+
+        const { fileName: imageFileName, filePath: imageFilePath } =
+          newTestFile(testDirectory, imageFileExtension);
+        fs.writeFileSync(imageFilePath, "");
+
+        const filePath = getPathToNewTestFile(testDirectory);
+
+        fs.writeFileSync(filePath, `![picture](./${imageFileName})`);
 
         await runTestWithDirectoryCleanup(async () => {
           expect(await badLinksInMarkdown(testDirectory)).toEqual({
@@ -1004,6 +1021,30 @@ describe("bad-links-in-markdown - local image links", () => {
         fs.writeFileSync(
           filePath,
           `Here is some text\n![and then a link to a file][picture]\n\n[picture]: ../test-images/dog${fileExtension}`
+        );
+
+        await runTestWithDirectoryCleanup(async () => {
+          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+            badLocalLinks: [],
+          });
+        }, testDirectory);
+      }
+    );
+
+    it.each(validImageExtensions.map((extension) => extension.toUpperCase()))(
+      "Ignores a local reference image link that points at an existing image with an extension %s, even when the casing is upper case",
+      async (imageFileExtension) => {
+        const testDirectory = await newTestDirectory();
+
+        const { fileName: imageFileName, filePath: imageFilePath } =
+          newTestFile(testDirectory, imageFileExtension);
+        fs.writeFileSync(imageFilePath, "");
+
+        const filePath = getPathToNewTestFile(testDirectory);
+
+        fs.writeFileSync(
+          filePath,
+          `Here is some text\n![and then a link to a file][picture]\n\n[picture]: ./${imageFileName}`
         );
 
         await runTestWithDirectoryCleanup(async () => {

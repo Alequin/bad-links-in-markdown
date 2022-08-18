@@ -8,7 +8,7 @@ export const findInvalidImageExtensions = (linkObjects) => {
       ({ isImage, isLinkMissingFileExtension, linkFileExtension }) =>
         isImage &&
         !isLinkMissingFileExtension &&
-        !validImageExtensions.includes(linkFileExtension)
+        !validImageExtensions.includes(linkFileExtension.toLowerCase())
     )
     .map((linkObject) => ({
       ...linkObject,

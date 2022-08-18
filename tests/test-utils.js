@@ -43,8 +43,17 @@ export const newTestDirectoryWithName = async () => {
   return { name: directoryName, path: directoryPath };
 };
 
-export const getPathToNewTestFile = (testDirectory) =>
-  path.resolve(testDirectory, `./${`${uniqueName()}.md`}`);
+export const getPathToNewTestFile = (testDirectory, extension = ".md") =>
+  path.resolve(testDirectory, `./${uniqueName()}${extension}`);
+
+export const newTestFile = (testDirectory, extension = ".md") => {
+  const fileName = `${uniqueName()}${extension}`;
+
+  return {
+    fileName,
+    filePath: path.resolve(testDirectory, `./${fileName}`),
+  };
+};
 
 export const uniqueName = () => `test-${uniqueId()}`;
 
