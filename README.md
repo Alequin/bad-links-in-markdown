@@ -48,6 +48,8 @@ The script:
 - Add an option to ignore missing extensions
 - make a helper script to display all valid headers in a markdown file
 - make images without alt tag show up, broken images only show up a broken when given an alt tag
+- should some "badLinkReasons" block others. 
+  - Should FILE_NOT_FOUND show if MISSING_FILE_EXTENSION is also showing?
 ### Syntax notes
 
 https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet#links
