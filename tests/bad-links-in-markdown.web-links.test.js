@@ -1,7 +1,7 @@
 import fs from "fs";
 import { badLinksInMarkdown } from "../bad-links-in-markdown";
 import {
-  getPathToNewTestFile,
+  newTestMarkdownFile,
   newTestDirectory,
   runTestWithDirectoryCleanup,
 } from "./test-utils";
@@ -10,7 +10,7 @@ describe("bad-links-in-markdown - web links", () => {
   it("Does not include inline web links in list of bad local links", async () => {
     const testDirectory = await newTestDirectory();
 
-    const filePath = getPathToNewTestFile(testDirectory);
+    const filePath = newTestMarkdownFile(testDirectory);
 
     fs.writeFileSync(
       filePath,
@@ -30,7 +30,7 @@ describe("bad-links-in-markdown - web links", () => {
   it("Does not include reference web links in the list of bad local links", async () => {
     const testDirectory = await newTestDirectory();
 
-    const filePath = getPathToNewTestFile(testDirectory);
+    const filePath = newTestMarkdownFile(testDirectory);
 
     fs.writeFileSync(
       filePath,
@@ -50,7 +50,7 @@ describe("bad-links-in-markdown - web links", () => {
   it("Does not include inline email links in list of bad local links", async () => {
     const testDirectory = await newTestDirectory();
 
-    const filePath = getPathToNewTestFile(testDirectory);
+    const filePath = newTestMarkdownFile(testDirectory);
 
     fs.writeFileSync(filePath, `[foo@gmail.com](mailto:foo@gmail.com)`);
 
@@ -64,7 +64,7 @@ describe("bad-links-in-markdown - web links", () => {
   it("Does not include reference email links in list of bad local links", async () => {
     const testDirectory = await newTestDirectory();
 
-    const filePath = getPathToNewTestFile(testDirectory);
+    const filePath = newTestMarkdownFile(testDirectory);
     fs.writeFileSync(
       filePath,
       `

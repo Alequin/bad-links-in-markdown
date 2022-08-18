@@ -3,7 +3,7 @@ import path from "path";
 import { badLinksInMarkdown } from "../bad-links-in-markdown";
 import { badLinkReasons } from "../src/identify-invalid-local-links/find-bad-links/bad-link-reasons";
 import {
-  getPathToNewTestFile,
+  newTestMarkdownFile,
   newTestDirectory,
   runTestWithDirectoryCleanup,
   uniqueName,
@@ -20,7 +20,7 @@ describe("bad-links-in-markdown - headers followed by command", () => {
     );
     fs.writeFileSync(filePathToLinkTo, `# main-title <!-- omit-in-toc -->`);
 
-    const fileContainingLink = getPathToNewTestFile(testDirectory);
+    const fileContainingLink = newTestMarkdownFile(testDirectory);
     fs.writeFileSync(
       fileContainingLink,
       `[I am a local link](./${fileNameToLinkTo}.md#main-title)`
@@ -46,7 +46,7 @@ describe("bad-links-in-markdown - headers followed by command", () => {
       `# unexpected title <!-- omit-in-toc -->`
     );
 
-    const fileContainingLink = getPathToNewTestFile(testDirectory);
+    const fileContainingLink = newTestMarkdownFile(testDirectory);
     fs.writeFileSync(
       fileContainingLink,
       `[I am a local link](./${fileNameToLinkTo}.md#main-title)`
@@ -79,7 +79,7 @@ describe("bad-links-in-markdown - headers followed by command", () => {
     );
     fs.writeFileSync(filePathToLinkTo, `# main-title <!-- omit-in-toc -->`);
 
-    const fileContainingLink = getPathToNewTestFile(testDirectory);
+    const fileContainingLink = newTestMarkdownFile(testDirectory);
     fs.writeFileSync(
       fileContainingLink,
       `[I am a local link][1]\n\n[1]: ./${fileNameToLinkTo}.md#main-title`
@@ -105,7 +105,7 @@ describe("bad-links-in-markdown - headers followed by command", () => {
       `# unexpected title <!-- omit-in-toc -->`
     );
 
-    const fileContainingLink = getPathToNewTestFile(testDirectory);
+    const fileContainingLink = newTestMarkdownFile(testDirectory);
     fs.writeFileSync(
       fileContainingLink,
       `[I am a local link](./${fileNameToLinkTo}.md#main-title)`

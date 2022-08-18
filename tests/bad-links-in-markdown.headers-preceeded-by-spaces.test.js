@@ -2,7 +2,7 @@ import fs from "fs";
 import path from "path";
 import { badLinksInMarkdown } from "../bad-links-in-markdown";
 import {
-  getPathToNewTestFile,
+  newTestMarkdownFile,
   newTestDirectory,
   runTestWithDirectoryCleanup,
   uniqueName,
@@ -22,7 +22,7 @@ describe("bad-links-in-markdown - headers preceeded by space characters", () => 
       `        # main-title\na story of foo and bar\nand baz`
     );
 
-    const fileContainingLink = getPathToNewTestFile(testDirectory);
+    const fileContainingLink = newTestMarkdownFile(testDirectory);
     fs.writeFileSync(
       fileContainingLink,
       `[I am a local link](./${fileNameToLinkTo}.md#main-title)`
@@ -68,7 +68,7 @@ describe("bad-links-in-markdown - headers preceeded by space characters", () => 
       `        # main-title\na story of foo and bar\nand baz`
     );
 
-    const fileContainingLink = getPathToNewTestFile(testDirectory);
+    const fileContainingLink = newTestMarkdownFile(testDirectory);
     fs.writeFileSync(
       fileContainingLink,
       `[I am a local link][1]\n\n[1]: ./${fileNameToLinkTo}.md#main-title`

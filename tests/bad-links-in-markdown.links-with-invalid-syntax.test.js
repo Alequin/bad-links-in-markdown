@@ -3,7 +3,7 @@ import path from "path";
 import { badLinksInMarkdown } from "../bad-links-in-markdown";
 import { badLinkReasons } from "../src/identify-invalid-local-links/find-bad-links/bad-link-reasons";
 import {
-  getPathToNewTestFile,
+  newTestMarkdownFile,
   newTestDirectory,
   newTestDirectoryWithName,
   runTestWithDirectoryCleanup,
@@ -19,7 +19,7 @@ describe("bad-links-in-markdown - bad link syntax", () => {
       it(`Ignores local inline links that point at files that do not exist when they include the incorrect syntax "${syntax}"`, async () => {
         const testDirectory = await newTestDirectory();
 
-        const filePath = getPathToNewTestFile(testDirectory);
+        const filePath = newTestMarkdownFile(testDirectory);
 
         fs.writeFileSync(
           filePath,
@@ -46,7 +46,7 @@ describe("bad-links-in-markdown - bad link syntax", () => {
           `# foo bar baz\na story of foo and bar\nand baz`
         );
 
-        const fileContainingLink = getPathToNewTestFile(testDirectory);
+        const fileContainingLink = newTestMarkdownFile(testDirectory);
         fs.writeFileSync(
           fileContainingLink,
           `[I am a local link](./${fileNameToLinkTo}-${syntax}-test.md#main-title)`
@@ -62,7 +62,7 @@ describe("bad-links-in-markdown - bad link syntax", () => {
       it(`Ignores reference links that point at files that do not exist when they include the incorrect syntax "${syntax}"`, async () => {
         const testDirectory = await newTestDirectory();
 
-        const filePath = getPathToNewTestFile(testDirectory);
+        const filePath = newTestMarkdownFile(testDirectory);
 
         fs.writeFileSync(
           filePath,
@@ -89,7 +89,7 @@ describe("bad-links-in-markdown - bad link syntax", () => {
           `# foo bar baz\na story of foo and bar\nand baz`
         );
 
-        const fileContainingLink = getPathToNewTestFile(testDirectory);
+        const fileContainingLink = newTestMarkdownFile(testDirectory);
         fs.writeFileSync(
           fileContainingLink,
           `Here is some text\n[and then a link to a file][1]\n\n[1]: ./${fileNameToLinkTo}-${syntax}-test.md#main-title`
@@ -105,7 +105,7 @@ describe("bad-links-in-markdown - bad link syntax", () => {
       it(`Ignores local inline image links that point at an images that does not exist when they include the incorrect syntax "${syntax}"`, async () => {
         const testDirectory = await newTestDirectory();
 
-        const filePath = getPathToNewTestFile(testDirectory);
+        const filePath = newTestMarkdownFile(testDirectory);
 
         fs.writeFileSync(
           filePath,
@@ -122,7 +122,7 @@ describe("bad-links-in-markdown - bad link syntax", () => {
       it(`Ignores local reference image links that point at images that do not exist when they include the incorrect syntax "${syntax}"`, async () => {
         const testDirectory = await newTestDirectory();
 
-        const filePath = getPathToNewTestFile(testDirectory);
+        const filePath = newTestMarkdownFile(testDirectory);
 
         fs.writeFileSync(
           filePath,

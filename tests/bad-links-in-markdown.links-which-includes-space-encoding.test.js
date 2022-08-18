@@ -3,7 +3,7 @@ import path from "path";
 import { badLinksInMarkdown } from "../bad-links-in-markdown";
 import { badLinkReasons } from "../src/identify-invalid-local-links/find-bad-links/bad-link-reasons";
 import {
-  getPathToNewTestFile,
+  newTestMarkdownFile,
   newTestDirectory,
   newTestDirectoryWithName,
   runTestWithDirectoryCleanup,
@@ -14,7 +14,7 @@ describe("bad-links-in-markdown - links-which-includes-space-encoding", () => {
   it("Identifies local inline links that point at files that do not exist, even when the link includes space encoding characters", async () => {
     const testDirectory = await newTestDirectory();
 
-    const filePath = getPathToNewTestFile(testDirectory);
+    const filePath = newTestMarkdownFile(testDirectory);
 
     fs.writeFileSync(
       filePath,
@@ -48,7 +48,7 @@ describe("bad-links-in-markdown - links-which-includes-space-encoding", () => {
     );
     fs.writeFileSync(filePathToLinkTo, `foo bar baz`);
 
-    const fileContainingLink = getPathToNewTestFile(testDirectory);
+    const fileContainingLink = newTestMarkdownFile(testDirectory);
     fs.writeFileSync(
       fileContainingLink,
       `[I am a local link](./${fileNameToLinkTo}%20test.md)`
@@ -64,7 +64,7 @@ describe("bad-links-in-markdown - links-which-includes-space-encoding", () => {
   it("Identifies multiple local inline links on the same file line that point at files that do not exist, even when the link includes space encoding characters", async () => {
     const testDirectory = await newTestDirectory();
 
-    const filePath = getPathToNewTestFile(testDirectory);
+    const filePath = newTestMarkdownFile(testDirectory);
 
     fs.writeFileSync(
       filePath,
@@ -113,7 +113,7 @@ describe("bad-links-in-markdown - links-which-includes-space-encoding", () => {
       `# foo bar baz\na story of foo and bar\nand baz`
     );
 
-    const fileContainingLink = getPathToNewTestFile(testDirectory);
+    const fileContainingLink = newTestMarkdownFile(testDirectory);
     fs.writeFileSync(
       fileContainingLink,
       `[I am a local link](./${fileNameToLinkTo}.md#main-title)`
@@ -149,7 +149,7 @@ describe("bad-links-in-markdown - links-which-includes-space-encoding", () => {
       `# main-title\na story of foo and bar\nand baz`
     );
 
-    const fileContainingLink = getPathToNewTestFile(testDirectory);
+    const fileContainingLink = newTestMarkdownFile(testDirectory);
     fs.writeFileSync(
       fileContainingLink,
       `[I am a local link](./${fileNameToLinkTo}%20test.md#main-title)`
@@ -165,7 +165,7 @@ describe("bad-links-in-markdown - links-which-includes-space-encoding", () => {
   it("Identifies reference links that point at files that do not exist, even when the link includes space encoding characters", async () => {
     const testDirectory = await newTestDirectory();
 
-    const filePath = getPathToNewTestFile(testDirectory);
+    const filePath = newTestMarkdownFile(testDirectory);
 
     fs.writeFileSync(
       filePath,
@@ -199,7 +199,7 @@ describe("bad-links-in-markdown - links-which-includes-space-encoding", () => {
     );
     fs.writeFileSync(filePathToLinkTo, `foo bar baz`);
 
-    const fileContainingLink = getPathToNewTestFile(testDirectory);
+    const fileContainingLink = newTestMarkdownFile(testDirectory);
     fs.writeFileSync(
       fileContainingLink,
       `Here is some text\n[and then a link to a file][1]\n\n[1]: ./${fileNameToLinkTo}%20test.md`
@@ -225,7 +225,7 @@ describe("bad-links-in-markdown - links-which-includes-space-encoding", () => {
       `# foo bar baz\na story of foo and bar\nand baz`
     );
 
-    const fileContainingLink = getPathToNewTestFile(testDirectory);
+    const fileContainingLink = newTestMarkdownFile(testDirectory);
     fs.writeFileSync(
       fileContainingLink,
       `Here is some text\n[and then a link to a file][1]\n\n[1]: ./${fileNameToLinkTo}.md#main-title`
@@ -261,7 +261,7 @@ describe("bad-links-in-markdown - links-which-includes-space-encoding", () => {
       `# main-title\na story of foo and bar\nand baz`
     );
 
-    const fileContainingLink = getPathToNewTestFile(testDirectory);
+    const fileContainingLink = newTestMarkdownFile(testDirectory);
     fs.writeFileSync(
       fileContainingLink,
       `Here is some text\n[and then a link to a file][1]\n\n[1]: ./${fileNameToLinkTo}%20test.md#main-title`
@@ -277,7 +277,7 @@ describe("bad-links-in-markdown - links-which-includes-space-encoding", () => {
   it("Identifies a local inline image link that points at an image that does not exist, even when the link includes space encoding characters", async () => {
     const testDirectory = await newTestDirectory();
 
-    const filePath = getPathToNewTestFile(testDirectory);
+    const filePath = newTestMarkdownFile(testDirectory);
 
     fs.writeFileSync(filePath, `![picture](./path/to/missing%20image.png)`);
 
@@ -301,7 +301,7 @@ describe("bad-links-in-markdown - links-which-includes-space-encoding", () => {
   it("Identifies multiple local inline image links on the same file line that point at files that do not exist, even when the link includes space encoding characters", async () => {
     const testDirectory = await newTestDirectory();
 
-    const filePath = getPathToNewTestFile(testDirectory);
+    const filePath = newTestMarkdownFile(testDirectory);
 
     fs.writeFileSync(
       filePath,
@@ -345,7 +345,7 @@ describe("bad-links-in-markdown - links-which-includes-space-encoding", () => {
       path.resolve(testDirectory, "./dog image.jpg")
     );
 
-    const filePath = getPathToNewTestFile(testDirectory);
+    const filePath = newTestMarkdownFile(testDirectory);
 
     fs.writeFileSync(filePath, `![picture](./dog%20image.jpg)`);
 
@@ -359,7 +359,7 @@ describe("bad-links-in-markdown - links-which-includes-space-encoding", () => {
   it("Identifies local reference image links that point at images that do not exist, even when the link includes space encoding characters", async () => {
     const testDirectory = await newTestDirectory();
 
-    const filePath = getPathToNewTestFile(testDirectory);
+    const filePath = newTestMarkdownFile(testDirectory);
 
     fs.writeFileSync(
       filePath,
@@ -391,7 +391,7 @@ describe("bad-links-in-markdown - links-which-includes-space-encoding", () => {
       path.resolve(testDirectory, "./dog image.jpg")
     );
 
-    const filePath = getPathToNewTestFile(testDirectory);
+    const filePath = newTestMarkdownFile(testDirectory);
 
     fs.writeFileSync(
       filePath,

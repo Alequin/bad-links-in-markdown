@@ -3,7 +3,7 @@ import path from "path";
 import { badLinksInMarkdown } from "../bad-links-in-markdown";
 import { badLinkReasons } from "../src/identify-invalid-local-links/find-bad-links/bad-link-reasons";
 import {
-  getPathToNewTestFile,
+  newTestMarkdownFile,
   newTestDirectory,
   runTestWithDirectoryCleanup,
   uniqueName,
@@ -13,7 +13,7 @@ describe("bad-links-in-markdown - links including spaces", () => {
   it("Identifies local inline links that point at files that do not exist, even when the links contain spaces at the start and end", async () => {
     const testDirectory = await newTestDirectory();
 
-    const filePath = getPathToNewTestFile(testDirectory);
+    const filePath = newTestMarkdownFile(testDirectory);
 
     fs.writeFileSync(
       filePath,
@@ -47,7 +47,7 @@ describe("bad-links-in-markdown - links including spaces", () => {
     );
     fs.writeFileSync(filePathToLinkTo, `foo bar baz`);
 
-    const fileContainingLink = getPathToNewTestFile(testDirectory);
+    const fileContainingLink = newTestMarkdownFile(testDirectory);
     fs.writeFileSync(
       fileContainingLink,
       `[I am a local link](    ./${fileNameToLinkTo}.md    )`
@@ -73,7 +73,7 @@ describe("bad-links-in-markdown - links including spaces", () => {
       `# foo bar baz\na story of foo and bar\nand baz`
     );
 
-    const fileContainingLink = getPathToNewTestFile(testDirectory);
+    const fileContainingLink = newTestMarkdownFile(testDirectory);
     fs.writeFileSync(
       fileContainingLink,
       `[I am a local link](    ./${fileNameToLinkTo}.md#main-title    )`
@@ -109,7 +109,7 @@ describe("bad-links-in-markdown - links including spaces", () => {
       `# main-title\na story of foo and bar\nand baz`
     );
 
-    const fileContainingLink = getPathToNewTestFile(testDirectory);
+    const fileContainingLink = newTestMarkdownFile(testDirectory);
     fs.writeFileSync(
       fileContainingLink,
       `[I am a local link](    ./${fileNameToLinkTo}.md#main-title    )`
@@ -125,7 +125,7 @@ describe("bad-links-in-markdown - links including spaces", () => {
   it("Identifies reference links that point at files that do not exist, even when the links contain spaces at the start and end", async () => {
     const testDirectory = await newTestDirectory();
 
-    const filePath = getPathToNewTestFile(testDirectory);
+    const filePath = newTestMarkdownFile(testDirectory);
 
     fs.writeFileSync(
       filePath,
@@ -159,7 +159,7 @@ describe("bad-links-in-markdown - links including spaces", () => {
     );
     fs.writeFileSync(filePathToLinkTo, `foo bar baz`);
 
-    const fileContainingLink = getPathToNewTestFile(testDirectory);
+    const fileContainingLink = newTestMarkdownFile(testDirectory);
     fs.writeFileSync(
       fileContainingLink,
       `Here is some text\n[and then a link to a file][1]\n\n[1]:     ./${fileNameToLinkTo}.md     `
@@ -185,7 +185,7 @@ describe("bad-links-in-markdown - links including spaces", () => {
       `# foo bar baz\na story of foo and bar\nand baz`
     );
 
-    const fileContainingLink = getPathToNewTestFile(testDirectory);
+    const fileContainingLink = newTestMarkdownFile(testDirectory);
     fs.writeFileSync(
       fileContainingLink,
       `Here is some text\n[and then a link to a file][1]\n\n[1]:     ./${fileNameToLinkTo}.md#main-title     `
@@ -221,7 +221,7 @@ describe("bad-links-in-markdown - links including spaces", () => {
       `# main-title\na story of foo and bar\nand baz`
     );
 
-    const fileContainingLink = getPathToNewTestFile(testDirectory);
+    const fileContainingLink = newTestMarkdownFile(testDirectory);
     fs.writeFileSync(
       fileContainingLink,
       `Here is some text\n[and then a link to a file][1]\n\n[1]:     ./${fileNameToLinkTo}.md#main-title    `
@@ -237,7 +237,7 @@ describe("bad-links-in-markdown - links including spaces", () => {
   it("Identifies local inline image links that point at images that does not exist, even when the links contain spaces at the start and end", async () => {
     const testDirectory = await newTestDirectory();
 
-    const filePath = getPathToNewTestFile(testDirectory);
+    const filePath = newTestMarkdownFile(testDirectory);
 
     fs.writeFileSync(
       filePath,
@@ -264,7 +264,7 @@ describe("bad-links-in-markdown - links including spaces", () => {
   it("Ignores local inline image link which point at images which exist, even when the links contain spaces at the start and end", async () => {
     const testDirectory = await newTestDirectory();
 
-    const filePath = getPathToNewTestFile(testDirectory);
+    const filePath = newTestMarkdownFile(testDirectory);
 
     fs.writeFileSync(filePath, `![picture](     ../dog.jpg     )`);
 
@@ -278,7 +278,7 @@ describe("bad-links-in-markdown - links including spaces", () => {
   it("Identifies local reference image links that point at images that do not exist, even when the links contain spaces at the start and end", async () => {
     const testDirectory = await newTestDirectory();
 
-    const filePath = getPathToNewTestFile(testDirectory);
+    const filePath = newTestMarkdownFile(testDirectory);
 
     fs.writeFileSync(
       filePath,
@@ -305,7 +305,7 @@ describe("bad-links-in-markdown - links including spaces", () => {
   it("Ignores local reference image links which points at images which exist, even when the links contain spaces at the start and end", async () => {
     const testDirectory = await newTestDirectory();
 
-    const filePath = getPathToNewTestFile(testDirectory);
+    const filePath = newTestMarkdownFile(testDirectory);
 
     fs.writeFileSync(
       filePath,
@@ -322,7 +322,7 @@ describe("bad-links-in-markdown - links including spaces", () => {
   it("Does not include inline web links in list of bad local links, even when the links contain spaces at the start and end", async () => {
     const testDirectory = await newTestDirectory();
 
-    const filePath = getPathToNewTestFile(testDirectory);
+    const filePath = newTestMarkdownFile(testDirectory);
 
     fs.writeFileSync(
       filePath,
@@ -339,7 +339,7 @@ describe("bad-links-in-markdown - links including spaces", () => {
   it("Does not include reference web links in the list of bad local links, even when the links contain spaces at the start and end", async () => {
     const testDirectory = await newTestDirectory();
 
-    const filePath = getPathToNewTestFile(testDirectory);
+    const filePath = newTestMarkdownFile(testDirectory);
 
     fs.writeFileSync(
       filePath,

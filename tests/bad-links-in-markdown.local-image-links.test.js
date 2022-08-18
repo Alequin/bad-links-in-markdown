@@ -2,7 +2,7 @@ import fs from "fs";
 import { badLinksInMarkdown } from "../bad-links-in-markdown";
 import { badLinkReasons } from "../src/identify-invalid-local-links/find-bad-links/bad-link-reasons";
 import {
-  getPathToNewTestFile,
+  newTestMarkdownFile,
   newTestDirectory,
   newTestDirectoryWithName,
   newTestFile,
@@ -16,7 +16,7 @@ describe("bad-links-in-markdown - local image links", () => {
     it("Identifies a local inline image link that points at an image that does not exist", async () => {
       const testDirectory = await newTestDirectory();
 
-      const filePath = getPathToNewTestFile(testDirectory);
+      const filePath = newTestMarkdownFile(testDirectory);
 
       fs.writeFileSync(filePath, `![picture](./path/to/missing/image.png)`);
 
@@ -40,7 +40,7 @@ describe("bad-links-in-markdown - local image links", () => {
     it("Ignores local inline image link which point at an images which exist", async () => {
       const testDirectory = await newTestDirectory();
 
-      const filePath = getPathToNewTestFile(testDirectory);
+      const filePath = newTestMarkdownFile(testDirectory);
 
       fs.writeFileSync(filePath, `![picture](../dog.jpg)`);
 
@@ -59,7 +59,7 @@ describe("bad-links-in-markdown - local image links", () => {
         path.resolve(testDirectory, "./dog.jpg")
       );
 
-      const fileContainingLink = getPathToNewTestFile(testDirectory);
+      const fileContainingLink = newTestMarkdownFile(testDirectory);
       fs.writeFileSync(fileContainingLink, `![I am a local link](/dog.jpg)`);
 
       await runTestWithDirectoryCleanup(async () => {
@@ -92,7 +92,7 @@ describe("bad-links-in-markdown - local image links", () => {
       );
 
       const mockAbsoluteLink = `/${firstNestedDirName}/${secondNestedDirName}/dog.jpg`;
-      const fileContainingLink = getPathToNewTestFile(secondNestedDirPath);
+      const fileContainingLink = newTestMarkdownFile(secondNestedDirPath);
       fs.writeFileSync(
         fileContainingLink,
         `![I am a local link](${mockAbsoluteLink})`
@@ -109,7 +109,7 @@ describe("bad-links-in-markdown - local image links", () => {
       const testDirectory = await newTestDirectoryWithName();
 
       const mockAbsoluteLink = `/${testDirectory.name}/dog.jpg`;
-      const fileContainingLink = getPathToNewTestFile(testDirectory.path);
+      const fileContainingLink = newTestMarkdownFile(testDirectory.path);
       fs.writeFileSync(
         fileContainingLink,
         `![I am a local link](${mockAbsoluteLink})`
@@ -159,7 +159,7 @@ describe("bad-links-in-markdown - local image links", () => {
 
       const mockAbsoluteLink = `/${secondNestedDirName}//dog.jpg`;
 
-      const fileContainingLink = getPathToNewTestFile(firstNestedDirPath);
+      const fileContainingLink = newTestMarkdownFile(firstNestedDirPath);
       fs.writeFileSync(
         fileContainingLink,
         `![I am a local link](${mockAbsoluteLink})`
@@ -188,7 +188,7 @@ describe("bad-links-in-markdown - local image links", () => {
     it("Identifies a local inline image link that points at a file that does not exist even when the link does not contain a file extension", async () => {
       const testDirectory = await newTestDirectory();
 
-      const filePath = getPathToNewTestFile(testDirectory);
+      const filePath = newTestMarkdownFile(testDirectory);
 
       fs.writeFileSync(filePath, `![picture](./path/to/missing/image)`);
 
@@ -215,7 +215,7 @@ describe("bad-links-in-markdown - local image links", () => {
     it("Identifies a local inline image link that points at a file that exist when the link does not contain a file extension", async () => {
       const testDirectory = await newTestDirectory();
 
-      const filePath = getPathToNewTestFile(testDirectory);
+      const filePath = newTestMarkdownFile(testDirectory);
 
       fs.writeFileSync(filePath, `![picture](../dog)`);
 
@@ -239,7 +239,7 @@ describe("bad-links-in-markdown - local image links", () => {
     it("Identifies a local inline image link that points at a file that does not exist when the file path does not include either absolute or relative path", async () => {
       const testDirectory = await newTestDirectory();
 
-      const filePath = getPathToNewTestFile(testDirectory);
+      const filePath = newTestMarkdownFile(testDirectory);
 
       fs.writeFileSync(filePath, `![picture](image.png)`);
 
@@ -263,7 +263,7 @@ describe("bad-links-in-markdown - local image links", () => {
     it("Ignores local inline image links which point at files which exist when the file path does not include either absolute or relative path", async () => {
       const testDirectory = await newTestDirectory();
 
-      const filePath = getPathToNewTestFile(testDirectory);
+      const filePath = newTestMarkdownFile(testDirectory);
 
       fs.copyFileSync(
         path.resolve(testDirectory, "../dog.jpg"),
@@ -282,7 +282,7 @@ describe("bad-links-in-markdown - local image links", () => {
     it("Identifies a local inline image link that points at a file that does not exist when the file path is missing and the extension is missing and does not include either absolute or relative path", async () => {
       const testDirectory = await newTestDirectory();
 
-      const filePath = getPathToNewTestFile(testDirectory);
+      const filePath = newTestMarkdownFile(testDirectory);
 
       fs.writeFileSync(filePath, `![picture](image)`);
 
@@ -309,7 +309,7 @@ describe("bad-links-in-markdown - local image links", () => {
     it("Identifies local inline image links which point at files which exist when the file path is missing and extension is missing and does not include either absolute or relative path", async () => {
       const testDirectory = await newTestDirectory();
 
-      const filePath = getPathToNewTestFile(testDirectory);
+      const filePath = newTestMarkdownFile(testDirectory);
 
       fs.copyFileSync(
         path.resolve(testDirectory, "../dog.jpg"),
@@ -338,7 +338,7 @@ describe("bad-links-in-markdown - local image links", () => {
     it("Identifies a local inline image link that is missing a file extension and could potentially refer to two separate files", async () => {
       const testDirectory = await newTestDirectory();
 
-      const filePath = getPathToNewTestFile(testDirectory);
+      const filePath = newTestMarkdownFile(testDirectory);
       fs.copyFileSync(
         path.resolve(testDirectory, "../dog.jpg"),
         path.resolve(testDirectory, "./dog.jpg")
@@ -373,7 +373,7 @@ describe("bad-links-in-markdown - local image links", () => {
     it("Ignores local inline image links which point at files which exist, even when the name includes multiple delimiters", async () => {
       const testDirectory = await newTestDirectory();
 
-      const filePath = getPathToNewTestFile(testDirectory);
+      const filePath = newTestMarkdownFile(testDirectory);
       fs.copyFileSync(
         path.resolve(testDirectory, "../dog.jpg"),
         path.resolve(testDirectory, "./dog.foo.bar.jpg")
@@ -396,7 +396,7 @@ describe("bad-links-in-markdown - local image links", () => {
       );
       fs.mkdirSync(firstInnerTestDirectory);
 
-      const fileContainingLink = getPathToNewTestFile(
+      const fileContainingLink = newTestMarkdownFile(
         `${testDirectory}/inner-test-1`
       );
       fs.writeFileSync(fileContainingLink, `[I am a local link](.../dog.jpg)`);
@@ -429,7 +429,7 @@ describe("bad-links-in-markdown - local image links", () => {
       );
       fs.mkdirSync(firstInnerTestDirectory);
 
-      const fileContainingLink = getPathToNewTestFile(
+      const fileContainingLink = newTestMarkdownFile(
         `${testDirectory}/inner-test-1`
       );
       fs.writeFileSync(
@@ -447,7 +447,7 @@ describe("bad-links-in-markdown - local image links", () => {
     it("Identifies multiple local inline image links on the same file line that point at images that do not exist", async () => {
       const testDirectory = await newTestDirectory();
 
-      const filePath = getPathToNewTestFile(testDirectory);
+      const filePath = newTestMarkdownFile(testDirectory);
 
       fs.writeFileSync(
         filePath,
@@ -488,7 +488,7 @@ describe("bad-links-in-markdown - local image links", () => {
       async (fileExtension) => {
         const testDirectory = await newTestDirectory();
 
-        const filePath = getPathToNewTestFile(testDirectory);
+        const filePath = newTestMarkdownFile(testDirectory);
 
         await runTestWithDirectoryCleanup(async () => {
           expect(await badLinksInMarkdown(testDirectory)).toEqual({
@@ -507,7 +507,7 @@ describe("bad-links-in-markdown - local image links", () => {
           newTestFile(testDirectory, imageFileExtension);
         fs.writeFileSync(imageFilePath, "");
 
-        const filePath = getPathToNewTestFile(testDirectory);
+        const filePath = newTestMarkdownFile(testDirectory);
 
         fs.writeFileSync(filePath, `![picture](./${imageFileName})`);
 
@@ -522,7 +522,7 @@ describe("bad-links-in-markdown - local image links", () => {
     it("Identifies a local inline image link that points at an image that uses an invalid extension", async () => {
       const testDirectory = await newTestDirectory();
 
-      const filePath = getPathToNewTestFile(testDirectory);
+      const filePath = newTestMarkdownFile(testDirectory);
 
       fs.writeFileSync(filePath, `![picture](../fake-audio.mp3)`);
 
@@ -548,7 +548,7 @@ describe("bad-links-in-markdown - local image links", () => {
     it("Identifies local reference image links that point at images that do not exist", async () => {
       const testDirectory = await newTestDirectory();
 
-      const filePath = getPathToNewTestFile(testDirectory);
+      const filePath = newTestMarkdownFile(testDirectory);
 
       fs.writeFileSync(
         filePath,
@@ -575,7 +575,7 @@ describe("bad-links-in-markdown - local image links", () => {
     it("Ignores local reference image links which points at images which exist", async () => {
       const testDirectory = await newTestDirectory();
 
-      const filePath = getPathToNewTestFile(testDirectory);
+      const filePath = newTestMarkdownFile(testDirectory);
 
       fs.writeFileSync(
         filePath,
@@ -597,7 +597,7 @@ describe("bad-links-in-markdown - local image links", () => {
         path.resolve(testDirectory, "./dog.jpg")
       );
 
-      const fileContainingLink = getPathToNewTestFile(testDirectory);
+      const fileContainingLink = newTestMarkdownFile(testDirectory);
       fs.writeFileSync(
         fileContainingLink,
         `![and then a link to a file][picture]\n\n[picture]: /dog.jpg`
@@ -633,7 +633,7 @@ describe("bad-links-in-markdown - local image links", () => {
       );
 
       const mockAbsoluteLink = `/${firstNestedDirName}/${secondNestedDirName}/dog.jpg`;
-      const fileContainingLink = getPathToNewTestFile(secondNestedDirPath);
+      const fileContainingLink = newTestMarkdownFile(secondNestedDirPath);
       fs.writeFileSync(
         fileContainingLink,
         `![and then a link to a file][picture]\n\n[picture]: ${mockAbsoluteLink}`
@@ -650,7 +650,7 @@ describe("bad-links-in-markdown - local image links", () => {
       const testDirectory = await newTestDirectoryWithName();
 
       const mockAbsoluteLink = `/${testDirectory.name}/dog.jpg`;
-      const fileContainingLink = getPathToNewTestFile(testDirectory.path);
+      const fileContainingLink = newTestMarkdownFile(testDirectory.path);
       fs.writeFileSync(
         fileContainingLink,
         `![and then a link to a file][picture]\n\n[picture]: ${mockAbsoluteLink}`
@@ -700,7 +700,7 @@ describe("bad-links-in-markdown - local image links", () => {
 
       const mockAbsoluteLink = `/${secondNestedDirName}//dog.jpg`;
 
-      const fileContainingLink = getPathToNewTestFile(firstNestedDirPath);
+      const fileContainingLink = newTestMarkdownFile(firstNestedDirPath);
       fs.writeFileSync(
         fileContainingLink,
         `![and then a link to a file][picture]\n\n[picture]: ${mockAbsoluteLink}`
@@ -729,7 +729,7 @@ describe("bad-links-in-markdown - local image links", () => {
     it("Identifies a local reference image link that points at a file that does not exist even when the link does not contain a file extension", async () => {
       const testDirectory = await newTestDirectory();
 
-      const filePath = getPathToNewTestFile(testDirectory);
+      const filePath = newTestMarkdownFile(testDirectory);
 
       fs.writeFileSync(
         filePath,
@@ -759,7 +759,7 @@ describe("bad-links-in-markdown - local image links", () => {
     it("Identifies a local reference image link that points at a file that exist when the link does not contain a file extension", async () => {
       const testDirectory = await newTestDirectory();
 
-      const filePath = getPathToNewTestFile(testDirectory);
+      const filePath = newTestMarkdownFile(testDirectory);
 
       fs.writeFileSync(
         filePath,
@@ -786,7 +786,7 @@ describe("bad-links-in-markdown - local image links", () => {
     it("Identifies a local reference image link that points at a file that does not exist when the file path does not include either absolute or relative path", async () => {
       const testDirectory = await newTestDirectory();
 
-      const filePath = getPathToNewTestFile(testDirectory);
+      const filePath = newTestMarkdownFile(testDirectory);
 
       fs.writeFileSync(
         filePath,
@@ -812,7 +812,7 @@ describe("bad-links-in-markdown - local image links", () => {
     it("Ignores local reference image links which point at files which exist when the file path does not include either absolute or relative path", async () => {
       const testDirectory = await newTestDirectory();
 
-      const filePath = getPathToNewTestFile(testDirectory);
+      const filePath = newTestMarkdownFile(testDirectory);
 
       fs.copyFileSync(
         path.resolve(testDirectory, "../dog.jpg"),
@@ -834,7 +834,7 @@ describe("bad-links-in-markdown - local image links", () => {
     it("Identifies a local reference image link that points at a file that does not exist when the file path is missing and extension and does not include either absolute or relative path", async () => {
       const testDirectory = await newTestDirectory();
 
-      const filePath = getPathToNewTestFile(testDirectory);
+      const filePath = newTestMarkdownFile(testDirectory);
 
       fs.writeFileSync(
         filePath,
@@ -864,7 +864,7 @@ describe("bad-links-in-markdown - local image links", () => {
     it("Identifies local reference image links which point at files which exist when the file path is missing and extension and does not include either absolute or relative path", async () => {
       const testDirectory = await newTestDirectory();
 
-      const filePath = getPathToNewTestFile(testDirectory);
+      const filePath = newTestMarkdownFile(testDirectory);
 
       fs.copyFileSync(
         path.resolve(testDirectory, "../dog.jpg"),
@@ -896,7 +896,7 @@ describe("bad-links-in-markdown - local image links", () => {
     it("Identifies a local reference image link that is missing a file extension and could potentially refer to two separate files", async () => {
       const testDirectory = await newTestDirectory();
 
-      const filePath = getPathToNewTestFile(testDirectory);
+      const filePath = newTestMarkdownFile(testDirectory);
       fs.copyFileSync(
         path.resolve(testDirectory, "../dog.jpg"),
         path.resolve(testDirectory, "./dog.jpg")
@@ -934,7 +934,7 @@ describe("bad-links-in-markdown - local image links", () => {
     it("Ignores local reference image links which point at files which exist, even when the name includes multiple delimiters", async () => {
       const testDirectory = await newTestDirectory();
 
-      const filePath = getPathToNewTestFile(testDirectory);
+      const filePath = newTestMarkdownFile(testDirectory);
       fs.copyFileSync(
         path.resolve(testDirectory, "../dog.jpg"),
         path.resolve(testDirectory, "./dog.foo.bar.jpg")
@@ -960,7 +960,7 @@ describe("bad-links-in-markdown - local image links", () => {
       );
       fs.mkdirSync(firstInnerTestDirectory);
 
-      const fileContainingLink = getPathToNewTestFile(
+      const fileContainingLink = newTestMarkdownFile(
         `${testDirectory}/inner-test-1`
       );
       fs.writeFileSync(
@@ -996,7 +996,7 @@ describe("bad-links-in-markdown - local image links", () => {
       );
       fs.mkdirSync(firstInnerTestDirectory);
 
-      const fileContainingLink = getPathToNewTestFile(
+      const fileContainingLink = newTestMarkdownFile(
         `${testDirectory}/inner-test-1`
       );
       fs.writeFileSync(
@@ -1016,7 +1016,7 @@ describe("bad-links-in-markdown - local image links", () => {
       async (fileExtension) => {
         const testDirectory = await newTestDirectory();
 
-        const filePath = getPathToNewTestFile(testDirectory);
+        const filePath = newTestMarkdownFile(testDirectory);
 
         fs.writeFileSync(
           filePath,
@@ -1040,7 +1040,7 @@ describe("bad-links-in-markdown - local image links", () => {
           newTestFile(testDirectory, imageFileExtension);
         fs.writeFileSync(imageFilePath, "");
 
-        const filePath = getPathToNewTestFile(testDirectory);
+        const filePath = newTestMarkdownFile(testDirectory);
 
         fs.writeFileSync(
           filePath,
@@ -1058,7 +1058,7 @@ describe("bad-links-in-markdown - local image links", () => {
     it("Identifies a local inline image link that points at an image that uses an invalid extension", async () => {
       const testDirectory = await newTestDirectory();
 
-      const filePath = getPathToNewTestFile(testDirectory);
+      const filePath = newTestMarkdownFile(testDirectory);
 
       fs.writeFileSync(
         filePath,

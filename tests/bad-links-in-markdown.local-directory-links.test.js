@@ -3,7 +3,7 @@ import path from "path";
 import { badLinksInMarkdown } from "../bad-links-in-markdown";
 import { badLinkReasons } from "../src/identify-invalid-local-links/find-bad-links/bad-link-reasons";
 import {
-  getPathToNewTestFile,
+  newTestMarkdownFile,
   newTestDirectory,
   runTestWithDirectoryCleanup,
   uniqueName,
@@ -14,7 +14,7 @@ describe("bad-links-in-markdown - local directory links", () => {
     it("Identifies local inline links that point at directories that do not exist", async () => {
       const testDirectory = await newTestDirectory();
 
-      const filePath = getPathToNewTestFile(testDirectory);
+      const filePath = newTestMarkdownFile(testDirectory);
 
       fs.writeFileSync(filePath, `[I am a local link](./path)`);
 
@@ -48,7 +48,7 @@ describe("bad-links-in-markdown - local directory links", () => {
       );
       fs.mkdirSync(directoryPathToLinkTo);
 
-      const fileContainingLink = getPathToNewTestFile(testDirectory);
+      const fileContainingLink = newTestMarkdownFile(testDirectory);
       fs.writeFileSync(
         fileContainingLink,
         `[I am a local link](./${directoryNameToLinkTo})`
@@ -77,7 +77,7 @@ describe("bad-links-in-markdown - local directory links", () => {
       fs.mkdirSync(directoryPathToLinkTo);
       fs.mkdirSync(secondDirectoryPath);
 
-      const fileContainingLink = getPathToNewTestFile(testDirectory);
+      const fileContainingLink = newTestMarkdownFile(testDirectory);
       fs.writeFileSync(
         fileContainingLink,
         `[I am a local link](./${directoryNameToLinkTo})`
@@ -95,7 +95,7 @@ describe("bad-links-in-markdown - local directory links", () => {
     it("Identifies local reference links that point at directories that do not exist", async () => {
       const testDirectory = await newTestDirectory();
 
-      const filePath = getPathToNewTestFile(testDirectory);
+      const filePath = newTestMarkdownFile(testDirectory);
 
       fs.writeFileSync(
         filePath,
@@ -132,7 +132,7 @@ describe("bad-links-in-markdown - local directory links", () => {
       );
       fs.mkdirSync(directoryPathToLinkTo);
 
-      const fileContainingLink = getPathToNewTestFile(testDirectory);
+      const fileContainingLink = newTestMarkdownFile(testDirectory);
       fs.writeFileSync(
         fileContainingLink,
         `Here is some text\n[and then a link to a file][1]\n\n[1]: ./${directoryNameToLinkTo}`
@@ -161,7 +161,7 @@ describe("bad-links-in-markdown - local directory links", () => {
       fs.mkdirSync(directoryPathToLinkTo);
       fs.mkdirSync(secondDirectoryPath);
 
-      const fileContainingLink = getPathToNewTestFile(testDirectory);
+      const fileContainingLink = newTestMarkdownFile(testDirectory);
       fs.writeFileSync(
         fileContainingLink,
         `Here is some text\n[and then a link to a file][1]\n\n[1]: ./${directoryNameToLinkTo}`

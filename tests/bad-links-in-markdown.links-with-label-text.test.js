@@ -3,7 +3,7 @@ import path from "path";
 import { badLinksInMarkdown } from "../bad-links-in-markdown";
 import { badLinkReasons } from "../src/identify-invalid-local-links/find-bad-links/bad-link-reasons";
 import {
-  getPathToNewTestFile,
+  newTestMarkdownFile,
   newTestDirectory,
   runTestWithDirectoryCleanup,
   uniqueName,
@@ -16,7 +16,7 @@ describe("bad-links-in-markdown - links with label text", () => {
     it("Identifies local inline links that point at files that do not exist, even when the link includes label text", async () => {
       const testDirectory = await newTestDirectory();
 
-      const filePath = getPathToNewTestFile(testDirectory);
+      const filePath = newTestMarkdownFile(testDirectory);
 
       fs.writeFileSync(
         filePath,
@@ -50,7 +50,7 @@ describe("bad-links-in-markdown - links with label text", () => {
       );
       fs.writeFileSync(filePathToLinkTo, `foo bar baz`);
 
-      const fileContainingLink = getPathToNewTestFile(testDirectory);
+      const fileContainingLink = newTestMarkdownFile(testDirectory);
       fs.writeFileSync(
         fileContainingLink,
         `[I am a local link](./${fileNameToLinkTo}.md ${labelText})`
@@ -66,7 +66,7 @@ describe("bad-links-in-markdown - links with label text", () => {
     it("Identifies multiple local inline links on the same file line that point at files that do not exist, even when the link includes label text", async () => {
       const testDirectory = await newTestDirectory();
 
-      const filePath = getPathToNewTestFile(testDirectory);
+      const filePath = newTestMarkdownFile(testDirectory);
 
       fs.writeFileSync(
         filePath,
@@ -115,7 +115,7 @@ describe("bad-links-in-markdown - links with label text", () => {
         `# foo bar baz\na story of foo and bar\nand baz`
       );
 
-      const fileContainingLink = getPathToNewTestFile(testDirectory);
+      const fileContainingLink = newTestMarkdownFile(testDirectory);
       fs.writeFileSync(
         fileContainingLink,
         `[I am a local link](./${fileNameToLinkTo}.md#main-title ${labelText})`
@@ -151,7 +151,7 @@ describe("bad-links-in-markdown - links with label text", () => {
         `# main-title\na story of foo and bar\nand baz`
       );
 
-      const fileContainingLink = getPathToNewTestFile(testDirectory);
+      const fileContainingLink = newTestMarkdownFile(testDirectory);
       fs.writeFileSync(
         fileContainingLink,
         `[I am a local link](./${fileNameToLinkTo}.md#main-title ${labelText})`
@@ -167,7 +167,7 @@ describe("bad-links-in-markdown - links with label text", () => {
     it("Identifies an inline local link that points at a header tag in the current file that does not exist, even when the link includes label text", async () => {
       const testDirectory = await newTestDirectory();
 
-      const fileContainingLink = getPathToNewTestFile(testDirectory);
+      const fileContainingLink = newTestMarkdownFile(testDirectory);
       fs.writeFileSync(
         fileContainingLink,
         `[bad header](#main-title ${labelText})`
@@ -193,7 +193,7 @@ describe("bad-links-in-markdown - links with label text", () => {
     it("Ignores an inline local link that points at a header tag in the current file that exist, even when the link includes label text", async () => {
       const testDirectory = await newTestDirectory();
 
-      const fileContainingLink = getPathToNewTestFile(testDirectory);
+      const fileContainingLink = newTestMarkdownFile(testDirectory);
       fs.writeFileSync(
         fileContainingLink,
         `# Main Title\n[header](#main-title ${labelText})`
@@ -209,7 +209,7 @@ describe("bad-links-in-markdown - links with label text", () => {
     it("Identifies reference links that point at files that do not exist, even when the link includes label text", async () => {
       const testDirectory = await newTestDirectory();
 
-      const filePath = getPathToNewTestFile(testDirectory);
+      const filePath = newTestMarkdownFile(testDirectory);
 
       fs.writeFileSync(
         filePath,
@@ -243,7 +243,7 @@ describe("bad-links-in-markdown - links with label text", () => {
       );
       fs.writeFileSync(filePathToLinkTo, `foo bar baz`);
 
-      const fileContainingLink = getPathToNewTestFile(testDirectory);
+      const fileContainingLink = newTestMarkdownFile(testDirectory);
       fs.writeFileSync(
         fileContainingLink,
         `Here is some text\n[and then a link to a file][1]\n\n[1]: ./${fileNameToLinkTo}.md ${labelText}`
@@ -269,7 +269,7 @@ describe("bad-links-in-markdown - links with label text", () => {
         `# foo bar baz\na story of foo and bar\nand baz`
       );
 
-      const fileContainingLink = getPathToNewTestFile(testDirectory);
+      const fileContainingLink = newTestMarkdownFile(testDirectory);
       fs.writeFileSync(
         fileContainingLink,
         `Here is some text\n[and then a link to a file][1]\n\n[1]: ./${fileNameToLinkTo}.md#main-title ${labelText}`
@@ -305,7 +305,7 @@ describe("bad-links-in-markdown - links with label text", () => {
         `# main-title\na story of foo and bar\nand baz`
       );
 
-      const fileContainingLink = getPathToNewTestFile(testDirectory);
+      const fileContainingLink = newTestMarkdownFile(testDirectory);
       fs.writeFileSync(
         fileContainingLink,
         `Here is some text\n[and then a link to a file][1]\n\n[1]: ./${fileNameToLinkTo}.md#main-title ${labelText}`
@@ -321,7 +321,7 @@ describe("bad-links-in-markdown - links with label text", () => {
     it("Identifies a local reference link that points at a header tag in the current file that does not exist, even when the link includes label text", async () => {
       const testDirectory = await newTestDirectory();
 
-      const fileContainingLink = getPathToNewTestFile(testDirectory);
+      const fileContainingLink = newTestMarkdownFile(testDirectory);
       fs.writeFileSync(
         fileContainingLink,
         `[foobar][bad header]\n[bad header]: #main-title ${labelText}`
@@ -347,7 +347,7 @@ describe("bad-links-in-markdown - links with label text", () => {
     it("Ignores a local reference link that points at a header tag in the current file that exist, even when the link includes label text", async () => {
       const testDirectory = await newTestDirectory();
 
-      const fileContainingLink = getPathToNewTestFile(testDirectory);
+      const fileContainingLink = newTestMarkdownFile(testDirectory);
       fs.writeFileSync(
         fileContainingLink,
         `# Main Title\n[foobar][good header]\n[good header]: #main-title ${labelText}`
@@ -363,7 +363,7 @@ describe("bad-links-in-markdown - links with label text", () => {
     it("Identifies a local inline image link that points at an image that does not exist, even when the link includes label text", async () => {
       const testDirectory = await newTestDirectory();
 
-      const filePath = getPathToNewTestFile(testDirectory);
+      const filePath = newTestMarkdownFile(testDirectory);
 
       fs.writeFileSync(
         filePath,
@@ -390,7 +390,7 @@ describe("bad-links-in-markdown - links with label text", () => {
     it("Identifies multiple local inline image links on the same file line that point at files that do not exist, even when the link includes label text", async () => {
       const testDirectory = await newTestDirectory();
 
-      const filePath = getPathToNewTestFile(testDirectory);
+      const filePath = newTestMarkdownFile(testDirectory);
 
       fs.writeFileSync(
         filePath,
@@ -429,7 +429,7 @@ describe("bad-links-in-markdown - links with label text", () => {
     it("Ignores local inline image links which point at images that exist, even when the link includes label text", async () => {
       const testDirectory = await newTestDirectory();
 
-      const filePath = getPathToNewTestFile(testDirectory);
+      const filePath = newTestMarkdownFile(testDirectory);
 
       fs.writeFileSync(filePath, `![picture](../dog.jpg ${labelText})`);
 
@@ -443,7 +443,7 @@ describe("bad-links-in-markdown - links with label text", () => {
     it("Ignores local reference image links which points at images that exist, even when the link includes label text", async () => {
       const testDirectory = await newTestDirectory();
 
-      const filePath = getPathToNewTestFile(testDirectory);
+      const filePath = newTestMarkdownFile(testDirectory);
 
       fs.writeFileSync(
         filePath,
@@ -460,7 +460,7 @@ describe("bad-links-in-markdown - links with label text", () => {
     it("Identifies local reference image links that point at images that do not exist, even when the link includes label text", async () => {
       const testDirectory = await newTestDirectory();
 
-      const filePath = getPathToNewTestFile(testDirectory);
+      const filePath = newTestMarkdownFile(testDirectory);
 
       fs.writeFileSync(
         filePath,
