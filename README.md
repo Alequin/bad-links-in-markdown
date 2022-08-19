@@ -1,6 +1,6 @@
 # bad-links-in-markdown
 
-[testing](#TODO)
+[testing](#todo)
 
 A script that identifies links in markdown files that no longer work.
 
