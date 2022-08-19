@@ -4,15 +4,20 @@ import { identifyInvalidLocalLinks } from "./src/identify-invalid-local-links/id
 import topLevelDirectoryFromConsoleArgs from "./src/top-level-directory-from-console-args";
 import { logger } from "./src/utils/logger";
 import { readFile } from "./src/utils/read-file";
+import { removeCommentedOutMarkdown } from "./src/utils/remove-commented-out-markdown";
 
 export const badLinksInMarkdown = async (topLevelDirectory) => {
   const allMarkdownFiles = findAllMarkdownFiles(topLevelDirectory);
 
   const markdownFilesWithLinks = allMarkdownFiles.map((file) => {
+    const markdownText = removeCommentedOutMarkdown(
+      readFile(file.sourceFilePath).toString()
+    );
+
     return {
       ...file,
       topLevelDirectory,
-      links: findLinksInMarkdown(readFile(file.sourceFilePath).toString()),
+      links: findLinksInMarkdown(markdownText),
     };
   });
 
