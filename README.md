@@ -1,5 +1,7 @@
 # bad-links-in-markdown
 
+[//]: # (This is a comment.)
+
 A script that identifies links in markdown files that no longer work.
 
 The script:
