@@ -1,13 +1,11 @@
 import { groupBy, mapValues } from "lodash";
-import { readFileLines } from "../../../utils/read-file-lines";
+import { readMarkdownFileLines } from "../../../utils/read-markdown-file-lines";
 
 export const badHashHeaderTags = (links) => {
   return links.filter((linkObject) => {
-    const linesInMarkdownFile = readFileLines(linkObject.fullPath);
+    const linesInMarkdownFile = readMarkdownFileLines(linkObject.fullPath);
 
-    const headers = linesInMarkdownFile
-      .filter(isMarkdownHeader)
-      .map(removeCommandsFollowingHeader);
+    const headers = linesInMarkdownFile.filter(isMarkdownHeader);
 
     const headerTagsFromFile = convertHeadersToLinkFormat(headers);
     return !headerTagsFromFile.includes(linkObject.tag);
@@ -55,9 +53,4 @@ const markdownHeaderToTag = (header) => {
     .replace(/[^\w-\s]/g, "") // remove chars which are not alpha-numeric, dashes or spaces
     .trim() // remove trailing white space
     .replace(/\s/g, "-"); // replace spaces with hyphens
-};
-
-const removeCommandsFollowingHeader = (header) => {
-  const indexOfCommand = header.indexOf("<!");
-  return indexOfCommand >= 0 ? header.slice(0, indexOfCommand) : header;
 };
