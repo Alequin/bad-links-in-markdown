@@ -1,11 +1,9 @@
 import fs from "fs";
 import path from "path";
 import { badLinksInMarkdown } from "../bad-links-in-markdown";
-import { badLinkReasons } from "../src/config/bad-link-reasons";
 import {
-  newTestMarkdownFile,
   newTestDirectory,
-  newTestDirectoryWithName,
+  newTestMarkdownFile,
   runTestWithDirectoryCleanup,
   uniqueName,
 } from "./test-utils";

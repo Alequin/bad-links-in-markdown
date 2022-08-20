@@ -8,7 +8,7 @@ import {
   runTestWithDirectoryCleanup,
 } from "./test-utils";
 
-describe("bad-links-in-markdown - local file links", () => {
+describe("bad-links-in-markdown - underscore headers", () => {
   describe("local inline links to headers in current file", () => {
     it("Ignores local inline links which point at headers in the current file that use the equals syntax", async () => {
       const testDirectory = await newTestDirectory();
