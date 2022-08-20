@@ -1,4 +1,4 @@
-import { badLinkReasons } from "./bad-link-reasons";
+import { badLinkReasons } from "../../config/bad-link-reasons";
 
 const MULTIPLE_DOTS_AT_START_REGEX = /^\.\.\.+/;
 export const findInvalidRelativeLinkSyntax = (linkObjects) => {

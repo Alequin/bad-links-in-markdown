@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { badLinksInMarkdown } from "../bad-links-in-markdown";
-import { badLinkReasons } from "../src/identify-invalid-local-links/find-bad-links/bad-link-reasons";
+import { badLinkReasons } from "../src/config/bad-link-reasons";
 import {
   newTestMarkdownFile,
   newTestDirectory,

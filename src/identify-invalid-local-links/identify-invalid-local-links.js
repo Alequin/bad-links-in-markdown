@@ -23,7 +23,7 @@ export const identifyInvalidLocalLinks = (fileObjects) => {
 
       const issues = groupMatchingLinkObjectWithIssues([
         ...findLinksWithBadHeaderTags(internalFileLinks),
-        ...identifyInvalidExternalFileLinks(externalFileLinks),
+        ...findInvalidExternalFileLinks(externalFileLinks),
       ]).map((issue) => ({
         ...issue,
         reasons: issue.reasons.sort(),
@@ -40,7 +40,7 @@ export const identifyInvalidLocalLinks = (fileObjects) => {
     .filter(({ missingLinks }) => !isEmpty(missingLinks));
 };
 
-const identifyInvalidExternalFileLinks = (linkObjects) => {
+const findInvalidExternalFileLinks = (linkObjects) => {
   return [
     ...findInvalidAbsoluteLinks.windowsAbsoluteLinks(linkObjects),
     ...findInvalidAbsoluteLinks.badRootAbsoluteLinks(linkObjects),

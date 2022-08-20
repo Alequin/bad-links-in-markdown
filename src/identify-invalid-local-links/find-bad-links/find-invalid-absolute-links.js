@@ -1,4 +1,4 @@
-import { badLinkReasons } from "./bad-link-reasons";
+import { badLinkReasons } from "../../config/bad-link-reasons";
 import fs from "fs";
 
 export const windowsAbsoluteLinks = (linkObjects) =>

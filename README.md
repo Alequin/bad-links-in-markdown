@@ -1,6 +1,11 @@
 # bad-links-in-markdown
 
-A script that identifies links in markdown files that no longer work.
+`123`
+foobar
+test header
+---
+
+A script to identify links in markdown files that no longer work.
 
 The script:
 
@@ -50,6 +55,7 @@ The script:
 - make images without alt tag show up, broken images only show up a broken when given an alt tag
 - should some "badLinkReasons" block others. 
   - Should FILE_NOT_FOUND show if MISSING_FILE_EXTENSION is also showing?
+- Handle headers which include back ticks
 ### Syntax notes
 
 https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet#links

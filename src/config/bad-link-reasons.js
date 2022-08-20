@@ -1,4 +1,4 @@
-import { validImageExtensions } from "../../config/valid-image-extensions";
+import { validImageExtensions } from "./valid-image-extensions";
 
 export const badLinkReasons = {
   FILE_NOT_FOUND: "File cannot be found",

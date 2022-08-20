@@ -1,7 +1,7 @@
 import { partition } from "lodash";
 import { doesFileExist } from "../../utils/does-file-exist";
-import { badLinkReasons } from "./bad-link-reasons";
-import { identifyLinksWithBadLineTags } from "./identify-links-with-bad-line-tags";
+import { badLinkReasons } from "../../config/bad-link-reasons";
+import { identifyLinksWithBadLineTags } from "./utils/bad-line-tags";
 
 export const findMissingLinksWithFileExtensions = (linkObjects) => {
   const [badLinks, workingLinks] = partition(
