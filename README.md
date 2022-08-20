@@ -1,10 +1,5 @@
 # bad-links-in-markdown
 
-`123`
-foobar
-test header
----
-
 A script to identify links in markdown files that no longer work.
 
 The script:
