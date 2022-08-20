@@ -1,6 +1,6 @@
 # bad-links-in-markdown
 
-[testing](#foobar)
+[testing](#foobar-test-header)
 
 A script that identifies links in markdown files that no longer work.
 
