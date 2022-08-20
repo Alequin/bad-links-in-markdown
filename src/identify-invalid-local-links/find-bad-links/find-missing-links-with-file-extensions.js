@@ -1,7 +1,7 @@
 import { partition } from "lodash";
 import { doesFileExist } from "../../utils/does-file-exist";
 import { badLinkReasons } from "../../config/bad-link-reasons";
-import { identifyLinksWithBadLineTags } from "./utils/bad-line-tags";
+import { badLineTags } from "./utils/bad-line-tags";
 
 export const findMissingLinksWithFileExtensions = (linkObjects) => {
   const [badLinks, workingLinks] = partition(
@@ -9,7 +9,7 @@ export const findMissingLinksWithFileExtensions = (linkObjects) => {
     (linkObject) => !doesFileExist(linkObject.fullPath)
   );
 
-  const linkWithBadTargetLineNumbers = identifyLinksWithBadLineTags(
+  const linkWithBadTargetLineNumbers = badLineTags(
     workingLinks.filter(({ tag }) => tag?.startsWith("L"))
   );
 

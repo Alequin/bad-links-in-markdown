@@ -1,13 +1,11 @@
 import { groupBy, mapValues } from "lodash";
-import { readMarkdownFileLines } from "../../../utils/read-markdown-file-lines";
+import { findHeadersInFile } from "./find-headers-in-file";
 
-export const badHashHeaderTags = (links) => {
+export const badHeaderTags = (links) => {
   return links.filter((linkObject) => {
-    const linesInMarkdownFile = readMarkdownFileLines(linkObject.fullPath);
-
-    const headers = linesInMarkdownFile.filter(isMarkdownHeader);
-
-    const headerTagsFromFile = convertHeadersToLinkFormat(headers);
+    const headerTagsFromFile = convertHeadersToLinkFormat(
+      findHeadersInFile(linkObject.fullPath)
+    );
     return !headerTagsFromFile.includes(linkObject.tag);
   });
 };
@@ -23,12 +21,9 @@ const convertHeadersToLinkFormat = (headers) => {
   ];
 };
 
-const MARKDOWN_HEADER_REGEX = /^\s*#/;
-const isMarkdownHeader = (line) => MARKDOWN_HEADER_REGEX.test(line);
-
 /**
- * In markdown when header appear multiple times to differentiate them in links
- * numbers are appended to the end of the tag.
+ * In markdown when headers appear multiple times numbers are appended to the end of the tag
+ * to differentiate them
  *
  * This function identifies duplicates and ensure the numbers are appended if required
  */

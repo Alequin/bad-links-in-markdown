@@ -1554,6 +1554,156 @@ describe("bad-links-in-markdown - local file links", () => {
         });
       }, testDirectory);
     });
+
+    it("Ignores local inline links which point at headers in the current file that use the equals syntax", async () => {
+      const testDirectory = await newTestDirectory();
+
+      const filePath = newTestMarkdownFile(testDirectory);
+
+      fs.writeFileSync(
+        filePath,
+        [
+          "[Solution A](#solution-a-foo-x-bar-hybrid)",
+          "",
+          "Solution A: Foo x Bar Hybrid",
+          "=",
+          "",
+          "[Solution B](#solution-b-foo-x-bar-hybrid)",
+          "",
+          "Solution B: Foo x Bar Hybrid",
+          "==",
+          "",
+          "[Solution C](#solution-c-foo-x-bar-hybrid)",
+          "",
+          "Solution C: Foo x Bar Hybrid",
+          "===",
+        ].join("\n")
+      );
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [],
+        });
+      }, testDirectory);
+    });
+
+    it("Ignores local inline links which point at headers in the current file that use the dash syntax", async () => {
+      const testDirectory = await newTestDirectory();
+
+      const filePath = newTestMarkdownFile(testDirectory);
+
+      fs.writeFileSync(
+        filePath,
+        [
+          "[Solution A](#solution-a-foo-x-bar-hybrid)",
+          "",
+          "Solution A: Foo x Bar Hybrid",
+          "-",
+          "",
+          "[Solution B](#solution-b-foo-x-bar-hybrid)",
+          "",
+          "Solution B: Foo x Bar Hybrid",
+          "--",
+          "",
+          "[Solution C](#solution-c-foo-x-bar-hybrid)",
+          "",
+          "Solution C: Foo x Bar Hybrid",
+          "---",
+        ].join("\n")
+      );
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [],
+        });
+      }, testDirectory);
+    });
+
+    it("Identifies local inline links which point at invalid headers in the current file that use the equals syntax", async () => {
+      const testDirectory = await newTestDirectory();
+
+      const filePath = newTestMarkdownFile(testDirectory);
+
+      fs.writeFileSync(
+        filePath,
+        [
+          "[Solution A](#solution-a-foo-x-bar-hybrid)",
+          "",
+          "Solution A: Foo x Bar Hybrid",
+          "",
+          "===",
+          "",
+          "[Solution C](#solution-c-foo-x-bar-hybrid)",
+          "",
+          "Solution C",
+          "Foo x Bar Hybrid",
+          "===",
+        ].join("\n")
+      );
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [
+            {
+              filePath,
+              missingLinks: [
+                {
+                  link: "[Solution A](#solution-a-foo-x-bar-hybrid)",
+                  reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
+                },
+                {
+                  link: "[Solution C](#solution-c-foo-x-bar-hybrid)",
+                  reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
+                },
+              ],
+            },
+          ],
+        });
+      }, testDirectory);
+    });
+
+    it("Identifies local inline links which point at invalid headers in the current file that use the dash syntax", async () => {
+      const testDirectory = await newTestDirectory();
+
+      const filePath = newTestMarkdownFile(testDirectory);
+
+      fs.writeFileSync(
+        filePath,
+        [
+          "[Solution A](#solution-a-foo-x-bar-hybrid)",
+          "",
+          "Solution A: Foo x Bar Hybrid",
+          "",
+          "---",
+          "",
+          "[Solution C](#solution-c-foo-x-bar-hybrid)",
+          "",
+          "Solution C",
+          "Foo x Bar Hybrid",
+          "---",
+        ].join("\n")
+      );
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [
+            {
+              filePath,
+              missingLinks: [
+                {
+                  link: "[Solution A](#solution-a-foo-x-bar-hybrid)",
+                  reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
+                },
+                {
+                  link: "[Solution C](#solution-c-foo-x-bar-hybrid)",
+                  reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
+                },
+              ],
+            },
+          ],
+        });
+      }, testDirectory);
+    });
   });
 
   describe("identify-invalid-local-links and the link is a reference link", () => {
@@ -3145,6 +3295,170 @@ describe("bad-links-in-markdown - local file links", () => {
       await runTestWithDirectoryCleanup(async () => {
         expect(await badLinksInMarkdown(testDirectory)).toEqual({
           badLocalLinks: [],
+        });
+      }, testDirectory);
+    });
+
+    it("Ignores local reference links which point at headers in the current file that use the equals syntax", async () => {
+      const testDirectory = await newTestDirectory();
+
+      const filePath = newTestMarkdownFile(testDirectory);
+
+      fs.writeFileSync(
+        filePath,
+        [
+          "[Solution A][A]",
+          "",
+          "Solution A: Foo x Bar Hybrid",
+          "=",
+          "",
+          "[Solution B][B]",
+          "",
+          "Solution B: Foo x Bar Hybrid",
+          "==",
+          "",
+          "[Solution C][C]",
+          "",
+          "Solution C: Foo x Bar Hybrid",
+          "===",
+          "",
+          "[A]: #solution-a-foo-x-bar-hybrid",
+          "[B]: #solution-b-foo-x-bar-hybrid",
+          "[C]: #solution-c-foo-x-bar-hybrid",
+        ].join("\n")
+      );
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [],
+        });
+      }, testDirectory);
+    });
+
+    it("Ignores local reference links which point at headers in the current file that use the dash syntax", async () => {
+      const testDirectory = await newTestDirectory();
+
+      const filePath = newTestMarkdownFile(testDirectory);
+
+      fs.writeFileSync(
+        filePath,
+        [
+          "[Solution A][A]",
+          "",
+          "Solution A: Foo x Bar Hybrid",
+          "-",
+          "",
+          "[Solution B][B]",
+          "",
+          "Solution B: Foo x Bar Hybrid",
+          "--",
+          "",
+          "[Solution C][C]",
+          "",
+          "Solution C: Foo x Bar Hybrid",
+          "---",
+          "",
+          "[A]: #solution-a-foo-x-bar-hybrid",
+          "[B]: #solution-b-foo-x-bar-hybrid",
+          "[C]: #solution-c-foo-x-bar-hybrid",
+        ].join("\n")
+      );
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [],
+        });
+      }, testDirectory);
+    });
+
+    it("Identifies local reference links which point at invalid headers in the current file that use the equals syntax", async () => {
+      const testDirectory = await newTestDirectory();
+
+      const filePath = newTestMarkdownFile(testDirectory);
+
+      fs.writeFileSync(
+        filePath,
+        [
+          "[Solution A][A]",
+          "",
+          "Solution A: Foo x Bar Hybrid",
+          "",
+          "=",
+          "",
+          "[Solution C][C]",
+          "",
+          "Solution C: Foo x Bar Hybrid",
+          "",
+          "===",
+          "",
+          "[A]: #solution-a-foo-x-bar-hybrid",
+          "[C]: #solution-c-foo-x-bar-hybrid",
+        ].join("\n")
+      );
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [
+            {
+              filePath,
+              missingLinks: [
+                {
+                  link: "[A]: #solution-a-foo-x-bar-hybrid",
+                  reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
+                },
+                {
+                  link: "[C]: #solution-c-foo-x-bar-hybrid",
+                  reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
+                },
+              ],
+            },
+          ],
+        });
+      }, testDirectory);
+    });
+
+    it("Identifies local reference links which point at invalid headers in the current file that use the dash syntax", async () => {
+      const testDirectory = await newTestDirectory();
+
+      const filePath = newTestMarkdownFile(testDirectory);
+
+      fs.writeFileSync(
+        filePath,
+        [
+          "[Solution A][A]",
+          "",
+          "Solution A: Foo x Bar Hybrid",
+          "",
+          "-",
+          "",
+          "[Solution C][C]",
+          "",
+          "Solution C: Foo x Bar Hybrid",
+          "",
+          "---",
+          "",
+          "[A]: #solution-a-foo-x-bar-hybrid",
+          "[C]: #solution-c-foo-x-bar-hybrid",
+        ].join("\n")
+      );
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [
+            {
+              filePath,
+              missingLinks: [
+                {
+                  link: "[A]: #solution-a-foo-x-bar-hybrid",
+                  reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
+                },
+                {
+                  link: "[C]: #solution-c-foo-x-bar-hybrid",
+                  reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
+                },
+              ],
+            },
+          ],
         });
       }, testDirectory);
     });
