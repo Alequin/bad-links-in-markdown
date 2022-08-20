@@ -1,7 +1,7 @@
-import { readMarkdownFileLines } from "../../../utils/read-markdown-file-lines";
+import { readCleanMarkdownFileLines } from "../../../utils/read-clean-markdown-file-lines";
 
 export const findHeadersInFile = (filePath) => {
-  const fileLines = readMarkdownFileLines(filePath);
+  const fileLines = readCleanMarkdownFileLines(filePath);
 
   return [
     ...findTagHeadersInFile(fileLines),

@@ -1,4 +1,6 @@
-import { readMarkdownFile } from "./read-markdown-file";
+import { readFile } from "./read-file";
 
 export const readMarkdownFileLines = (filePath) =>
-  readMarkdownFile(filePath).split(/\n|\r\n/);
+  readFile(filePath)
+    .toString()
+    .split(/\n|\r\n/);

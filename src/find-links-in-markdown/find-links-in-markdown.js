@@ -1,19 +1,12 @@
-import { flow } from "lodash";
+import { cleanMarkdownContents } from "../utils/clean-markdown-contents";
 import { findInlineMarkdownLinks } from "./find-inline-markdown-links";
 import { findReferenceMarkdownLinks } from "./find-reference-markdown-links";
 
 export const findLinksInMarkdown = (markdown) => {
-  const preparedMarkdown = removeNonLinkRelatedMarkdown(markdown);
+  const cleanedMarkdown = cleanMarkdownContents(markdown);
 
   return [
-    ...findInlineMarkdownLinks(preparedMarkdown),
-    ...findReferenceMarkdownLinks(preparedMarkdown),
+    ...findInlineMarkdownLinks(cleanedMarkdown),
+    ...findReferenceMarkdownLinks(cleanedMarkdown),
   ];
 };
-
-const TRIPLE_TICK_REGEX = /```.*```/s;
-const removeTripleBackTickContents = (markdown) => {
-  return markdown.replace(TRIPLE_TICK_REGEX, "");
-};
-
-const removeNonLinkRelatedMarkdown = flow(removeTripleBackTickContents);

@@ -6,6 +6,7 @@ export const badHeaderTags = (links) => {
     const headerTagsFromFile = convertHeadersToLinkFormat(
       findHeadersInFile(linkObject.fullPath)
     );
+
     return !headerTagsFromFile.includes(linkObject.tag);
   });
 };

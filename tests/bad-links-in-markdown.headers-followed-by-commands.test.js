@@ -33,7 +33,7 @@ describe("bad-links-in-markdown - headers followed by command", () => {
     }, testDirectory);
   });
 
-  it("Identifies local inline links which point at missing headers that are followed by and inline command (example command <!-- omit-in-toc -->)", async () => {
+  it("Identifies local inline links which point at missing headers that are followed by an inline command (example command <!-- omit-in-toc -->)", async () => {
     const testDirectory = await newTestDirectory();
 
     const fileNameToLinkTo = uniqueName();
@@ -69,7 +69,7 @@ describe("bad-links-in-markdown - headers followed by command", () => {
     }, testDirectory);
   });
 
-  it("Ignores local reference links which point at existing headers that are followed by and inline command (example command <!-- omit-in-toc -->)", async () => {
+  it("Ignores local reference links which point at existing headers that are followed by an inline command (example command <!-- omit-in-toc -->)", async () => {
     const testDirectory = await newTestDirectory();
 
     const fileNameToLinkTo = uniqueName();
@@ -92,7 +92,7 @@ describe("bad-links-in-markdown - headers followed by command", () => {
     }, testDirectory);
   });
 
-  it("Identifies local reference links which point at missing headers that are followed by and inline command (example command <!-- omit-in-toc -->)", async () => {
+  it("Identifies local reference links which point at missing headers that are followed by an inline command (example command <!-- omit-in-toc -->)", async () => {
     const testDirectory = await newTestDirectory();
 
     const fileNameToLinkTo = uniqueName();

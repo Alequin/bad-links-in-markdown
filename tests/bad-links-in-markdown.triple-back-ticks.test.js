@@ -35,9 +35,9 @@ describe("bad-links-in-markdown - links in triple back ticks", () => {
     fs.writeFileSync(
       filePath,
       [
-        "[foobar][I am a local link]",
+        "[foobar][I am a reference link]",
         "```",
-        `[I am a local link]: ./path/to/missing/file.md`,
+        `[I am a reference link]: ./path/to/missing/file.md`,
         "```",
       ].join("\n")
     );
@@ -49,33 +49,66 @@ describe("bad-links-in-markdown - links in triple back ticks", () => {
     }, testDirectory);
   });
 
-  // it.only("Identifies local inline links when the header they link to is in triple backticks", async () => {
-  //   const testDirectory = await newTestDirectory();
+  it("Identifies local inline links when the header they link to is in triple backticks", async () => {
+    const testDirectory = await newTestDirectory();
 
-  //   const filePath = newTestMarkdownFile(testDirectory);
+    const filePath = newTestMarkdownFile(testDirectory);
 
-  //   fs.writeFileSync(
-  //     filePath,
-  //     ["```", "# cool header", "```", `[I am a local link](#cool-header)`].join(
-  //       "\n"
-  //     )
-  //   );
+    fs.writeFileSync(
+      filePath,
+      ["```", "# cool header", "```", `[I am a local link](#cool-header)`].join(
+        "\n"
+      )
+    );
 
-  //   await runTestWithDirectoryCleanup(async () => {
-  //     expect(await badLinksInMarkdown(testDirectory)).toEqual({
-  //       badLocalLinks: [
-  //         {
-  //           filePath:
-  //             "/home/jcox/work/bad-links-in-markdown/test-markdown-files/test-5/test-6.md",
-  //           missingLinks: [
-  //             {
-  //               link: "[I am a local link](#cool-header)",
-  //               reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
-  //             },
-  //           ],
-  //         },
-  //       ],
-  //     });
-  //   }, testDirectory);
-  // });
+    await runTestWithDirectoryCleanup(async () => {
+      expect(await badLinksInMarkdown(testDirectory)).toEqual({
+        badLocalLinks: [
+          {
+            filePath,
+            missingLinks: [
+              {
+                link: "[I am a local link](#cool-header)",
+                reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
+              },
+            ],
+          },
+        ],
+      });
+    }, testDirectory);
+  });
+
+  it("Identifies local reference links when the header they link to is in triple backticks", async () => {
+    const testDirectory = await newTestDirectory();
+
+    const filePath = newTestMarkdownFile(testDirectory);
+
+    fs.writeFileSync(
+      filePath,
+      [
+        "```",
+        "# cool header",
+        "```",
+        "",
+        "[foobar][I am a reference link]",
+        `[I am a reference link]: #cool-header`,
+      ].join("\n")
+    );
+
+    await runTestWithDirectoryCleanup(async () => {
+      expect(await badLinksInMarkdown(testDirectory)).toEqual({
+        badLocalLinks: [
+          {
+            filePath,
+            missingLinks: [
+              {
+                link: "[I am a reference link]: #cool-header",
+                reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
+              },
+            ],
+          },
+        ],
+      });
+    }, testDirectory);
+  });
 });
