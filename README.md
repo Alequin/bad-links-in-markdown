@@ -1,6 +1,6 @@
 # bad-links-in-markdown
 
-[testing](#todo)
+[testing](#foobar)
 
 A script that identifies links in markdown files that no longer work.
 
@@ -57,3 +57,7 @@ The script:
 https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet#links
 https://www.markdownguide.org/basic-syntax/#links
 https://www.w3schools.io/file/markdown-links/
+
+foobar 
+test header
+---
