@@ -4,7 +4,8 @@
   "description": "A script which identifies link in markdown files which no longer work",
   "main": "index.js",
   "scripts": {
-    "test": "jest --runInBand --coverage",
+    "test": "jest --runInBand",
+    "test:coverage": "jest --runInBand --coverage",
     "find-bad-links": "npx babel-node ./bad-links-in-markdown"
   },
   "repository": {

@@ -51,16 +51,14 @@ describe("bad-links-in-markdown - commented out links", () => {
 
       fs.writeFileSync(
         filePath,
-        `
-        <!- [I am a local link](./path/to/missing/file.md) -->
-        <!-- [I am a local link](./path/to/missing/file.md) ->
-        <! [I am a local link](./path/to/missing/file.md) >
-
-        < [I am a local link](./path/to/missing/file.md) ?>
-        <? [I am a local link](./path/to/missing/file.md) >
-
-        [//]: #[I am a local link](./path/to/missing/file.md)
-        `
+        [
+          "<!- [I am a local link](./path/to/missing/file.md) -->",
+          "<!-- [I am a local link](./path/to/missing/file.md) ->",
+          "<! [I am a local link](./path/to/missing/file.md) >",
+          "< [I am a local link](./path/to/missing/file.md) ?>",
+          "<? [I am a local link](./path/to/missing/file.md) >",
+          "[//]: #[I am a local link](./path/to/missing/file.md)",
+        ].join("\n")
       );
 
       await runTestWithDirectoryCleanup(async () => {

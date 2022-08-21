@@ -1,9 +1,11 @@
 import { match } from "../utils/match";
 import { makeLinkObjectFromReferenceLink } from "./make-link-object";
 
-const MARKDOWN_REFERENCE_LINK_REGEX = /!?\[.*\]:.*/g;
-export const findReferenceMarkdownLinks = (markdown) => {
-  return match(markdown, MARKDOWN_REFERENCE_LINK_REGEX)
+const MARKDOWN_REFERENCE_LINK_REGEX = /^[\s,\>]*!?\[.*\]:.*/;
+export const findReferenceMarkdownLinks = (markdown, markdownLines) => {
+  return markdownLines
+    .map(identifyReferenceLink)
+    .filter(Boolean)
     .map((referenceLink) => {
       const referenceText = match(referenceLink, /\[.*\]/)[0];
 
@@ -19,4 +21,10 @@ export const findReferenceMarkdownLinks = (markdown) => {
       });
     })
     .filter(Boolean);
+};
+
+const identifyReferenceLink = (line) => {
+  const referenceLink = match(line, MARKDOWN_REFERENCE_LINK_REGEX)[0];
+  if (!referenceLink) return null;
+  return referenceLink;
 };

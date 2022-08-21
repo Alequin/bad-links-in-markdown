@@ -1557,7 +1557,7 @@ describe("bad-links-in-markdown - local file links", () => {
   });
 
   describe("identify-invalid-local-links and the link is a reference link", () => {
-    it("Identifies reference links that point at files that do not exist", async () => {
+    it("Identifies local reference links that point at files that do not exist", async () => {
       const testDirectory = await newTestDirectory();
 
       const filePath = newTestMarkdownFile(testDirectory);
@@ -1584,7 +1584,7 @@ describe("bad-links-in-markdown - local file links", () => {
       }, testDirectory);
     });
 
-    it("Ignores reference links which point at files which exist", async () => {
+    it("Ignores local reference links which point at files which exist", async () => {
       const testDirectory = await newTestDirectory();
 
       const fileNameToLinkTo = uniqueName();
@@ -2450,6 +2450,56 @@ describe("bad-links-in-markdown - local file links", () => {
         });
       }, testDirectory);
     });
+
+    it.each(["a", "1", "<", "/"])(
+      "Ignores local reference links that point at files that do not exist when the link is preceded by %s",
+      async (precedingText) => {
+        const testDirectory = await newTestDirectory();
+
+        const filePath = newTestMarkdownFile(testDirectory);
+
+        fs.writeFileSync(
+          filePath,
+          `Here is some text\n[and then a link to a file][1]\n\n${precedingText} [1]: ./path/to/missing/file.md`
+        );
+
+        await runTestWithDirectoryCleanup(async () => {
+          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+            badLocalLinks: [],
+          });
+        }, testDirectory);
+      }
+    );
+
+    it.each([">", ">>", ">>>", ">> >>", "    "])(
+      "Identifies local reference links that point at files that do not exist when the link is preceded only by '%s'",
+      async (precedingText) => {
+        const testDirectory = await newTestDirectory();
+
+        const filePath = newTestMarkdownFile(testDirectory);
+
+        fs.writeFileSync(
+          filePath,
+          `Here is some text\n[and then a link to a file][1]\n\n${precedingText} [1]: ./path/to/missing/file.md`
+        );
+
+        await runTestWithDirectoryCleanup(async () => {
+          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+            badLocalLinks: [
+              {
+                filePath,
+                missingLinks: [
+                  {
+                    link: `${precedingText} [1]: ./path/to/missing/file.md`,
+                    reasons: [badLinkReasons.FILE_NOT_FOUND],
+                  },
+                ],
+              },
+            ],
+          });
+        }, testDirectory);
+      }
+    );
   });
 
   describe("identify-invalid-local-links and the link is an reference link which includes a header tag", () => {

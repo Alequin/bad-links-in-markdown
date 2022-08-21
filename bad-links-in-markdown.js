@@ -3,18 +3,15 @@ import { findLinksInMarkdown } from "./src/find-links-in-markdown/find-links-in-
 import { identifyInvalidLocalLinks } from "./src/identify-invalid-local-links/identify-invalid-local-links";
 import topLevelDirectoryFromConsoleArgs from "./src/top-level-directory-from-console-args";
 import { logger } from "./src/utils/logger";
-import { readCleanMarkdownFile } from "./src/utils/read-clean-markdown-file";
 
 export const badLinksInMarkdown = async (topLevelDirectory) => {
   const allMarkdownFiles = findAllMarkdownFiles(topLevelDirectory);
 
   const markdownFilesWithLinks = allMarkdownFiles.map((file) => {
-    const markdownText = readCleanMarkdownFile(file.sourceFilePath);
-
     return {
       ...file,
       topLevelDirectory,
-      links: findLinksInMarkdown(markdownText),
+      links: findLinksInMarkdown(file.sourceFilePath),
     };
   });
 
