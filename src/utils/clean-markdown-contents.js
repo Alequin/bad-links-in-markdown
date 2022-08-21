@@ -1,6 +1,6 @@
 import { flow } from "lodash";
 
-const TRIPLE_TICK_REGEX = /```.*```/s;
+const TRIPLE_TICK_REGEX = /```.*?```/gs;
 const removeTripleBackTickContents = (markdown) => {
   return markdown.replace(TRIPLE_TICK_REGEX, "");
 };

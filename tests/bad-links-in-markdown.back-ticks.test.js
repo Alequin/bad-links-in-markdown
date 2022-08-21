@@ -115,6 +115,59 @@ describe("bad-links-in-markdown - links in triple back ticks", () => {
         });
       }, testDirectory);
     });
+
+    it("Ignores local inline links which point at headers placed between two backtick sections", async () => {
+      const testDirectory = await newTestDirectory();
+
+      const filePath = newTestMarkdownFile(testDirectory);
+
+      fs.writeFileSync(
+        filePath,
+        [
+          "```",
+          "backtick contents 1",
+          "```",
+          "# header",
+          "```",
+          "backtick contents 1",
+          "```",
+          "[header link](#header)",
+        ].join("\n")
+      );
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [],
+        });
+      }, testDirectory);
+    });
+
+    it("Ignores local reference links which point at headers placed between two backtick sections", async () => {
+      const testDirectory = await newTestDirectory();
+
+      const filePath = newTestMarkdownFile(testDirectory);
+
+      fs.writeFileSync(
+        filePath,
+        [
+          "```",
+          "backtick contents 1",
+          "```",
+          "# header",
+          "```",
+          "backtick contents 1",
+          "```",
+          "[header link][foo]",
+          "[foo][#header]",
+        ].join("\n")
+      );
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [],
+        });
+      }, testDirectory);
+    });
   });
 
   describe("single back ticks", () => {
