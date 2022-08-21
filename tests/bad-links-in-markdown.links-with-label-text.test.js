@@ -484,4 +484,38 @@ describe("bad-links-in-markdown - links with label text", () => {
       }, testDirectory);
     });
   });
+
+  it("Ignores local inline links that point at files that do not exist when the link includes label text not wrapped in quotes", async () => {
+    const testDirectory = await newTestDirectory();
+
+    const filePath = newTestMarkdownFile(testDirectory);
+
+    fs.writeFileSync(
+      filePath,
+      `[I am a local link](./path/to/missing/file.md invalid-label-text)`
+    );
+
+    await runTestWithDirectoryCleanup(async () => {
+      expect(await badLinksInMarkdown(testDirectory)).toEqual({
+        badLocalLinks: [],
+      });
+    }, testDirectory);
+  });
+
+  it("Ignores local reference links that point at files that do not exist when the link includes label text not wrapped in quotes", async () => {
+    const testDirectory = await newTestDirectory();
+
+    const filePath = newTestMarkdownFile(testDirectory);
+
+    fs.writeFileSync(
+      filePath,
+      `Here is some text\n[and then a link to a file][1]\n\n[1]: ./path/to/missing/file.md invalid-label-text`
+    );
+
+    await runTestWithDirectoryCleanup(async () => {
+      expect(await badLinksInMarkdown(testDirectory)).toEqual({
+        badLocalLinks: [],
+      });
+    }, testDirectory);
+  });
 });
