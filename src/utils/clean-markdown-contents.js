@@ -9,7 +9,11 @@ const removeCommentedOutMarkdown = (markdown) => {
   return markdown
     .replace(/<!--.*-->/s, "") // <!-- commented out -->
     .replace(/\<\?.*\?\>/s, "") // <? commented out ?>
-    .replace(/\[\/\/\]\:\s*\#\s.*/g, ""); // [//]: # commented out
+    .replace(/\[\/\/\]\:\s*\#\s.*/g, ""); // [//]: # commented out || [//]:# commented out
+};
+
+const removeIndentedCodeBlocks = (markdown) => {
+  return markdown.replace(/\n\n\s\s\s\s.*\n/, "\n");
 };
 
 /**
@@ -18,5 +22,6 @@ const removeCommentedOutMarkdown = (markdown) => {
  */
 export const cleanMarkdownContents = flow(
   removeTripleBackTickContents,
-  removeCommentedOutMarkdown
+  removeCommentedOutMarkdown,
+  removeIndentedCodeBlocks
 );

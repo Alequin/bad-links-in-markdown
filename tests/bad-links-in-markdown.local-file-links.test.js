@@ -2490,7 +2490,7 @@ describe("bad-links-in-markdown - local file links", () => {
                 filePath,
                 missingLinks: [
                   {
-                    link: `${precedingText} [1]: ./path/to/missing/file.md`,
+                    link: `${precedingText} [1]: ./path/to/missing/file.md`.trim(),
                     reasons: [badLinkReasons.FILE_NOT_FOUND],
                   },
                 ],

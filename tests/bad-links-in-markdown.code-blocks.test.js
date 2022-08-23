@@ -7,8 +7,8 @@ import {
   runTestWithDirectoryCleanup,
 } from "./test-utils";
 
-describe("bad-links-in-markdown - links in triple back ticks", () => {
-  describe("triple back ticks", () => {
+describe("bad-links-in-markdown - code blocks", () => {
+  describe("triple back ticks code block", () => {
     it("Ignores local inline links wrapped in triple backticks, even when the link is broken", async () => {
       const testDirectory = await newTestDirectory();
 
@@ -170,7 +170,7 @@ describe("bad-links-in-markdown - links in triple back ticks", () => {
     });
   });
 
-  describe("single back ticks", () => {
+  describe("single back ticks code block", () => {
     it("Ignores local inline links wrapped in single backticks", async () => {
       const testDirectory = await newTestDirectory();
 
@@ -308,5 +308,194 @@ describe("bad-links-in-markdown - links in triple back ticks", () => {
         });
       }, testDirectory);
     });
+  });
+
+  describe.each([1, 2, 3])(
+    "indented code block - indented %sX",
+    (indentationModifier) => {
+      // indented code block requires at least 4 spaces from the line start to create the block
+      const indentation = "    ".repeat(indentationModifier);
+
+      it("Ignores local inline links included in indented code blocks, even when the link is broken", async () => {
+        const testDirectory = await newTestDirectory();
+
+        const filePath = newTestMarkdownFile(testDirectory);
+
+        fs.writeFileSync(
+          filePath,
+          [
+            "Here is some text to talk about something",
+            // space required between paragraph and code block
+            "",
+            `${indentation}[I am a local link](./path/to/missing/file.md)`,
+            "some more text here that is not in the code block",
+          ].join("\n")
+        );
+
+        await runTestWithDirectoryCleanup(async () => {
+          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+            badLocalLinks: [],
+          });
+        }, testDirectory);
+      });
+
+      it("Ignores local reference links in indented code blocks, even when the link is broken", async () => {
+        const testDirectory = await newTestDirectory();
+
+        const filePath = newTestMarkdownFile(testDirectory);
+
+        fs.writeFileSync(
+          filePath,
+          [
+            "Here is some text to talk about something: [foobar][I am a reference link]",
+            // space required between paragraph and code block
+            "",
+            `${indentation}[I am a reference link]: ./path/to/missing/file.md`,
+            "some more text here that is not in the code block",
+          ].join("\n")
+        );
+
+        await runTestWithDirectoryCleanup(async () => {
+          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+            badLocalLinks: [],
+          });
+        }, testDirectory);
+      });
+
+      it("Identifies local inline links when the header they link to is in an indented code block", async () => {
+        const testDirectory = await newTestDirectory();
+
+        const filePath = newTestMarkdownFile(testDirectory);
+
+        fs.writeFileSync(
+          filePath,
+          [
+            "Here is some text to talk about something: [I am a local link](#cool-header)",
+            // space required between paragraph and code block
+            "",
+            `${indentation}# Cool Header`,
+            "some more text here that is not in the code block",
+          ].join("\n")
+        );
+
+        await runTestWithDirectoryCleanup(async () => {
+          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+            badLocalLinks: [
+              {
+                filePath,
+                missingLinks: [
+                  {
+                    link: "[I am a local link](#cool-header)",
+                    reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
+                  },
+                ],
+              },
+            ],
+          });
+        }, testDirectory);
+      });
+
+      it("Identifies local reference links when the header they link to is in an indented code block", async () => {
+        const testDirectory = await newTestDirectory();
+
+        const filePath = newTestMarkdownFile(testDirectory);
+
+        fs.writeFileSync(
+          filePath,
+          [
+            "Here is some text to talk about something: [foobar][I am a reference link]",
+            // space required between paragraph and code block
+            "",
+            `${indentation}# Cool Header`,
+            "some more text here that is not in the code block",
+            "[I am a reference link]: #cool-header",
+          ].join("\n")
+        );
+
+        await runTestWithDirectoryCleanup(async () => {
+          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+            badLocalLinks: [
+              {
+                filePath,
+                missingLinks: [
+                  {
+                    link: "[I am a reference link]: #cool-header",
+                    reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
+                  },
+                ],
+              },
+            ],
+          });
+        }, testDirectory);
+      });
+
+      it("Identifies a local inline link in an indented code block when the block is not preceded by a blank line", async () => {
+        const testDirectory = await newTestDirectory();
+
+        const filePath = newTestMarkdownFile(testDirectory);
+
+        fs.writeFileSync(
+          filePath,
+          [
+            "Here is some text to talk about something",
+            // No empty lin here so code block is broken
+            `${indentation}[I am a local link](./path/to/missing/file.md)`,
+            "some more text here that is not in the code block",
+          ].join("\n")
+        );
+
+        await runTestWithDirectoryCleanup(async () => {
+          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+            badLocalLinks: [
+              {
+                filePath,
+                missingLinks: [
+                  {
+                    link: `[I am a local link](./path/to/missing/file.md)`,
+                    reasons: [badLinkReasons.FILE_NOT_FOUND],
+                  },
+                ],
+              },
+            ],
+          });
+        }, testDirectory);
+      });
+
+      it("Identifies a local reference link in an indented code block when the block is not preceded by a blank line", async () => {
+        const testDirectory = await newTestDirectory();
+
+        const filePath = newTestMarkdownFile(testDirectory);
+
+        fs.writeFileSync(
+          filePath,
+          [
+            "Here is some text to talk about something: [foobar][I am a reference link]",
+            // No empty lin here so code block is broken
+            `${indentation}[I am a reference link]: ./path/to/missing/file.md`,
+            "some more text here that is not in the code block",
+          ].join("\n")
+        );
+
+        await runTestWithDirectoryCleanup(async () => {
+          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+            badLocalLinks: [
+              {
+                filePath,
+                missingLinks: [
+                  {
+                    link: `[I am a reference link]: ./path/to/missing/file.md`,
+                    reasons: [badLinkReasons.FILE_NOT_FOUND],
+                  },
+                ],
+              },
+            ],
+          });
+        }, testDirectory);
+      });
+    }
+  );
+
+  describe("html code block", () => {
+    it.todo("works as expected");
   });
 });

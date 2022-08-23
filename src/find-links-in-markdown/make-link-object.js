@@ -1,3 +1,4 @@
+import { mapValues } from "lodash";
 import { isValidLink } from "../utils/link-type-checks";
 import { match } from "../utils/match";
 import { MARKDOWN_INLINE_LINK_REGEX } from "./markdown-inline-link-regex";
@@ -25,8 +26,12 @@ const makeLinkObject = ({ markdownLink, fullLink, isImage }) => {
     ? [undefined, removeHashCharsFromStart(linkWithTag)]
     : linkWithTag.split("#");
 
+  const trimmedLinkData = mapValues({ markdownLink, link, tag }, (value) =>
+    value?.trim()
+  );
+
   return isValidLink(link, tag)
-    ? Object.freeze({ markdownLink, link, tag, isImage })
+    ? Object.freeze({ ...trimmedLinkData, isImage })
     : null;
 };
 

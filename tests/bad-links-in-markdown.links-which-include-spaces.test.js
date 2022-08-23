@@ -139,7 +139,7 @@ describe("bad-links-in-markdown - links including spaces", () => {
             filePath,
             missingLinks: [
               {
-                link: "[1]:     ./path/to/missing/file.md     ",
+                link: "[1]:     ./path/to/missing/file.md",
                 reasons: [badLinkReasons.FILE_NOT_FOUND],
               },
             ],
@@ -198,7 +198,7 @@ describe("bad-links-in-markdown - links including spaces", () => {
             filePath: fileContainingLink,
             missingLinks: [
               {
-                link: `[1]:     ./${fileNameToLinkTo}.md#main-title     `,
+                link: `[1]:     ./${fileNameToLinkTo}.md#main-title`,
                 reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
               },
             ],
@@ -224,7 +224,7 @@ describe("bad-links-in-markdown - links including spaces", () => {
     const fileContainingLink = newTestMarkdownFile(testDirectory);
     fs.writeFileSync(
       fileContainingLink,
-      `Here is some text\n[and then a link to a file][1]\n\n[1]:     ./${fileNameToLinkTo}.md#main-title    `
+      `Here is some text\n[and then a link to a file][1]\n\n[1]:     ./${fileNameToLinkTo}.md#main-title`
     );
 
     await runTestWithDirectoryCleanup(async () => {
@@ -292,7 +292,7 @@ describe("bad-links-in-markdown - links including spaces", () => {
             filePath,
             missingLinks: [
               {
-                link: "[picture]:     ./path/to/missing/image.png    ",
+                link: "[picture]:     ./path/to/missing/image.png",
                 reasons: [badLinkReasons.FILE_NOT_FOUND],
               },
             ],

@@ -14,7 +14,7 @@ export const findReferenceMarkdownLinks = (markdown, markdownLines) => {
       );
 
       return makeLinkObjectFromReferenceLink({
-        markdownLink: referenceLink,
+        markdownLink: referenceLink.trim(),
         isImage: referenceLinksUsage.some((linkUsage) =>
           linkUsage.startsWith("!")
         ),
