@@ -4,7 +4,7 @@
 
 ---
 
->> [testing]: #test-header
+    [testing]: #test-header
 
 ---
 
