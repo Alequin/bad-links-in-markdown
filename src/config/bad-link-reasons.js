@@ -18,4 +18,6 @@ export const badLinkReasons = {
   INVALID_IMAGE_EXTENSIONS: `Image extension is not valid. The supported extensions are ${validImageExtensions.join(
     ", "
   )}`,
+  CASE_SENSITIVE_HEADER_TAG:
+    "Header tag includes upper case characters. It is recommended to only used lower case. It will work in github but may not work in other markdown readers",
 };

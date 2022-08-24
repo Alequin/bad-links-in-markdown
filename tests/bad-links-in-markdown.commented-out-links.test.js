@@ -69,7 +69,10 @@ describe("bad-links-in-markdown - commented out links", () => {
               missingLinks: [
                 {
                   link: "[//]: #[I am a local link](./path/to/missing/file.md)",
-                  reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
+                  reasons: [
+                    badLinkReasons.HEADER_TAG_NOT_FOUND,
+                    badLinkReasons.CASE_SENSITIVE_HEADER_TAG,
+                  ],
                 },
                 {
                   link: "[I am a local link](./path/to/missing/file.md)",

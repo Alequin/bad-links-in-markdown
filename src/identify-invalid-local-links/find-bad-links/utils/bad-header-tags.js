@@ -7,7 +7,7 @@ export const badHeaderTags = (links) => {
       findHeadersInFile(linkObject.fullPath)
     );
 
-    return !headerTagsFromFile.includes(linkObject.tag);
+    return !headerTagsFromFile.includes(linkObject.tag.toLowerCase());
   });
 };
 
