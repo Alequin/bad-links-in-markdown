@@ -4,6 +4,8 @@
 
 [foobar](#KEY-TERMS-1)
 
+[foobar](#key-terms)
+
 ---
 
     [testing]: #test-header
