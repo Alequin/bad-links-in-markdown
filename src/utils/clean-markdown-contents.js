@@ -7,8 +7,8 @@ const removeTripleBackTickContents = (markdown) => {
 
 const removeCommentedOutMarkdown = (markdown) => {
   return markdown
-    .replace(/<!--.*-->/s, "") // <!-- commented out -->
-    .replace(/\<\?.*\?\>/s, "") // <? commented out ?>
+    .replace(/<!--.*?-->/gs, "") // <!-- commented out -->
+    .replace(/\<\?.*?\?\>/gs, "") // <? commented out ?>
     .replace(/\[\/\/\]\:\s*\#\s.*/g, ""); // [//]: # commented out || [//]:# commented out
 };
 

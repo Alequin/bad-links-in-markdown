@@ -117,5 +117,40 @@ describe("bad-links-in-markdown - commented out links", () => {
         });
       }, testDirectory);
     });
+
+    it.each([
+      { openComment: "<!--", closeComment: "-->" },
+      { openComment: "<?", closeComment: "?>" },
+    ])(
+      "Does not incorrectly ignore links when the target header is sat between two comments, using the syntax $openComment $closeComment",
+      async () => {
+        const testDirectory = await newTestDirectory();
+
+        const filePath = newTestMarkdownFile(testDirectory);
+
+        fs.writeFileSync(
+          filePath,
+          `
+        <!--
+          [I am a local link](./path/to/missing/file.md)
+        -->
+        
+        # Header
+
+        <!--
+          [I am a local link](./path/to/missing/file.md)
+        -->
+
+        [I am a local link](#header)
+        `
+        );
+
+        await runTestWithDirectoryCleanup(async () => {
+          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+            badLocalLinks: [],
+          });
+        }, testDirectory);
+      }
+    );
   });
 });
