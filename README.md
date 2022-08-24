@@ -1,6 +1,6 @@
 # bad-links-in-markdown
 
-[foobar](#KeY-TeRMS)
+[foobar](#l20)
 
 [foobar](#KEY-TERMS-1)
 
