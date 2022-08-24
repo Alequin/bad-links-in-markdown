@@ -1,6 +1,8 @@
 # bad-links-in-markdown
 
-> [testing]: #test-header
+[foobar](#KEY-TERMS)
+
+[foobar](#KEY-TERMS-1)
 
 ---
 
@@ -20,7 +22,13 @@ The script:
 
 `npm run find-bad-links -- --directory C:/path/to/top/level/directory`
 
-# Key terms
+# KEY TERMS
+
+# KEY TERMS
+
+# KEY TERMS
+
+# KEY TERMS
 
 - **Local link**: A link which points to another file / location in the current git repository
 - **Inline link**: any markdown link which appears inline in markdown. Contains the descriptive text and the raw link all in one place
