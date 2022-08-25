@@ -1,5 +1,9 @@
 # bad-links-in-markdown
 
+[foobar]: #syntax-notes foobar
+
+ [foobar](./foobar.md#L1000)
+
 A script to identify links in markdown files that no longer work.
 
 The script:
@@ -42,15 +46,17 @@ The script:
 - shorthand web links e.g. <www.google.com>
 - html tag links
 - html tag image links
+- html header tags
 - Confirm absolute image links on linux are invalid
 - web links (to be considered)
 - identify invalid url links (analytics.google.com does not work in a markdown link but is a valid url)
 - Add an option to ignore missing extensions
 - make a helper script to display all valid headers in a markdown file
-- make images without alt tag show up, broken images only show up a broken when given an alt tag
+- make images without alt tag show up, broken images only show up as broken when given an alt tag
 - should some "badLinkReasons" block others. 
   - Should FILE_NOT_FOUND show if MISSING_FILE_EXTENSION is also showing?
 - Handle headers which include back ticks
+- header tags with multiple # chars
 ### Syntax notes
 
 https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet#links
