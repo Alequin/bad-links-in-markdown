@@ -1,3 +1,4 @@
+import { orderBy, sumBy } from "lodash";
 import { findAllMarkdownFiles } from "./src/find-all-markdown-files/find-all-markdown-files";
 import { findLinksInMarkdown } from "./src/find-links-in-markdown/find-links-in-markdown";
 import { identifyInvalidLocalLinks } from "./src/identify-invalid-local-links/identify-invalid-local-links";
@@ -24,8 +25,19 @@ export const badLinksInMarkdown = async (topLevelDirectory) => {
 if (module === require.main) {
   badLinksInMarkdown(topLevelDirectoryFromConsoleArgs())
     .then((result) => {
-      logger.info(JSON.stringify(result, null, 2));
-      logger.info(`Total bad local links: ${result.badLocalLinks.length}`);
+      logger.info(
+        JSON.stringify(
+          orderBy(result.badLocalLinks, ({ filePath }) => filePath),
+          null,
+          2
+        )
+      );
+      logger.info(
+        `Total bad local links: ${sumBy(
+          result.badLocalLinks,
+          ({ missingLinks }) => missingLinks.length
+        )}`
+      );
     })
     .catch((error) => {
       console.error(error);
