@@ -1,13 +1,11 @@
 import fs from "fs";
-import path from "path";
 import { badLinksInMarkdown } from "../bad-links-in-markdown";
 import { badLinkReasons } from "../src/config/bad-link-reasons";
 import {
-  newTestMarkdownFile,
   newTestDirectory,
-  runTestWithDirectoryCleanup,
-  uniqueName,
   newTestFile,
+  newTestMarkdownFile,
+  runTestWithDirectoryCleanup,
 } from "./test-utils";
 
 describe("bad-links-in-markdown - links with label text", () => {
@@ -44,17 +42,16 @@ describe("bad-links-in-markdown - links with label text", () => {
     it("Ignores local inline links which point at files which exist, even when the link includes label text", async () => {
       const testDirectory = await newTestDirectory();
 
-      const fileNameToLinkTo = uniqueName();
-      const filePathToLinkTo = path.resolve(
-        testDirectory,
-        `./${fileNameToLinkTo}.md`
-      );
-      fs.writeFileSync(filePathToLinkTo, `foo bar baz`);
+      const fileToLinkTo = newTestFile({
+        directory: testDirectory,
+        extension: ".md",
+      });
+      fs.writeFileSync(fileToLinkTo.filePath, `foo bar baz`);
 
       const fileContainingLink = newTestMarkdownFile(testDirectory);
       fs.writeFileSync(
         fileContainingLink,
-        `[I am a local link](./${fileNameToLinkTo}.md ${labelText})`
+        `[I am a local link](./${fileToLinkTo.fileName} ${labelText})`
       );
 
       await runTestWithDirectoryCleanup(async () => {
@@ -106,20 +103,19 @@ describe("bad-links-in-markdown - links with label text", () => {
     it("Identifies inline local links that point at a files that exists but do not contain the targeted header tag, even when the link includes label text", async () => {
       const testDirectory = await newTestDirectory();
 
-      const fileNameToLinkTo = uniqueName();
-      const filePathToLinkTo = path.resolve(
-        testDirectory,
-        `./${fileNameToLinkTo}.md`
-      );
+      const fileToLinkTo = newTestFile({
+        directory: testDirectory,
+        extension: ".md",
+      });
       fs.writeFileSync(
-        filePathToLinkTo,
+        fileToLinkTo.filePath,
         `# foo bar baz\na story of foo and bar\nand baz`
       );
 
       const fileContainingLink = newTestMarkdownFile(testDirectory);
       fs.writeFileSync(
         fileContainingLink,
-        `[I am a local link](./${fileNameToLinkTo}.md#main-title ${labelText})`
+        `[I am a local link](./${fileToLinkTo.fileName}#main-title ${labelText})`
       );
 
       await runTestWithDirectoryCleanup(async () => {
@@ -129,7 +125,7 @@ describe("bad-links-in-markdown - links with label text", () => {
               filePath: fileContainingLink,
               missingLinks: [
                 {
-                  link: `[I am a local link](./${fileNameToLinkTo}.md#main-title ${labelText})`,
+                  link: `[I am a local link](./${fileToLinkTo.fileName}#main-title ${labelText})`,
                   reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
                 },
               ],
@@ -142,20 +138,19 @@ describe("bad-links-in-markdown - links with label text", () => {
     it("Ignores local links which point at files that exist and contain the targeted header, even when the link includes label text", async () => {
       const testDirectory = await newTestDirectory();
 
-      const fileNameToLinkTo = uniqueName();
-      const filePathToLinkTo = path.resolve(
-        testDirectory,
-        `./${fileNameToLinkTo}.md`
-      );
+      const fileToLinkTo = newTestFile({
+        directory: testDirectory,
+        extension: ".md",
+      });
       fs.writeFileSync(
-        filePathToLinkTo,
+        fileToLinkTo.filePath,
         `# main-title\na story of foo and bar\nand baz`
       );
 
       const fileContainingLink = newTestMarkdownFile(testDirectory);
       fs.writeFileSync(
         fileContainingLink,
-        `[I am a local link](./${fileNameToLinkTo}.md#main-title ${labelText})`
+        `[I am a local link](./${fileToLinkTo.fileName}#main-title ${labelText})`
       );
 
       await runTestWithDirectoryCleanup(async () => {
@@ -237,17 +232,16 @@ describe("bad-links-in-markdown - links with label text", () => {
     it("Ignores reference links which point at files which exist, even when the link includes label text", async () => {
       const testDirectory = await newTestDirectory();
 
-      const fileNameToLinkTo = uniqueName();
-      const filePathToLinkTo = path.resolve(
-        testDirectory,
-        `./${fileNameToLinkTo}.md`
-      );
-      fs.writeFileSync(filePathToLinkTo, `foo bar baz`);
+      const fileToLinkTo = newTestFile({
+        directory: testDirectory,
+        extension: ".md",
+      });
+      fs.writeFileSync(fileToLinkTo.filePath, `foo bar baz`);
 
       const fileContainingLink = newTestMarkdownFile(testDirectory);
       fs.writeFileSync(
         fileContainingLink,
-        `Here is some text\n[and then a link to a file][1]\n\n[1]: ./${fileNameToLinkTo}.md ${labelText}`
+        `Here is some text\n[and then a link to a file][1]\n\n[1]: ./${fileToLinkTo.fileName} ${labelText}`
       );
 
       await runTestWithDirectoryCleanup(async () => {
@@ -260,20 +254,19 @@ describe("bad-links-in-markdown - links with label text", () => {
     it("Identifies an inline local link that points at a file that exists but does not contain the targeted header tag, even when the link includes label text", async () => {
       const testDirectory = await newTestDirectory();
 
-      const fileNameToLinkTo = uniqueName();
-      const filePathToLinkTo = path.resolve(
-        testDirectory,
-        `./${fileNameToLinkTo}.md`
-      );
+      const fileToLinkTo = newTestFile({
+        directory: testDirectory,
+        extension: ".md",
+      });
       fs.writeFileSync(
-        filePathToLinkTo,
+        fileToLinkTo.filePath,
         `# foo bar baz\na story of foo and bar\nand baz`
       );
 
       const fileContainingLink = newTestMarkdownFile(testDirectory);
       fs.writeFileSync(
         fileContainingLink,
-        `Here is some text\n[and then a link to a file][1]\n\n[1]: ./${fileNameToLinkTo}.md#main-title ${labelText}`
+        `Here is some text\n[and then a link to a file][1]\n\n[1]: ./${fileToLinkTo.fileName}#main-title ${labelText}`
       );
 
       await runTestWithDirectoryCleanup(async () => {
@@ -283,7 +276,7 @@ describe("bad-links-in-markdown - links with label text", () => {
               filePath: fileContainingLink,
               missingLinks: [
                 {
-                  link: `[1]: ./${fileNameToLinkTo}.md#main-title ${labelText}`,
+                  link: `[1]: ./${fileToLinkTo.fileName}#main-title ${labelText}`,
                   reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
                 },
               ],
@@ -296,20 +289,19 @@ describe("bad-links-in-markdown - links with label text", () => {
     it("Ignores local reference links which point at files that exist and contain the targeted header, even when the link includes label text", async () => {
       const testDirectory = await newTestDirectory();
 
-      const fileNameToLinkTo = uniqueName();
-      const filePathToLinkTo = path.resolve(
-        testDirectory,
-        `./${fileNameToLinkTo}.md`
-      );
+      const fileToLinkTo = newTestFile({
+        directory: testDirectory,
+        extension: ".md",
+      });
       fs.writeFileSync(
-        filePathToLinkTo,
+        fileToLinkTo.filePath,
         `# main-title\na story of foo and bar\nand baz`
       );
 
       const fileContainingLink = newTestMarkdownFile(testDirectory);
       fs.writeFileSync(
         fileContainingLink,
-        `Here is some text\n[and then a link to a file][1]\n\n[1]: ./${fileNameToLinkTo}.md#main-title ${labelText}`
+        `Here is some text\n[and then a link to a file][1]\n\n[1]: ./${fileToLinkTo.fileName}#main-title ${labelText}`
       );
 
       await runTestWithDirectoryCleanup(async () => {

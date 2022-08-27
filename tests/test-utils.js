@@ -68,8 +68,4 @@ export const newTestFile = ({ directory, extension, name = uniqueName() }) => {
   };
 };
 
-export const uniqueName = () => `test-${uniqueId()}`;
-
-export const transformAbsoluteLinkToMarkdownForCurrentOS = (absoluteLink) => {
-  return absoluteLink;
-};
+const uniqueName = () => `test-${uniqueId()}`;

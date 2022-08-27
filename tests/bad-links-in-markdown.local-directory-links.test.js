@@ -3,10 +3,9 @@ import path from "path";
 import { badLinksInMarkdown } from "../bad-links-in-markdown";
 import { badLinkReasons } from "../src/config/bad-link-reasons";
 import {
-  newTestMarkdownFile,
   newTestDirectory,
+  newTestMarkdownFile,
   runTestWithDirectoryCleanup,
-  uniqueName,
 } from "./test-utils";
 
 describe("bad-links-in-markdown - local directory links", () => {
@@ -41,7 +40,7 @@ describe("bad-links-in-markdown - local directory links", () => {
     it("Ignores local inline links which point at directories which exist", async () => {
       const testDirectory = await newTestDirectory();
 
-      const directoryNameToLinkTo = uniqueName();
+      const directoryNameToLinkTo = "inner-test-1";
       const directoryPathToLinkTo = path.resolve(
         testDirectory,
         `./${directoryNameToLinkTo}`
@@ -64,7 +63,7 @@ describe("bad-links-in-markdown - local directory links", () => {
     it("Ignores local inline links which point at directories which exist and have names similar to other directories in the same location", async () => {
       const testDirectory = await newTestDirectory();
 
-      const directoryNameToLinkTo = uniqueName();
+      const directoryNameToLinkTo = "inner-test-1";
       const directoryPathToLinkTo = path.resolve(
         testDirectory,
         `./${directoryNameToLinkTo}`
@@ -125,7 +124,7 @@ describe("bad-links-in-markdown - local directory links", () => {
     it("Ignores local reference links which point at directories which exist", async () => {
       const testDirectory = await newTestDirectory();
 
-      const directoryNameToLinkTo = uniqueName();
+      const directoryNameToLinkTo = "inner-test-1";
       const directoryPathToLinkTo = path.resolve(
         testDirectory,
         `./${directoryNameToLinkTo}`
@@ -148,7 +147,7 @@ describe("bad-links-in-markdown - local directory links", () => {
     it("Ignores local inline links which point at directories which exist and have names similar to other directories in the same location", async () => {
       const testDirectory = await newTestDirectory();
 
-      const directoryNameToLinkTo = uniqueName();
+      const directoryNameToLinkTo = "inner-test-1";
       const directoryPathToLinkTo = path.resolve(
         testDirectory,
         `./${directoryNameToLinkTo}`

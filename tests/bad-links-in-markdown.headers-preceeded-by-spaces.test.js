@@ -1,31 +1,29 @@
 import fs from "fs";
-import path from "path";
 import { badLinksInMarkdown } from "../bad-links-in-markdown";
 import {
   newTestMarkdownFile,
   newTestDirectory,
   runTestWithDirectoryCleanup,
-  uniqueName,
+  newTestFile,
 } from "./test-utils";
 
 describe("bad-links-in-markdown - headers preceeded by space characters", () => {
   it("Ignores local inline links which point at headers which exist and are preceeded by space characters", async () => {
     const testDirectory = await newTestDirectory();
 
-    const fileNameToLinkTo = uniqueName();
-    const filePathToLinkTo = path.resolve(
-      testDirectory,
-      `./${fileNameToLinkTo}.md`
-    );
+    const fileToLinkTo = newTestFile({
+      directory: testDirectory,
+      extension: ".md",
+    });
     fs.writeFileSync(
-      filePathToLinkTo,
+      fileToLinkTo.filePath,
       `        # main-title\na story of foo and bar\nand baz`
     );
 
     const fileContainingLink = newTestMarkdownFile(testDirectory);
     fs.writeFileSync(
       fileContainingLink,
-      `[I am a local link](./${fileNameToLinkTo}.md#main-title)`
+      `[I am a local link](./${fileToLinkTo.fileName}#main-title)`
     );
 
     await runTestWithDirectoryCleanup(async () => {
@@ -38,13 +36,12 @@ describe("bad-links-in-markdown - headers preceeded by space characters", () => 
   it("Ignores local inline links which point at headers in the same file and are preceeded by space characters", async () => {
     const testDirectory = await newTestDirectory();
 
-    const fileNameToLinkTo = uniqueName();
-    const filePathToLinkTo = path.resolve(
-      testDirectory,
-      `./${fileNameToLinkTo}.md`
-    );
+    const fileToLinkTo = newTestFile({
+      directory: testDirectory,
+      extension: ".md",
+    });
     fs.writeFileSync(
-      filePathToLinkTo,
+      fileToLinkTo.filePath,
       `        # main-title\na story of foo and bar\nand baz\n[I am a local link](#main-title)`
     );
 
@@ -58,20 +55,19 @@ describe("bad-links-in-markdown - headers preceeded by space characters", () => 
   it("Ignores local reference links which point at headers which exist and are preceeded by space characters", async () => {
     const testDirectory = await newTestDirectory();
 
-    const fileNameToLinkTo = uniqueName();
-    const filePathToLinkTo = path.resolve(
-      testDirectory,
-      `./${fileNameToLinkTo}.md`
-    );
+    const fileToLinkTo = newTestFile({
+      directory: testDirectory,
+      extension: ".md",
+    });
     fs.writeFileSync(
-      filePathToLinkTo,
+      fileToLinkTo.filePath,
       `        # main-title\na story of foo and bar\nand baz`
     );
 
     const fileContainingLink = newTestMarkdownFile(testDirectory);
     fs.writeFileSync(
       fileContainingLink,
-      `[I am a local link][1]\n\n[1]: ./${fileNameToLinkTo}.md#main-title`
+      `[I am a local link][1]\n\n[1]: ./${fileToLinkTo.fileName}#main-title`
     );
 
     await runTestWithDirectoryCleanup(async () => {
@@ -84,14 +80,13 @@ describe("bad-links-in-markdown - headers preceeded by space characters", () => 
   it("Ignores local reference links which point at headers in the same file which are preceeded by space characters", async () => {
     const testDirectory = await newTestDirectory();
 
-    const fileNameToLinkTo = uniqueName();
-    const filePathToLinkTo = path.resolve(
-      testDirectory,
-      `./${fileNameToLinkTo}.md`
-    );
+    const fileToLinkTo = newTestFile({
+      directory: testDirectory,
+      extension: ".md",
+    });
     fs.writeFileSync(
-      filePathToLinkTo,
-      `        # main-title\na story of foo and bar\nand baz\n\n[1]: ./${fileNameToLinkTo}.md#main-title`
+      fileToLinkTo.filePath,
+      `        # main-title\na story of foo and bar\nand baz\n\n[1]: ./${fileToLinkTo.fileName}#main-title`
     );
 
     await runTestWithDirectoryCleanup(async () => {
