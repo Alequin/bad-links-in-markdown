@@ -45,10 +45,10 @@ describe("bad-links-in-markdown - headers with upper case characters", () => {
       parentDirectory: TOP_LEVEL_DIRECTORY,
     });
 
-    const { filePath: targetFilePath, fileName: targetFileName } = newTestFile({
-      directory: testDirectory,
-      extension: ".md",
-    });
+    const { filePath: targetFilePath, fileName: targetFileName } =
+      newTestMarkdownFile({
+        directory: testDirectory,
+      });
     fs.writeFileSync(targetFilePath, `# MAIN TITLE\nsome random text`);
 
     const { filePath: fileContainingLink } = newTestMarkdownFile({
@@ -111,10 +111,10 @@ describe("bad-links-in-markdown - headers with upper case characters", () => {
       parentDirectory: TOP_LEVEL_DIRECTORY,
     });
 
-    const { filePath: targetFilePath, fileName: targetFileName } = newTestFile({
-      directory: testDirectory,
-      extension: ".md",
-    });
+    const { filePath: targetFilePath, fileName: targetFileName } =
+      newTestMarkdownFile({
+        directory: testDirectory,
+      });
 
     fs.writeFileSync(targetFilePath, `# MAIN TITLE\nsome random text`);
 

@@ -39,9 +39,8 @@ describe("bad-links-in-markdown - bad link syntax", () => {
         });
 
         const name = `test${badSyntax}file`;
-        const fileToLinkTo = newTestFile({
+        const fileToLinkTo = newTestMarkdownFile({
           directory: testDirectory,
-          extension: ".md",
           name,
         });
         fs.writeFileSync(
@@ -89,9 +88,8 @@ describe("bad-links-in-markdown - bad link syntax", () => {
         });
 
         const name = `test${badSyntax}file`;
-        const fileToLinkTo = newTestFile({
+        const fileToLinkTo = newTestMarkdownFile({
           directory: testDirectory,
-          extension: ".md",
           name,
         });
         fs.writeFileSync(

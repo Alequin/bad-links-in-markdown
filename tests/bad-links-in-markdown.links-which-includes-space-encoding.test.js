@@ -46,9 +46,8 @@ describe("bad-links-in-markdown - links-which-includes-space-encoding", () => {
     });
 
     const name = "test file 893982";
-    const fileToLinkTo = newTestFile({
+    const fileToLinkTo = newTestMarkdownFile({
       directory: testDirectory,
-      extension: ".md",
       name,
     });
     fs.writeFileSync(fileToLinkTo.filePath, `foo bar baz`);
@@ -115,9 +114,8 @@ describe("bad-links-in-markdown - links-which-includes-space-encoding", () => {
     });
 
     const name = `file%20test`;
-    const fileToLinkTo = newTestFile({
+    const fileToLinkTo = newTestMarkdownFile({
       directory: testDirectory,
-      extension: ".md",
       name,
     });
     fs.writeFileSync(
@@ -156,9 +154,8 @@ describe("bad-links-in-markdown - links-which-includes-space-encoding", () => {
     });
 
     const name = "test file 9023892";
-    const fileToLinkTo = newTestFile({
+    const fileToLinkTo = newTestMarkdownFile({
       directory: testDirectory,
-      extension: ".md",
       name,
     });
     fs.writeFileSync(
@@ -216,9 +213,8 @@ describe("bad-links-in-markdown - links-which-includes-space-encoding", () => {
     });
 
     const name = `file test`;
-    const fileToLinkTo = newTestFile({
+    const fileToLinkTo = newTestMarkdownFile({
       directory: testDirectory,
-      extension: ".md",
       name,
     });
     fs.writeFileSync(fileToLinkTo.filePath, `foo bar baz`);
@@ -244,9 +240,8 @@ describe("bad-links-in-markdown - links-which-includes-space-encoding", () => {
     });
 
     const name = `file%20test-893892hf`;
-    const fileToLinkTo = newTestFile({
+    const fileToLinkTo = newTestMarkdownFile({
       directory: testDirectory,
-      extension: ".md",
       name,
     });
     fs.writeFileSync(
@@ -285,9 +280,8 @@ describe("bad-links-in-markdown - links-which-includes-space-encoding", () => {
     });
 
     const name = "test file nio39820";
-    const fileToLinkTo = newTestFile({
+    const fileToLinkTo = newTestMarkdownFile({
       directory: testDirectory,
-      extension: ".md",
       name,
     });
     fs.writeFileSync(

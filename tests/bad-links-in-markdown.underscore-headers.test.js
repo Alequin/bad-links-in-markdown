@@ -176,9 +176,8 @@ describe("bad-links-in-markdown - underscore headers", () => {
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
-      const fileToLinkTo = newTestFile({
+      const fileToLinkTo = newTestMarkdownFile({
         directory: testDirectory,
-        extension: ".md",
       });
       fs.writeFileSync(
         fileToLinkTo.filePath,
@@ -217,9 +216,8 @@ describe("bad-links-in-markdown - underscore headers", () => {
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
-      const fileToLinkTo = newTestFile({
+      const fileToLinkTo = newTestMarkdownFile({
         directory: testDirectory,
-        extension: ".md",
       });
 
       fs.writeFileSync(
@@ -259,9 +257,8 @@ describe("bad-links-in-markdown - underscore headers", () => {
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
-      const fileToLinkTo = newTestFile({
+      const fileToLinkTo = newTestMarkdownFile({
         directory: testDirectory,
-        extension: ".md",
       });
 
       fs.writeFileSync(
@@ -313,9 +310,8 @@ describe("bad-links-in-markdown - underscore headers", () => {
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
-      const fileToLinkTo = newTestFile({
+      const fileToLinkTo = newTestMarkdownFile({
         directory: testDirectory,
-        extension: ".md",
       });
 
       fs.writeFileSync(
@@ -543,9 +539,8 @@ describe("bad-links-in-markdown - underscore headers", () => {
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
-      const fileToLinkTo = newTestFile({
+      const fileToLinkTo = newTestMarkdownFile({
         directory: testDirectory,
-        extension: ".md",
       });
 
       fs.writeFileSync(
@@ -588,9 +583,8 @@ describe("bad-links-in-markdown - underscore headers", () => {
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
-      const fileToLinkTo = newTestFile({
+      const fileToLinkTo = newTestMarkdownFile({
         directory: testDirectory,
-        extension: ".md",
       });
 
       fs.writeFileSync(
@@ -633,9 +627,8 @@ describe("bad-links-in-markdown - underscore headers", () => {
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
-      const fileToLinkTo = newTestFile({
+      const fileToLinkTo = newTestMarkdownFile({
         directory: testDirectory,
-        extension: ".md",
       });
 
       fs.writeFileSync(
@@ -687,9 +680,8 @@ describe("bad-links-in-markdown - underscore headers", () => {
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
-      const fileToLinkTo = newTestFile({
+      const fileToLinkTo = newTestMarkdownFile({
         directory: testDirectory,
-        extension: ".md",
       });
 
       fs.writeFileSync(
