@@ -1,5 +1,4 @@
 import fs from "fs";
-import path from "path";
 import { badLinksInMarkdown } from "../bad-links-in-markdown";
 import { badLinkReasons } from "../src/config/bad-link-reasons";
 import {
@@ -8,12 +7,15 @@ import {
   newTestFile,
   newTestMarkdownFile,
   runTestWithDirectoryCleanup,
+  TOP_LEVEL_DIRECTORY,
 } from "./test-utils";
 
 describe("bad-links-in-markdown - local file links", () => {
   describe("identify-invalid-local-links and the link is an inline link", () => {
     it("Identifies local inline links that point at files that do not exist", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const filePath = newTestMarkdownFile(testDirectory);
 
@@ -40,7 +42,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Ignores local inline links which point at files which exist", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const fileToLinkTo = newTestFile({
         directory: testDirectory,
@@ -62,7 +66,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Ignores absolute local inline links which point at files which exist", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const fileToLinkTo = newTestFile({
         directory: testDirectory,
@@ -86,31 +92,27 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Ignores absolute local inline links which point at nested files that exist", async () => {
-      const testDirectory = await newTestDirectoryWithName();
+      const testDirectory = await newTestDirectoryWithName({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
-      const firstNestedDirName = "test-dir-1";
-      const firstNestedDirPath = path.resolve(
-        testDirectory.path,
-        `./${firstNestedDirName}`
-      );
-      fs.mkdirSync(firstNestedDirPath);
+      const innerDirectory1 = await newTestDirectoryWithName({
+        parentDirectory: testDirectory.path,
+      });
 
-      const secondNestedDirName = "test-dir-2";
-      const secondNestedDirPath = path.resolve(
-        firstNestedDirPath,
-        `./${secondNestedDirName}`
-      );
-      fs.mkdirSync(secondNestedDirPath);
+      const innerDirectory2 = await newTestDirectoryWithName({
+        parentDirectory: innerDirectory1.path,
+      });
 
       const fileToLinkTo = newTestFile({
-        directory: secondNestedDirPath,
+        directory: innerDirectory2.path,
         extension: ".md",
       });
       fs.writeFileSync(fileToLinkTo.filePath, `foo bar baz`);
 
-      const mockAbsoluteLink = `/${firstNestedDirName}/${secondNestedDirName}/${fileToLinkTo.fileName}`;
+      const mockAbsoluteLink = `/${innerDirectory1.name}/${innerDirectory2.name}/${fileToLinkTo.fileName}`;
 
-      const fileContainingLink = newTestMarkdownFile(secondNestedDirPath);
+      const fileContainingLink = newTestMarkdownFile(innerDirectory2.path);
       fs.writeFileSync(
         fileContainingLink,
         `[I am a local link](${mockAbsoluteLink})`
@@ -124,7 +126,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("identifies absolute local inline links which starts from outside the given directory", async () => {
-      const testDirectory = await newTestDirectoryWithName();
+      const testDirectory = await newTestDirectoryWithName({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const fileToLinkTo = newTestFile({
         directory: testDirectory.path,
@@ -161,29 +165,25 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("identifies absolute local inline links which starts from within the given directory", async () => {
-      const testDirectory = await newTestDirectoryWithName();
+      const testDirectory = await newTestDirectoryWithName({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
-      const firstNestedDirName = "test-dir-1";
-      const firstNestedDirPath = path.resolve(
-        testDirectory.path,
-        `./${firstNestedDirName}`
-      );
-      fs.mkdirSync(firstNestedDirPath);
+      const innerDirectory1 = await newTestDirectoryWithName({
+        parentDirectory: testDirectory.path,
+      });
 
-      const secondNestedDirName = "test-dir-2";
-      const secondNestedDirPath = path.resolve(
-        firstNestedDirPath,
-        `./${secondNestedDirName}`
-      );
-      fs.mkdirSync(secondNestedDirPath);
+      const innerDirectory2 = await newTestDirectoryWithName({
+        parentDirectory: innerDirectory1.path,
+      });
 
       const fileToLinkTo = newTestFile({
-        directory: secondNestedDirPath,
+        directory: innerDirectory2.path,
         extension: ".md",
       });
       fs.writeFileSync(fileToLinkTo.filePath, `foo bar baz`);
 
-      const mockAbsoluteLink = `/${secondNestedDirName}/${fileToLinkTo.fileName}`;
+      const mockAbsoluteLink = `/${innerDirectory2.name}/${fileToLinkTo.fileName}`;
 
       const fileContainingLink = newTestMarkdownFile(testDirectory.path);
       fs.writeFileSync(
@@ -212,7 +212,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Identifies a local inline link that points at a file that does not exist even when the link does not contain a file extension", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const filePath = newTestMarkdownFile(testDirectory);
 
@@ -239,7 +241,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Identifies local inline links which point at files which exist but the link is missing an extension", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const name = "test-file-without-extension";
       const fileToLinkTo = newTestFile({
@@ -270,13 +274,19 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Ignores local inline links with a link which point at a directory", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
-      const directoryToLinkTo = path.resolve(testDirectory, `./inner-dir`);
-      fs.mkdirSync(directoryToLinkTo);
+      const innerDirectory1 = await newTestDirectoryWithName({
+        parentDirectory: testDirectory,
+      });
 
       const fileContainingLink = newTestMarkdownFile(testDirectory);
-      fs.writeFileSync(fileContainingLink, `[I am a local link](./inner-dir)`);
+      fs.writeFileSync(
+        fileContainingLink,
+        `[I am a local link](./${innerDirectory1.name})`
+      );
 
       await runTestWithDirectoryCleanup(async () => {
         expect(await badLinksInMarkdown(testDirectory)).toEqual({
@@ -286,7 +296,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Identifies a local link that points at a file that does not exist when the file path does not include either absolute or relative path", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const filePath = newTestMarkdownFile(testDirectory);
 
@@ -310,7 +322,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Ignores local inline links which point at files which exist when the file path does not include either absolute or relative path", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const fileToLinkTo = newTestFile({
         directory: testDirectory,
@@ -333,7 +347,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Identifies a local link that points at a file that does not exist even when the link does not contain a file extension and when the file path does not include either absolute or relative path", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const filePath = newTestMarkdownFile(testDirectory);
 
@@ -360,7 +376,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Identifies local inline links which point at files that exist but link does not contain a file extension or either absolute or relative path", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const name = "test-file-9823hf";
       const fileToLinkTo = newTestFile({
@@ -392,7 +410,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Identifies a local link that points at a javascript file that does not exist", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const filePath = newTestMarkdownFile(testDirectory);
 
@@ -419,7 +439,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Ignores local inline links which point at javascript files which exist", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const fileToLinkTo = newTestFile({
         directory: testDirectory,
@@ -441,7 +463,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Identifies a local link that points at a javascript file that exists but the file extension is missing", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const name = "test-file-oi3893";
       const fileToLinkTo = newTestFile({
@@ -472,7 +496,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Identifies a local inline link that is missing a file extension and could potentially refer to two separate files", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const name = "test-name-for-multiple-files";
 
@@ -514,7 +540,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Ignores local inline links which point at files which exist, even when the name includes multiple delimiters", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const extension = ".config.foobar.woohoo.md";
       const file = newTestFile({
@@ -538,14 +566,17 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Identifies local inline links which point at a file in another sub directory which exist but the link is missing an extension", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
-      const innerTestDirectory = path.resolve(testDirectory, "./inner-test");
-      fs.mkdirSync(innerTestDirectory);
+      const innerDirectory = await newTestDirectoryWithName({
+        parentDirectory: testDirectory,
+      });
 
       const nameToLinkTo = "test-file-983n3no";
       const fileToLinkTo = newTestFile({
-        directory: innerTestDirectory,
+        directory: innerDirectory.path,
         extension: ".md",
         name: nameToLinkTo,
       });
@@ -554,7 +585,7 @@ describe("bad-links-in-markdown - local file links", () => {
       const fileContainingLink = newTestMarkdownFile(testDirectory);
       fs.writeFileSync(
         fileContainingLink,
-        `[I am a local link](./inner-test/${nameToLinkTo})`
+        `[I am a local link](./${innerDirectory.name}/${nameToLinkTo})`
       );
 
       await runTestWithDirectoryCleanup(async () => {
@@ -564,7 +595,7 @@ describe("bad-links-in-markdown - local file links", () => {
               filePath: fileContainingLink,
               missingLinks: [
                 {
-                  link: `[I am a local link](./inner-test/${nameToLinkTo})`,
+                  link: `[I am a local link](./${innerDirectory.name}/${nameToLinkTo})`,
                   reasons: [badLinkReasons.MISSING_FILE_EXTENSION],
                 },
               ],
@@ -575,9 +606,13 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Identifies local inline links which point at a file in another parent directory which exist but the link is missing an extension", async () => {
-      const testDirectory = await newTestDirectory();
-      const innerTestDirectory = path.resolve(testDirectory, "./inner-test");
-      fs.mkdirSync(innerTestDirectory);
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
+
+      const innerDirectory = await newTestDirectoryWithName({
+        parentDirectory: testDirectory,
+      });
 
       const nameToLinkTo = "test-file-983n3no";
       const fileToLinkTo = newTestFile({
@@ -587,9 +622,7 @@ describe("bad-links-in-markdown - local file links", () => {
       });
       fs.writeFileSync(fileToLinkTo.filePath, `foo bar baz`);
 
-      const fileContainingLink = newTestMarkdownFile(
-        `${testDirectory}/inner-test`
-      );
+      const fileContainingLink = newTestMarkdownFile(innerDirectory.path);
       fs.writeFileSync(
         fileContainingLink,
         `[I am a local link](../${nameToLinkTo})`
@@ -613,17 +646,17 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Identifies an issue with local inline links when they are relative links which attempts to link through multiple parent directories at once with invalid syntax", async () => {
-      const testDirectory = await newTestDirectory();
-      const firstInnerTestDirectory = path.resolve(
-        testDirectory,
-        "./inner-test-1"
-      );
-      const secondInnerTestDirectory = path.resolve(
-        firstInnerTestDirectory,
-        "./inner-test-2"
-      );
-      fs.mkdirSync(firstInnerTestDirectory);
-      fs.mkdirSync(secondInnerTestDirectory);
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
+
+      const innerDirectory1 = await newTestDirectoryWithName({
+        parentDirectory: testDirectory,
+      });
+
+      const innerDirectory2 = await newTestDirectoryWithName({
+        parentDirectory: innerDirectory1.path,
+      });
 
       const fileToLinkTo = newTestFile({
         directory: testDirectory,
@@ -631,9 +664,7 @@ describe("bad-links-in-markdown - local file links", () => {
       });
       fs.writeFileSync(fileToLinkTo.filePath, `foo bar baz`);
 
-      const fileContainingLink = newTestMarkdownFile(
-        `${testDirectory}/inner-test-1/inner-test-2`
-      );
+      const fileContainingLink = newTestMarkdownFile(innerDirectory2.path);
       fs.writeFileSync(
         fileContainingLink,
         `[I am a local link](.../${fileToLinkTo.fileName})`
@@ -660,17 +691,17 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Ignores local inline links when they are relative links which link through multiple parent directories", async () => {
-      const testDirectory = await newTestDirectory();
-      const firstInnerTestDirectory = path.resolve(
-        testDirectory,
-        "./inner-test-1"
-      );
-      const secondInnerTestDirectory = path.resolve(
-        firstInnerTestDirectory,
-        "./inner-test-2"
-      );
-      fs.mkdirSync(firstInnerTestDirectory);
-      fs.mkdirSync(secondInnerTestDirectory);
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
+
+      const innerDirectory1 = await newTestDirectoryWithName({
+        parentDirectory: testDirectory,
+      });
+
+      const innerDirectory2 = await newTestDirectoryWithName({
+        parentDirectory: innerDirectory1.path,
+      });
 
       const fileToLinkTo = newTestFile({
         directory: testDirectory,
@@ -678,9 +709,7 @@ describe("bad-links-in-markdown - local file links", () => {
       });
       fs.writeFileSync(fileToLinkTo.filePath, `foo bar baz`);
 
-      const fileContainingLink = newTestMarkdownFile(
-        `${testDirectory}/inner-test-1/inner-test-2`
-      );
+      const fileContainingLink = newTestMarkdownFile(innerDirectory2.path);
       fs.writeFileSync(
         fileContainingLink,
         `[I am a local link](../../${fileToLinkTo.fileName})`
@@ -694,17 +723,17 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Identifies a local inline link that is missing a file extension and could potentially refer to two separate files when the files are in a parent directory", async () => {
-      const testDirectory = await newTestDirectory();
-      const firstInnerTestDirectory = path.resolve(
-        testDirectory,
-        "./inner-test-1"
-      );
-      const secondInnerTestDirectory = path.resolve(
-        firstInnerTestDirectory,
-        "./inner-test-2"
-      );
-      fs.mkdirSync(firstInnerTestDirectory);
-      fs.mkdirSync(secondInnerTestDirectory);
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
+
+      const innerDirectory1 = await newTestDirectoryWithName({
+        parentDirectory: testDirectory,
+      });
+
+      const innerDirectory2 = await newTestDirectoryWithName({
+        parentDirectory: innerDirectory1.path,
+      });
 
       const fileName = "test-file-for-both-file-iu329";
 
@@ -722,9 +751,7 @@ describe("bad-links-in-markdown - local file links", () => {
       });
       fs.writeFileSync(javascriptFile.filePath, `const foo = () => {}`);
 
-      const fileContainingLink = newTestMarkdownFile(
-        `${testDirectory}/inner-test-1/inner-test-2`
-      );
+      const fileContainingLink = newTestMarkdownFile(innerDirectory2.path);
       fs.writeFileSync(
         fileContainingLink,
         `[I am a local link](../../${fileName})`
@@ -751,29 +778,29 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Identifies a local inline link that is missing a file extension and could potentially refer to two separate files when the files are in a sub directory", async () => {
-      const testDirectory = await newTestDirectory();
-      const firstInnerTestDirectory = path.resolve(
-        testDirectory,
-        "./inner-test-1"
-      );
-      const secondInnerTestDirectory = path.resolve(
-        firstInnerTestDirectory,
-        "./inner-test-2"
-      );
-      fs.mkdirSync(firstInnerTestDirectory);
-      fs.mkdirSync(secondInnerTestDirectory);
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
+
+      const innerDirectory1 = await newTestDirectoryWithName({
+        parentDirectory: testDirectory,
+      });
+
+      const innerDirectory2 = await newTestDirectoryWithName({
+        parentDirectory: innerDirectory1.path,
+      });
 
       const fileName = "test-file-for-both-file-93oif3mio";
 
       const markdownFile = newTestFile({
-        directory: secondInnerTestDirectory,
+        directory: innerDirectory2.path,
         extension: ".md",
         name: fileName,
       });
       fs.writeFileSync(markdownFile.filePath, `# foo bar baz`);
 
       const javascriptFile = newTestFile({
-        directory: secondInnerTestDirectory,
+        directory: innerDirectory2.path,
         extension: ".js",
         name: fileName,
       });
@@ -782,7 +809,7 @@ describe("bad-links-in-markdown - local file links", () => {
       const fileContainingLink = newTestMarkdownFile(testDirectory);
       fs.writeFileSync(
         fileContainingLink,
-        `[I am a local link](./inner-test-1/inner-test-2/${fileName})`
+        `[I am a local link](./${innerDirectory1.name}/${innerDirectory2.name}/${fileName})`
       );
 
       await runTestWithDirectoryCleanup(async () => {
@@ -792,7 +819,7 @@ describe("bad-links-in-markdown - local file links", () => {
               filePath: fileContainingLink,
               missingLinks: [
                 {
-                  link: `[I am a local link](./inner-test-1/inner-test-2/${fileName})`,
+                  link: `[I am a local link](./${innerDirectory1.name}/${innerDirectory2.name}/${fileName})`,
                   reasons: [
                     badLinkReasons.MISSING_FILE_EXTENSION,
                     badLinkReasons.MULTIPLE_MATCHING_FILES,
@@ -806,7 +833,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Identifies multiple local inline links on the same file line that point at files that do not exist", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const filePath = newTestMarkdownFile(testDirectory);
       `![picture](./path/to/missing/image.png) and ![picture2](./path/to/missing/image.png)![picture3](./path/to/missing/image.png)(foobar)![picture4](./path/to/missing/image.png)`;
@@ -846,7 +875,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Ignores local inline links that point at files that do not exist when the link syntax is not valid", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const filePath = newTestMarkdownFile(testDirectory);
 
@@ -865,7 +896,9 @@ describe("bad-links-in-markdown - local file links", () => {
 
   describe("identify-invalid-local-links and the link is an inline link which includes a header tag", () => {
     it("Identifies inline local links that point at a files that exists but do not contain the targeted header tag", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const fileToLinkTo = newTestFile({
         directory: testDirectory,
@@ -900,7 +933,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Ignores local links which point at files that exist and contain the targeted header", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const fileToLinkTo = newTestFile({
         directory: testDirectory,
@@ -925,7 +960,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Ignores local links which point at files that exist and contain the targeted sub header", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const fileToLinkTo = newTestFile({
         directory: testDirectory,
@@ -950,7 +987,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Ignores local links which point at files that exist and contain the targeted sub header which contains varying characters", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const fileToLinkTo = newTestFile({
         directory: testDirectory,
@@ -975,7 +1014,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Identifies an inline local link that points at a file that exists but does not contain the targeted header tag", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const fileToLinkTo = newTestFile({
         directory: testDirectory,
@@ -1010,7 +1051,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Identifies an inline local link that points at a file that exists, contains the targeted header but does not contain the specified instance", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const fileToLinkTo = newTestFile({
         directory: testDirectory,
@@ -1042,7 +1085,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Ignores local links which point at files that exist and contain the targeted header that appears multiple times and the link points at the first header", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const fileToLinkTo = newTestFile({
         directory: testDirectory,
@@ -1064,7 +1109,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Ignores local links which point at files that exist and contain the targeted header that appears multiple times and the link points at the second header", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const fileToLinkTo = newTestFile({
         directory: testDirectory,
@@ -1086,7 +1133,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Ignores local links which point headers that appears multiple times in the current file and the link points at the first header", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const fileToLinkTo = newTestFile({
         directory: testDirectory,
@@ -1105,7 +1154,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Ignores local links which point headers that appears multiple times in the current file and the link points at the second header", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const fileToLinkTo = newTestFile({
         directory: testDirectory,
@@ -1124,7 +1175,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Identifies an inline local link that points at a file that exists but does not contain the targeted header tag, regardless of the type of new line character used", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const fileToLinkTo = newTestFile({
         directory: testDirectory,
@@ -1159,7 +1212,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Identifies an inline local link that point at a file that exists but does not contain the targeted header tag, even when the file extension is not provided", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const name = "file-name-j9823ufno";
       const fileToLinkTo = newTestFile({
@@ -1199,7 +1254,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Identifies local inline links which point at files that exist and contain the targeted header but do not include a file extension", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const name = "test-file-oi32iog";
       const fileToLinkTo = newTestFile({
@@ -1236,7 +1293,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Ignores local links which point at javascript files which exist and have a valid line number", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const fileToLinkTo = newTestFile({
         directory: testDirectory,
@@ -1258,7 +1317,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Identifies local links which point at javascript files which exist but do not have a valid line number", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const fileToLinkTo = newTestFile({
         directory: testDirectory,
@@ -1290,7 +1351,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Identifies an inline local link that points at a javascript file that exists but the file extension is missing, even if the line number is valid", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const name = "test-file-oi234fnio";
       const fileToLinkTo = newTestFile({
@@ -1321,17 +1384,17 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Ignores local inline links when they are relative links which link through multiple parent directories", async () => {
-      const testDirectory = await newTestDirectory();
-      const firstInnerTestDirectory = path.resolve(
-        testDirectory,
-        "./inner-test-1"
-      );
-      const secondInnerTestDirectory = path.resolve(
-        firstInnerTestDirectory,
-        "./inner-test-2"
-      );
-      fs.mkdirSync(firstInnerTestDirectory);
-      fs.mkdirSync(secondInnerTestDirectory);
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
+
+      const innerDirectory1 = await newTestDirectoryWithName({
+        parentDirectory: testDirectory,
+      });
+
+      const innerDirectory2 = await newTestDirectoryWithName({
+        parentDirectory: innerDirectory1.path,
+      });
 
       const fileToLinkTo = newTestFile({
         directory: testDirectory,
@@ -1342,9 +1405,7 @@ describe("bad-links-in-markdown - local file links", () => {
         `# main-title\na story of foo and bar\nand baz`
       );
 
-      const fileContainingLink = newTestMarkdownFile(
-        `${testDirectory}/inner-test-1/inner-test-2`
-      );
+      const fileContainingLink = newTestMarkdownFile(innerDirectory2.path);
 
       fs.writeFileSync(
         fileContainingLink,
@@ -1359,7 +1420,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Identifies an inline local link that points at a header tag in the current file that does not exist", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const fileContainingLink = newTestMarkdownFile(testDirectory);
       fs.writeFileSync(fileContainingLink, `[bad header](#main-title)`);
@@ -1382,7 +1445,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Ignores an inline local link that points at a header tag in the current file that exist", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const fileContainingLink = newTestMarkdownFile(testDirectory);
       fs.writeFileSync(
@@ -1398,7 +1463,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Identifies an inline local link that points at a sub header tag in the current file that does not exist", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const fileContainingLink = newTestMarkdownFile(testDirectory);
       fs.writeFileSync(fileContainingLink, `[bad header](##main-title)`);
@@ -1421,7 +1488,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Ignores an inline local link that points at a sub header tag in the current file that exist", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const fileContainingLink = newTestMarkdownFile(testDirectory);
       fs.writeFileSync(
@@ -1437,7 +1506,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Ignores local links which point at files that exist and contain the targeted header, even when the header includes non alpha-numeric characters", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const fileToLinkTo = newTestFile({
         directory: testDirectory,
@@ -1462,7 +1533,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Ignores an inline local link that points at a header tag in the current file that exist and include non alpha-numeric characters", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const fileContainingLink = newTestMarkdownFile(testDirectory);
       fs.writeFileSync(
@@ -1478,7 +1551,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Ignores local links which point at files that exist and contain the targeted header and the header is snake-case", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const fileToLinkTo = newTestFile({
         directory: testDirectory,
@@ -1503,7 +1578,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Ignores local links which point at headers in the current file which are in snake-case", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const fileToLinkTo = newTestFile({
         directory: testDirectory,
@@ -1522,7 +1599,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Ignores local links which point at headers in the current file which consist of multiple text cases", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const fileToLinkTo = newTestFile({
         directory: testDirectory,
@@ -1543,7 +1622,9 @@ describe("bad-links-in-markdown - local file links", () => {
 
   describe("identify-invalid-local-links and the link is a reference link", () => {
     it("Identifies local reference links that point at files that do not exist", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const filePath = newTestMarkdownFile(testDirectory);
 
@@ -1570,7 +1651,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Ignores local reference links which point at files which exist", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const fileToLinkTo = newTestFile({
         directory: testDirectory,
@@ -1592,7 +1675,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Ignores absolute local reference links which point at files which exist", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const fileToLinkTo = newTestFile({
         directory: testDirectory,
@@ -1616,29 +1701,25 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Ignores absolute local reference links which point at nested files that exist", async () => {
-      const testDirectory = await newTestDirectoryWithName();
+      const testDirectory = await newTestDirectoryWithName({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
-      const firstNestedDirName = "test-dir-1";
-      const firstNestedDirPath = path.resolve(
-        testDirectory.path,
-        `./${firstNestedDirName}`
-      );
-      fs.mkdirSync(firstNestedDirPath);
+      const innerDirectory1 = await newTestDirectoryWithName({
+        parentDirectory: testDirectory.path,
+      });
 
-      const secondNestedDirName = "test-dir-2";
-      const secondNestedDirPath = path.resolve(
-        firstNestedDirPath,
-        `./${secondNestedDirName}`
-      );
-      fs.mkdirSync(secondNestedDirPath);
+      const innerDirectory2 = await newTestDirectoryWithName({
+        parentDirectory: innerDirectory1.path,
+      });
 
       const fileToLinkTo = newTestFile({
-        directory: secondNestedDirPath,
+        directory: innerDirectory2.path,
         extension: ".md",
       });
       fs.writeFileSync(fileToLinkTo.filePath, `foo bar baz`);
 
-      const mockAbsoluteLink = `/${firstNestedDirName}/${secondNestedDirName}/${fileToLinkTo.fileName}`;
+      const mockAbsoluteLink = `/${innerDirectory1.name}/${innerDirectory2.name}/${fileToLinkTo.fileName}`;
 
       const fileContainingLink = newTestMarkdownFile(testDirectory.path);
       fs.writeFileSync(
@@ -1654,7 +1735,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("identifies absolute local reference links which starts from outside the given directory", async () => {
-      const testDirectory = await newTestDirectoryWithName();
+      const testDirectory = await newTestDirectoryWithName({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const fileToLinkTo = newTestFile({
         directory: testDirectory.path,
@@ -1691,29 +1774,25 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("identifies absolute local reference links which starts from within the given directory", async () => {
-      const testDirectory = await newTestDirectoryWithName();
+      const testDirectory = await newTestDirectoryWithName({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
-      const firstNestedDirName = "test-dir-1";
-      const firstNestedDirPath = path.resolve(
-        testDirectory.path,
-        `./${firstNestedDirName}`
-      );
-      fs.mkdirSync(firstNestedDirPath);
+      const innerDirectory1 = await newTestDirectoryWithName({
+        parentDirectory: testDirectory.path,
+      });
 
-      const secondNestedDirName = "test-dir-2";
-      const secondNestedDirPath = path.resolve(
-        firstNestedDirPath,
-        `./${secondNestedDirName}`
-      );
-      fs.mkdirSync(secondNestedDirPath);
+      const innerDirectory2 = await newTestDirectoryWithName({
+        parentDirectory: innerDirectory1.path,
+      });
 
       const fileToLinkTo = newTestFile({
-        directory: secondNestedDirPath,
+        directory: innerDirectory2.path,
         extension: ".md",
       });
       fs.writeFileSync(fileToLinkTo.filePath, `foo bar baz`);
 
-      const mockAbsoluteLink = `/${secondNestedDirName}/${fileToLinkTo.fileName}`;
+      const mockAbsoluteLink = `/${innerDirectory2.name}/${fileToLinkTo.fileName}`;
 
       const fileContainingLink = newTestMarkdownFile(testDirectory.path);
       fs.writeFileSync(
@@ -1742,7 +1821,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Identifies a local reference link that points at a file that does not exist even when the link does not contain a file extension", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const filePath = newTestMarkdownFile(testDirectory);
 
@@ -1772,7 +1853,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Identifies local reference links which point at files which exist but the link is missing an extension", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const name = "test-file9i23ji3oim";
       const fileToLinkTo = newTestFile({
@@ -1806,15 +1889,18 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Ignores local reference links with a link which point at a directory", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
-      const directoryToLinkTo = path.resolve(testDirectory, `./inner-dir`);
-      fs.mkdirSync(directoryToLinkTo);
+      const directory = await newTestDirectoryWithName({
+        parentDirectory: testDirectory,
+      });
 
       const fileContainingLink = newTestMarkdownFile(testDirectory);
       fs.writeFileSync(
         fileContainingLink,
-        `Here is some text\n[and then a link to a file][1]\n\n[1]: ./inner-dir`
+        `Here is some text\n[and then a link to a file][1]\n\n[1]: ./${directory.name}`
       );
 
       await runTestWithDirectoryCleanup(async () => {
@@ -1825,7 +1911,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Identifies a local reference links that points at a file that does not exist when the file path does not include either absolute or relative path", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const filePath = newTestMarkdownFile(testDirectory);
 
@@ -1852,7 +1940,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Ignores local reference links which point at files which exist when the file path does not include either absolute or relative path", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const fileToLinkTo = newTestFile({
         directory: testDirectory,
@@ -1875,7 +1965,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Identifies a local reference link that points at a file that does not exist even when the link does not contain a file extension and when the file path does not include either absolute or relative path", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const filePath = newTestMarkdownFile(testDirectory);
 
@@ -1905,7 +1997,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Identifies local reference links which point at files that exist but link does not contain a file extension or either absolute or relative path", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const name = "test-file-i239foi";
       const fileToLinkTo = newTestFile({
@@ -1940,7 +2034,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Identifies a local reference link that points at a javascript file that does not exist", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const filePath = newTestMarkdownFile(testDirectory);
 
@@ -1967,7 +2063,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Ignores local reference links which point at javascript files which exist", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const fileToLinkTo = newTestFile({
         directory: testDirectory,
@@ -1989,7 +2087,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Identifies a local reference link that points at a javascript file that exists but the file extension is missing", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const name = "test-file-i389j3omi";
       const fileToLinkTo = newTestFile({
@@ -2023,7 +2123,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Identifies a local reference link that is missing a file extension and could potentially refer to two separate files", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const name = "shared-file-name-j32inofmio";
 
@@ -2068,7 +2170,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Ignores local reference links which point at files which exist, even when the name includes multiple delimiters", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const fileToLinkTo = newTestFile({
         directory: testDirectory,
@@ -2090,13 +2194,17 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Identifies local reference links which point at a file in another sub directory which exist but the link is missing an extension", async () => {
-      const testDirectory = await newTestDirectory();
-      const innerTestDirectory = path.resolve(testDirectory, "./inner-test");
-      fs.mkdirSync(innerTestDirectory);
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
+
+      const directory = await newTestDirectoryWithName({
+        parentDirectory: testDirectory,
+      });
 
       const name = "test-file-ojn3hf39";
       const fileToLinkTo = newTestFile({
-        directory: innerTestDirectory,
+        directory: directory.path,
         extension: ".md",
         name,
       });
@@ -2105,7 +2213,7 @@ describe("bad-links-in-markdown - local file links", () => {
       const fileContainingLink = newTestMarkdownFile(testDirectory);
       fs.writeFileSync(
         fileContainingLink,
-        `Here is some text\n[and then a link to a file][1]\n\n[1]: ./inner-test/${name}`
+        `Here is some text\n[and then a link to a file][1]\n\n[1]: ./${directory.name}/${name}`
       );
 
       await runTestWithDirectoryCleanup(async () => {
@@ -2115,7 +2223,7 @@ describe("bad-links-in-markdown - local file links", () => {
               filePath: fileContainingLink,
               missingLinks: [
                 {
-                  link: `[1]: ./inner-test/${name}`,
+                  link: `[1]: ./${directory.name}/${name}`,
                   reasons: [badLinkReasons.MISSING_FILE_EXTENSION],
                 },
               ],
@@ -2126,9 +2234,13 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Identifies local reference links which point at a file in another parent directory which exist but the link is missing an extension", async () => {
-      const testDirectory = await newTestDirectory();
-      const innerTestDirectory = path.resolve(testDirectory, "./inner-test");
-      fs.mkdirSync(innerTestDirectory);
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
+
+      const directory = await newTestDirectoryWithName({
+        parentDirectory: testDirectory,
+      });
 
       const name = "test-file-98j2mj3";
       const fileToLinkTo = newTestFile({
@@ -2138,9 +2250,7 @@ describe("bad-links-in-markdown - local file links", () => {
       });
       fs.writeFileSync(fileToLinkTo.filePath, `foo bar baz`);
 
-      const fileContainingLink = newTestMarkdownFile(
-        `${testDirectory}/inner-test`
-      );
+      const fileContainingLink = newTestMarkdownFile(directory.path);
       fs.writeFileSync(
         fileContainingLink,
         `Here is some text\n[and then a link to a file][1]\n\n[1]: ../${name}`
@@ -2164,17 +2274,17 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Identifies an issue with local reference links when they are relative links which attempts to link through multiple parent directories at once with invalid syntax", async () => {
-      const testDirectory = await newTestDirectory();
-      const firstInnerTestDirectory = path.resolve(
-        testDirectory,
-        "./inner-test-1"
-      );
-      const secondInnerTestDirectory = path.resolve(
-        firstInnerTestDirectory,
-        "./inner-test-2"
-      );
-      fs.mkdirSync(firstInnerTestDirectory);
-      fs.mkdirSync(secondInnerTestDirectory);
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
+
+      const innerDirectory1 = await newTestDirectoryWithName({
+        parentDirectory: testDirectory,
+      });
+
+      const innerDirectory2 = await newTestDirectoryWithName({
+        parentDirectory: innerDirectory1.path,
+      });
 
       const fileToLinkTo = newTestFile({
         directory: testDirectory,
@@ -2182,9 +2292,7 @@ describe("bad-links-in-markdown - local file links", () => {
       });
       fs.writeFileSync(fileToLinkTo.filePath, `foo bar baz`);
 
-      const fileContainingLink = newTestMarkdownFile(
-        `${testDirectory}/inner-test-1/inner-test-2`
-      );
+      const fileContainingLink = newTestMarkdownFile(innerDirectory2.path);
       fs.writeFileSync(
         fileContainingLink,
         `Here is some text\n[and then a link to a file][1]\n\n[1]: .../${fileToLinkTo.fileName}`
@@ -2211,17 +2319,17 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Ignores local reference links when they are relative links which link through multiple parent directories", async () => {
-      const testDirectory = await newTestDirectory();
-      const firstInnerTestDirectory = path.resolve(
-        testDirectory,
-        "./inner-test-1"
-      );
-      const secondInnerTestDirectory = path.resolve(
-        firstInnerTestDirectory,
-        "./inner-test-2"
-      );
-      fs.mkdirSync(firstInnerTestDirectory);
-      fs.mkdirSync(secondInnerTestDirectory);
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
+
+      const innerDirectory1 = await newTestDirectoryWithName({
+        parentDirectory: testDirectory,
+      });
+
+      const innerDirectory2 = await newTestDirectoryWithName({
+        parentDirectory: innerDirectory1.path,
+      });
 
       const fileToLinkTo = newTestFile({
         directory: testDirectory,
@@ -2229,9 +2337,7 @@ describe("bad-links-in-markdown - local file links", () => {
       });
       fs.writeFileSync(fileToLinkTo.filePath, `foo bar baz`);
 
-      const fileContainingLink = newTestMarkdownFile(
-        `${testDirectory}/inner-test-1/inner-test-2`
-      );
+      const fileContainingLink = newTestMarkdownFile(innerDirectory2.path);
       fs.writeFileSync(
         fileContainingLink,
         `Here is some text\n[and then a link to a file][1]\n\n[1]: ../../${fileToLinkTo.fileName}`
@@ -2245,17 +2351,17 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Identifies a local reference link that is missing a file extension and could potentially refer to two separate files when the files are in a parent directory", async () => {
-      const testDirectory = await newTestDirectory();
-      const firstInnerTestDirectory = path.resolve(
-        testDirectory,
-        "./inner-test-1"
-      );
-      const secondInnerTestDirectory = path.resolve(
-        firstInnerTestDirectory,
-        "./inner-test-2"
-      );
-      fs.mkdirSync(firstInnerTestDirectory);
-      fs.mkdirSync(secondInnerTestDirectory);
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
+
+      const innerDirectory1 = await newTestDirectoryWithName({
+        parentDirectory: testDirectory,
+      });
+
+      const innerDirectory2 = await newTestDirectoryWithName({
+        parentDirectory: innerDirectory1.path,
+      });
 
       const name = "shared-file-name-oij3nofpwq";
 
@@ -2273,9 +2379,7 @@ describe("bad-links-in-markdown - local file links", () => {
       });
       fs.writeFileSync(javascriptFile.filePath, `const foo = () => {}`);
 
-      const fileContainingLink = newTestMarkdownFile(
-        `${testDirectory}/inner-test-1/inner-test-2`
-      );
+      const fileContainingLink = newTestMarkdownFile(innerDirectory2.path);
       fs.writeFileSync(
         fileContainingLink,
         `Here is some text\n[and then a link to a file][1]\n\n[1]: ../../${name}`
@@ -2302,29 +2406,29 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Identifies a local reference link that is missing a file extension and could potentially refer to two separate files when the files are in a sub directory", async () => {
-      const testDirectory = await newTestDirectory();
-      const firstInnerTestDirectory = path.resolve(
-        testDirectory,
-        "./inner-test-1"
-      );
-      const secondInnerTestDirectory = path.resolve(
-        firstInnerTestDirectory,
-        "./inner-test-2"
-      );
-      fs.mkdirSync(firstInnerTestDirectory);
-      fs.mkdirSync(secondInnerTestDirectory);
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
+
+      const innerDirectory1 = await newTestDirectoryWithName({
+        parentDirectory: testDirectory,
+      });
+
+      const innerDirectory2 = await newTestDirectoryWithName({
+        parentDirectory: innerDirectory1.path,
+      });
 
       const name = "shared-file-name-sio3c90mc3jog";
 
       const markdownFile = newTestFile({
-        directory: secondInnerTestDirectory,
+        directory: innerDirectory2.path,
         extension: ".md",
         name,
       });
       fs.writeFileSync(markdownFile.filePath, `foo bar baz`);
 
       const javascriptFile = newTestFile({
-        directory: secondInnerTestDirectory,
+        directory: innerDirectory2.path,
         extension: ".js",
         name,
       });
@@ -2333,7 +2437,7 @@ describe("bad-links-in-markdown - local file links", () => {
       const fileContainingLink = newTestMarkdownFile(testDirectory);
       fs.writeFileSync(
         fileContainingLink,
-        `Here is some text\n[and then a link to a file][1]\n\n[1]: ./inner-test-1/inner-test-2/${name}`
+        `Here is some text\n[and then a link to a file][1]\n\n[1]: ./${innerDirectory1.name}/${innerDirectory2.name}/${name}`
       );
 
       await runTestWithDirectoryCleanup(async () => {
@@ -2343,7 +2447,7 @@ describe("bad-links-in-markdown - local file links", () => {
               filePath: fileContainingLink,
               missingLinks: [
                 {
-                  link: `[1]: ./inner-test-1/inner-test-2/${name}`,
+                  link: `[1]: ./${innerDirectory1.name}/${innerDirectory2.name}/${name}`,
                   reasons: [
                     badLinkReasons.MISSING_FILE_EXTENSION,
                     badLinkReasons.MULTIPLE_MATCHING_FILES,
@@ -2357,7 +2461,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Does not error if some of the markdown is written is a similar way to a reference link", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const filePath = newTestMarkdownFile(testDirectory);
 
@@ -2374,7 +2480,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Does not error if some of the markdown is written is a similar way to a reference link and the text appears twice in the file", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const filePath = newTestMarkdownFile(testDirectory);
 
@@ -2394,7 +2502,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Identifies shorthand reference links that point at files that do not exist", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const filePath = newTestMarkdownFile(testDirectory);
 
@@ -2421,7 +2531,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Ignores shorthand reference links which point at files that exist", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const fileToLinkTo = newTestFile({
         directory: testDirectory,
@@ -2445,7 +2557,9 @@ describe("bad-links-in-markdown - local file links", () => {
     it.each(["a", "1", "<", "/"])(
       "Ignores local reference links that point at files that do not exist when the link is preceded by %s",
       async (precedingText) => {
-        const testDirectory = await newTestDirectory();
+        const testDirectory = await newTestDirectory({
+          parentDirectory: TOP_LEVEL_DIRECTORY,
+        });
 
         const filePath = newTestMarkdownFile(testDirectory);
 
@@ -2465,7 +2579,9 @@ describe("bad-links-in-markdown - local file links", () => {
     it.each([">", ">>", ">>>", ">> >>", "    "])(
       "Identifies local reference links that point at files that do not exist when the link is preceded only by '%s'",
       async (precedingText) => {
-        const testDirectory = await newTestDirectory();
+        const testDirectory = await newTestDirectory({
+          parentDirectory: TOP_LEVEL_DIRECTORY,
+        });
 
         const filePath = newTestMarkdownFile(testDirectory);
 
@@ -2495,7 +2611,9 @@ describe("bad-links-in-markdown - local file links", () => {
 
   describe("identify-invalid-local-links and the link is an reference link which includes a header tag", () => {
     it("Identifies an inline local link that points at a file that exists but does not contain the targeted header tag", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const fileToLinkTo = newTestFile({
         directory: testDirectory,
@@ -2530,7 +2648,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Ignores local reference links which point at files that exist and contain the targeted header", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const fileToLinkTo = newTestFile({
         directory: testDirectory,
@@ -2555,7 +2675,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Identifies an absolute reference local link that points at a file that exist but does not contain the targeted header tag", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const fileToLinkTo = newTestFile({
         directory: testDirectory,
@@ -2590,7 +2712,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Ignores absolute reference local links which point at files which exist and contain the targeted header tag", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const fileToLinkTo = newTestFile({
         directory: testDirectory,
@@ -2615,7 +2739,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Ignores local reference links which point at files that exist and contain the targeted sub header", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const fileToLinkTo = newTestFile({
         directory: testDirectory,
@@ -2640,7 +2766,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Ignores local reference links which point at files that exist and contain the targeted sub header which contains varying characters", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const fileToLinkTo = newTestFile({
         directory: testDirectory,
@@ -2665,7 +2793,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Identifies a local reference link that points at a file that exists but does not contain the targeted header tag", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const fileToLinkTo = newTestFile({
         directory: testDirectory,
@@ -2700,7 +2830,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Identifies a local reference link that points at a file that exists, contains the targeted header but does not contain the specified instance", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const fileToLinkTo = newTestFile({
         directory: testDirectory,
@@ -2732,7 +2864,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Ignores local links which point at files that exist and contain the targeted header that appears multiple times and the link points at the first header", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const fileToLinkTo = newTestFile({
         directory: testDirectory,
@@ -2754,7 +2888,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Ignores local reference links which point at files that exist and contain the targeted header that appears multiple times and the link points at the second header", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const fileToLinkTo = newTestFile({
         directory: testDirectory,
@@ -2776,7 +2912,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Ignores local reference links which point headers that appears multiple times in the current file and the link points at the first header", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const fileToLinkTo = newTestFile({
         directory: testDirectory,
@@ -2795,7 +2933,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Ignores local reference links which point headers that appears multiple times in the current file and the link points at the second header", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const fileToLinkTo = newTestFile({
         directory: testDirectory,
@@ -2814,7 +2954,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Identifies a local reference link that points at a file that exists but does not contain the targeted header tag, regardless of the type of new line character used", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const fileToLinkTo = newTestFile({
         directory: testDirectory,
@@ -2849,7 +2991,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Identifies a local reference link that points at a file that exists but does not contain the targeted header tag, even when the file extension is not provided", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const name = "test-file-o3fin3op";
       const fileToLinkTo = newTestFile({
@@ -2889,7 +3033,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Identifies local reference links which point at files that exist and contain the targeted header but are missing a file extension", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const name = "test-file-v3h893c0p3";
       const fileToLinkTo = newTestFile({
@@ -2926,7 +3072,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Ignores local reference links which point at javascript files which exist and have a valid line number", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const fileToLinkTo = newTestFile({
         directory: testDirectory,
@@ -2948,7 +3096,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Identifies local reference links which point at javascript files which exist but do not have a valid line number", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const fileToLinkTo = newTestFile({
         directory: testDirectory,
@@ -2980,7 +3130,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Identifies a local reference link that points at a javascript file that exists but the file extension is missing, even if the line number is valid", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const name = "test-file-p3vu98nr3hu";
       const fileToLinkTo = newTestFile({
@@ -3014,17 +3166,17 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Ignores local reference links when they are relative links which link through multiple parent directories", async () => {
-      const testDirectory = await newTestDirectory();
-      const firstInnerTestDirectory = path.resolve(
-        testDirectory,
-        "./inner-test-1"
-      );
-      const secondInnerTestDirectory = path.resolve(
-        firstInnerTestDirectory,
-        "./inner-test-2"
-      );
-      fs.mkdirSync(firstInnerTestDirectory);
-      fs.mkdirSync(secondInnerTestDirectory);
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
+
+      const innerDirectory1 = await newTestDirectoryWithName({
+        parentDirectory: testDirectory,
+      });
+
+      const innerDirectory2 = await newTestDirectoryWithName({
+        parentDirectory: innerDirectory1.path,
+      });
 
       const fileToLinkTo = newTestFile({
         directory: testDirectory,
@@ -3035,9 +3187,7 @@ describe("bad-links-in-markdown - local file links", () => {
         `# main-title\na story of foo and bar\nand baz`
       );
 
-      const fileContainingLink = newTestMarkdownFile(
-        `${testDirectory}/inner-test-1/inner-test-2`
-      );
+      const fileContainingLink = newTestMarkdownFile(innerDirectory2.path);
 
       fs.writeFileSync(
         fileContainingLink,
@@ -3052,7 +3202,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Identifies a local reference link that points at a header tag in the current file that does not exist", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const fileContainingLink = newTestMarkdownFile(testDirectory);
       fs.writeFileSync(
@@ -3078,7 +3230,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Ignores a local reference link that points at a header tag in the current file that exist", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const fileContainingLink = newTestMarkdownFile(testDirectory);
       fs.writeFileSync(
@@ -3094,7 +3248,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Identifies a local reference link that points at a sub header tag in the current file that does not exist", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const fileContainingLink = newTestMarkdownFile(testDirectory);
       fs.writeFileSync(
@@ -3120,7 +3276,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Ignores a local reference link that points at a sub header tag in the current file that exist", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const fileContainingLink = newTestMarkdownFile(testDirectory);
       fs.writeFileSync(
@@ -3136,7 +3294,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Ignores local reference links which point at files that exist and contain the targeted header, even when the header includes non alpha-numeric characters", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const fileToLinkTo = newTestFile({
         directory: testDirectory,
@@ -3161,7 +3321,9 @@ describe("bad-links-in-markdown - local file links", () => {
     });
 
     it("Ignores an local reference links that point at header tags in the current file that exist and include non alpha-numeric characters", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const fileContainingLink = newTestMarkdownFile(testDirectory);
       fs.writeFileSync(

@@ -5,12 +5,15 @@ import {
   newTestDirectory,
   newTestMarkdownFile,
   runTestWithDirectoryCleanup,
+  TOP_LEVEL_DIRECTORY,
 } from "./test-utils";
 
 describe("bad-links-in-markdown - commented out links", () => {
   describe("identify-invalid-local-links and the link is an inline link", () => {
     it("Ignores commented out links", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const filePath = newTestMarkdownFile(testDirectory);
 
@@ -45,7 +48,9 @@ describe("bad-links-in-markdown - commented out links", () => {
     });
 
     it("Identifies incorrectly commented out lines", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const filePath = newTestMarkdownFile(testDirectory);
 
@@ -86,7 +91,9 @@ describe("bad-links-in-markdown - commented out links", () => {
     });
 
     it("Does not get confused between two matching links when one is commented out", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const filePath = newTestMarkdownFile(testDirectory);
 
@@ -124,7 +131,9 @@ describe("bad-links-in-markdown - commented out links", () => {
     ])(
       "Does not incorrectly ignore links when the target header is sat between two comments, using the syntax $openComment $closeComment",
       async () => {
-        const testDirectory = await newTestDirectory();
+        const testDirectory = await newTestDirectory({
+          parentDirectory: TOP_LEVEL_DIRECTORY,
+        });
 
         const filePath = newTestMarkdownFile(testDirectory);
 

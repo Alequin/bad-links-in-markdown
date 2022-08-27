@@ -5,11 +5,14 @@ import {
   newTestDirectory,
   runTestWithDirectoryCleanup,
   newTestFile,
+  TOP_LEVEL_DIRECTORY,
 } from "./test-utils";
 
 describe("bad-links-in-markdown - headers preceeded by space characters", () => {
   it("Ignores local inline links which point at headers which exist and are preceeded by space characters", async () => {
-    const testDirectory = await newTestDirectory();
+    const testDirectory = await newTestDirectory({
+      parentDirectory: TOP_LEVEL_DIRECTORY,
+    });
 
     const fileToLinkTo = newTestFile({
       directory: testDirectory,
@@ -34,7 +37,9 @@ describe("bad-links-in-markdown - headers preceeded by space characters", () => 
   });
 
   it("Ignores local inline links which point at headers in the same file and are preceeded by space characters", async () => {
-    const testDirectory = await newTestDirectory();
+    const testDirectory = await newTestDirectory({
+      parentDirectory: TOP_LEVEL_DIRECTORY,
+    });
 
     const fileToLinkTo = newTestFile({
       directory: testDirectory,
@@ -53,7 +58,9 @@ describe("bad-links-in-markdown - headers preceeded by space characters", () => 
   });
 
   it("Ignores local reference links which point at headers which exist and are preceeded by space characters", async () => {
-    const testDirectory = await newTestDirectory();
+    const testDirectory = await newTestDirectory({
+      parentDirectory: TOP_LEVEL_DIRECTORY,
+    });
 
     const fileToLinkTo = newTestFile({
       directory: testDirectory,
@@ -78,7 +85,9 @@ describe("bad-links-in-markdown - headers preceeded by space characters", () => 
   });
 
   it("Ignores local reference links which point at headers in the same file which are preceeded by space characters", async () => {
-    const testDirectory = await newTestDirectory();
+    const testDirectory = await newTestDirectory({
+      parentDirectory: TOP_LEVEL_DIRECTORY,
+    });
 
     const fileToLinkTo = newTestFile({
       directory: testDirectory,

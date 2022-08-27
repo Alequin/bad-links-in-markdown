@@ -3,7 +3,10 @@ import { uniqueId } from "lodash";
 import path from "path";
 import { doesFileExist } from "../src/utils/does-file-exist";
 
-const TOP_LEVEL_DIRECTORY = path.resolve(__dirname, "../test-markdown-files");
+export const TOP_LEVEL_DIRECTORY = path.resolve(
+  __dirname,
+  "../test-markdown-files"
+);
 
 /**
  * A function used to run a test with a file that will be cleaned up once
@@ -29,19 +32,24 @@ const forceRemoveDir = async (directory) =>
     fs.rm(directory, { recursive: true, force: true }, resolve)
   );
 
-export const newTestDirectory = async () => {
-  const { path } = await newTestDirectoryWithName();
+export const newTestDirectory = async ({ parentDirectory, name }) => {
+  const { path } = await newTestDirectoryWithName({
+    parentDirectory,
+    name,
+  });
   return path;
 };
 
-export const newTestDirectoryWithName = async () => {
-  const directoryName = uniqueName();
-  const directoryPath = path.resolve(TOP_LEVEL_DIRECTORY, `./${directoryName}`);
+export const newTestDirectoryWithName = async ({
+  parentDirectory,
+  name = uniqueName(),
+}) => {
+  const directoryPath = path.resolve(parentDirectory, `./${name}`);
 
   if (doesFileExist(directoryPath)) await forceRemoveDir(directoryPath);
   fs.mkdirSync(directoryPath);
 
-  return { name: directoryName, path: directoryPath };
+  return { name: name, path: directoryPath };
 };
 
 export const newTestMarkdownFile = (testDirectory) => {

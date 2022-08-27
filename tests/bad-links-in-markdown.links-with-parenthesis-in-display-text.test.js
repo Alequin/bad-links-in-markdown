@@ -6,11 +6,14 @@ import {
   newTestFile,
   newTestMarkdownFile,
   runTestWithDirectoryCleanup,
+  TOP_LEVEL_DIRECTORY,
 } from "./test-utils";
 
 describe("bad-links-in-markdown - links including parenthesis", () => {
   it("Identifies local inline links that point at files that do not exist, even when the links description text contains parentheses", async () => {
-    const testDirectory = await newTestDirectory();
+    const testDirectory = await newTestDirectory({
+      parentDirectory: TOP_LEVEL_DIRECTORY,
+    });
 
     const filePath = newTestMarkdownFile(testDirectory);
 
@@ -37,7 +40,9 @@ describe("bad-links-in-markdown - links including parenthesis", () => {
   });
 
   it("Ignores local inline links which point at files which exist, even when the links description text contains parentheses", async () => {
-    const testDirectory = await newTestDirectory();
+    const testDirectory = await newTestDirectory({
+      parentDirectory: TOP_LEVEL_DIRECTORY,
+    });
 
     const fileToLinkTo = newTestFile({
       directory: testDirectory,
@@ -59,7 +64,9 @@ describe("bad-links-in-markdown - links including parenthesis", () => {
   });
 
   it("Identifies inline local links that point at a files that exists but do not contain the targeted header tag, even when the links description text contains parentheses", async () => {
-    const testDirectory = await newTestDirectory();
+    const testDirectory = await newTestDirectory({
+      parentDirectory: TOP_LEVEL_DIRECTORY,
+    });
 
     const fileToLinkTo = newTestFile({
       directory: testDirectory,
@@ -94,7 +101,9 @@ describe("bad-links-in-markdown - links including parenthesis", () => {
   });
 
   it("Ignores local links which point at files that exist and contain the targeted header, even when the links description text contains parentheses", async () => {
-    const testDirectory = await newTestDirectory();
+    const testDirectory = await newTestDirectory({
+      parentDirectory: TOP_LEVEL_DIRECTORY,
+    });
 
     const fileToLinkTo = newTestFile({
       directory: testDirectory,
@@ -119,7 +128,9 @@ describe("bad-links-in-markdown - links including parenthesis", () => {
   });
 
   it("Identifies reference links that point at files that do not exist, even when the links description text contains parentheses", async () => {
-    const testDirectory = await newTestDirectory();
+    const testDirectory = await newTestDirectory({
+      parentDirectory: TOP_LEVEL_DIRECTORY,
+    });
 
     const filePath = newTestMarkdownFile(testDirectory);
 
@@ -146,7 +157,9 @@ describe("bad-links-in-markdown - links including parenthesis", () => {
   });
 
   it("Ignores reference links which point at files which exist, even when the links description text contains parentheses", async () => {
-    const testDirectory = await newTestDirectory();
+    const testDirectory = await newTestDirectory({
+      parentDirectory: TOP_LEVEL_DIRECTORY,
+    });
 
     const fileToLinkTo = newTestFile({
       directory: testDirectory,
@@ -168,7 +181,9 @@ describe("bad-links-in-markdown - links including parenthesis", () => {
   });
 
   it("Identifies an inline local link that points at a file that exists but does not contain the targeted header tag, even when the links description text contains parentheses", async () => {
-    const testDirectory = await newTestDirectory();
+    const testDirectory = await newTestDirectory({
+      parentDirectory: TOP_LEVEL_DIRECTORY,
+    });
 
     const fileToLinkTo = newTestFile({
       directory: testDirectory,
@@ -203,7 +218,9 @@ describe("bad-links-in-markdown - links including parenthesis", () => {
   });
 
   it("Ignores local reference links which point at files that exist and contain the targeted header, even when the links description text contains parentheses", async () => {
-    const testDirectory = await newTestDirectory();
+    const testDirectory = await newTestDirectory({
+      parentDirectory: TOP_LEVEL_DIRECTORY,
+    });
 
     const fileToLinkTo = newTestFile({
       directory: testDirectory,
@@ -228,7 +245,9 @@ describe("bad-links-in-markdown - links including parenthesis", () => {
   });
 
   it("Identifies local inline image links that point at images that does not exist, even when the links description text contains parentheses", async () => {
-    const testDirectory = await newTestDirectory();
+    const testDirectory = await newTestDirectory({
+      parentDirectory: TOP_LEVEL_DIRECTORY,
+    });
 
     const filePath = newTestMarkdownFile(testDirectory);
 
@@ -255,7 +274,9 @@ describe("bad-links-in-markdown - links including parenthesis", () => {
   });
 
   it("Ignores local inline image link which point at images which exist, even when the links description text contains parentheses", async () => {
-    const testDirectory = await newTestDirectory();
+    const testDirectory = await newTestDirectory({
+      parentDirectory: TOP_LEVEL_DIRECTORY,
+    });
 
     const imageFile = newTestFile({
       directory: testDirectory,
@@ -277,7 +298,9 @@ describe("bad-links-in-markdown - links including parenthesis", () => {
   });
 
   it("Identifies local reference image links that point at images that do not exist, even when the links description text contains parentheses", async () => {
-    const testDirectory = await newTestDirectory();
+    const testDirectory = await newTestDirectory({
+      parentDirectory: TOP_LEVEL_DIRECTORY,
+    });
 
     const filePath = newTestMarkdownFile(testDirectory);
 
@@ -304,7 +327,9 @@ describe("bad-links-in-markdown - links including parenthesis", () => {
   });
 
   it("Ignores local reference image links which points at images which exist, even when the links description text contains parentheses", async () => {
-    const testDirectory = await newTestDirectory();
+    const testDirectory = await newTestDirectory({
+      parentDirectory: TOP_LEVEL_DIRECTORY,
+    });
 
     const imageFile = newTestFile({
       directory: testDirectory,
@@ -326,7 +351,9 @@ describe("bad-links-in-markdown - links including parenthesis", () => {
   });
 
   it("Does not include inline web links in list of bad local links, even when the links description text contains parentheses", async () => {
-    const testDirectory = await newTestDirectory();
+    const testDirectory = await newTestDirectory({
+      parentDirectory: TOP_LEVEL_DIRECTORY,
+    });
 
     const filePath = newTestMarkdownFile(testDirectory);
 
@@ -343,7 +370,9 @@ describe("bad-links-in-markdown - links including parenthesis", () => {
   });
 
   it("Does not include reference web links in the list of bad local links, even when the links description text contains parentheses", async () => {
-    const testDirectory = await newTestDirectory();
+    const testDirectory = await newTestDirectory({
+      parentDirectory: TOP_LEVEL_DIRECTORY,
+    });
 
     const filePath = newTestMarkdownFile(testDirectory);
 

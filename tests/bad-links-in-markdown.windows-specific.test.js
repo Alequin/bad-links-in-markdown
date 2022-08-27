@@ -5,11 +5,14 @@ import {
   newTestMarkdownFile,
   newTestDirectory,
   runTestWithDirectoryCleanup,
+  TOP_LEVEL_DIRECTORY,
 } from "./test-utils";
 
 describe("bad-links-in-markdown - windows specific", () => {
   it("Identifies a windows absolute local inline link that does not start with a forward slash", async () => {
-    const testDirectory = await newTestDirectory();
+    const testDirectory = await newTestDirectory({
+      parentDirectory: TOP_LEVEL_DIRECTORY,
+    });
 
     const filePath = newTestMarkdownFile(testDirectory);
 
@@ -37,7 +40,9 @@ describe("bad-links-in-markdown - windows specific", () => {
   });
 
   it("Identifies a windows absolute local reference link that does not start with a forward slash", async () => {
-    const testDirectory = await newTestDirectory();
+    const testDirectory = await newTestDirectory({
+      parentDirectory: TOP_LEVEL_DIRECTORY,
+    });
 
     const filePath = newTestMarkdownFile(testDirectory);
 
@@ -68,7 +73,9 @@ describe("bad-links-in-markdown - windows specific", () => {
   });
 
   it("Identifies a windows absolute local inline link for an image that does not start with a forward slash", async () => {
-    const testDirectory = await newTestDirectory();
+    const testDirectory = await newTestDirectory({
+      parentDirectory: TOP_LEVEL_DIRECTORY,
+    });
 
     const filePath = newTestMarkdownFile(testDirectory);
 
@@ -97,7 +104,9 @@ describe("bad-links-in-markdown - windows specific", () => {
   });
 
   it("Identifies a windows absolute local reference link for an image that does not start with a forward slash", async () => {
-    const testDirectory = await newTestDirectory();
+    const testDirectory = await newTestDirectory({
+      parentDirectory: TOP_LEVEL_DIRECTORY,
+    });
 
     const filePath = newTestMarkdownFile(testDirectory);
 
@@ -129,7 +138,9 @@ describe("bad-links-in-markdown - windows specific", () => {
   });
 
   it("Identifies an absolute local reference image as invalid even when the reference is uses as both an image and a file link", async () => {
-    const testDirectory = await newTestDirectory();
+    const testDirectory = await newTestDirectory({
+      parentDirectory: TOP_LEVEL_DIRECTORY,
+    });
 
     const filePath = newTestMarkdownFile(testDirectory);
 

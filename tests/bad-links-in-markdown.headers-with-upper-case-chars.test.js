@@ -6,11 +6,14 @@ import {
   newTestDirectory,
   runTestWithDirectoryCleanup,
   newTestFile,
+  TOP_LEVEL_DIRECTORY,
 } from "./test-utils";
 
 describe("bad-links-in-markdown - headers with upper case characters", () => {
   it("Identifies local inline links which use upper case characters in the header, even when the header exists", async () => {
-    const testDirectory = await newTestDirectory();
+    const testDirectory = await newTestDirectory({
+      parentDirectory: TOP_LEVEL_DIRECTORY,
+    });
 
     const fileContainingLink = newTestMarkdownFile(testDirectory);
     fs.writeFileSync(
@@ -36,7 +39,9 @@ describe("bad-links-in-markdown - headers with upper case characters", () => {
   });
 
   it("Identifies local inline links which point at another files header and uses upper case characters in the header, even when the header exists", async () => {
-    const testDirectory = await newTestDirectory();
+    const testDirectory = await newTestDirectory({
+      parentDirectory: TOP_LEVEL_DIRECTORY,
+    });
 
     const { filePath: targetFilePath, fileName: targetFileName } = newTestFile({
       directory: testDirectory,
@@ -68,7 +73,9 @@ describe("bad-links-in-markdown - headers with upper case characters", () => {
   });
 
   it("Identifies local reference links which use upper case characters in the header, even when the header exists", async () => {
-    const testDirectory = await newTestDirectory();
+    const testDirectory = await newTestDirectory({
+      parentDirectory: TOP_LEVEL_DIRECTORY,
+    });
 
     const fileContainingLink = newTestMarkdownFile(testDirectory);
     fs.writeFileSync(
@@ -94,7 +101,9 @@ describe("bad-links-in-markdown - headers with upper case characters", () => {
   });
 
   it("Identifies local reference links which point at another files header and uses upper case characters in the header, even when the header exists", async () => {
-    const testDirectory = await newTestDirectory();
+    const testDirectory = await newTestDirectory({
+      parentDirectory: TOP_LEVEL_DIRECTORY,
+    });
 
     const { filePath: targetFilePath, fileName: targetFileName } = newTestFile({
       directory: testDirectory,

@@ -1,17 +1,20 @@
 import fs from "fs";
-import path from "path";
 import { badLinksInMarkdown } from "../bad-links-in-markdown";
 import { badLinkReasons } from "../src/config/bad-link-reasons";
 import {
   newTestDirectory,
+  newTestDirectoryWithName,
   newTestMarkdownFile,
   runTestWithDirectoryCleanup,
+  TOP_LEVEL_DIRECTORY,
 } from "./test-utils";
 
 describe("bad-links-in-markdown - local directory links", () => {
   describe("identify-invalid-local-links and the link is an inline link to a directory", () => {
     it("Identifies local inline links that point at directories that do not exist", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const filePath = newTestMarkdownFile(testDirectory);
 
@@ -38,19 +41,18 @@ describe("bad-links-in-markdown - local directory links", () => {
     });
 
     it("Ignores local inline links which point at directories which exist", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
-      const directoryNameToLinkTo = "inner-test-1";
-      const directoryPathToLinkTo = path.resolve(
-        testDirectory,
-        `./${directoryNameToLinkTo}`
-      );
-      fs.mkdirSync(directoryPathToLinkTo);
+      const innerDirectory = await newTestDirectoryWithName({
+        parentDirectory: testDirectory,
+      });
 
       const fileContainingLink = newTestMarkdownFile(testDirectory);
       fs.writeFileSync(
         fileContainingLink,
-        `[I am a local link](./${directoryNameToLinkTo})`
+        `[I am a local link](./${innerDirectory.name})`
       );
 
       await runTestWithDirectoryCleanup(async () => {
@@ -61,25 +63,25 @@ describe("bad-links-in-markdown - local directory links", () => {
     });
 
     it("Ignores local inline links which point at directories which exist and have names similar to other directories in the same location", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
-      const directoryNameToLinkTo = "inner-test-1";
-      const directoryPathToLinkTo = path.resolve(
-        testDirectory,
-        `./${directoryNameToLinkTo}`
-      );
-      const secondDirectoryPath = path.resolve(
-        testDirectory,
-        `./${directoryNameToLinkTo}-another-one`
-      );
+      const baseDirectoryName = "test-directory-i3oni3fpo";
+      await newTestDirectoryWithName({
+        parentDirectory: testDirectory,
+        name: baseDirectoryName,
+      });
 
-      fs.mkdirSync(directoryPathToLinkTo);
-      fs.mkdirSync(secondDirectoryPath);
+      await newTestDirectoryWithName({
+        parentDirectory: testDirectory,
+        name: `${baseDirectoryName}-another-one`,
+      });
 
       const fileContainingLink = newTestMarkdownFile(testDirectory);
       fs.writeFileSync(
         fileContainingLink,
-        `[I am a local link](./${directoryNameToLinkTo})`
+        `[I am a local link](./${baseDirectoryName})`
       );
 
       await runTestWithDirectoryCleanup(async () => {
@@ -92,7 +94,9 @@ describe("bad-links-in-markdown - local directory links", () => {
 
   describe("identify-invalid-local-links and the link is an reference link to a directory", () => {
     it("Identifies local reference links that point at directories that do not exist", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
       const filePath = newTestMarkdownFile(testDirectory);
 
@@ -122,19 +126,18 @@ describe("bad-links-in-markdown - local directory links", () => {
     });
 
     it("Ignores local reference links which point at directories which exist", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
-      const directoryNameToLinkTo = "inner-test-1";
-      const directoryPathToLinkTo = path.resolve(
-        testDirectory,
-        `./${directoryNameToLinkTo}`
-      );
-      fs.mkdirSync(directoryPathToLinkTo);
+      const directoryToLinkTo = await newTestDirectoryWithName({
+        parentDirectory: testDirectory,
+      });
 
       const fileContainingLink = newTestMarkdownFile(testDirectory);
       fs.writeFileSync(
         fileContainingLink,
-        `Here is some text\n[and then a link to a file][1]\n\n[1]: ./${directoryNameToLinkTo}`
+        `Here is some text\n[and then a link to a file][1]\n\n[1]: ./${directoryToLinkTo.name}`
       );
 
       await runTestWithDirectoryCleanup(async () => {
@@ -145,25 +148,25 @@ describe("bad-links-in-markdown - local directory links", () => {
     });
 
     it("Ignores local inline links which point at directories which exist and have names similar to other directories in the same location", async () => {
-      const testDirectory = await newTestDirectory();
+      const testDirectory = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
 
-      const directoryNameToLinkTo = "inner-test-1";
-      const directoryPathToLinkTo = path.resolve(
-        testDirectory,
-        `./${directoryNameToLinkTo}`
-      );
-      const secondDirectoryPath = path.resolve(
-        testDirectory,
-        `./${directoryNameToLinkTo}-another-one`
-      );
+      const directoryName = "inner-test-1";
 
-      fs.mkdirSync(directoryPathToLinkTo);
-      fs.mkdirSync(secondDirectoryPath);
+      await newTestDirectoryWithName({
+        parentDirectory: testDirectory,
+        name: directoryName,
+      });
+      await newTestDirectoryWithName({
+        parentDirectory: testDirectory,
+        name: `${directoryName}-another-one`,
+      });
 
       const fileContainingLink = newTestMarkdownFile(testDirectory);
       fs.writeFileSync(
         fileContainingLink,
-        `Here is some text\n[and then a link to a file][1]\n\n[1]: ./${directoryNameToLinkTo}`
+        `Here is some text\n[and then a link to a file][1]\n\n[1]: ./${directoryName}`
       );
 
       await runTestWithDirectoryCleanup(async () => {
