@@ -24,13 +24,14 @@ export const runTestWithDirectoryCleanup = async (
   }
 };
 
+const forceRemoveDir = async (directory) =>
+  new Promise((resolve) =>
+    fs.rm(directory, { recursive: true, force: true }, resolve)
+  );
+
 export const newTestDirectory = async () => {
-  const testDirectory = path.resolve(TOP_LEVEL_DIRECTORY, `./${uniqueName()}`);
-
-  if (doesFileExist(testDirectory)) await forceRemoveDir(testDirectory);
-  fs.mkdirSync(testDirectory);
-
-  return testDirectory;
+  const { path } = await newTestDirectoryWithName();
+  return path;
 };
 
 export const newTestDirectoryWithName = async () => {
@@ -68,11 +69,6 @@ export const newTestFile = ({ directory, extension, name = uniqueName() }) => {
 };
 
 export const uniqueName = () => `test-${uniqueId()}`;
-
-const forceRemoveDir = async (directory) =>
-  new Promise((resolve) =>
-    fs.rm(directory, { recursive: true, force: true }, resolve)
-  );
 
 export const transformAbsoluteLinkToMarkdownForCurrentOS = (absoluteLink) => {
   return absoluteLink;
