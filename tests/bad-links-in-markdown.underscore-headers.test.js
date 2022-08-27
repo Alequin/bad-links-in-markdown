@@ -165,8 +165,10 @@ describe("bad-links-in-markdown - underscore headers", () => {
     it("Ignores local inline links which point at headers in a different file that use the equals syntax", async () => {
       const testDirectory = await newTestDirectory();
 
-      const fileToLinkTo = newTestFile(testDirectory, ".md");
-
+      const fileToLinkTo = newTestFile({
+        directory: testDirectory,
+        extension: ".md",
+      });
       fs.writeFileSync(
         fileToLinkTo.filePath,
         [
@@ -202,7 +204,10 @@ describe("bad-links-in-markdown - underscore headers", () => {
     it("Ignores local inline links which point at headers in a different file that use the dash syntax", async () => {
       const testDirectory = await newTestDirectory();
 
-      const fileToLinkTo = newTestFile(testDirectory, ".md");
+      const fileToLinkTo = newTestFile({
+        directory: testDirectory,
+        extension: ".md",
+      });
 
       fs.writeFileSync(
         fileToLinkTo.filePath,
@@ -239,7 +244,10 @@ describe("bad-links-in-markdown - underscore headers", () => {
     it("Identifies local inline links which point at invalid headers in a different file that use the equals syntax", async () => {
       const testDirectory = await newTestDirectory();
 
-      const fileToLinkTo = newTestFile(testDirectory, ".md");
+      const fileToLinkTo = newTestFile({
+        directory: testDirectory,
+        extension: ".md",
+      });
 
       fs.writeFileSync(
         fileToLinkTo.filePath,
@@ -288,7 +296,10 @@ describe("bad-links-in-markdown - underscore headers", () => {
     it("Identifies local inline links which point at invalid headers in a different file that use the dash syntax", async () => {
       const testDirectory = await newTestDirectory();
 
-      const fileToLinkTo = newTestFile(testDirectory, ".md");
+      const fileToLinkTo = newTestFile({
+        directory: testDirectory,
+        extension: ".md",
+      });
 
       fs.writeFileSync(
         fileToLinkTo.filePath,
@@ -505,7 +516,10 @@ describe("bad-links-in-markdown - underscore headers", () => {
     it("Ignores local reference links which point at headers in a different file that use the equals syntax", async () => {
       const testDirectory = await newTestDirectory();
 
-      const fileToLinkTo = newTestFile(testDirectory, ".md");
+      const fileToLinkTo = newTestFile({
+        directory: testDirectory,
+        extension: ".md",
+      });
 
       fs.writeFileSync(
         fileToLinkTo.filePath,
@@ -545,7 +559,10 @@ describe("bad-links-in-markdown - underscore headers", () => {
     it("Ignores local reference links which point at headers in a different file that use the dash syntax", async () => {
       const testDirectory = await newTestDirectory();
 
-      const fileToLinkTo = newTestFile(testDirectory, ".md");
+      const fileToLinkTo = newTestFile({
+        directory: testDirectory,
+        extension: ".md",
+      });
 
       fs.writeFileSync(
         fileToLinkTo.filePath,
@@ -585,7 +602,10 @@ describe("bad-links-in-markdown - underscore headers", () => {
     it("Identifies local reference links which point at invalid headers in a different file that use the equals syntax", async () => {
       const testDirectory = await newTestDirectory();
 
-      const fileToLinkTo = newTestFile(testDirectory, ".md");
+      const fileToLinkTo = newTestFile({
+        directory: testDirectory,
+        extension: ".md",
+      });
 
       fs.writeFileSync(
         fileToLinkTo.filePath,
@@ -634,7 +654,10 @@ describe("bad-links-in-markdown - underscore headers", () => {
     it("Identifies local reference links which point at invalid headers in a different file that use the dash syntax", async () => {
       const testDirectory = await newTestDirectory();
 
-      const fileToLinkTo = newTestFile(testDirectory, ".md");
+      const fileToLinkTo = newTestFile({
+        directory: testDirectory,
+        extension: ".md",
+      });
 
       fs.writeFileSync(
         fileToLinkTo.filePath,

@@ -8,6 +8,7 @@ import {
   newTestDirectoryWithName,
   runTestWithDirectoryCleanup,
   uniqueName,
+  newTestFile,
 } from "./test-utils";
 
 describe("bad-links-in-markdown - links-which-includes-space-encoding", () => {
@@ -340,14 +341,20 @@ describe("bad-links-in-markdown - links-which-includes-space-encoding", () => {
   it("Ignores local inline image links which point at images that exist, even when the link includes space encoding characters", async () => {
     const testDirectory = await newTestDirectory();
 
+    const imageFile = newTestFile({
+      directory: testDirectory,
+      extension: ".jpg",
+    });
+    fs.writeFileSync(imageFile.filePath, "");
+
     fs.copyFileSync(
-      path.resolve(testDirectory, "../dog.jpg"),
-      path.resolve(testDirectory, "./dog image.jpg")
+      path.resolve(testDirectory, imageFile.filePath),
+      path.resolve(testDirectory, "./test image.jpg")
     );
 
     const filePath = newTestMarkdownFile(testDirectory);
 
-    fs.writeFileSync(filePath, `![picture](./dog%20image.jpg)`);
+    fs.writeFileSync(filePath, `![picture](./test%20image.jpg)`);
 
     await runTestWithDirectoryCleanup(async () => {
       expect(await badLinksInMarkdown(testDirectory)).toEqual({
@@ -386,16 +393,22 @@ describe("bad-links-in-markdown - links-which-includes-space-encoding", () => {
   it("Ignores local reference image links which points at images that exist, even when the link includes space encoding characters", async () => {
     const testDirectory = await newTestDirectory();
 
+    const imageFile = newTestFile({
+      directory: testDirectory,
+      extension: ".jpg",
+    });
+    fs.writeFileSync(imageFile.filePath, "");
+
     fs.copyFileSync(
-      path.resolve(testDirectory, "../dog.jpg"),
-      path.resolve(testDirectory, "./dog image.jpg")
+      path.resolve(testDirectory, imageFile.filePath),
+      path.resolve(testDirectory, `./test image.jpg`)
     );
 
     const filePath = newTestMarkdownFile(testDirectory);
 
     fs.writeFileSync(
       filePath,
-      `Here is some text\n![and then a link to a file][picture]\n\n[picture]: ./dog%20image.jpg`
+      `Here is some text\n![and then a link to a file][picture]\n\n[picture]: ./test%20image.jpg`
     );
 
     await runTestWithDirectoryCleanup(async () => {

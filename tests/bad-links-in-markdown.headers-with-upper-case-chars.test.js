@@ -38,9 +38,10 @@ describe("bad-links-in-markdown - headers with upper case characters", () => {
   it("Identifies local inline links which point at another files header and uses upper case characters in the header, even when the header exists", async () => {
     const testDirectory = await newTestDirectory();
 
-    const { filePath: targetFilePath, fileName: targetFileName } =
-      newTestFile(testDirectory);
-
+    const { filePath: targetFilePath, fileName: targetFileName } = newTestFile({
+      directory: testDirectory,
+      extension: ".md",
+    });
     fs.writeFileSync(targetFilePath, `# MAIN TITLE\nsome random text`);
 
     const fileContainingLink = newTestMarkdownFile(testDirectory);
@@ -95,8 +96,10 @@ describe("bad-links-in-markdown - headers with upper case characters", () => {
   it("Identifies local reference links which point at another files header and uses upper case characters in the header, even when the header exists", async () => {
     const testDirectory = await newTestDirectory();
 
-    const { filePath: targetFilePath, fileName: targetFileName } =
-      newTestFile(testDirectory);
+    const { filePath: targetFilePath, fileName: targetFileName } = newTestFile({
+      directory: testDirectory,
+      extension: ".md",
+    });
 
     fs.writeFileSync(targetFilePath, `# MAIN TITLE\nsome random text`);
 

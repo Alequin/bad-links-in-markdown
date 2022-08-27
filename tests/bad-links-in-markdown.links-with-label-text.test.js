@@ -7,6 +7,7 @@ import {
   newTestDirectory,
   runTestWithDirectoryCleanup,
   uniqueName,
+  newTestFile,
 } from "./test-utils";
 
 describe("bad-links-in-markdown - links with label text", () => {
@@ -429,9 +430,17 @@ describe("bad-links-in-markdown - links with label text", () => {
     it("Ignores local inline image links which point at images that exist, even when the link includes label text", async () => {
       const testDirectory = await newTestDirectory();
 
-      const filePath = newTestMarkdownFile(testDirectory);
+      const imageFile = newTestFile({
+        directory: testDirectory,
+        extension: ".jpg",
+      });
+      fs.writeFileSync(imageFile.filePath, "");
 
-      fs.writeFileSync(filePath, `![picture](../dog.jpg ${labelText})`);
+      const filePath = newTestMarkdownFile(testDirectory);
+      fs.writeFileSync(
+        filePath,
+        `![picture](./${imageFile.fileName} ${labelText})`
+      );
 
       await runTestWithDirectoryCleanup(async () => {
         expect(await badLinksInMarkdown(testDirectory)).toEqual({
@@ -443,11 +452,16 @@ describe("bad-links-in-markdown - links with label text", () => {
     it("Ignores local reference image links which points at images that exist, even when the link includes label text", async () => {
       const testDirectory = await newTestDirectory();
 
-      const filePath = newTestMarkdownFile(testDirectory);
+      const imageFile = newTestFile({
+        directory: testDirectory,
+        extension: ".jpg",
+      });
+      fs.writeFileSync(imageFile.filePath, "");
 
+      const filePath = newTestMarkdownFile(testDirectory);
       fs.writeFileSync(
         filePath,
-        `Here is some text\n![and then a link to a file][picture]\n\n[picture]: ../dog.jpg 'the images label text'`
+        `Here is some text\n![and then a link to a file][picture]\n\n[picture]: ./${imageFile.fileName} 'the images label text'`
       );
 
       await runTestWithDirectoryCleanup(async () => {

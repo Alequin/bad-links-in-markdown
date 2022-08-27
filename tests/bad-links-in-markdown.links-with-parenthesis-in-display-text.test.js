@@ -7,6 +7,7 @@ import {
   newTestDirectory,
   runTestWithDirectoryCleanup,
   uniqueName,
+  newTestFile,
 } from "./test-utils";
 
 describe("bad-links-in-markdown - links including parenthesis", () => {
@@ -264,9 +265,17 @@ describe("bad-links-in-markdown - links including parenthesis", () => {
   it("Ignores local inline image link which point at images which exist, even when the links description text contains parentensis", async () => {
     const testDirectory = await newTestDirectory();
 
-    const filePath = newTestMarkdownFile(testDirectory);
+    const imageFile = newTestFile({
+      directory: testDirectory,
+      extension: ".jpg",
+    });
+    fs.writeFileSync(imageFile.filePath, "");
 
-    fs.writeFileSync(filePath, `![picture (check it out)](../dog.jpg)`);
+    const filePath = newTestMarkdownFile(testDirectory);
+    fs.writeFileSync(
+      filePath,
+      `![picture (check it out)](./${imageFile.fileName})`
+    );
 
     await runTestWithDirectoryCleanup(async () => {
       expect(await badLinksInMarkdown(testDirectory)).toEqual({
@@ -305,11 +314,16 @@ describe("bad-links-in-markdown - links including parenthesis", () => {
   it("Ignores local reference image links which points at images which exist, even when the links description text contains parentensis", async () => {
     const testDirectory = await newTestDirectory();
 
-    const filePath = newTestMarkdownFile(testDirectory);
+    const imageFile = newTestFile({
+      directory: testDirectory,
+      extension: ".jpg",
+    });
+    fs.writeFileSync(imageFile.filePath, "");
 
+    const filePath = newTestMarkdownFile(testDirectory);
     fs.writeFileSync(
       filePath,
-      `Here is some text\n![and then a link to a file][picture(link text)]\n\n[picture(link text)]: ../dog.jpg`
+      `Here is some text\n![and then a link to a file][picture(link text)]\n\n[picture(link text)]: ./${imageFile.fileName}`
     );
 
     await runTestWithDirectoryCleanup(async () => {

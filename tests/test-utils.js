@@ -44,16 +44,26 @@ export const newTestDirectoryWithName = async () => {
 };
 
 export const newTestMarkdownFile = (testDirectory) => {
-  const { filePath } = newTestFile(testDirectory, ".md");
+  const { filePath } = newTestFile({
+    directory: testDirectory,
+    extension: ".md",
+  });
   return filePath;
 };
 
-export const newTestFile = (testDirectory, extension) => {
-  const fileName = `${uniqueName()}${extension}`;
+/**
+ *
+ * @param {object} options
+ * @param {String} directory - directory the file should be made in
+ * @param {[String]} name - name (without the extension) for the file. If null default name will be used
+ * @param {String} extension - the file extension
+ */
+export const newTestFile = ({ directory, extension, name = uniqueName() }) => {
+  const fileName = `${name}${extension}`;
 
   return {
     fileName,
-    filePath: path.resolve(testDirectory, `./${fileName}`),
+    filePath: path.resolve(directory, `./${fileName}`),
   };
 };
 
