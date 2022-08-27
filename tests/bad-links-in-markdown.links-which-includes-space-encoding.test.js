@@ -16,7 +16,7 @@ describe("bad-links-in-markdown - links-which-includes-space-encoding", () => {
       parentDirectory: TOP_LEVEL_DIRECTORY,
     });
 
-    const filePath = newTestMarkdownFile(testDirectory);
+    const { filePath } = newTestMarkdownFile({ directory: testDirectory });
 
     fs.writeFileSync(
       filePath,
@@ -53,7 +53,9 @@ describe("bad-links-in-markdown - links-which-includes-space-encoding", () => {
     });
     fs.writeFileSync(fileToLinkTo.filePath, `foo bar baz`);
 
-    const fileContainingLink = newTestMarkdownFile(testDirectory);
+    const { filePath: fileContainingLink } = newTestMarkdownFile({
+      directory: testDirectory,
+    });
     fs.writeFileSync(
       fileContainingLink,
       `[I am a local link](./test%20file%20893982.md)`
@@ -71,7 +73,7 @@ describe("bad-links-in-markdown - links-which-includes-space-encoding", () => {
       parentDirectory: TOP_LEVEL_DIRECTORY,
     });
 
-    const filePath = newTestMarkdownFile(testDirectory);
+    const { filePath } = newTestMarkdownFile({ directory: testDirectory });
 
     fs.writeFileSync(
       filePath,
@@ -123,7 +125,9 @@ describe("bad-links-in-markdown - links-which-includes-space-encoding", () => {
       `# foo bar baz\na story of foo and bar\nand baz`
     );
 
-    const fileContainingLink = newTestMarkdownFile(testDirectory);
+    const { filePath: fileContainingLink } = newTestMarkdownFile({
+      directory: testDirectory,
+    });
     fs.writeFileSync(
       fileContainingLink,
       `[I am a local link](./${fileToLinkTo.fileName}#main-title)`
@@ -162,7 +166,9 @@ describe("bad-links-in-markdown - links-which-includes-space-encoding", () => {
       `# main-title\na story of foo and bar\nand baz`
     );
 
-    const fileContainingLink = newTestMarkdownFile(testDirectory);
+    const { filePath: fileContainingLink } = newTestMarkdownFile({
+      directory: testDirectory,
+    });
     fs.writeFileSync(
       fileContainingLink,
       `[I am a local link](./test%20file%209023892.md#main-title)`
@@ -180,7 +186,7 @@ describe("bad-links-in-markdown - links-which-includes-space-encoding", () => {
       parentDirectory: TOP_LEVEL_DIRECTORY,
     });
 
-    const filePath = newTestMarkdownFile(testDirectory);
+    const { filePath } = newTestMarkdownFile({ directory: testDirectory });
 
     fs.writeFileSync(
       filePath,
@@ -217,7 +223,9 @@ describe("bad-links-in-markdown - links-which-includes-space-encoding", () => {
     });
     fs.writeFileSync(fileToLinkTo.filePath, `foo bar baz`);
 
-    const fileContainingLink = newTestMarkdownFile(testDirectory);
+    const { filePath: fileContainingLink } = newTestMarkdownFile({
+      directory: testDirectory,
+    });
     fs.writeFileSync(
       fileContainingLink,
       `Here is some text\n[and then a link to a file][1]\n\n[1]: ./file%20test.md`
@@ -246,7 +254,9 @@ describe("bad-links-in-markdown - links-which-includes-space-encoding", () => {
       `# foo bar baz\na story of foo and bar\nand baz`
     );
 
-    const fileContainingLink = newTestMarkdownFile(testDirectory);
+    const { filePath: fileContainingLink } = newTestMarkdownFile({
+      directory: testDirectory,
+    });
     fs.writeFileSync(
       fileContainingLink,
       `Here is some text\n[and then a link to a file][1]\n\n[1]: ./${fileToLinkTo.fileName}#main-title`
@@ -285,7 +295,9 @@ describe("bad-links-in-markdown - links-which-includes-space-encoding", () => {
       `# main-title\na story of foo and bar\nand baz`
     );
 
-    const fileContainingLink = newTestMarkdownFile(testDirectory);
+    const { filePath: fileContainingLink } = newTestMarkdownFile({
+      directory: testDirectory,
+    });
     fs.writeFileSync(
       fileContainingLink,
       `Here is some text\n[and then a link to a file][1]\n\n[1]: ./test%20file%20nio39820.md#main-title`
@@ -303,7 +315,7 @@ describe("bad-links-in-markdown - links-which-includes-space-encoding", () => {
       parentDirectory: TOP_LEVEL_DIRECTORY,
     });
 
-    const filePath = newTestMarkdownFile(testDirectory);
+    const { filePath } = newTestMarkdownFile({ directory: testDirectory });
 
     fs.writeFileSync(filePath, `![picture](./path/to/missing%20image.png)`);
 
@@ -329,7 +341,7 @@ describe("bad-links-in-markdown - links-which-includes-space-encoding", () => {
       parentDirectory: TOP_LEVEL_DIRECTORY,
     });
 
-    const filePath = newTestMarkdownFile(testDirectory);
+    const { filePath } = newTestMarkdownFile({ directory: testDirectory });
 
     fs.writeFileSync(
       filePath,
@@ -377,7 +389,7 @@ describe("bad-links-in-markdown - links-which-includes-space-encoding", () => {
     });
     fs.writeFileSync(imageFile.filePath, "");
 
-    const filePath = newTestMarkdownFile(testDirectory);
+    const { filePath } = newTestMarkdownFile({ directory: testDirectory });
 
     fs.writeFileSync(filePath, `![picture](./test%20image.jpg)`);
 
@@ -393,7 +405,7 @@ describe("bad-links-in-markdown - links-which-includes-space-encoding", () => {
       parentDirectory: TOP_LEVEL_DIRECTORY,
     });
 
-    const filePath = newTestMarkdownFile(testDirectory);
+    const { filePath } = newTestMarkdownFile({ directory: testDirectory });
 
     fs.writeFileSync(
       filePath,
@@ -429,7 +441,7 @@ describe("bad-links-in-markdown - links-which-includes-space-encoding", () => {
     });
     fs.writeFileSync(imageFile.filePath, "");
 
-    const filePath = newTestMarkdownFile(testDirectory);
+    const { filePath } = newTestMarkdownFile({ directory: testDirectory });
 
     fs.writeFileSync(
       filePath,

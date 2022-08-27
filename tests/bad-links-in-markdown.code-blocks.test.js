@@ -15,14 +15,14 @@ describe("bad-links-in-markdown - code blocks", () => {
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
-      const filePath = newTestMarkdownFile(testDirectory);
-
-      fs.writeFileSync(
-        filePath,
-        ["```", `[I am a local link](./path/to/missing/file.md)`, "```"].join(
-          "\n"
-        )
-      );
+      newTestMarkdownFile({
+        directory: testDirectory,
+        content: [
+          "```",
+          `[I am a local link](./path/to/missing/file.md)`,
+          "```",
+        ].join("\n"),
+      });
 
       await runTestWithDirectoryCleanup(async () => {
         expect(await badLinksInMarkdown(testDirectory)).toEqual({
@@ -36,17 +36,15 @@ describe("bad-links-in-markdown - code blocks", () => {
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
-      const filePath = newTestMarkdownFile(testDirectory);
-
-      fs.writeFileSync(
-        filePath,
-        [
+      newTestMarkdownFile({
+        directory: testDirectory,
+        content: [
           "[foobar][I am a reference link]",
           "```",
           `[I am a reference link]: ./path/to/missing/file.md`,
           "```",
-        ].join("\n")
-      );
+        ].join("\n"),
+      });
 
       await runTestWithDirectoryCleanup(async () => {
         expect(await badLinksInMarkdown(testDirectory)).toEqual({
@@ -60,17 +58,15 @@ describe("bad-links-in-markdown - code blocks", () => {
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
-      const filePath = newTestMarkdownFile(testDirectory);
-
-      fs.writeFileSync(
-        filePath,
-        [
+      const { filePath } = newTestMarkdownFile({
+        directory: testDirectory,
+        content: [
           "```",
           "# cool header",
           "```",
           `[I am a local link](#cool-header)`,
-        ].join("\n")
-      );
+        ].join("\n"),
+      });
 
       await runTestWithDirectoryCleanup(async () => {
         expect(await badLinksInMarkdown(testDirectory)).toEqual({
@@ -94,19 +90,17 @@ describe("bad-links-in-markdown - code blocks", () => {
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
-      const filePath = newTestMarkdownFile(testDirectory);
-
-      fs.writeFileSync(
-        filePath,
-        [
+      const { filePath } = newTestMarkdownFile({
+        directory: testDirectory,
+        content: [
           "```",
           "# cool header",
           "```",
           "",
           "[foobar][I am a reference link]",
           `[I am a reference link]: #cool-header`,
-        ].join("\n")
-      );
+        ].join("\n"),
+      });
 
       await runTestWithDirectoryCleanup(async () => {
         expect(await badLinksInMarkdown(testDirectory)).toEqual({
@@ -130,11 +124,9 @@ describe("bad-links-in-markdown - code blocks", () => {
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
-      const filePath = newTestMarkdownFile(testDirectory);
-
-      fs.writeFileSync(
-        filePath,
-        [
+      newTestMarkdownFile({
+        directory: testDirectory,
+        content: [
           "```",
           "backtick contents 1",
           "```",
@@ -143,8 +135,8 @@ describe("bad-links-in-markdown - code blocks", () => {
           "backtick contents 1",
           "```",
           "[header link](#header)",
-        ].join("\n")
-      );
+        ].join("\n"),
+      });
 
       await runTestWithDirectoryCleanup(async () => {
         expect(await badLinksInMarkdown(testDirectory)).toEqual({
@@ -158,11 +150,9 @@ describe("bad-links-in-markdown - code blocks", () => {
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
-      const filePath = newTestMarkdownFile(testDirectory);
-
-      fs.writeFileSync(
-        filePath,
-        [
+      newTestMarkdownFile({
+        directory: testDirectory,
+        content: [
           "```",
           "backtick contents 1",
           "```",
@@ -172,8 +162,8 @@ describe("bad-links-in-markdown - code blocks", () => {
           "```",
           "[header link][foo]",
           "[foo][#header]",
-        ].join("\n")
-      );
+        ].join("\n"),
+      });
 
       await runTestWithDirectoryCleanup(async () => {
         expect(await badLinksInMarkdown(testDirectory)).toEqual({
@@ -189,15 +179,13 @@ describe("bad-links-in-markdown - code blocks", () => {
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
-      const filePath = newTestMarkdownFile(testDirectory);
-
-      fs.writeFileSync(
-        filePath,
-        [
+      newTestMarkdownFile({
+        directory: testDirectory,
+        content: [
           "`[I am a local link 1](./path/to/missing/file.md)`",
           "`here is some other text [I am a local link 2](./path/to/missing/file.md) more text over here`",
-        ].join("\n")
-      );
+        ].join("\n"),
+      });
 
       await runTestWithDirectoryCleanup(async () => {
         expect(await badLinksInMarkdown(testDirectory)).toEqual({
@@ -211,15 +199,13 @@ describe("bad-links-in-markdown - code blocks", () => {
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
-      const filePath = newTestMarkdownFile(testDirectory);
-
-      fs.writeFileSync(
-        filePath,
-        [
+      newTestMarkdownFile({
+        directory: testDirectory,
+        content: [
           "`[I am a reference link 1]: ./path/to/missing/file.md`",
           "`this is text [I am a reference link 2]: ./path/to/missing/file.md also this`",
-        ].join("\n")
-      );
+        ].join("\n"),
+      });
 
       await runTestWithDirectoryCleanup(async () => {
         expect(await badLinksInMarkdown(testDirectory)).toEqual({
@@ -233,12 +219,10 @@ describe("bad-links-in-markdown - code blocks", () => {
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
-      const filePath = newTestMarkdownFile(testDirectory);
-
-      fs.writeFileSync(
-        filePath,
-        "[I am a `local link`](./path/to/missing/file.md)"
-      );
+      const { filePath } = newTestMarkdownFile({
+        directory: testDirectory,
+        content: "[I am a `local link`](./path/to/missing/file.md)",
+      });
 
       await runTestWithDirectoryCleanup(async () => {
         expect(await badLinksInMarkdown(testDirectory)).toEqual({
@@ -262,12 +246,12 @@ describe("bad-links-in-markdown - code blocks", () => {
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
-      const filePath = newTestMarkdownFile(testDirectory);
-
-      fs.writeFileSync(
-        filePath,
-        ["[I am a `reference` link 1]: ./path/to/missing/file.md"].join("\n")
-      );
+      const { filePath } = newTestMarkdownFile({
+        directory: testDirectory,
+        content: [
+          "[I am a `reference` link 1]: ./path/to/missing/file.md",
+        ].join("\n"),
+      });
 
       await runTestWithDirectoryCleanup(async () => {
         expect(await badLinksInMarkdown(testDirectory)).toEqual({
@@ -291,16 +275,14 @@ describe("bad-links-in-markdown - code blocks", () => {
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
-      const filePath = newTestMarkdownFile(testDirectory);
+      newTestMarkdownFile({
+        directory: testDirectory,
+        content: `
+      # Header \`text\`
 
-      fs.writeFileSync(
-        filePath,
-        `
-        # Header \`text\`
-
-        [I am a local link 1](#header-text)
-        `
-      );
+      [I am a local link 1](#header-text)
+      `,
+      });
 
       await runTestWithDirectoryCleanup(async () => {
         expect(await badLinksInMarkdown(testDirectory)).toEqual({
@@ -314,18 +296,16 @@ describe("bad-links-in-markdown - code blocks", () => {
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
-      const filePath = newTestMarkdownFile(testDirectory);
+      newTestMarkdownFile({
+        directory: testDirectory,
+        content: `
+      # Header \`text\`
 
-      fs.writeFileSync(
-        filePath,
-        `
-        # Header \`text\`
+      [I am a local link 1][foobar]
 
-        [I am a local link 1][foobar]
-
-        [foobar]: #header-text
-        `
-      );
+      [foobar]: #header-text
+      `,
+      });
 
       await runTestWithDirectoryCleanup(async () => {
         expect(await badLinksInMarkdown(testDirectory)).toEqual({
@@ -346,18 +326,16 @@ describe("bad-links-in-markdown - code blocks", () => {
           parentDirectory: TOP_LEVEL_DIRECTORY,
         });
 
-        const filePath = newTestMarkdownFile(testDirectory);
-
-        fs.writeFileSync(
-          filePath,
-          [
+        newTestMarkdownFile({
+          directory: testDirectory,
+          content: [
             "Here is some text to talk about something",
             // space required between paragraph and code block
             "",
             `${indentation}[I am a local link](./path/to/missing/file.md)`,
             "some more text here that is not in the code block",
-          ].join("\n")
-        );
+          ].join("\n"),
+        });
 
         await runTestWithDirectoryCleanup(async () => {
           expect(await badLinksInMarkdown(testDirectory)).toEqual({
@@ -371,18 +349,16 @@ describe("bad-links-in-markdown - code blocks", () => {
           parentDirectory: TOP_LEVEL_DIRECTORY,
         });
 
-        const filePath = newTestMarkdownFile(testDirectory);
-
-        fs.writeFileSync(
-          filePath,
-          [
+        newTestMarkdownFile({
+          directory: testDirectory,
+          content: [
             "Here is some text to talk about something: [foobar][I am a reference link]",
             // space required between paragraph and code block
             "",
             `${indentation}[I am a reference link]: ./path/to/missing/file.md`,
             "some more text here that is not in the code block",
-          ].join("\n")
-        );
+          ].join("\n"),
+        });
 
         await runTestWithDirectoryCleanup(async () => {
           expect(await badLinksInMarkdown(testDirectory)).toEqual({
@@ -396,18 +372,16 @@ describe("bad-links-in-markdown - code blocks", () => {
           parentDirectory: TOP_LEVEL_DIRECTORY,
         });
 
-        const filePath = newTestMarkdownFile(testDirectory);
-
-        fs.writeFileSync(
-          filePath,
-          [
+        const { filePath } = newTestMarkdownFile({
+          directory: testDirectory,
+          content: [
             "Here is some text to talk about something: [I am a local link](#cool-header)",
             // space required between paragraph and code block
             "",
             `${indentation}# Cool Header`,
             "some more text here that is not in the code block",
-          ].join("\n")
-        );
+          ].join("\n"),
+        });
 
         await runTestWithDirectoryCleanup(async () => {
           expect(await badLinksInMarkdown(testDirectory)).toEqual({
@@ -431,19 +405,17 @@ describe("bad-links-in-markdown - code blocks", () => {
           parentDirectory: TOP_LEVEL_DIRECTORY,
         });
 
-        const filePath = newTestMarkdownFile(testDirectory);
-
-        fs.writeFileSync(
-          filePath,
-          [
+        const { filePath } = newTestMarkdownFile({
+          directory: testDirectory,
+          content: [
             "Here is some text to talk about something: [foobar][I am a reference link]",
             // space required between paragraph and code block
             "",
             `${indentation}# Cool Header`,
             "some more text here that is not in the code block",
             "[I am a reference link]: #cool-header",
-          ].join("\n")
-        );
+          ].join("\n"),
+        });
 
         await runTestWithDirectoryCleanup(async () => {
           expect(await badLinksInMarkdown(testDirectory)).toEqual({
@@ -467,17 +439,15 @@ describe("bad-links-in-markdown - code blocks", () => {
           parentDirectory: TOP_LEVEL_DIRECTORY,
         });
 
-        const filePath = newTestMarkdownFile(testDirectory);
-
-        fs.writeFileSync(
-          filePath,
-          [
+        const { filePath } = newTestMarkdownFile({
+          directory: testDirectory,
+          content: [
             "Here is some text to talk about something",
             // No empty lin here so code block is broken
             `${indentation}[I am a local link](./path/to/missing/file.md)`,
             "some more text here that is not in the code block",
-          ].join("\n")
-        );
+          ].join("\n"),
+        });
 
         await runTestWithDirectoryCleanup(async () => {
           expect(await badLinksInMarkdown(testDirectory)).toEqual({
@@ -501,7 +471,7 @@ describe("bad-links-in-markdown - code blocks", () => {
           parentDirectory: TOP_LEVEL_DIRECTORY,
         });
 
-        const filePath = newTestMarkdownFile(testDirectory);
+        const { filePath } = newTestMarkdownFile({ directory: testDirectory });
 
         fs.writeFileSync(
           filePath,

@@ -52,28 +52,39 @@ export const newTestDirectoryWithName = async ({
   return { name: name, path: directoryPath };
 };
 
-export const newTestMarkdownFile = (testDirectory) => {
-  const { filePath } = newTestFile({
-    directory: testDirectory,
+export const newTestMarkdownFile = ({ directory, name, content }) => {
+  return newTestFile({
+    directory,
     extension: ".md",
+    name,
+    content,
   });
-  return filePath;
 };
 
 /**
- *
  * @param {object} options
  * @param {String} directory - directory the file should be made in
  * @param {[String]} name - name (without the extension) for the file. If null default name will be used
  * @param {String} extension - the file extension
  */
-export const newTestFile = ({ directory, extension, name = uniqueName() }) => {
+export const newTestFile = ({
+  directory,
+  extension,
+  name = uniqueName(),
+  content,
+}) => {
   const fileName = `${name}${extension}`;
-
-  return {
+  const fileDetails = {
     fileName,
     filePath: path.resolve(directory, `./${fileName}`),
   };
+
+  // TODO remove this condition and update all the tests
+  if (content) {
+    fs.writeFileSync(fileDetails.filePath, content);
+  }
+
+  return fileDetails;
 };
 
 const uniqueName = () => `test-${uniqueId()}`;

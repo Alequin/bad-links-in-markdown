@@ -16,7 +16,7 @@ describe("bad-links-in-markdown - underscore headers", () => {
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
-      const filePath = newTestMarkdownFile(testDirectory);
+      const { filePath } = newTestMarkdownFile({ directory: testDirectory });
 
       fs.writeFileSync(
         filePath,
@@ -50,7 +50,7 @@ describe("bad-links-in-markdown - underscore headers", () => {
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
-      const filePath = newTestMarkdownFile(testDirectory);
+      const { filePath } = newTestMarkdownFile({ directory: testDirectory });
 
       fs.writeFileSync(
         filePath,
@@ -84,7 +84,7 @@ describe("bad-links-in-markdown - underscore headers", () => {
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
-      const filePath = newTestMarkdownFile(testDirectory);
+      const { filePath } = newTestMarkdownFile({ directory: testDirectory });
 
       fs.writeFileSync(
         filePath,
@@ -129,7 +129,7 @@ describe("bad-links-in-markdown - underscore headers", () => {
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
-      const filePath = newTestMarkdownFile(testDirectory);
+      const { filePath } = newTestMarkdownFile({ directory: testDirectory });
 
       fs.writeFileSync(
         filePath,
@@ -194,7 +194,7 @@ describe("bad-links-in-markdown - underscore headers", () => {
         ].join("\n")
       );
 
-      const filePath = newTestMarkdownFile(testDirectory);
+      const { filePath } = newTestMarkdownFile({ directory: testDirectory });
 
       fs.writeFileSync(
         filePath,
@@ -236,7 +236,7 @@ describe("bad-links-in-markdown - underscore headers", () => {
         ].join("\n")
       );
 
-      const filePath = newTestMarkdownFile(testDirectory);
+      const { filePath } = newTestMarkdownFile({ directory: testDirectory });
 
       fs.writeFileSync(
         filePath,
@@ -277,7 +277,7 @@ describe("bad-links-in-markdown - underscore headers", () => {
         ].join("\n")
       );
 
-      const filePath = newTestMarkdownFile(testDirectory);
+      const { filePath } = newTestMarkdownFile({ directory: testDirectory });
 
       fs.writeFileSync(
         filePath,
@@ -331,7 +331,7 @@ describe("bad-links-in-markdown - underscore headers", () => {
         ].join("\n")
       );
 
-      const filePath = newTestMarkdownFile(testDirectory);
+      const { filePath } = newTestMarkdownFile({ directory: testDirectory });
 
       fs.writeFileSync(
         filePath,
@@ -369,7 +369,7 @@ describe("bad-links-in-markdown - underscore headers", () => {
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
-      const filePath = newTestMarkdownFile(testDirectory);
+      const { filePath } = newTestMarkdownFile({ directory: testDirectory });
 
       fs.writeFileSync(
         filePath,
@@ -407,7 +407,7 @@ describe("bad-links-in-markdown - underscore headers", () => {
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
-      const filePath = newTestMarkdownFile(testDirectory);
+      const { filePath } = newTestMarkdownFile({ directory: testDirectory });
 
       fs.writeFileSync(
         filePath,
@@ -445,7 +445,7 @@ describe("bad-links-in-markdown - underscore headers", () => {
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
-      const filePath = newTestMarkdownFile(testDirectory);
+      const { filePath } = newTestMarkdownFile({ directory: testDirectory });
 
       fs.writeFileSync(
         filePath,
@@ -493,7 +493,7 @@ describe("bad-links-in-markdown - underscore headers", () => {
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
-      const filePath = newTestMarkdownFile(testDirectory);
+      const { filePath } = newTestMarkdownFile({ directory: testDirectory });
 
       fs.writeFileSync(
         filePath,
@@ -562,7 +562,7 @@ describe("bad-links-in-markdown - underscore headers", () => {
         ].join("\n")
       );
 
-      const filePath = newTestMarkdownFile(testDirectory);
+      const { filePath } = newTestMarkdownFile({ directory: testDirectory });
 
       fs.writeFileSync(
         filePath,
@@ -607,7 +607,7 @@ describe("bad-links-in-markdown - underscore headers", () => {
         ].join("\n")
       );
 
-      const filePath = newTestMarkdownFile(testDirectory);
+      const { filePath } = newTestMarkdownFile({ directory: testDirectory });
 
       fs.writeFileSync(
         filePath,
@@ -651,7 +651,7 @@ describe("bad-links-in-markdown - underscore headers", () => {
         ].join("\n")
       );
 
-      const filePath = newTestMarkdownFile(testDirectory);
+      const { filePath } = newTestMarkdownFile({ directory: testDirectory });
 
       fs.writeFileSync(
         filePath,
@@ -705,7 +705,7 @@ describe("bad-links-in-markdown - underscore headers", () => {
         ].join("\n")
       );
 
-      const filePath = newTestMarkdownFile(testDirectory);
+      const { filePath } = newTestMarkdownFile({ directory: testDirectory });
 
       fs.writeFileSync(
         filePath,

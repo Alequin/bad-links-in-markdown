@@ -14,7 +14,7 @@ describe("bad-links-in-markdown - windows specific", () => {
       parentDirectory: TOP_LEVEL_DIRECTORY,
     });
 
-    const filePath = newTestMarkdownFile(testDirectory);
+    const { filePath } = newTestMarkdownFile({ directory: testDirectory });
 
     const absolutePath = "C:\\path\\to\\missing\\file.md";
     fs.writeFileSync(filePath, `[I am a local link](${absolutePath})`);
@@ -44,7 +44,7 @@ describe("bad-links-in-markdown - windows specific", () => {
       parentDirectory: TOP_LEVEL_DIRECTORY,
     });
 
-    const filePath = newTestMarkdownFile(testDirectory);
+    const { filePath } = newTestMarkdownFile({ directory: testDirectory });
 
     const absolutePath = "C:\\path\\to\\missing\\file.md";
     fs.writeFileSync(
@@ -77,7 +77,7 @@ describe("bad-links-in-markdown - windows specific", () => {
       parentDirectory: TOP_LEVEL_DIRECTORY,
     });
 
-    const filePath = newTestMarkdownFile(testDirectory);
+    const { filePath } = newTestMarkdownFile({ directory: testDirectory });
 
     const absolutePath = "C:\\path\\to\\missing\\image.png";
     fs.writeFileSync(filePath, `![picture](/${absolutePath})`);
@@ -108,7 +108,7 @@ describe("bad-links-in-markdown - windows specific", () => {
       parentDirectory: TOP_LEVEL_DIRECTORY,
     });
 
-    const filePath = newTestMarkdownFile(testDirectory);
+    const { filePath } = newTestMarkdownFile({ directory: testDirectory });
 
     const absolutePath = "C:\\path\\to\\missing\\image.png";
     fs.writeFileSync(
@@ -142,7 +142,7 @@ describe("bad-links-in-markdown - windows specific", () => {
       parentDirectory: TOP_LEVEL_DIRECTORY,
     });
 
-    const filePath = newTestMarkdownFile(testDirectory);
+    const { filePath } = newTestMarkdownFile({ directory: testDirectory });
 
     const absolutePath = "C:\\path\\to\\missing\\image.png";
     fs.writeFileSync(

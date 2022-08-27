@@ -13,7 +13,7 @@ describe("bad-links-in-markdown - web links", () => {
       parentDirectory: TOP_LEVEL_DIRECTORY,
     });
 
-    const filePath = newTestMarkdownFile(testDirectory);
+    const { filePath } = newTestMarkdownFile({ directory: testDirectory });
 
     fs.writeFileSync(
       filePath,
@@ -35,7 +35,7 @@ describe("bad-links-in-markdown - web links", () => {
       parentDirectory: TOP_LEVEL_DIRECTORY,
     });
 
-    const filePath = newTestMarkdownFile(testDirectory);
+    const { filePath } = newTestMarkdownFile({ directory: testDirectory });
 
     fs.writeFileSync(
       filePath,
@@ -57,7 +57,7 @@ describe("bad-links-in-markdown - web links", () => {
       parentDirectory: TOP_LEVEL_DIRECTORY,
     });
 
-    const filePath = newTestMarkdownFile(testDirectory);
+    const { filePath } = newTestMarkdownFile({ directory: testDirectory });
 
     fs.writeFileSync(filePath, `[foo@gmail.com](mailto:foo@gmail.com)`);
 
@@ -73,7 +73,7 @@ describe("bad-links-in-markdown - web links", () => {
       parentDirectory: TOP_LEVEL_DIRECTORY,
     });
 
-    const filePath = newTestMarkdownFile(testDirectory);
+    const { filePath } = newTestMarkdownFile({ directory: testDirectory });
     fs.writeFileSync(
       filePath,
       `

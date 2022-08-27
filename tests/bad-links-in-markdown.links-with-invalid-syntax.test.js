@@ -19,7 +19,7 @@ describe("bad-links-in-markdown - bad link syntax", () => {
           parentDirectory: TOP_LEVEL_DIRECTORY,
         });
 
-        const filePath = newTestMarkdownFile(testDirectory);
+        const { filePath } = newTestMarkdownFile({ directory: testDirectory });
 
         fs.writeFileSync(
           filePath,
@@ -49,7 +49,9 @@ describe("bad-links-in-markdown - bad link syntax", () => {
           `# foo bar baz\na story of foo and bar\nand baz`
         );
 
-        const fileContainingLink = newTestMarkdownFile(testDirectory);
+        const { filePath: fileContainingLink } = newTestMarkdownFile({
+          directory: testDirectory,
+        });
         fs.writeFileSync(
           fileContainingLink,
           `[I am a local link](./${name}.md#main-title)`
@@ -67,7 +69,7 @@ describe("bad-links-in-markdown - bad link syntax", () => {
           parentDirectory: TOP_LEVEL_DIRECTORY,
         });
 
-        const filePath = newTestMarkdownFile(testDirectory);
+        const { filePath } = newTestMarkdownFile({ directory: testDirectory });
 
         fs.writeFileSync(
           filePath,
@@ -97,7 +99,9 @@ describe("bad-links-in-markdown - bad link syntax", () => {
           `# foo bar baz\na story of foo and bar\nand baz`
         );
 
-        const fileContainingLink = newTestMarkdownFile(testDirectory);
+        const { filePath: fileContainingLink } = newTestMarkdownFile({
+          directory: testDirectory,
+        });
         fs.writeFileSync(
           fileContainingLink,
           `Here is some text\n[and then a link to a file][1]\n\n[1]: ./${name}.md#main-title`
@@ -115,7 +119,7 @@ describe("bad-links-in-markdown - bad link syntax", () => {
           parentDirectory: TOP_LEVEL_DIRECTORY,
         });
 
-        const filePath = newTestMarkdownFile(testDirectory);
+        const { filePath } = newTestMarkdownFile({ directory: testDirectory });
 
         fs.writeFileSync(
           filePath,
@@ -134,7 +138,7 @@ describe("bad-links-in-markdown - bad link syntax", () => {
           parentDirectory: TOP_LEVEL_DIRECTORY,
         });
 
-        const filePath = newTestMarkdownFile(testDirectory);
+        const { filePath } = newTestMarkdownFile({ directory: testDirectory });
 
         fs.writeFileSync(
           filePath,

@@ -23,7 +23,9 @@ describe("bad-links-in-markdown - headers preceeded by space characters", () => 
       `        # main-title\na story of foo and bar\nand baz`
     );
 
-    const fileContainingLink = newTestMarkdownFile(testDirectory);
+    const { filePath: fileContainingLink } = newTestMarkdownFile({
+      directory: testDirectory,
+    });
     fs.writeFileSync(
       fileContainingLink,
       `[I am a local link](./${fileToLinkTo.fileName}#main-title)`
@@ -71,7 +73,9 @@ describe("bad-links-in-markdown - headers preceeded by space characters", () => 
       `        # main-title\na story of foo and bar\nand baz`
     );
 
-    const fileContainingLink = newTestMarkdownFile(testDirectory);
+    const { filePath: fileContainingLink } = newTestMarkdownFile({
+      directory: testDirectory,
+    });
     fs.writeFileSync(
       fileContainingLink,
       `[I am a local link][1]\n\n[1]: ./${fileToLinkTo.fileName}#main-title`

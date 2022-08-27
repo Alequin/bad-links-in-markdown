@@ -17,7 +17,7 @@ describe("bad-links-in-markdown - local file links", () => {
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
-      const filePath = newTestMarkdownFile(testDirectory);
+      const { filePath } = newTestMarkdownFile({ directory: testDirectory });
 
       fs.writeFileSync(
         filePath,
@@ -52,7 +52,9 @@ describe("bad-links-in-markdown - local file links", () => {
       });
       fs.writeFileSync(fileToLinkTo.filePath, `foo bar baz`);
 
-      const fileContainingLink = newTestMarkdownFile(testDirectory);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: testDirectory,
+      });
       fs.writeFileSync(
         fileContainingLink,
         `[I am a local link](./${fileToLinkTo.fileName})`
@@ -78,7 +80,9 @@ describe("bad-links-in-markdown - local file links", () => {
 
       const mockAbsoluteLink = `/${fileToLinkTo.fileName}`;
 
-      const fileContainingLink = newTestMarkdownFile(testDirectory);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: testDirectory,
+      });
       fs.writeFileSync(
         fileContainingLink,
         `[I am a local link](${mockAbsoluteLink})`
@@ -112,7 +116,9 @@ describe("bad-links-in-markdown - local file links", () => {
 
       const mockAbsoluteLink = `/${innerDirectory1.name}/${innerDirectory2.name}/${fileToLinkTo.fileName}`;
 
-      const fileContainingLink = newTestMarkdownFile(innerDirectory2.path);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: innerDirectory2.path,
+      });
       fs.writeFileSync(
         fileContainingLink,
         `[I am a local link](${mockAbsoluteLink})`
@@ -138,7 +144,9 @@ describe("bad-links-in-markdown - local file links", () => {
 
       const mockAbsoluteLink = `/${testDirectory.name}/${fileToLinkTo.fileName}`;
 
-      const fileContainingLink = newTestMarkdownFile(testDirectory.path);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: testDirectory.path,
+      });
       fs.writeFileSync(
         fileContainingLink,
         `[I am a local link](${mockAbsoluteLink})`
@@ -185,7 +193,9 @@ describe("bad-links-in-markdown - local file links", () => {
 
       const mockAbsoluteLink = `/${innerDirectory2.name}/${fileToLinkTo.fileName}`;
 
-      const fileContainingLink = newTestMarkdownFile(testDirectory.path);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: testDirectory.path,
+      });
       fs.writeFileSync(
         fileContainingLink,
         `[I am a local link](${mockAbsoluteLink})`
@@ -216,7 +226,7 @@ describe("bad-links-in-markdown - local file links", () => {
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
-      const filePath = newTestMarkdownFile(testDirectory);
+      const { filePath } = newTestMarkdownFile({ directory: testDirectory });
 
       fs.writeFileSync(filePath, `[I am a local link](./path/to/missing/file)`);
 
@@ -253,7 +263,9 @@ describe("bad-links-in-markdown - local file links", () => {
       });
       fs.writeFileSync(fileToLinkTo.filePath, `foo bar baz`);
 
-      const fileContainingLink = newTestMarkdownFile(testDirectory);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: testDirectory,
+      });
       fs.writeFileSync(fileContainingLink, `[I am a local link](./${name})`);
 
       await runTestWithDirectoryCleanup(async () => {
@@ -282,7 +294,9 @@ describe("bad-links-in-markdown - local file links", () => {
         parentDirectory: testDirectory,
       });
 
-      const fileContainingLink = newTestMarkdownFile(testDirectory);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: testDirectory,
+      });
       fs.writeFileSync(
         fileContainingLink,
         `[I am a local link](./${innerDirectory1.name})`
@@ -300,7 +314,7 @@ describe("bad-links-in-markdown - local file links", () => {
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
-      const filePath = newTestMarkdownFile(testDirectory);
+      const { filePath } = newTestMarkdownFile({ directory: testDirectory });
 
       fs.writeFileSync(filePath, `[I am a local link](file.md)`);
 
@@ -332,7 +346,7 @@ describe("bad-links-in-markdown - local file links", () => {
       });
       fs.writeFileSync(fileToLinkTo.filePath, `foo bar baz`);
 
-      const filePath = newTestMarkdownFile(testDirectory);
+      const { filePath } = newTestMarkdownFile({ directory: testDirectory });
 
       fs.writeFileSync(
         filePath,
@@ -351,7 +365,7 @@ describe("bad-links-in-markdown - local file links", () => {
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
-      const filePath = newTestMarkdownFile(testDirectory);
+      const { filePath } = newTestMarkdownFile({ directory: testDirectory });
 
       fs.writeFileSync(filePath, `[I am a local link](file)`);
 
@@ -388,7 +402,7 @@ describe("bad-links-in-markdown - local file links", () => {
       });
       fs.writeFileSync(fileToLinkTo.filePath, `foo bar baz`);
 
-      const filePath = newTestMarkdownFile(testDirectory);
+      const { filePath } = newTestMarkdownFile({ directory: testDirectory });
 
       fs.writeFileSync(filePath, `[I am a local link](${name})`);
 
@@ -414,7 +428,7 @@ describe("bad-links-in-markdown - local file links", () => {
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
-      const filePath = newTestMarkdownFile(testDirectory);
+      const { filePath } = newTestMarkdownFile({ directory: testDirectory });
 
       fs.writeFileSync(
         filePath,
@@ -449,7 +463,9 @@ describe("bad-links-in-markdown - local file links", () => {
       });
       fs.writeFileSync(fileToLinkTo.filePath, `foo bar baz`);
 
-      const fileContainingLink = newTestMarkdownFile(testDirectory);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: testDirectory,
+      });
       fs.writeFileSync(
         fileContainingLink,
         `[I am a local link](./${fileToLinkTo.fileName})`
@@ -475,7 +491,9 @@ describe("bad-links-in-markdown - local file links", () => {
       });
       fs.writeFileSync(fileToLinkTo.filePath, `foo bar baz`);
 
-      const fileContainingLink = newTestMarkdownFile(testDirectory);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: testDirectory,
+      });
       fs.writeFileSync(fileContainingLink, `[I am a local link](./${name})`);
 
       await runTestWithDirectoryCleanup(async () => {
@@ -516,7 +534,9 @@ describe("bad-links-in-markdown - local file links", () => {
       });
       fs.writeFileSync(javascriptFile.filePath, `const foo = () => {}`);
 
-      const fileContainingLink = newTestMarkdownFile(testDirectory);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: testDirectory,
+      });
       fs.writeFileSync(fileContainingLink, `[I am a local link](./${name})`);
 
       await runTestWithDirectoryCleanup(async () => {
@@ -552,7 +572,9 @@ describe("bad-links-in-markdown - local file links", () => {
 
       fs.writeFileSync(file.filePath, `foo bar baz`);
 
-      const fileContainingLink = newTestMarkdownFile(testDirectory);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: testDirectory,
+      });
       fs.writeFileSync(
         fileContainingLink,
         `[I am a local link](./${file.fileName})`
@@ -582,7 +604,9 @@ describe("bad-links-in-markdown - local file links", () => {
       });
       fs.writeFileSync(fileToLinkTo.filePath, `foo bar baz`);
 
-      const fileContainingLink = newTestMarkdownFile(testDirectory);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: testDirectory,
+      });
       fs.writeFileSync(
         fileContainingLink,
         `[I am a local link](./${innerDirectory.name}/${nameToLinkTo})`
@@ -622,7 +646,9 @@ describe("bad-links-in-markdown - local file links", () => {
       });
       fs.writeFileSync(fileToLinkTo.filePath, `foo bar baz`);
 
-      const fileContainingLink = newTestMarkdownFile(innerDirectory.path);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: innerDirectory.path,
+      });
       fs.writeFileSync(
         fileContainingLink,
         `[I am a local link](../${nameToLinkTo})`
@@ -664,7 +690,9 @@ describe("bad-links-in-markdown - local file links", () => {
       });
       fs.writeFileSync(fileToLinkTo.filePath, `foo bar baz`);
 
-      const fileContainingLink = newTestMarkdownFile(innerDirectory2.path);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: innerDirectory2.path,
+      });
       fs.writeFileSync(
         fileContainingLink,
         `[I am a local link](.../${fileToLinkTo.fileName})`
@@ -709,7 +737,9 @@ describe("bad-links-in-markdown - local file links", () => {
       });
       fs.writeFileSync(fileToLinkTo.filePath, `foo bar baz`);
 
-      const fileContainingLink = newTestMarkdownFile(innerDirectory2.path);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: innerDirectory2.path,
+      });
       fs.writeFileSync(
         fileContainingLink,
         `[I am a local link](../../${fileToLinkTo.fileName})`
@@ -751,7 +781,9 @@ describe("bad-links-in-markdown - local file links", () => {
       });
       fs.writeFileSync(javascriptFile.filePath, `const foo = () => {}`);
 
-      const fileContainingLink = newTestMarkdownFile(innerDirectory2.path);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: innerDirectory2.path,
+      });
       fs.writeFileSync(
         fileContainingLink,
         `[I am a local link](../../${fileName})`
@@ -806,7 +838,9 @@ describe("bad-links-in-markdown - local file links", () => {
       });
       fs.writeFileSync(javascriptFile.filePath, `const foo = () => {}`);
 
-      const fileContainingLink = newTestMarkdownFile(testDirectory);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: testDirectory,
+      });
       fs.writeFileSync(
         fileContainingLink,
         `[I am a local link](./${innerDirectory1.name}/${innerDirectory2.name}/${fileName})`
@@ -837,7 +871,7 @@ describe("bad-links-in-markdown - local file links", () => {
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
-      const filePath = newTestMarkdownFile(testDirectory);
+      const { filePath } = newTestMarkdownFile({ directory: testDirectory });
       `![picture](./path/to/missing/image.png) and ![picture2](./path/to/missing/image.png)![picture3](./path/to/missing/image.png)(foobar)![picture4](./path/to/missing/image.png)`;
 
       fs.writeFileSync(
@@ -879,7 +913,7 @@ describe("bad-links-in-markdown - local file links", () => {
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
-      const filePath = newTestMarkdownFile(testDirectory);
+      const { filePath } = newTestMarkdownFile({ directory: testDirectory });
 
       fs.writeFileSync(
         filePath,
@@ -909,7 +943,9 @@ describe("bad-links-in-markdown - local file links", () => {
         `# foo bar baz\na story of foo and bar\nand baz`
       );
 
-      const fileContainingLink = newTestMarkdownFile(testDirectory);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: testDirectory,
+      });
       fs.writeFileSync(
         fileContainingLink,
         `[I am a local link](./${fileToLinkTo.fileName}#main-title)`
@@ -946,7 +982,9 @@ describe("bad-links-in-markdown - local file links", () => {
         `# main-title\na story of foo and bar\nand baz`
       );
 
-      const fileContainingLink = newTestMarkdownFile(testDirectory);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: testDirectory,
+      });
       fs.writeFileSync(
         fileContainingLink,
         `[I am a local link](./${fileToLinkTo.fileName}#main-title)`
@@ -973,7 +1011,9 @@ describe("bad-links-in-markdown - local file links", () => {
         `# foo bar baz\na story of foo and bar\nand baz\n### Next Chapter\n baz and foo join forces`
       );
 
-      const fileContainingLink = newTestMarkdownFile(testDirectory);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: testDirectory,
+      });
       fs.writeFileSync(
         fileContainingLink,
         `[I am a local link](./${fileToLinkTo.fileName}#next-chapter)`
@@ -1000,7 +1040,9 @@ describe("bad-links-in-markdown - local file links", () => {
         `# foo bar baz\na story of foo and bar\nand baz\n### Chapter (1)!!!!! alliances/are\\formed\n baz and foo join forces`
       );
 
-      const fileContainingLink = newTestMarkdownFile(testDirectory);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: testDirectory,
+      });
       fs.writeFileSync(
         fileContainingLink,
         `[I am a local link](./${fileToLinkTo.fileName}#chapter-1-alliancesareformed)`
@@ -1027,7 +1069,9 @@ describe("bad-links-in-markdown - local file links", () => {
         `# foo bar baz\na story of foo and bar\nand baz`
       );
 
-      const fileContainingLink = newTestMarkdownFile(testDirectory);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: testDirectory,
+      });
       fs.writeFileSync(
         fileContainingLink,
         `[I am a local link](./${fileToLinkTo.fileName}#main-title)`
@@ -1061,7 +1105,9 @@ describe("bad-links-in-markdown - local file links", () => {
       });
       fs.writeFileSync(fileToLinkTo.filePath, `# foo bar baz\n# foo bar baz`);
 
-      const fileContainingLink = newTestMarkdownFile(testDirectory);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: testDirectory,
+      });
       fs.writeFileSync(
         fileContainingLink,
         `[I am a local link](./${fileToLinkTo.fileName}#foo-bar-baz-3)`
@@ -1095,7 +1141,9 @@ describe("bad-links-in-markdown - local file links", () => {
       });
       fs.writeFileSync(fileToLinkTo.filePath, `# foo bar baz\n# foo bar baz`);
 
-      const fileContainingLink = newTestMarkdownFile(testDirectory);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: testDirectory,
+      });
       fs.writeFileSync(
         fileContainingLink,
         `[I am a local link](./${fileToLinkTo.fileName}#foo-bar-baz)`
@@ -1119,7 +1167,9 @@ describe("bad-links-in-markdown - local file links", () => {
       });
       fs.writeFileSync(fileToLinkTo.filePath, `# foo bar baz\n# foo bar baz`);
 
-      const fileContainingLink = newTestMarkdownFile(testDirectory);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: testDirectory,
+      });
       fs.writeFileSync(
         fileContainingLink,
         `[I am a local link](./${fileToLinkTo.fileName}#foo-bar-baz-1)`
@@ -1188,7 +1238,9 @@ describe("bad-links-in-markdown - local file links", () => {
         `a story of foo and bar\r\nand baz\r\n# foo bar baz\n`
       );
 
-      const fileContainingLink = newTestMarkdownFile(testDirectory);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: testDirectory,
+      });
       fs.writeFileSync(
         fileContainingLink,
         `[I am a local link](./${fileToLinkTo.fileName}#main-title)`
@@ -1227,7 +1279,9 @@ describe("bad-links-in-markdown - local file links", () => {
         `# main-title\na story of foo and bar\nand baz`
       );
 
-      const fileContainingLink = newTestMarkdownFile(testDirectory);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: testDirectory,
+      });
       fs.writeFileSync(
         fileContainingLink,
         `[I am a local link](./${name}#different-header)`
@@ -1269,7 +1323,9 @@ describe("bad-links-in-markdown - local file links", () => {
         `# main-title\na story of foo and bar\nand baz`
       );
 
-      const fileContainingLink = newTestMarkdownFile(testDirectory);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: testDirectory,
+      });
       fs.writeFileSync(
         fileContainingLink,
         `[I am a local link](./${name}#main-title)`
@@ -1303,7 +1359,9 @@ describe("bad-links-in-markdown - local file links", () => {
       });
       fs.writeFileSync(fileToLinkTo.filePath, `foo bar baz\n`.repeat(1000));
 
-      const fileContainingLink = newTestMarkdownFile(testDirectory);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: testDirectory,
+      });
       fs.writeFileSync(
         fileContainingLink,
         `[I am a local link](./${fileToLinkTo.fileName}#L100)`
@@ -1327,7 +1385,9 @@ describe("bad-links-in-markdown - local file links", () => {
       });
       fs.writeFileSync(fileToLinkTo.filePath, `foo bar baz\n`.repeat(10));
 
-      const fileContainingLink = newTestMarkdownFile(testDirectory);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: testDirectory,
+      });
       fs.writeFileSync(
         fileContainingLink,
         `[I am a local link](./${fileToLinkTo.fileName}#L100)`
@@ -1363,7 +1423,9 @@ describe("bad-links-in-markdown - local file links", () => {
       });
       fs.writeFileSync(fileToLinkTo.filePath, `foo bar baz`);
 
-      const fileContainingLink = newTestMarkdownFile(testDirectory);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: testDirectory,
+      });
       fs.writeFileSync(fileContainingLink, `[I am a local link](./${name}#L1)`);
 
       await runTestWithDirectoryCleanup(async () => {
@@ -1405,7 +1467,9 @@ describe("bad-links-in-markdown - local file links", () => {
         `# main-title\na story of foo and bar\nand baz`
       );
 
-      const fileContainingLink = newTestMarkdownFile(innerDirectory2.path);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: innerDirectory2.path,
+      });
 
       fs.writeFileSync(
         fileContainingLink,
@@ -1424,7 +1488,9 @@ describe("bad-links-in-markdown - local file links", () => {
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
-      const fileContainingLink = newTestMarkdownFile(testDirectory);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: testDirectory,
+      });
       fs.writeFileSync(fileContainingLink, `[bad header](#main-title)`);
 
       await runTestWithDirectoryCleanup(async () => {
@@ -1449,7 +1515,9 @@ describe("bad-links-in-markdown - local file links", () => {
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
-      const fileContainingLink = newTestMarkdownFile(testDirectory);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: testDirectory,
+      });
       fs.writeFileSync(
         fileContainingLink,
         `# Main Title\n[header](#main-title)`
@@ -1467,7 +1535,9 @@ describe("bad-links-in-markdown - local file links", () => {
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
-      const fileContainingLink = newTestMarkdownFile(testDirectory);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: testDirectory,
+      });
       fs.writeFileSync(fileContainingLink, `[bad header](##main-title)`);
 
       await runTestWithDirectoryCleanup(async () => {
@@ -1492,7 +1562,9 @@ describe("bad-links-in-markdown - local file links", () => {
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
-      const fileContainingLink = newTestMarkdownFile(testDirectory);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: testDirectory,
+      });
       fs.writeFileSync(
         fileContainingLink,
         `# Main Title\n## Sub Header\n[header](##sub-header)`
@@ -1519,7 +1591,9 @@ describe("bad-links-in-markdown - local file links", () => {
         `# Foo Bar -> Bacon and eggs\na story of foo and bar\nand baz`
       );
 
-      const fileContainingLink = newTestMarkdownFile(testDirectory);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: testDirectory,
+      });
       fs.writeFileSync(
         fileContainingLink,
         `[I am a local link](./${fileToLinkTo.fileName}#foo-bar---bacon-and-eggs)`
@@ -1537,7 +1611,9 @@ describe("bad-links-in-markdown - local file links", () => {
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
-      const fileContainingLink = newTestMarkdownFile(testDirectory);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: testDirectory,
+      });
       fs.writeFileSync(
         fileContainingLink,
         `# Foo Bar -> Bacon and eggs\n\n- [Foo Bar -> Bacon and eggs](#foo-bar---bacon-and-eggs)`
@@ -1564,7 +1640,9 @@ describe("bad-links-in-markdown - local file links", () => {
         `# main_title\na story of foo and bar\nand baz`
       );
 
-      const fileContainingLink = newTestMarkdownFile(testDirectory);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: testDirectory,
+      });
       fs.writeFileSync(
         fileContainingLink,
         `[I am a local link](./${fileToLinkTo.fileName}#maintitle)`
@@ -1626,7 +1704,7 @@ describe("bad-links-in-markdown - local file links", () => {
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
-      const filePath = newTestMarkdownFile(testDirectory);
+      const { filePath } = newTestMarkdownFile({ directory: testDirectory });
 
       fs.writeFileSync(
         filePath,
@@ -1661,7 +1739,9 @@ describe("bad-links-in-markdown - local file links", () => {
       });
       fs.writeFileSync(fileToLinkTo.filePath, `foo bar baz`);
 
-      const fileContainingLink = newTestMarkdownFile(testDirectory);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: testDirectory,
+      });
       fs.writeFileSync(
         fileContainingLink,
         `Here is some text\n[and then a link to a file][1]\n\n[1]: ./${fileToLinkTo.fileName}`
@@ -1687,7 +1767,9 @@ describe("bad-links-in-markdown - local file links", () => {
 
       const mockAbsoluteLink = `/${fileToLinkTo.fileName}`;
 
-      const fileContainingLink = newTestMarkdownFile(testDirectory);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: testDirectory,
+      });
       fs.writeFileSync(
         fileContainingLink,
         `Here is some text\n[and then a link to a file][1]\n\n[1]: ${mockAbsoluteLink}`
@@ -1721,7 +1803,9 @@ describe("bad-links-in-markdown - local file links", () => {
 
       const mockAbsoluteLink = `/${innerDirectory1.name}/${innerDirectory2.name}/${fileToLinkTo.fileName}`;
 
-      const fileContainingLink = newTestMarkdownFile(testDirectory.path);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: testDirectory.path,
+      });
       fs.writeFileSync(
         fileContainingLink,
         `Here is some text\n[and then a link to a file][1]\n\n[1]: ${mockAbsoluteLink}`
@@ -1747,7 +1831,9 @@ describe("bad-links-in-markdown - local file links", () => {
 
       const mockAbsoluteLink = `/${testDirectory.name}/${fileToLinkTo.fileName}`;
 
-      const fileContainingLink = newTestMarkdownFile(testDirectory.path);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: testDirectory.path,
+      });
       fs.writeFileSync(
         fileContainingLink,
         `Here is some text\n[and then a link to a file][1]\n\n[1]: ${mockAbsoluteLink}`
@@ -1794,7 +1880,9 @@ describe("bad-links-in-markdown - local file links", () => {
 
       const mockAbsoluteLink = `/${innerDirectory2.name}/${fileToLinkTo.fileName}`;
 
-      const fileContainingLink = newTestMarkdownFile(testDirectory.path);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: testDirectory.path,
+      });
       fs.writeFileSync(
         fileContainingLink,
         `Here is some text\n[and then a link to a file][1]\n\n[1]: ${mockAbsoluteLink}`
@@ -1825,7 +1913,7 @@ describe("bad-links-in-markdown - local file links", () => {
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
-      const filePath = newTestMarkdownFile(testDirectory);
+      const { filePath } = newTestMarkdownFile({ directory: testDirectory });
 
       fs.writeFileSync(
         filePath,
@@ -1865,7 +1953,9 @@ describe("bad-links-in-markdown - local file links", () => {
       });
       fs.writeFileSync(fileToLinkTo.filePath, `foo bar baz`);
 
-      const fileContainingLink = newTestMarkdownFile(testDirectory);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: testDirectory,
+      });
       fs.writeFileSync(
         fileContainingLink,
         `Here is some text\n[and then a link to a file][1]\n\n[1]: ./${name}`
@@ -1897,7 +1987,9 @@ describe("bad-links-in-markdown - local file links", () => {
         parentDirectory: testDirectory,
       });
 
-      const fileContainingLink = newTestMarkdownFile(testDirectory);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: testDirectory,
+      });
       fs.writeFileSync(
         fileContainingLink,
         `Here is some text\n[and then a link to a file][1]\n\n[1]: ./${directory.name}`
@@ -1915,7 +2007,7 @@ describe("bad-links-in-markdown - local file links", () => {
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
-      const filePath = newTestMarkdownFile(testDirectory);
+      const { filePath } = newTestMarkdownFile({ directory: testDirectory });
 
       fs.writeFileSync(
         filePath,
@@ -1950,7 +2042,7 @@ describe("bad-links-in-markdown - local file links", () => {
       });
       fs.writeFileSync(fileToLinkTo.filePath, `foo bar baz`);
 
-      const filePath = newTestMarkdownFile(testDirectory);
+      const { filePath } = newTestMarkdownFile({ directory: testDirectory });
 
       fs.writeFileSync(
         filePath,
@@ -1969,7 +2061,7 @@ describe("bad-links-in-markdown - local file links", () => {
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
-      const filePath = newTestMarkdownFile(testDirectory);
+      const { filePath } = newTestMarkdownFile({ directory: testDirectory });
 
       fs.writeFileSync(
         filePath,
@@ -2009,7 +2101,7 @@ describe("bad-links-in-markdown - local file links", () => {
       });
       fs.writeFileSync(fileToLinkTo.filePath, `foo bar baz`);
 
-      const filePath = newTestMarkdownFile(testDirectory);
+      const { filePath } = newTestMarkdownFile({ directory: testDirectory });
 
       fs.writeFileSync(
         filePath,
@@ -2038,7 +2130,7 @@ describe("bad-links-in-markdown - local file links", () => {
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
-      const filePath = newTestMarkdownFile(testDirectory);
+      const { filePath } = newTestMarkdownFile({ directory: testDirectory });
 
       fs.writeFileSync(
         filePath,
@@ -2073,7 +2165,9 @@ describe("bad-links-in-markdown - local file links", () => {
       });
       fs.writeFileSync(fileToLinkTo.filePath, `foo bar baz`);
 
-      const fileContainingLink = newTestMarkdownFile(testDirectory);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: testDirectory,
+      });
       fs.writeFileSync(
         fileContainingLink,
         `Here is some text\n[and then a link to a file][1]\n\n[1]: ./${fileToLinkTo.fileName}`
@@ -2099,7 +2193,9 @@ describe("bad-links-in-markdown - local file links", () => {
       });
       fs.writeFileSync(fileToLinkTo.filePath, `foo bar baz`);
 
-      const fileContainingLink = newTestMarkdownFile(testDirectory);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: testDirectory,
+      });
       fs.writeFileSync(
         fileContainingLink,
         `Here is some text\n[and then a link to a file][1]\n\n[1]: ./${name}`
@@ -2143,7 +2239,9 @@ describe("bad-links-in-markdown - local file links", () => {
       });
       fs.writeFileSync(javascriptFile.filePath, `const foo = () => {}`);
 
-      const fileContainingLink = newTestMarkdownFile(testDirectory);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: testDirectory,
+      });
       fs.writeFileSync(
         fileContainingLink,
         `Here is some text\n[and then a link to a file][1]\n\n[1]: ./${name}`
@@ -2180,7 +2278,9 @@ describe("bad-links-in-markdown - local file links", () => {
       });
       fs.writeFileSync(fileToLinkTo.filePath, `# foo bar baz`);
 
-      const fileContainingLink = newTestMarkdownFile(testDirectory);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: testDirectory,
+      });
       fs.writeFileSync(
         fileContainingLink,
         `Here is some text\n[and then a link to a file][1]\n\n[1]: ./${fileToLinkTo.fileName}`
@@ -2210,7 +2310,9 @@ describe("bad-links-in-markdown - local file links", () => {
       });
       fs.writeFileSync(fileToLinkTo.filePath, `foo bar baz`);
 
-      const fileContainingLink = newTestMarkdownFile(testDirectory);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: testDirectory,
+      });
       fs.writeFileSync(
         fileContainingLink,
         `Here is some text\n[and then a link to a file][1]\n\n[1]: ./${directory.name}/${name}`
@@ -2250,7 +2352,9 @@ describe("bad-links-in-markdown - local file links", () => {
       });
       fs.writeFileSync(fileToLinkTo.filePath, `foo bar baz`);
 
-      const fileContainingLink = newTestMarkdownFile(directory.path);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: directory.path,
+      });
       fs.writeFileSync(
         fileContainingLink,
         `Here is some text\n[and then a link to a file][1]\n\n[1]: ../${name}`
@@ -2292,7 +2396,9 @@ describe("bad-links-in-markdown - local file links", () => {
       });
       fs.writeFileSync(fileToLinkTo.filePath, `foo bar baz`);
 
-      const fileContainingLink = newTestMarkdownFile(innerDirectory2.path);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: innerDirectory2.path,
+      });
       fs.writeFileSync(
         fileContainingLink,
         `Here is some text\n[and then a link to a file][1]\n\n[1]: .../${fileToLinkTo.fileName}`
@@ -2337,7 +2443,9 @@ describe("bad-links-in-markdown - local file links", () => {
       });
       fs.writeFileSync(fileToLinkTo.filePath, `foo bar baz`);
 
-      const fileContainingLink = newTestMarkdownFile(innerDirectory2.path);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: innerDirectory2.path,
+      });
       fs.writeFileSync(
         fileContainingLink,
         `Here is some text\n[and then a link to a file][1]\n\n[1]: ../../${fileToLinkTo.fileName}`
@@ -2379,7 +2487,9 @@ describe("bad-links-in-markdown - local file links", () => {
       });
       fs.writeFileSync(javascriptFile.filePath, `const foo = () => {}`);
 
-      const fileContainingLink = newTestMarkdownFile(innerDirectory2.path);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: innerDirectory2.path,
+      });
       fs.writeFileSync(
         fileContainingLink,
         `Here is some text\n[and then a link to a file][1]\n\n[1]: ../../${name}`
@@ -2434,7 +2544,9 @@ describe("bad-links-in-markdown - local file links", () => {
       });
       fs.writeFileSync(javascriptFile.filePath, `const foo = () => {}`);
 
-      const fileContainingLink = newTestMarkdownFile(testDirectory);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: testDirectory,
+      });
       fs.writeFileSync(
         fileContainingLink,
         `Here is some text\n[and then a link to a file][1]\n\n[1]: ./${innerDirectory1.name}/${innerDirectory2.name}/${name}`
@@ -2465,7 +2577,7 @@ describe("bad-links-in-markdown - local file links", () => {
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
-      const filePath = newTestMarkdownFile(testDirectory);
+      const { filePath } = newTestMarkdownFile({ directory: testDirectory });
 
       fs.writeFileSync(
         filePath,
@@ -2484,7 +2596,7 @@ describe("bad-links-in-markdown - local file links", () => {
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
-      const filePath = newTestMarkdownFile(testDirectory);
+      const { filePath } = newTestMarkdownFile({ directory: testDirectory });
 
       fs.writeFileSync(
         filePath,
@@ -2506,7 +2618,7 @@ describe("bad-links-in-markdown - local file links", () => {
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
-      const filePath = newTestMarkdownFile(testDirectory);
+      const { filePath } = newTestMarkdownFile({ directory: testDirectory });
 
       fs.writeFileSync(
         filePath,
@@ -2541,7 +2653,9 @@ describe("bad-links-in-markdown - local file links", () => {
       });
       fs.writeFileSync(fileToLinkTo.filePath, `foo bar baz`);
 
-      const fileContainingLink = newTestMarkdownFile(testDirectory);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: testDirectory,
+      });
       fs.writeFileSync(
         fileContainingLink,
         `Here is some text\n[1]\n\n[1]: ./${fileToLinkTo.fileName}`
@@ -2561,7 +2675,7 @@ describe("bad-links-in-markdown - local file links", () => {
           parentDirectory: TOP_LEVEL_DIRECTORY,
         });
 
-        const filePath = newTestMarkdownFile(testDirectory);
+        const { filePath } = newTestMarkdownFile({ directory: testDirectory });
 
         fs.writeFileSync(
           filePath,
@@ -2583,7 +2697,7 @@ describe("bad-links-in-markdown - local file links", () => {
           parentDirectory: TOP_LEVEL_DIRECTORY,
         });
 
-        const filePath = newTestMarkdownFile(testDirectory);
+        const { filePath } = newTestMarkdownFile({ directory: testDirectory });
 
         fs.writeFileSync(
           filePath,
@@ -2624,7 +2738,9 @@ describe("bad-links-in-markdown - local file links", () => {
         `# foo bar baz\na story of foo and bar\nand baz`
       );
 
-      const fileContainingLink = newTestMarkdownFile(testDirectory);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: testDirectory,
+      });
       fs.writeFileSync(
         fileContainingLink,
         `Here is some text\n[and then a link to a file][1]\n\n[1]: ./${fileToLinkTo.fileName}#main-title`
@@ -2661,7 +2777,9 @@ describe("bad-links-in-markdown - local file links", () => {
         `# main-title\na story of foo and bar\nand baz`
       );
 
-      const fileContainingLink = newTestMarkdownFile(testDirectory);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: testDirectory,
+      });
       fs.writeFileSync(
         fileContainingLink,
         `Here is some text\n[and then a link to a file][1]\n\n[1]: ./${fileToLinkTo.fileName}#main-title`
@@ -2688,7 +2806,9 @@ describe("bad-links-in-markdown - local file links", () => {
         `# foo bar baz\na story of foo and bar\nand baz`
       );
 
-      const fileContainingLink = newTestMarkdownFile(testDirectory);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: testDirectory,
+      });
       fs.writeFileSync(
         fileContainingLink,
         `Here is some text\n[and then a link to a file][1]\n\n[1]: ./${fileToLinkTo.fileName}#main-title`
@@ -2725,7 +2845,9 @@ describe("bad-links-in-markdown - local file links", () => {
         `# main-title\na story of foo and bar\nand baz`
       );
 
-      const fileContainingLink = newTestMarkdownFile(testDirectory);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: testDirectory,
+      });
       fs.writeFileSync(
         fileContainingLink,
         `Here is some text\n[and then a link to a file][1]\n\n[1]: ./${fileToLinkTo.fileName}#main-title`
@@ -2752,7 +2874,9 @@ describe("bad-links-in-markdown - local file links", () => {
         `# foo bar baz\na story of foo and bar\nand baz\n### Next Chapter\n baz and foo join forces`
       );
 
-      const fileContainingLink = newTestMarkdownFile(testDirectory);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: testDirectory,
+      });
       fs.writeFileSync(
         fileContainingLink,
         `Here is some text\n[and then a link to a file][1]\n\n[1]: ./${fileToLinkTo.fileName}#next-chapter`
@@ -2779,7 +2903,9 @@ describe("bad-links-in-markdown - local file links", () => {
         `# foo bar baz\na story of foo and bar\nand baz\n### Chapter (1)!!!!! alliances/are\\formed\n baz and foo join forces`
       );
 
-      const fileContainingLink = newTestMarkdownFile(testDirectory);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: testDirectory,
+      });
       fs.writeFileSync(
         fileContainingLink,
         `Here is some text\n[and then a link to a file][1]\n\n[1]: ./${fileToLinkTo.fileName}#chapter-1-alliancesareformed`
@@ -2806,7 +2932,9 @@ describe("bad-links-in-markdown - local file links", () => {
         `# foo bar baz\na story of foo and bar\nand baz`
       );
 
-      const fileContainingLink = newTestMarkdownFile(testDirectory);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: testDirectory,
+      });
       fs.writeFileSync(
         fileContainingLink,
         `Here is some text\n[and then a link to a file][1]\n\n[1]: ./${fileToLinkTo.fileName}#main-title`
@@ -2840,7 +2968,9 @@ describe("bad-links-in-markdown - local file links", () => {
       });
       fs.writeFileSync(fileToLinkTo.filePath, `# foo bar baz\n# foo bar baz`);
 
-      const fileContainingLink = newTestMarkdownFile(testDirectory);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: testDirectory,
+      });
       fs.writeFileSync(
         fileContainingLink,
         `Here is some text\n[and then a link to a file][1]\n\n[1]: ./${fileToLinkTo.fileName}#foo-bar-baz-3`
@@ -2874,7 +3004,9 @@ describe("bad-links-in-markdown - local file links", () => {
       });
       fs.writeFileSync(fileToLinkTo.filePath, `# foo bar baz\n# foo bar baz`);
 
-      const fileContainingLink = newTestMarkdownFile(testDirectory);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: testDirectory,
+      });
       fs.writeFileSync(
         fileContainingLink,
         `Here is some text\n[and then a link to a file][1]\n\n[1]: ./${fileToLinkTo.fileName}#foo-bar-baz`
@@ -2898,7 +3030,9 @@ describe("bad-links-in-markdown - local file links", () => {
       });
       fs.writeFileSync(fileToLinkTo.filePath, `# foo bar baz\n# foo bar baz`);
 
-      const fileContainingLink = newTestMarkdownFile(testDirectory);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: testDirectory,
+      });
       fs.writeFileSync(
         fileContainingLink,
         `Here is some text\n[and then a link to a file][1]\n\n[1]: ./${fileToLinkTo.fileName}#foo-bar-baz-1`
@@ -2967,7 +3101,9 @@ describe("bad-links-in-markdown - local file links", () => {
         `a story of foo and bar\r\nand baz\r\n# foo bar baz\n`
       );
 
-      const fileContainingLink = newTestMarkdownFile(testDirectory);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: testDirectory,
+      });
       fs.writeFileSync(
         fileContainingLink,
         `Here is some text\n[and then a link to a file][1]\n\n[1]: ./${fileToLinkTo.fileName}#main-title`
@@ -3006,7 +3142,9 @@ describe("bad-links-in-markdown - local file links", () => {
         `# main-title\na story of foo and bar\nand baz`
       );
 
-      const fileContainingLink = newTestMarkdownFile(testDirectory);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: testDirectory,
+      });
       fs.writeFileSync(
         fileContainingLink,
         `Here is some text\n[and then a link to a file][1]\n\n[1]: ./${name}#different-header`
@@ -3048,7 +3186,9 @@ describe("bad-links-in-markdown - local file links", () => {
         `# main-title\na story of foo and bar\nand baz`
       );
 
-      const fileContainingLink = newTestMarkdownFile(testDirectory);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: testDirectory,
+      });
       fs.writeFileSync(
         fileContainingLink,
         `Here is some text\n[and then a link to a file][1]\n\n[1]: ./${name}#main-title`
@@ -3082,7 +3222,9 @@ describe("bad-links-in-markdown - local file links", () => {
       });
       fs.writeFileSync(fileToLinkTo.filePath, `foo bar baz\n`.repeat(1000));
 
-      const fileContainingLink = newTestMarkdownFile(testDirectory);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: testDirectory,
+      });
       fs.writeFileSync(
         fileContainingLink,
         `Here is some text\n[and then a link to a file][1]\n\n[1]: ./${fileToLinkTo.fileName}#L100`
@@ -3106,7 +3248,9 @@ describe("bad-links-in-markdown - local file links", () => {
       });
       fs.writeFileSync(fileToLinkTo.filePath, `foo bar baz\n`.repeat(10));
 
-      const fileContainingLink = newTestMarkdownFile(testDirectory);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: testDirectory,
+      });
       fs.writeFileSync(
         fileContainingLink,
         `Here is some text\n[and then a link to a file][1]\n\n[1]: ./${fileToLinkTo.fileName}#L100`
@@ -3142,7 +3286,9 @@ describe("bad-links-in-markdown - local file links", () => {
       });
       fs.writeFileSync(fileToLinkTo.filePath, `foo bar baz`);
 
-      const fileContainingLink = newTestMarkdownFile(testDirectory);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: testDirectory,
+      });
       fs.writeFileSync(
         fileContainingLink,
         `Here is some text\n[and then a link to a file][1]\n\n[1]: ./${name}#L1`
@@ -3187,7 +3333,9 @@ describe("bad-links-in-markdown - local file links", () => {
         `# main-title\na story of foo and bar\nand baz`
       );
 
-      const fileContainingLink = newTestMarkdownFile(innerDirectory2.path);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: innerDirectory2.path,
+      });
 
       fs.writeFileSync(
         fileContainingLink,
@@ -3206,7 +3354,9 @@ describe("bad-links-in-markdown - local file links", () => {
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
-      const fileContainingLink = newTestMarkdownFile(testDirectory);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: testDirectory,
+      });
       fs.writeFileSync(
         fileContainingLink,
         `[foobar][bad header]\n[bad header]: #main-title`
@@ -3234,7 +3384,9 @@ describe("bad-links-in-markdown - local file links", () => {
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
-      const fileContainingLink = newTestMarkdownFile(testDirectory);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: testDirectory,
+      });
       fs.writeFileSync(
         fileContainingLink,
         `# Main Title\n[foobar][good header]\n[good header]: #main-title`
@@ -3252,7 +3404,9 @@ describe("bad-links-in-markdown - local file links", () => {
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
-      const fileContainingLink = newTestMarkdownFile(testDirectory);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: testDirectory,
+      });
       fs.writeFileSync(
         fileContainingLink,
         `[foobar][bad header]\n[bad header]: ##main-title`
@@ -3280,7 +3434,9 @@ describe("bad-links-in-markdown - local file links", () => {
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
-      const fileContainingLink = newTestMarkdownFile(testDirectory);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: testDirectory,
+      });
       fs.writeFileSync(
         fileContainingLink,
         `# Main Title\n# Sub Header\n[foobar][good header]\n[good header]: ##sub-header`
@@ -3307,7 +3463,9 @@ describe("bad-links-in-markdown - local file links", () => {
         `# Foo Bar -> Bacon and eggs\na story of foo and bar\nand baz`
       );
 
-      const fileContainingLink = newTestMarkdownFile(testDirectory);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: testDirectory,
+      });
       fs.writeFileSync(
         fileContainingLink,
         `[Foo Bar -> Bacon and eggs][1]\n\n[1]: ./${fileToLinkTo.fileName}#foo-bar---bacon-and-eggs`
@@ -3325,7 +3483,9 @@ describe("bad-links-in-markdown - local file links", () => {
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
-      const fileContainingLink = newTestMarkdownFile(testDirectory);
+      const { filePath: fileContainingLink } = newTestMarkdownFile({
+        directory: testDirectory,
+      });
       fs.writeFileSync(
         fileContainingLink,
         `# Foo Bar -> Bacon and eggs\n\n- [Foo Bar -> Bacon and eggs][1]\n\n[1]: #foo-bar---bacon-and-eggs`

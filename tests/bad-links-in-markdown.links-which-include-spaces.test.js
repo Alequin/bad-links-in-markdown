@@ -15,7 +15,7 @@ describe("bad-links-in-markdown - links including spaces", () => {
       parentDirectory: TOP_LEVEL_DIRECTORY,
     });
 
-    const filePath = newTestMarkdownFile(testDirectory);
+    const { filePath } = newTestMarkdownFile({ directory: testDirectory });
 
     fs.writeFileSync(
       filePath,
@@ -50,7 +50,9 @@ describe("bad-links-in-markdown - links including spaces", () => {
     });
     fs.writeFileSync(fileToLinkTo.filePath, `foo bar baz`);
 
-    const fileContainingLink = newTestMarkdownFile(testDirectory);
+    const { filePath: fileContainingLink } = newTestMarkdownFile({
+      directory: testDirectory,
+    });
     fs.writeFileSync(
       fileContainingLink,
       `[I am a local link](    ./${fileToLinkTo.fileName}    )`
@@ -77,7 +79,9 @@ describe("bad-links-in-markdown - links including spaces", () => {
       `# foo bar baz\na story of foo and bar\nand baz`
     );
 
-    const fileContainingLink = newTestMarkdownFile(testDirectory);
+    const { filePath: fileContainingLink } = newTestMarkdownFile({
+      directory: testDirectory,
+    });
     fs.writeFileSync(
       fileContainingLink,
       `[I am a local link](    ./${fileToLinkTo.fileName}#main-title    )`
@@ -114,7 +118,9 @@ describe("bad-links-in-markdown - links including spaces", () => {
       `# main-title\na story of foo and bar\nand baz`
     );
 
-    const fileContainingLink = newTestMarkdownFile(testDirectory);
+    const { filePath: fileContainingLink } = newTestMarkdownFile({
+      directory: testDirectory,
+    });
     fs.writeFileSync(
       fileContainingLink,
       `[I am a local link](    ./${fileToLinkTo.fileName}#main-title    )`
@@ -132,7 +138,7 @@ describe("bad-links-in-markdown - links including spaces", () => {
       parentDirectory: TOP_LEVEL_DIRECTORY,
     });
 
-    const filePath = newTestMarkdownFile(testDirectory);
+    const { filePath } = newTestMarkdownFile({ directory: testDirectory });
 
     fs.writeFileSync(
       filePath,
@@ -167,7 +173,9 @@ describe("bad-links-in-markdown - links including spaces", () => {
     });
     fs.writeFileSync(fileToLinkTo.filePath, `foo bar baz`);
 
-    const fileContainingLink = newTestMarkdownFile(testDirectory);
+    const { filePath: fileContainingLink } = newTestMarkdownFile({
+      directory: testDirectory,
+    });
     fs.writeFileSync(
       fileContainingLink,
       `Here is some text\n[and then a link to a file][1]\n\n[1]:     ./${fileToLinkTo.fileName}     `
@@ -194,7 +202,9 @@ describe("bad-links-in-markdown - links including spaces", () => {
       `# foo bar baz\na story of foo and bar\nand baz`
     );
 
-    const fileContainingLink = newTestMarkdownFile(testDirectory);
+    const { filePath: fileContainingLink } = newTestMarkdownFile({
+      directory: testDirectory,
+    });
     fs.writeFileSync(
       fileContainingLink,
       `Here is some text\n[and then a link to a file][1]\n\n[1]:     ./${fileToLinkTo.fileName}#main-title     `
@@ -231,7 +241,9 @@ describe("bad-links-in-markdown - links including spaces", () => {
       `# main-title\na story of foo and bar\nand baz`
     );
 
-    const fileContainingLink = newTestMarkdownFile(testDirectory);
+    const { filePath: fileContainingLink } = newTestMarkdownFile({
+      directory: testDirectory,
+    });
     fs.writeFileSync(
       fileContainingLink,
       `Here is some text\n[and then a link to a file][1]\n\n[1]:     ./${fileToLinkTo.fileName}#main-title`
@@ -249,7 +261,7 @@ describe("bad-links-in-markdown - links including spaces", () => {
       parentDirectory: TOP_LEVEL_DIRECTORY,
     });
 
-    const filePath = newTestMarkdownFile(testDirectory);
+    const { filePath } = newTestMarkdownFile({ directory: testDirectory });
 
     fs.writeFileSync(
       filePath,
@@ -284,7 +296,7 @@ describe("bad-links-in-markdown - links including spaces", () => {
     });
     fs.writeFileSync(imageFile.filePath, "");
 
-    const filePath = newTestMarkdownFile(testDirectory);
+    const { filePath } = newTestMarkdownFile({ directory: testDirectory });
     fs.writeFileSync(filePath, `![picture](     ./${imageFile.fileName}     )`);
 
     await runTestWithDirectoryCleanup(async () => {
@@ -299,7 +311,7 @@ describe("bad-links-in-markdown - links including spaces", () => {
       parentDirectory: TOP_LEVEL_DIRECTORY,
     });
 
-    const filePath = newTestMarkdownFile(testDirectory);
+    const { filePath } = newTestMarkdownFile({ directory: testDirectory });
 
     fs.writeFileSync(
       filePath,
@@ -334,7 +346,7 @@ describe("bad-links-in-markdown - links including spaces", () => {
     });
     fs.writeFileSync(imageFile.filePath, "");
 
-    const filePath = newTestMarkdownFile(testDirectory);
+    const { filePath } = newTestMarkdownFile({ directory: testDirectory });
 
     fs.writeFileSync(
       filePath,
@@ -353,7 +365,7 @@ describe("bad-links-in-markdown - links including spaces", () => {
       parentDirectory: TOP_LEVEL_DIRECTORY,
     });
 
-    const filePath = newTestMarkdownFile(testDirectory);
+    const { filePath } = newTestMarkdownFile({ directory: testDirectory });
 
     fs.writeFileSync(
       filePath,
@@ -372,7 +384,7 @@ describe("bad-links-in-markdown - links including spaces", () => {
       parentDirectory: TOP_LEVEL_DIRECTORY,
     });
 
-    const filePath = newTestMarkdownFile(testDirectory);
+    const { filePath } = newTestMarkdownFile({ directory: testDirectory });
 
     fs.writeFileSync(
       filePath,

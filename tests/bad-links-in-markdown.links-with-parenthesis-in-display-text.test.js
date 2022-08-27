@@ -15,7 +15,7 @@ describe("bad-links-in-markdown - links including parenthesis", () => {
       parentDirectory: TOP_LEVEL_DIRECTORY,
     });
 
-    const filePath = newTestMarkdownFile(testDirectory);
+    const { filePath } = newTestMarkdownFile({ directory: testDirectory });
 
     fs.writeFileSync(
       filePath,
@@ -50,7 +50,9 @@ describe("bad-links-in-markdown - links including parenthesis", () => {
     });
     fs.writeFileSync(fileToLinkTo.filePath, `foo bar baz`);
 
-    const fileContainingLink = newTestMarkdownFile(testDirectory);
+    const { filePath: fileContainingLink } = newTestMarkdownFile({
+      directory: testDirectory,
+    });
     fs.writeFileSync(
       fileContainingLink,
       `[I am a local link (with parens)](./${fileToLinkTo.fileName})`
@@ -77,7 +79,9 @@ describe("bad-links-in-markdown - links including parenthesis", () => {
       `# foo bar baz\na story of foo and bar\nand baz`
     );
 
-    const fileContainingLink = newTestMarkdownFile(testDirectory);
+    const { filePath: fileContainingLink } = newTestMarkdownFile({
+      directory: testDirectory,
+    });
     fs.writeFileSync(
       fileContainingLink,
       `[I am a local link (with parens)](./${fileToLinkTo.fileName}#main-title)`
@@ -114,7 +118,9 @@ describe("bad-links-in-markdown - links including parenthesis", () => {
       `# main-title\na story of foo and bar\nand baz`
     );
 
-    const fileContainingLink = newTestMarkdownFile(testDirectory);
+    const { filePath: fileContainingLink } = newTestMarkdownFile({
+      directory: testDirectory,
+    });
     fs.writeFileSync(
       fileContainingLink,
       `[I am a local link (with parens)](./${fileToLinkTo.fileName}#main-title)`
@@ -132,7 +138,7 @@ describe("bad-links-in-markdown - links including parenthesis", () => {
       parentDirectory: TOP_LEVEL_DIRECTORY,
     });
 
-    const filePath = newTestMarkdownFile(testDirectory);
+    const { filePath } = newTestMarkdownFile({ directory: testDirectory });
 
     fs.writeFileSync(
       filePath,
@@ -167,7 +173,9 @@ describe("bad-links-in-markdown - links including parenthesis", () => {
     });
     fs.writeFileSync(fileToLinkTo.filePath, `foo bar baz`);
 
-    const fileContainingLink = newTestMarkdownFile(testDirectory);
+    const { filePath: fileContainingLink } = newTestMarkdownFile({
+      directory: testDirectory,
+    });
     fs.writeFileSync(
       fileContainingLink,
       `Here is some text\n[and then a link to a file][1(link)]\n\n[1(link)]: ./${fileToLinkTo.fileName}`
@@ -194,7 +202,9 @@ describe("bad-links-in-markdown - links including parenthesis", () => {
       `# foo bar baz\na story of foo and bar\nand baz`
     );
 
-    const fileContainingLink = newTestMarkdownFile(testDirectory);
+    const { filePath: fileContainingLink } = newTestMarkdownFile({
+      directory: testDirectory,
+    });
     fs.writeFileSync(
       fileContainingLink,
       `Here is some text\n[and then a link to a file][1(link)]\n\n[1(link)]: ./${fileToLinkTo.fileName}#main-title`
@@ -231,7 +241,9 @@ describe("bad-links-in-markdown - links including parenthesis", () => {
       `# main-title\na story of foo and bar\nand baz`
     );
 
-    const fileContainingLink = newTestMarkdownFile(testDirectory);
+    const { filePath: fileContainingLink } = newTestMarkdownFile({
+      directory: testDirectory,
+    });
     fs.writeFileSync(
       fileContainingLink,
       `Here is some text\n[and then a link to a file][1(link)]\n\n[1(link)]: ./${fileToLinkTo.fileName}#main-title`
@@ -249,7 +261,7 @@ describe("bad-links-in-markdown - links including parenthesis", () => {
       parentDirectory: TOP_LEVEL_DIRECTORY,
     });
 
-    const filePath = newTestMarkdownFile(testDirectory);
+    const { filePath } = newTestMarkdownFile({ directory: testDirectory });
 
     fs.writeFileSync(
       filePath,
@@ -284,7 +296,7 @@ describe("bad-links-in-markdown - links including parenthesis", () => {
     });
     fs.writeFileSync(imageFile.filePath, "");
 
-    const filePath = newTestMarkdownFile(testDirectory);
+    const { filePath } = newTestMarkdownFile({ directory: testDirectory });
     fs.writeFileSync(
       filePath,
       `![picture (check it out)](./${imageFile.fileName})`
@@ -302,7 +314,7 @@ describe("bad-links-in-markdown - links including parenthesis", () => {
       parentDirectory: TOP_LEVEL_DIRECTORY,
     });
 
-    const filePath = newTestMarkdownFile(testDirectory);
+    const { filePath } = newTestMarkdownFile({ directory: testDirectory });
 
     fs.writeFileSync(
       filePath,
@@ -337,7 +349,7 @@ describe("bad-links-in-markdown - links including parenthesis", () => {
     });
     fs.writeFileSync(imageFile.filePath, "");
 
-    const filePath = newTestMarkdownFile(testDirectory);
+    const { filePath } = newTestMarkdownFile({ directory: testDirectory });
     fs.writeFileSync(
       filePath,
       `Here is some text\n![and then a link to a file][picture(link text)]\n\n[picture(link text)]: ./${imageFile.fileName}`
@@ -355,7 +367,7 @@ describe("bad-links-in-markdown - links including parenthesis", () => {
       parentDirectory: TOP_LEVEL_DIRECTORY,
     });
 
-    const filePath = newTestMarkdownFile(testDirectory);
+    const { filePath } = newTestMarkdownFile({ directory: testDirectory });
 
     fs.writeFileSync(
       filePath,
@@ -374,7 +386,7 @@ describe("bad-links-in-markdown - links including parenthesis", () => {
       parentDirectory: TOP_LEVEL_DIRECTORY,
     });
 
-    const filePath = newTestMarkdownFile(testDirectory);
+    const { filePath } = newTestMarkdownFile({ directory: testDirectory });
 
     fs.writeFileSync(
       filePath,
