@@ -15,7 +15,7 @@ describe("bad-links-in-markdown - bad link syntax", () => {
     `When the bad syntax is "%s"`,
     (badSyntax) => {
       it(`Ignores local inline links that point at files that do not exist when they include the incorrect syntax "${badSyntax}"`, async () => {
-        const testDirectory = await newTestDirectory({
+        const { path: testDirectory } = await newTestDirectory({
           parentDirectory: TOP_LEVEL_DIRECTORY,
         });
 
@@ -34,7 +34,7 @@ describe("bad-links-in-markdown - bad link syntax", () => {
       });
 
       it(`Ignores inline local links that point at a files that exists but do not contain the targeted header tag when they include the incorrect syntax "${badSyntax}"`, async () => {
-        const testDirectory = await newTestDirectory({
+        const { path: testDirectory } = await newTestDirectory({
           parentDirectory: TOP_LEVEL_DIRECTORY,
         });
 
@@ -65,7 +65,7 @@ describe("bad-links-in-markdown - bad link syntax", () => {
       });
 
       it(`Ignores reference links that point at files that do not exist when they include the incorrect syntax "${badSyntax}"`, async () => {
-        const testDirectory = await newTestDirectory({
+        const { path: testDirectory } = await newTestDirectory({
           parentDirectory: TOP_LEVEL_DIRECTORY,
         });
 
@@ -84,7 +84,7 @@ describe("bad-links-in-markdown - bad link syntax", () => {
       });
 
       it(`Ignores inline local links that point at a files that exists but does not contain the targeted header tag when they include the incorrect syntax "${badSyntax}"`, async () => {
-        const testDirectory = await newTestDirectory({
+        const { path: testDirectory } = await newTestDirectory({
           parentDirectory: TOP_LEVEL_DIRECTORY,
         });
 
@@ -115,7 +115,7 @@ describe("bad-links-in-markdown - bad link syntax", () => {
       });
 
       it(`Ignores local inline image links that point at an images that does not exist when they include the incorrect syntax "${badSyntax}"`, async () => {
-        const testDirectory = await newTestDirectory({
+        const { path: testDirectory } = await newTestDirectory({
           parentDirectory: TOP_LEVEL_DIRECTORY,
         });
 
@@ -134,7 +134,7 @@ describe("bad-links-in-markdown - bad link syntax", () => {
       });
 
       it(`Ignores local reference image links that point at images that do not exist when they include the incorrect syntax "${badSyntax}"`, async () => {
-        const testDirectory = await newTestDirectory({
+        const { path: testDirectory } = await newTestDirectory({
           parentDirectory: TOP_LEVEL_DIRECTORY,
         });
 

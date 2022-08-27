@@ -14,7 +14,7 @@ describe("bad-links-in-markdown - links with label text", () => {
     const labelText = `${quoteMark}the links label text${quoteMark}`;
 
     it("Identifies local inline links that point at files that do not exist, even when the link includes label text", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
@@ -43,7 +43,7 @@ describe("bad-links-in-markdown - links with label text", () => {
     });
 
     it("Ignores local inline links which point at files which exist, even when the link includes label text", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
@@ -69,7 +69,7 @@ describe("bad-links-in-markdown - links with label text", () => {
     });
 
     it("Identifies multiple local inline links on the same file line that point at files that do not exist, even when the link includes label text", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
@@ -110,7 +110,7 @@ describe("bad-links-in-markdown - links with label text", () => {
     });
 
     it("Identifies inline local links that point at a files that exists but do not contain the targeted header tag, even when the link includes label text", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
@@ -149,7 +149,7 @@ describe("bad-links-in-markdown - links with label text", () => {
     });
 
     it("Ignores local links which point at files that exist and contain the targeted header, even when the link includes label text", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
@@ -178,7 +178,7 @@ describe("bad-links-in-markdown - links with label text", () => {
     });
 
     it("Identifies an inline local link that points at a header tag in the current file that does not exist, even when the link includes label text", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
@@ -208,7 +208,7 @@ describe("bad-links-in-markdown - links with label text", () => {
     });
 
     it("Ignores an inline local link that points at a header tag in the current file that exist, even when the link includes label text", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
@@ -228,7 +228,7 @@ describe("bad-links-in-markdown - links with label text", () => {
     });
 
     it("Identifies reference links that point at files that do not exist, even when the link includes label text", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
@@ -257,7 +257,7 @@ describe("bad-links-in-markdown - links with label text", () => {
     });
 
     it("Ignores reference links which point at files which exist, even when the link includes label text", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
@@ -283,7 +283,7 @@ describe("bad-links-in-markdown - links with label text", () => {
     });
 
     it("Identifies an inline local link that points at a file that exists but does not contain the targeted header tag, even when the link includes label text", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
@@ -322,7 +322,7 @@ describe("bad-links-in-markdown - links with label text", () => {
     });
 
     it("Ignores local reference links which point at files that exist and contain the targeted header, even when the link includes label text", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
@@ -351,7 +351,7 @@ describe("bad-links-in-markdown - links with label text", () => {
     });
 
     it("Identifies a local reference link that points at a header tag in the current file that does not exist, even when the link includes label text", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
@@ -381,7 +381,7 @@ describe("bad-links-in-markdown - links with label text", () => {
     });
 
     it("Ignores a local reference link that points at a header tag in the current file that exist, even when the link includes label text", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
@@ -401,7 +401,7 @@ describe("bad-links-in-markdown - links with label text", () => {
     });
 
     it("Identifies a local inline image link that points at an image that does not exist, even when the link includes label text", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
@@ -430,7 +430,7 @@ describe("bad-links-in-markdown - links with label text", () => {
     });
 
     it("Identifies multiple local inline image links on the same file line that point at files that do not exist, even when the link includes label text", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
@@ -471,7 +471,7 @@ describe("bad-links-in-markdown - links with label text", () => {
     });
 
     it("Ignores local inline image links which point at images that exist, even when the link includes label text", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
@@ -495,7 +495,7 @@ describe("bad-links-in-markdown - links with label text", () => {
     });
 
     it("Ignores local reference image links which points at images that exist, even when the link includes label text", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
@@ -519,7 +519,7 @@ describe("bad-links-in-markdown - links with label text", () => {
     });
 
     it("Identifies local reference image links that point at images that do not exist, even when the link includes label text", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
@@ -549,7 +549,7 @@ describe("bad-links-in-markdown - links with label text", () => {
   });
 
   it("Ignores local inline links that point at files that do not exist when the link includes label text not wrapped in quotes", async () => {
-    const testDirectory = await newTestDirectory({
+    const { path: testDirectory } = await newTestDirectory({
       parentDirectory: TOP_LEVEL_DIRECTORY,
     });
 
@@ -568,7 +568,7 @@ describe("bad-links-in-markdown - links with label text", () => {
   });
 
   it("Ignores local reference links that point at files that do not exist when the link includes label text not wrapped in quotes", async () => {
-    const testDirectory = await newTestDirectory({
+    const { path: testDirectory } = await newTestDirectory({
       parentDirectory: TOP_LEVEL_DIRECTORY,
     });
 

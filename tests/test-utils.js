@@ -32,15 +32,7 @@ const forceRemoveDir = async (directory) =>
     fs.rm(directory, { recursive: true, force: true }, resolve)
   );
 
-export const newTestDirectory = async ({ parentDirectory, name }) => {
-  const { path } = await newTestDirectoryWithName({
-    parentDirectory,
-    name,
-  });
-  return path;
-};
-
-export const newTestDirectoryWithName = async ({
+export const newTestDirectory = async ({
   parentDirectory,
   name = uniqueName(),
 }) => {

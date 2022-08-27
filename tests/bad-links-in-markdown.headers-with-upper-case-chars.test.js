@@ -11,7 +11,7 @@ import {
 
 describe("bad-links-in-markdown - headers with upper case characters", () => {
   it("Identifies local inline links which use upper case characters in the header, even when the header exists", async () => {
-    const testDirectory = await newTestDirectory({
+    const { path: testDirectory } = await newTestDirectory({
       parentDirectory: TOP_LEVEL_DIRECTORY,
     });
 
@@ -41,7 +41,7 @@ describe("bad-links-in-markdown - headers with upper case characters", () => {
   });
 
   it("Identifies local inline links which point at another files header and uses upper case characters in the header, even when the header exists", async () => {
-    const testDirectory = await newTestDirectory({
+    const { path: testDirectory } = await newTestDirectory({
       parentDirectory: TOP_LEVEL_DIRECTORY,
     });
 
@@ -77,7 +77,7 @@ describe("bad-links-in-markdown - headers with upper case characters", () => {
   });
 
   it("Identifies local reference links which use upper case characters in the header, even when the header exists", async () => {
-    const testDirectory = await newTestDirectory({
+    const { path: testDirectory } = await newTestDirectory({
       parentDirectory: TOP_LEVEL_DIRECTORY,
     });
 
@@ -107,7 +107,7 @@ describe("bad-links-in-markdown - headers with upper case characters", () => {
   });
 
   it("Identifies local reference links which point at another files header and uses upper case characters in the header, even when the header exists", async () => {
-    const testDirectory = await newTestDirectory({
+    const { path: testDirectory } = await newTestDirectory({
       parentDirectory: TOP_LEVEL_DIRECTORY,
     });
 

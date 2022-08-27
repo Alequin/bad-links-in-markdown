@@ -11,7 +11,7 @@ import {
 
 describe("bad-links-in-markdown - headers followed by command", () => {
   it("Ignores local inline links which point at existing headers that are followed by and inline command (example command <!-- omit-in-toc -->)", async () => {
-    const testDirectory = await newTestDirectory({
+    const { path: testDirectory } = await newTestDirectory({
       parentDirectory: TOP_LEVEL_DIRECTORY,
     });
 
@@ -40,7 +40,7 @@ describe("bad-links-in-markdown - headers followed by command", () => {
   });
 
   it("Identifies local inline links which point at missing headers that are followed by an inline command (example command <!-- omit-in-toc -->)", async () => {
-    const testDirectory = await newTestDirectory({
+    const { path: testDirectory } = await newTestDirectory({
       parentDirectory: TOP_LEVEL_DIRECTORY,
     });
 
@@ -79,7 +79,7 @@ describe("bad-links-in-markdown - headers followed by command", () => {
   });
 
   it("Ignores local reference links which point at existing headers that are followed by an inline command (example command <!-- omit-in-toc -->)", async () => {
-    const testDirectory = await newTestDirectory({
+    const { path: testDirectory } = await newTestDirectory({
       parentDirectory: TOP_LEVEL_DIRECTORY,
     });
 
@@ -108,7 +108,7 @@ describe("bad-links-in-markdown - headers followed by command", () => {
   });
 
   it("Identifies local reference links which point at missing headers that are followed by an inline command (example command <!-- omit-in-toc -->)", async () => {
-    const testDirectory = await newTestDirectory({
+    const { path: testDirectory } = await newTestDirectory({
       parentDirectory: TOP_LEVEL_DIRECTORY,
     });
 

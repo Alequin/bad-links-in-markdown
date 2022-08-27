@@ -9,7 +9,7 @@ import {
 
 describe("bad-links-in-markdown - web links", () => {
   it("Does not include inline web links in list of bad local links", async () => {
-    const testDirectory = await newTestDirectory({
+    const { path: testDirectory } = await newTestDirectory({
       parentDirectory: TOP_LEVEL_DIRECTORY,
     });
 
@@ -31,7 +31,7 @@ describe("bad-links-in-markdown - web links", () => {
   });
 
   it("Does not include reference web links in the list of bad local links", async () => {
-    const testDirectory = await newTestDirectory({
+    const { path: testDirectory } = await newTestDirectory({
       parentDirectory: TOP_LEVEL_DIRECTORY,
     });
 
@@ -53,7 +53,7 @@ describe("bad-links-in-markdown - web links", () => {
   });
 
   it("Does not include inline email links in list of bad local links", async () => {
-    const testDirectory = await newTestDirectory({
+    const { path: testDirectory } = await newTestDirectory({
       parentDirectory: TOP_LEVEL_DIRECTORY,
     });
 
@@ -69,7 +69,7 @@ describe("bad-links-in-markdown - web links", () => {
   });
 
   it("Does not include reference email links in list of bad local links", async () => {
-    const testDirectory = await newTestDirectory({
+    const { path: testDirectory } = await newTestDirectory({
       parentDirectory: TOP_LEVEL_DIRECTORY,
     });
 

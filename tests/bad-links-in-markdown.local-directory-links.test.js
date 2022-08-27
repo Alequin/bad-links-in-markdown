@@ -3,7 +3,6 @@ import { badLinksInMarkdown } from "../bad-links-in-markdown";
 import { badLinkReasons } from "../src/config/bad-link-reasons";
 import {
   newTestDirectory,
-  newTestDirectoryWithName,
   newTestMarkdownFile,
   runTestWithDirectoryCleanup,
   TOP_LEVEL_DIRECTORY,
@@ -12,7 +11,7 @@ import {
 describe("bad-links-in-markdown - local directory links", () => {
   describe("identify-invalid-local-links and the link is an inline link to a directory", () => {
     it("Identifies local inline links that point at directories that do not exist", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
@@ -41,11 +40,11 @@ describe("bad-links-in-markdown - local directory links", () => {
     });
 
     it("Ignores local inline links which point at directories which exist", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
-      const innerDirectory = await newTestDirectoryWithName({
+      const innerDirectory = await newTestDirectory({
         parentDirectory: testDirectory,
       });
 
@@ -65,17 +64,17 @@ describe("bad-links-in-markdown - local directory links", () => {
     });
 
     it("Ignores local inline links which point at directories which exist and have names similar to other directories in the same location", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
       const baseDirectoryName = "test-directory-i3oni3fpo";
-      await newTestDirectoryWithName({
+      await newTestDirectory({
         parentDirectory: testDirectory,
         name: baseDirectoryName,
       });
 
-      await newTestDirectoryWithName({
+      await newTestDirectory({
         parentDirectory: testDirectory,
         name: `${baseDirectoryName}-another-one`,
       });
@@ -98,7 +97,7 @@ describe("bad-links-in-markdown - local directory links", () => {
 
   describe("identify-invalid-local-links and the link is an reference link to a directory", () => {
     it("Identifies local reference links that point at directories that do not exist", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
@@ -130,11 +129,11 @@ describe("bad-links-in-markdown - local directory links", () => {
     });
 
     it("Ignores local reference links which point at directories which exist", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
-      const directoryToLinkTo = await newTestDirectoryWithName({
+      const directoryToLinkTo = await newTestDirectory({
         parentDirectory: testDirectory,
       });
 
@@ -154,17 +153,17 @@ describe("bad-links-in-markdown - local directory links", () => {
     });
 
     it("Ignores local inline links which point at directories which exist and have names similar to other directories in the same location", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
       const directoryName = "inner-test-1";
 
-      await newTestDirectoryWithName({
+      await newTestDirectory({
         parentDirectory: testDirectory,
         name: directoryName,
       });
-      await newTestDirectoryWithName({
+      await newTestDirectory({
         parentDirectory: testDirectory,
         name: `${directoryName}-another-one`,
       });

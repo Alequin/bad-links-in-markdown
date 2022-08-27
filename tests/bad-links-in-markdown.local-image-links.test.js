@@ -4,7 +4,6 @@ import { badLinkReasons } from "../src/config/bad-link-reasons";
 import { validImageExtensions } from "../src/config/valid-image-extensions";
 import {
   newTestDirectory,
-  newTestDirectoryWithName,
   newTestFile,
   newTestMarkdownFile,
   runTestWithDirectoryCleanup,
@@ -14,7 +13,7 @@ import {
 describe("bad-links-in-markdown - local image links", () => {
   describe("identify-invalid-local-links and the image link is an inline link", () => {
     it("Identifies a local inline image link that points at an image that does not exist", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
@@ -40,7 +39,7 @@ describe("bad-links-in-markdown - local image links", () => {
     });
 
     it("Ignores local inline image link which point at an images which exist", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
@@ -61,7 +60,7 @@ describe("bad-links-in-markdown - local image links", () => {
     });
 
     it("Ignores absolute local inline image links which point at files which exist", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
@@ -87,15 +86,15 @@ describe("bad-links-in-markdown - local image links", () => {
     });
 
     it("Ignores absolute local inline image links which point at nested files that exist", async () => {
-      const testDirectory = await newTestDirectoryWithName({
+      const testDirectory = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
-      const innerDirectory1 = await newTestDirectoryWithName({
+      const innerDirectory1 = await newTestDirectory({
         parentDirectory: testDirectory.path,
       });
 
-      const innerDirectory2 = await newTestDirectoryWithName({
+      const innerDirectory2 = await newTestDirectory({
         parentDirectory: innerDirectory1.path,
       });
 
@@ -122,7 +121,7 @@ describe("bad-links-in-markdown - local image links", () => {
     });
 
     it("identifies absolute local inline image links which starts from outside the given directory", async () => {
-      const testDirectory = await newTestDirectoryWithName({
+      const testDirectory = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
@@ -156,15 +155,15 @@ describe("bad-links-in-markdown - local image links", () => {
     });
 
     it("identifies absolute local inline image links which starts from within the given directory", async () => {
-      const testDirectory = await newTestDirectoryWithName({
+      const testDirectory = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
-      const innerDirectory1 = await newTestDirectoryWithName({
+      const innerDirectory1 = await newTestDirectory({
         parentDirectory: testDirectory.path,
       });
 
-      const innerDirectory2 = await newTestDirectoryWithName({
+      const innerDirectory2 = await newTestDirectory({
         parentDirectory: innerDirectory1.path,
       });
 
@@ -205,7 +204,7 @@ describe("bad-links-in-markdown - local image links", () => {
     });
 
     it("Identifies a local inline image link that points at a file that does not exist even when the link does not contain a file extension", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
@@ -234,7 +233,7 @@ describe("bad-links-in-markdown - local image links", () => {
     });
 
     it("Identifies a local inline image link that points at a file that exist when the link does not contain a file extension", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
@@ -267,7 +266,7 @@ describe("bad-links-in-markdown - local image links", () => {
     });
 
     it("Identifies a local inline image link that points at a file that does not exist when the file path does not include either absolute or relative path", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
@@ -293,7 +292,7 @@ describe("bad-links-in-markdown - local image links", () => {
     });
 
     it("Ignores local inline image links which point at files which exist when the file path does not include either absolute or relative path", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
@@ -314,7 +313,7 @@ describe("bad-links-in-markdown - local image links", () => {
     });
 
     it("Identifies a local inline image link that points at a file that does not exist when the file path is missing and the extension is missing and does not include either absolute or relative path", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
@@ -343,7 +342,7 @@ describe("bad-links-in-markdown - local image links", () => {
     });
 
     it("Identifies local inline image links which point at files which exist when the file path is missing and extension is missing and does not include either absolute or relative path", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
@@ -376,7 +375,7 @@ describe("bad-links-in-markdown - local image links", () => {
     });
 
     it("Identifies a local inline image link that is missing a file extension and could potentially refer to two separate files", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
@@ -419,7 +418,7 @@ describe("bad-links-in-markdown - local image links", () => {
     });
 
     it("Ignores local inline image links which point at files which exist, even when the name includes multiple delimiters", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
@@ -442,15 +441,15 @@ describe("bad-links-in-markdown - local image links", () => {
     });
 
     it("Identifies an issue with local inline links for images when they are relative links which attempts to link through multiple parent directories at once with invalid syntax", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
-      const innerDirectory1 = await newTestDirectoryWithName({
+      const innerDirectory1 = await newTestDirectory({
         parentDirectory: testDirectory,
       });
 
-      const innerDirectory2 = await newTestDirectoryWithName({
+      const innerDirectory2 = await newTestDirectory({
         parentDirectory: innerDirectory1.path,
       });
 
@@ -490,15 +489,15 @@ describe("bad-links-in-markdown - local image links", () => {
     });
 
     it("Ignores local inline links when they are relative links which link through multiple parent directories", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
-      const innerDirectory1 = await newTestDirectoryWithName({
+      const innerDirectory1 = await newTestDirectory({
         parentDirectory: testDirectory,
       });
 
-      const innerDirectory2 = await newTestDirectoryWithName({
+      const innerDirectory2 = await newTestDirectory({
         parentDirectory: innerDirectory1.path,
       });
 
@@ -525,7 +524,7 @@ describe("bad-links-in-markdown - local image links", () => {
     });
 
     it("Identifies multiple local inline image links on the same file line that point at images that do not exist", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
@@ -568,7 +567,7 @@ describe("bad-links-in-markdown - local image links", () => {
     it.each(validImageExtensions)(
       "Ignores a local inline image link that points at an existing image with an extension %s",
       async (imageFileExtension) => {
-        const testDirectory = await newTestDirectory({
+        const { path: testDirectory } = await newTestDirectory({
           parentDirectory: TOP_LEVEL_DIRECTORY,
         });
 
@@ -593,7 +592,7 @@ describe("bad-links-in-markdown - local image links", () => {
     it.each(validImageExtensions.map((extension) => extension.toUpperCase()))(
       "Ignores a local reference image link that points at an existing image with an extension %s, even when the casing is upper case",
       async (imageFileExtension) => {
-        const testDirectory = await newTestDirectory({
+        const { path: testDirectory } = await newTestDirectory({
           parentDirectory: TOP_LEVEL_DIRECTORY,
         });
 
@@ -615,7 +614,7 @@ describe("bad-links-in-markdown - local image links", () => {
     );
 
     it("Identifies a local inline image link that points at an image that uses an invalid extension", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
@@ -649,7 +648,7 @@ describe("bad-links-in-markdown - local image links", () => {
 
   describe("identify-invalid-local-links and the image link is a reference link", () => {
     it("Identifies local reference image links that point at images that do not exist", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
@@ -678,7 +677,7 @@ describe("bad-links-in-markdown - local image links", () => {
     });
 
     it("Ignores local reference image links which points at images which exist", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
@@ -703,7 +702,7 @@ describe("bad-links-in-markdown - local image links", () => {
     });
 
     it("Ignores absolute local inline image links which point at files which exist", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
@@ -729,15 +728,15 @@ describe("bad-links-in-markdown - local image links", () => {
     });
 
     it("Ignores absolute local inline image links which point at nested files that exist", async () => {
-      const testDirectory = await newTestDirectoryWithName({
+      const testDirectory = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
-      const innerDirectory1 = await newTestDirectoryWithName({
+      const innerDirectory1 = await newTestDirectory({
         parentDirectory: testDirectory.path,
       });
 
-      const innerDirectory2 = await newTestDirectoryWithName({
+      const innerDirectory2 = await newTestDirectory({
         parentDirectory: innerDirectory1.path,
       });
 
@@ -764,7 +763,7 @@ describe("bad-links-in-markdown - local image links", () => {
     });
 
     it("identifies absolute local inline image links which starts from outside the given directory", async () => {
-      const testDirectory = await newTestDirectoryWithName({
+      const testDirectory = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
@@ -798,15 +797,15 @@ describe("bad-links-in-markdown - local image links", () => {
     });
 
     it("identifies absolute local inline image links which starts from within the given directory", async () => {
-      const testDirectory = await newTestDirectoryWithName({
+      const testDirectory = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
-      const innerDirectory1 = await newTestDirectoryWithName({
+      const innerDirectory1 = await newTestDirectory({
         parentDirectory: testDirectory.path,
       });
 
-      const innerDirectory2 = await newTestDirectoryWithName({
+      const innerDirectory2 = await newTestDirectory({
         parentDirectory: innerDirectory1.path,
       });
 
@@ -846,7 +845,7 @@ describe("bad-links-in-markdown - local image links", () => {
     });
 
     it("Identifies a local reference image link that points at a file that does not exist even when the link does not contain a file extension", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
@@ -878,7 +877,7 @@ describe("bad-links-in-markdown - local image links", () => {
     });
 
     it("Identifies a local reference image link that points at a file that exist when the link does not contain a file extension", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
@@ -914,7 +913,7 @@ describe("bad-links-in-markdown - local image links", () => {
     });
 
     it("Identifies a local reference image link that points at a file that does not exist when the file path does not include either absolute or relative path", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
@@ -942,7 +941,7 @@ describe("bad-links-in-markdown - local image links", () => {
     });
 
     it("Ignores local reference image links which point at files which exist when the file path does not include either absolute or relative path", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
@@ -966,7 +965,7 @@ describe("bad-links-in-markdown - local image links", () => {
     });
 
     it("Identifies a local reference image link that points at a file that does not exist when the file path is missing and extension and does not include either absolute or relative path", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
@@ -998,7 +997,7 @@ describe("bad-links-in-markdown - local image links", () => {
     });
 
     it("Identifies local reference image links which point at files which exist when the file path is missing and extension and does not include either absolute or relative path", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
@@ -1034,7 +1033,7 @@ describe("bad-links-in-markdown - local image links", () => {
     });
 
     it("Identifies a local reference image link that is missing a file extension and could potentially refer to two separate files", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
@@ -1080,7 +1079,7 @@ describe("bad-links-in-markdown - local image links", () => {
     });
 
     it("Ignores local reference image links which point at files which exist, even when the name includes multiple delimiters", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
@@ -1105,15 +1104,15 @@ describe("bad-links-in-markdown - local image links", () => {
     });
 
     it("Identifies an issue with local reference image links for images when they are relative links which attempts to link through multiple parent directories at once with invalid syntax", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
-      const innerDirectory1 = await newTestDirectoryWithName({
+      const innerDirectory1 = await newTestDirectory({
         parentDirectory: testDirectory,
       });
 
-      const innerDirectory2 = await newTestDirectoryWithName({
+      const innerDirectory2 = await newTestDirectory({
         parentDirectory: innerDirectory1.path,
       });
 
@@ -1153,15 +1152,15 @@ describe("bad-links-in-markdown - local image links", () => {
     });
 
     it("Ignores local reference image links when they are relative links which link through multiple parent directories", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
-      const innerDirectory1 = await newTestDirectoryWithName({
+      const innerDirectory1 = await newTestDirectory({
         parentDirectory: testDirectory,
       });
 
-      const innerDirectory2 = await newTestDirectoryWithName({
+      const innerDirectory2 = await newTestDirectory({
         parentDirectory: innerDirectory1.path,
       });
 
@@ -1190,7 +1189,7 @@ describe("bad-links-in-markdown - local image links", () => {
     it.each(validImageExtensions)(
       "Ignores a local reference image link that points at an existing image with an extension %s",
       async (imageFileExtension) => {
-        const testDirectory = await newTestDirectory({
+        const { path: testDirectory } = await newTestDirectory({
           parentDirectory: TOP_LEVEL_DIRECTORY,
         });
 
@@ -1218,7 +1217,7 @@ describe("bad-links-in-markdown - local image links", () => {
     it.each(validImageExtensions.map((extension) => extension.toUpperCase()))(
       "Ignores a local reference image link that points at an existing image with an extension %s, even when the casing is upper case",
       async (imageFileExtension) => {
-        const testDirectory = await newTestDirectory({
+        const { path: testDirectory } = await newTestDirectory({
           parentDirectory: TOP_LEVEL_DIRECTORY,
         });
 
@@ -1245,7 +1244,7 @@ describe("bad-links-in-markdown - local image links", () => {
     );
 
     it("Identifies a local inline image link that points at an image that uses an invalid extension", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 

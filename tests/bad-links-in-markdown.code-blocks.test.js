@@ -11,7 +11,7 @@ import {
 describe("bad-links-in-markdown - code blocks", () => {
   describe("triple back ticks code block", () => {
     it("Ignores local inline links wrapped in triple backticks, even when the link is broken", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
@@ -32,7 +32,7 @@ describe("bad-links-in-markdown - code blocks", () => {
     });
 
     it("Ignores local reference links wrapped in triple backticks, even when the link is broken", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
@@ -54,7 +54,7 @@ describe("bad-links-in-markdown - code blocks", () => {
     });
 
     it("Identifies local inline links when the header they link to is in triple backticks", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
@@ -86,7 +86,7 @@ describe("bad-links-in-markdown - code blocks", () => {
     });
 
     it("Identifies local reference links when the header they link to is in triple backticks", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
@@ -120,7 +120,7 @@ describe("bad-links-in-markdown - code blocks", () => {
     });
 
     it("Ignores local inline links which point at headers placed between two backtick sections", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
@@ -146,7 +146,7 @@ describe("bad-links-in-markdown - code blocks", () => {
     });
 
     it("Ignores local reference links which point at headers placed between two backtick sections", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
@@ -175,7 +175,7 @@ describe("bad-links-in-markdown - code blocks", () => {
 
   describe("single back ticks code block", () => {
     it("Ignores local inline links wrapped in single backticks", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
@@ -195,7 +195,7 @@ describe("bad-links-in-markdown - code blocks", () => {
     });
 
     it("Ignores local reference links wrapped in single backticks", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
@@ -215,7 +215,7 @@ describe("bad-links-in-markdown - code blocks", () => {
     });
 
     it("Identifies local inline links the point to files that don't exist, even when the link text contains backticks", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
@@ -242,7 +242,7 @@ describe("bad-links-in-markdown - code blocks", () => {
     });
 
     it("Identifies local reference links the point to files that don't exist, even when the link text contains backticks", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
@@ -271,7 +271,7 @@ describe("bad-links-in-markdown - code blocks", () => {
     });
 
     it("Ignores a local inline link that points at header that includes backticks", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
@@ -292,7 +292,7 @@ describe("bad-links-in-markdown - code blocks", () => {
     });
 
     it("Ignores a local reference link that points at header that includes backticks", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
@@ -322,7 +322,7 @@ describe("bad-links-in-markdown - code blocks", () => {
       const indentation = "    ".repeat(indentationModifier);
 
       it("Ignores local inline links included in indented code blocks, even when the link is broken", async () => {
-        const testDirectory = await newTestDirectory({
+        const { path: testDirectory } = await newTestDirectory({
           parentDirectory: TOP_LEVEL_DIRECTORY,
         });
 
@@ -345,7 +345,7 @@ describe("bad-links-in-markdown - code blocks", () => {
       });
 
       it("Ignores local reference links in indented code blocks, even when the link is broken", async () => {
-        const testDirectory = await newTestDirectory({
+        const { path: testDirectory } = await newTestDirectory({
           parentDirectory: TOP_LEVEL_DIRECTORY,
         });
 
@@ -368,7 +368,7 @@ describe("bad-links-in-markdown - code blocks", () => {
       });
 
       it("Identifies local inline links when the header they link to is in an indented code block", async () => {
-        const testDirectory = await newTestDirectory({
+        const { path: testDirectory } = await newTestDirectory({
           parentDirectory: TOP_LEVEL_DIRECTORY,
         });
 
@@ -401,7 +401,7 @@ describe("bad-links-in-markdown - code blocks", () => {
       });
 
       it("Identifies local reference links when the header they link to is in an indented code block", async () => {
-        const testDirectory = await newTestDirectory({
+        const { path: testDirectory } = await newTestDirectory({
           parentDirectory: TOP_LEVEL_DIRECTORY,
         });
 
@@ -435,7 +435,7 @@ describe("bad-links-in-markdown - code blocks", () => {
       });
 
       it("Identifies a local inline link in an indented code block when the block is not preceded by a blank line", async () => {
-        const testDirectory = await newTestDirectory({
+        const { path: testDirectory } = await newTestDirectory({
           parentDirectory: TOP_LEVEL_DIRECTORY,
         });
 
@@ -467,7 +467,7 @@ describe("bad-links-in-markdown - code blocks", () => {
       });
 
       it("Identifies a local reference link in an indented code block when the block is not preceded by a blank line", async () => {
-        const testDirectory = await newTestDirectory({
+        const { path: testDirectory } = await newTestDirectory({
           parentDirectory: TOP_LEVEL_DIRECTORY,
         });
 

@@ -12,7 +12,7 @@ import {
 
 describe("bad-links-in-markdown - links-which-includes-space-encoding", () => {
   it("Identifies local inline links that point at files that do not exist, even when the link includes space encoding characters", async () => {
-    const testDirectory = await newTestDirectory({
+    const { path: testDirectory } = await newTestDirectory({
       parentDirectory: TOP_LEVEL_DIRECTORY,
     });
 
@@ -41,7 +41,7 @@ describe("bad-links-in-markdown - links-which-includes-space-encoding", () => {
   });
 
   it("Ignores local inline links which point at files which exist, even when the link includes space encoding characters", async () => {
-    const testDirectory = await newTestDirectory({
+    const { path: testDirectory } = await newTestDirectory({
       parentDirectory: TOP_LEVEL_DIRECTORY,
     });
 
@@ -69,7 +69,7 @@ describe("bad-links-in-markdown - links-which-includes-space-encoding", () => {
   });
 
   it("Identifies multiple local inline links on the same file line that point at files that do not exist, even when the link includes space encoding characters", async () => {
-    const testDirectory = await newTestDirectory({
+    const { path: testDirectory } = await newTestDirectory({
       parentDirectory: TOP_LEVEL_DIRECTORY,
     });
 
@@ -110,7 +110,7 @@ describe("bad-links-in-markdown - links-which-includes-space-encoding", () => {
   });
 
   it("Identifies inline local links that point at a files that exists but do not contain the targeted header tag, even when the link includes space encoding characters", async () => {
-    const testDirectory = await newTestDirectory({
+    const { path: testDirectory } = await newTestDirectory({
       parentDirectory: TOP_LEVEL_DIRECTORY,
     });
 
@@ -151,7 +151,7 @@ describe("bad-links-in-markdown - links-which-includes-space-encoding", () => {
   });
 
   it("Ignores local links which point at files that exist and contain the targeted header, even when the link includes space encoding characters", async () => {
-    const testDirectory = await newTestDirectory({
+    const { path: testDirectory } = await newTestDirectory({
       parentDirectory: TOP_LEVEL_DIRECTORY,
     });
 
@@ -182,7 +182,7 @@ describe("bad-links-in-markdown - links-which-includes-space-encoding", () => {
   });
 
   it("Identifies reference links that point at files that do not exist, even when the link includes space encoding characters", async () => {
-    const testDirectory = await newTestDirectory({
+    const { path: testDirectory } = await newTestDirectory({
       parentDirectory: TOP_LEVEL_DIRECTORY,
     });
 
@@ -211,7 +211,7 @@ describe("bad-links-in-markdown - links-which-includes-space-encoding", () => {
   });
 
   it("Ignores reference links which point at files which exist, even when the link includes space encoding characters", async () => {
-    const testDirectory = await newTestDirectory({
+    const { path: testDirectory } = await newTestDirectory({
       parentDirectory: TOP_LEVEL_DIRECTORY,
     });
 
@@ -239,7 +239,7 @@ describe("bad-links-in-markdown - links-which-includes-space-encoding", () => {
   });
 
   it("Identifies an inline local link that points at a file that exists but does not contain the targeted header tag, even when the link includes space encoding characters", async () => {
-    const testDirectory = await newTestDirectory({
+    const { path: testDirectory } = await newTestDirectory({
       parentDirectory: TOP_LEVEL_DIRECTORY,
     });
 
@@ -280,7 +280,7 @@ describe("bad-links-in-markdown - links-which-includes-space-encoding", () => {
   });
 
   it("Ignores local reference links which point at files that exist and contain the targeted header, even when the link includes space encoding characters", async () => {
-    const testDirectory = await newTestDirectory({
+    const { path: testDirectory } = await newTestDirectory({
       parentDirectory: TOP_LEVEL_DIRECTORY,
     });
 
@@ -311,7 +311,7 @@ describe("bad-links-in-markdown - links-which-includes-space-encoding", () => {
   });
 
   it("Identifies a local inline image link that points at an image that does not exist, even when the link includes space encoding characters", async () => {
-    const testDirectory = await newTestDirectory({
+    const { path: testDirectory } = await newTestDirectory({
       parentDirectory: TOP_LEVEL_DIRECTORY,
     });
 
@@ -337,7 +337,7 @@ describe("bad-links-in-markdown - links-which-includes-space-encoding", () => {
   });
 
   it("Identifies multiple local inline image links on the same file line that point at files that do not exist, even when the link includes space encoding characters", async () => {
-    const testDirectory = await newTestDirectory({
+    const { path: testDirectory } = await newTestDirectory({
       parentDirectory: TOP_LEVEL_DIRECTORY,
     });
 
@@ -378,7 +378,7 @@ describe("bad-links-in-markdown - links-which-includes-space-encoding", () => {
   });
 
   it("Ignores local inline image links which point at images that exist, even when the link includes space encoding characters", async () => {
-    const testDirectory = await newTestDirectory({
+    const { path: testDirectory } = await newTestDirectory({
       parentDirectory: TOP_LEVEL_DIRECTORY,
     });
 
@@ -401,7 +401,7 @@ describe("bad-links-in-markdown - links-which-includes-space-encoding", () => {
   });
 
   it("Identifies local reference image links that point at images that do not exist, even when the link includes space encoding characters", async () => {
-    const testDirectory = await newTestDirectory({
+    const { path: testDirectory } = await newTestDirectory({
       parentDirectory: TOP_LEVEL_DIRECTORY,
     });
 
@@ -430,7 +430,7 @@ describe("bad-links-in-markdown - links-which-includes-space-encoding", () => {
   });
 
   it("Ignores local reference image links which points at images that exist, even when the link includes space encoding characters", async () => {
-    const testDirectory = await newTestDirectory({
+    const { path: testDirectory } = await newTestDirectory({
       parentDirectory: TOP_LEVEL_DIRECTORY,
     });
 

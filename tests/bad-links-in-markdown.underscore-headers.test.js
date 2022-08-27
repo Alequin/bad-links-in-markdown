@@ -12,7 +12,7 @@ import {
 describe("bad-links-in-markdown - underscore headers", () => {
   describe("local inline links to headers in current file", () => {
     it("Ignores local inline links which point at headers in the current file that use the equals syntax", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
@@ -46,7 +46,7 @@ describe("bad-links-in-markdown - underscore headers", () => {
     });
 
     it("Ignores local inline links which point at headers in the current file that use the dash syntax", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
@@ -80,7 +80,7 @@ describe("bad-links-in-markdown - underscore headers", () => {
     });
 
     it("Identifies local inline links which point at invalid headers in the current file that use the equals syntax", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
@@ -125,7 +125,7 @@ describe("bad-links-in-markdown - underscore headers", () => {
     });
 
     it("Identifies local inline links which point at invalid headers in the current file that use the dash syntax", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
@@ -172,7 +172,7 @@ describe("bad-links-in-markdown - underscore headers", () => {
 
   describe("local inline links to headers in another file", () => {
     it("Ignores local inline links which point at headers in a different file that use the equals syntax", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
@@ -213,7 +213,7 @@ describe("bad-links-in-markdown - underscore headers", () => {
     });
 
     it("Ignores local inline links which point at headers in a different file that use the dash syntax", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
@@ -255,7 +255,7 @@ describe("bad-links-in-markdown - underscore headers", () => {
     });
 
     it("Identifies local inline links which point at invalid headers in a different file that use the equals syntax", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
@@ -309,7 +309,7 @@ describe("bad-links-in-markdown - underscore headers", () => {
     });
 
     it("Identifies local inline links which point at invalid headers in a different file that use the dash syntax", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
@@ -365,7 +365,7 @@ describe("bad-links-in-markdown - underscore headers", () => {
 
   describe("local reference links to headers in current file", () => {
     it("Ignores local reference links which point at headers in the current file that use the equals syntax", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
@@ -403,7 +403,7 @@ describe("bad-links-in-markdown - underscore headers", () => {
     });
 
     it("Ignores local reference links which point at headers in the current file that use the dash syntax", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
@@ -441,7 +441,7 @@ describe("bad-links-in-markdown - underscore headers", () => {
     });
 
     it("Identifies local reference links which point at invalid headers in the current file that use the equals syntax", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
@@ -489,7 +489,7 @@ describe("bad-links-in-markdown - underscore headers", () => {
     });
 
     it("Identifies local reference links which point at invalid headers in the current file that use the dash syntax", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
@@ -539,7 +539,7 @@ describe("bad-links-in-markdown - underscore headers", () => {
 
   describe("local reference links to headers in another file", () => {
     it("Ignores local reference links which point at headers in a different file that use the equals syntax", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
@@ -584,7 +584,7 @@ describe("bad-links-in-markdown - underscore headers", () => {
     });
 
     it("Ignores local reference links which point at headers in a different file that use the dash syntax", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
@@ -629,7 +629,7 @@ describe("bad-links-in-markdown - underscore headers", () => {
     });
 
     it("Identifies local reference links which point at invalid headers in a different file that use the equals syntax", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
@@ -683,7 +683,7 @@ describe("bad-links-in-markdown - underscore headers", () => {
     });
 
     it("Identifies local reference links which point at invalid headers in a different file that use the dash syntax", async () => {
-      const testDirectory = await newTestDirectory({
+      const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
