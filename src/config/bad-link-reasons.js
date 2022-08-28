@@ -20,4 +20,6 @@ export const badLinkReasons = {
   )}`,
   CASE_SENSITIVE_HEADER_TAG:
     "Header tag includes upper case characters. It is recommended to only used lower case. It will work in github but may not work in other markdown readers",
+  TOO_MANY_HASH_CHARACTERS:
+    "A header link should not contain more then one hash character",
 };

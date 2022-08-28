@@ -1,14 +1,16 @@
-import { doesFileExist } from "../../utils/does-file-exist";
-import { badLinkReasons } from "../../config/bad-link-reasons";
-import { badHeaderTags } from "./utils/bad-header-tags";
 import { reject } from "lodash";
+import { badLinkReasons } from "../../config/bad-link-reasons";
+import { doesFileExist } from "../../utils/does-file-exist";
+import { match } from "../../utils/match";
+import { badHeaderTags } from "./utils/bad-header-tags";
 
 export const findLinksWithBadHeaderTags = (linkObjects) => {
   const linksExcludingLineNumberTags = reject(linkObjects, isLineNumberTag);
 
   return [
+    ...findMissingHeaderTags(linksExcludingLineNumberTags),
     ...findCaseInsensitiveHeaderTags(linksExcludingLineNumberTags),
-    ...findBrokenHeaderTags(linksExcludingLineNumberTags),
+    ...findHeaderLinksWithTooManyHashCharacters(linksExcludingLineNumberTags),
   ];
 };
 
@@ -25,7 +27,7 @@ const findCaseInsensitiveHeaderTags = (linkObjects) => {
     }));
 };
 
-const findBrokenHeaderTags = (linkObjects) => {
+const findMissingHeaderTags = (linkObjects) => {
   const workingLinks = linkObjects.filter((linkObject) =>
     doesFileExist(linkObject.fullPath)
   );
@@ -38,4 +40,17 @@ const findBrokenHeaderTags = (linkObjects) => {
     ...linkObject,
     reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
   }));
+};
+
+const findHeaderLinksWithTooManyHashCharacters = (linkObjects) => {
+  const workingLinks = linkObjects.filter((linkObject) =>
+    doesFileExist(linkObject.fullPath)
+  );
+
+  return workingLinks
+    .filter(({ link }) => match(link, /#/g).length >= 2)
+    .map((linkObject) => ({
+      ...linkObject,
+      reasons: [badLinkReasons.TOO_MANY_HASH_CHARACTERS],
+    }));
 };
