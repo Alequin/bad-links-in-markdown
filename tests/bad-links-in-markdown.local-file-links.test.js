@@ -2,6 +2,8 @@ import fs from "fs";
 import { badLinksInMarkdown } from "../bad-links-in-markdown";
 import { badLinkReasons } from "../src/config/bad-link-reasons";
 import {
+  anchorLinkDoubleQuoteTemplate,
+  anchorLinkSingleQuoteTemplate,
   applyTemplate,
   inlineLinkTemplate,
   referenceLinkTemplate,
@@ -15,7 +17,12 @@ import {
 } from "./test-utils";
 
 describe("bad-links-in-markdown - local file links", () => {
-  describe.each([inlineLinkTemplate, referenceLinkTemplate])(
+  describe.each([
+    inlineLinkTemplate,
+    referenceLinkTemplate,
+    anchorLinkSingleQuoteTemplate,
+    anchorLinkDoubleQuoteTemplate,
+  ])(
     "identify-invalid-local-links and the link is an inline link",
     (markdown) => {
       it.only(`Identifies a local ${markdown.linkType} that point at a file that does not exist`, async () => {

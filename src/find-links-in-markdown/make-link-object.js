@@ -20,7 +20,7 @@ export const makeLinkObjectFromReferenceLink = ({ markdownLink, isImage }) => {
   });
 };
 
-const ANCHOR_LINK_REGEX = /href="(.*?)"/;
+const ANCHOR_LINK_REGEX = /href=[",'](.*?)[",']/;
 export const makeLinkObjectFromAnchorLink = ({ markdownLink }) => {
   return makeLinkObject({
     markdownLink,
