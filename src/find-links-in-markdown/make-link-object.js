@@ -20,6 +20,15 @@ export const makeLinkObjectFromReferenceLink = ({ markdownLink, isImage }) => {
   });
 };
 
+const ANCHOR_LINK_REGEX = /href="(.*?)"/;
+export const makeLinkObjectFromAnchorLink = ({ markdownLink }) => {
+  return makeLinkObject({
+    markdownLink,
+    isImage: false,
+    fullLink: match(markdownLink, ANCHOR_LINK_REGEX)[1],
+  });
+};
+
 const makeLinkObject = ({ markdownLink, fullLink, isImage }) => {
   const linkWithTag = removeLabelText(fullLink).trim();
   const [link, tag] = linkWithTag.startsWith("#")

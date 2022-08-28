@@ -3433,4 +3433,55 @@ describe("bad-links-in-markdown - local file links", () => {
       }, testDirectory);
     });
   });
+
+  describe("identify-invalid-local-links and the link is an anchor link", () => {
+    it("Identifies local inline links that point at files that do not exist", async () => {
+      const { path: testDirectory } = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
+
+      const { filePath } = newTestMarkdownFile({
+        directory: testDirectory,
+        content: `<a href="./path/to/missing/file.md">an anchor link</a>`,
+      });
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [
+            {
+              filePath,
+              missingLinks: [
+                {
+                  link: `<a href="./path/to/missing/file.md">an anchor link</a>`,
+                  reasons: [badLinkReasons.FILE_NOT_FOUND],
+                },
+              ],
+            },
+          ],
+        });
+      }, testDirectory);
+    });
+
+    it("Ignores local inline links which point at files which exist", async () => {
+      const { path: testDirectory } = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
+
+      const fileToLinkTo = newTestMarkdownFile({
+        directory: testDirectory,
+        content: `foo bar baz`,
+      });
+
+      newTestMarkdownFile({
+        directory: testDirectory,
+        content: `<a href="./${fileToLinkTo.fileName}">an anchor link</a>`,
+      });
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [],
+        });
+      }, testDirectory);
+    });
+  });
 });
