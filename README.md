@@ -1,6 +1,6 @@
 # bad-links-in-markdown
 
-<a href='./src'>an anchor link</a>
+<a href='test.md'>an anchor link</a>
 
 ---
 
