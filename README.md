@@ -1,10 +1,6 @@
 # bad-links-in-markdown
 
-[foobar](#l20)
-
-[foobar](#KEY-TERMS-1)
-
-[foobar](#key-terms)
+<a href="./test.md">an anchor link</a>
 
 ---
 
