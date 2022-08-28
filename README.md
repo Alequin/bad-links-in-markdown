@@ -2,8 +2,8 @@
 
 <a href='test.md'>an anchor link</a>
 
-[foobar1](# TODO)
-[foobar2](## TODO)
+[foobar1](#todo)
+[foobar2](##todo)
 
 ---
 
