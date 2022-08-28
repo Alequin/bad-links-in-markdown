@@ -2,6 +2,9 @@
 
 <a href='test.md'>an anchor link</a>
 
+[foobar1](# TODO)
+[foobar2](## TODO)
+
 ---
 
     [testing]: #test-header
