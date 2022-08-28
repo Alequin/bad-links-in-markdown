@@ -4,6 +4,7 @@
 
 [foobar1](#todo)
 [foobar2](##todo)
+[foobar3](###todo)
 
 ---
 
