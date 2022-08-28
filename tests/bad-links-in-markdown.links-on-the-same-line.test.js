@@ -1,0 +1,111 @@
+import fs from "fs";
+import { badLinksInMarkdown } from "../bad-links-in-markdown";
+import { badLinkReasons } from "../src/config/bad-link-reasons";
+import {
+  anchorLinkDoubleQuoteTemplate,
+  anchorLinkSingleQuoteTemplate,
+  applyTemplate,
+  inlineLinkTemplate,
+  referenceLinkTemplate,
+} from "./markdown-templates";
+import {
+  newTestDirectory,
+  newTestFile,
+  newTestMarkdownFile,
+  runTestWithDirectoryCleanup,
+  TOP_LEVEL_DIRECTORY,
+} from "./test-utils";
+
+describe("bad-links-in-markdown  - links on the same line", () => {
+  it("Identifies multiple local inline links on the same file line that point at files that do not exist", async () => {
+    const { path: testDirectory } = await newTestDirectory({
+      parentDirectory: TOP_LEVEL_DIRECTORY,
+    });
+
+    const { filePath } = newTestMarkdownFile({ directory: testDirectory });
+
+    fs.writeFileSync(
+      filePath,
+      [
+        "[I am a local link](./path/to/missing/file.md)",
+        "[I am another local link](./path/to/missing/file.md)",
+        "[I am anotherx2 local link](./path/to/missing/file.md)",
+        "[I am anotherx3 local link](./path/to/missing/file.md)",
+      ].join(" and ")
+    );
+
+    await runTestWithDirectoryCleanup(async () => {
+      expect(await badLinksInMarkdown(testDirectory)).toEqual({
+        badLocalLinks: [
+          {
+            filePath,
+            missingLinks: [
+              {
+                link: "[I am a local link](./path/to/missing/file.md)",
+                reasons: [badLinkReasons.FILE_NOT_FOUND],
+              },
+              {
+                link: "[I am another local link](./path/to/missing/file.md)",
+                reasons: [badLinkReasons.FILE_NOT_FOUND],
+              },
+              {
+                link: "[I am anotherx2 local link](./path/to/missing/file.md)",
+                reasons: [badLinkReasons.FILE_NOT_FOUND],
+              },
+              {
+                link: "[I am anotherx3 local link](./path/to/missing/file.md)",
+                reasons: [badLinkReasons.FILE_NOT_FOUND],
+              },
+            ],
+          },
+        ],
+      });
+    }, testDirectory);
+  });
+
+  it("Identifies multiple local anchor links on the same file line that point at files that do not exist", async () => {
+    const { path: testDirectory } = await newTestDirectory({
+      parentDirectory: TOP_LEVEL_DIRECTORY,
+    });
+
+    const { filePath } = newTestMarkdownFile({ directory: testDirectory });
+
+    fs.writeFileSync(
+      filePath,
+      [
+        "<a href='./path/to/missing/file.md'>I am a local link</a>",
+        "<a href='./path/to/missing/file.md'>I am another local link</a>",
+        "<a href='./path/to/missing/file.md'>I am anotherx2 local link</a>",
+        "<a href='./path/to/missing/file.md'>I am anotherx3 local link</a>",
+      ].join(" and ")
+    );
+
+    await runTestWithDirectoryCleanup(async () => {
+      expect(await badLinksInMarkdown(testDirectory)).toEqual({
+        badLocalLinks: [
+          {
+            filePath,
+            missingLinks: [
+              {
+                link: "<a href='./path/to/missing/file.md'>I am a local link</a>",
+                reasons: [badLinkReasons.FILE_NOT_FOUND],
+              },
+              {
+                link: "<a href='./path/to/missing/file.md'>I am another local link</a>",
+                reasons: [badLinkReasons.FILE_NOT_FOUND],
+              },
+              {
+                link: "<a href='./path/to/missing/file.md'>I am anotherx2 local link</a>",
+                reasons: [badLinkReasons.FILE_NOT_FOUND],
+              },
+              {
+                link: "<a href='./path/to/missing/file.md'>I am anotherx3 local link</a>",
+                reasons: [badLinkReasons.FILE_NOT_FOUND],
+              },
+            ],
+          },
+        ],
+      });
+    }, testDirectory);
+  });
+});

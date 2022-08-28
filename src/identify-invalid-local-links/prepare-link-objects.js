@@ -1,10 +1,11 @@
 import fs from "fs";
-import { last } from "lodash";
+import { first, last } from "lodash";
 import path from "path";
 import { match } from "../utils/match";
 import { isLocalLink } from "../utils/link-type-checks";
 import { doesLinkStartWithRelativePath } from "../utils/does-link-start-with-relative-path";
 import { doesFileExist } from "../utils/does-file-exist";
+import { LINK_TYPE } from "../config/link-type";
 
 /**
  * @param {{
@@ -96,6 +97,24 @@ const addRawFileNameToObject = (linkObject) => {
 };
 
 const addMatchingFilesInDirectoryToLinks = (linkObject) => {
+  if (linkObject.type === LINK_TYPE.anchorLink) {
+    // Anchor tags must have exact links and so cannot have matching files
+    return {
+      ...linkObject,
+      matchedFileCount: 0,
+      matchedFile: null,
+    };
+  }
+
+  const matchedFiles = findMatchingFiles(linkObject);
+  return {
+    ...linkObject,
+    matchedFileCount: matchedFiles?.length || 0,
+    matchedFile: first(matchedFiles) || null,
+  };
+};
+
+const findMatchingFiles = (linkObject) => {
   const directoryToCheckForMatchingFiles = linkObject.fullPath.replace(
     linkObject.name,
     ""
@@ -104,12 +123,7 @@ const addMatchingFilesInDirectoryToLinks = (linkObject) => {
     ? fs.readdirSync(directoryToCheckForMatchingFiles)
     : null;
 
-  return {
-    ...linkObject,
-    matchedFileCount:
-      filesInDirectory?.filter(isMatchFile(linkObject))?.length || null,
-    matchedFile: filesInDirectory?.find(isMatchFile(linkObject)) || null,
-  };
+  return filesInDirectory?.filter(isMatchFile(linkObject));
 };
 
 const isMatchFile = (linkObject) => (fileInDirectory) => {
