@@ -10,7 +10,7 @@ export const findMissingLinksWithFileExtensions = (linkObjects) => {
   );
 
   const linkWithBadTargetLineNumbers = badLineTags(
-    workingLinks.filter(({ tag }) => tag?.startsWith("L"))
+    workingLinks.filter(({ linkTag }) => linkTag?.startsWith("L"))
   );
 
   return [

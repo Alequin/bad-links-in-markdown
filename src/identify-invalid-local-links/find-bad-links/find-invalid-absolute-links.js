@@ -3,7 +3,7 @@ import fs from "fs";
 
 export const windowsAbsoluteLinks = (linkObjects) =>
   linkObjects
-    .filter(({ link }) => /^\/?\w:/.test(link))
+    .filter(({ linkPath }) => /^\/?\w:/.test(linkPath))
     .map((linkObject) => ({
       ...linkObject,
       reasons: [badLinkReasons.POTENTIAL_WINDOWS_ABSOLUTE_LINK],
@@ -15,7 +15,7 @@ export const badRootAbsoluteLinks = (linkObjects) =>
     .filter((linkObject) => {
       const doesLinkStartWithAnyRootFileNames = fs
         .readdirSync(linkObject.topLevelDirectory)
-        .some((fileName) => linkObject.link.startsWith(`/${fileName}`));
+        .some((fileName) => linkObject.linkPath.startsWith(`/${fileName}`));
 
       return !doesLinkStartWithAnyRootFileNames;
     })

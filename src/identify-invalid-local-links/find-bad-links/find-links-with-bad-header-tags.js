@@ -13,11 +13,12 @@ export const findLinksWithBadHeaderTags = (linkObjects) => {
 };
 
 const LINE_NUMBER_TAG_REGEX = /l\d+/i;
-const isLineNumberTag = ({ tag }) => tag && LINE_NUMBER_TAG_REGEX.test(tag);
+const isLineNumberTag = ({ linkTag }) =>
+  linkTag && LINE_NUMBER_TAG_REGEX.test(linkTag);
 
 const findCaseInsensitiveHeaderTags = (linkObjects) => {
   return linkObjects
-    .filter(({ tag }) => tag && tag !== tag.toLowerCase())
+    .filter(({ linkTag }) => linkTag && linkTag !== linkTag.toLowerCase())
     .map((linkObject) => ({
       ...linkObject,
       reasons: [badLinkReasons.CASE_SENSITIVE_HEADER_TAG],
@@ -31,7 +32,7 @@ const findBrokenHeaderTags = (linkObjects) => {
 
   return badHeaderTags(
     workingLinks.filter(
-      ({ tag, linkFileExtension }) => tag && linkFileExtension === ".md"
+      ({ linkTag, linkFileExtension }) => linkTag && linkFileExtension === ".md"
     )
   ).map((linkObject) => ({
     ...linkObject,

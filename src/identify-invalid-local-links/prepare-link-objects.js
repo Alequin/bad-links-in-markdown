@@ -10,14 +10,15 @@ import { LINK_TYPE } from "../config/link-type";
 /**
  * @param {{
  * markdownLink: String
- * link: String
- * tag: String | undefined
+ * linkPath: String | undefined
+ * linkTag: String | undefined
  * isImage: Boolean
  * }} fileObject
  * @returns {{
  * markdownLink: String
  * link: String
- * tag: String | null
+ * linkPath: String | null
+ * linkTag: String | null
  * isImage: Boolean
  * directory: String
  * topLevelDirectory: String
@@ -35,7 +36,7 @@ import { LINK_TYPE } from "../config/link-type";
  */
 export const prepareLinkObjects = (fileObject) =>
   fileObject.links
-    .filter(({ link, tag }) => isLocalLink(link, tag))
+    .filter(({ linkPath, linkTag }) => isLocalLink(linkPath, linkTag))
     .map((linkObject) => ({
       ...linkObject,
       directory: fileObject.directory,
@@ -54,7 +55,7 @@ export const prepareLinkObjects = (fileObject) =>
 const addIsInternalFileLink = (linkObject) => {
   return {
     ...linkObject,
-    isInternalFileLink: Boolean(!linkObject.link && linkObject.tag),
+    isInternalFileLink: Boolean(!linkObject.linkPath && linkObject.linkTag),
   };
 };
 
@@ -75,7 +76,10 @@ const addFullPathToObject = (linkObject) => {
     : {
         ...linkObject,
         fullPath: linkObject.isAbsoluteLink
-          ? path.resolve(linkObject.topLevelDirectory, `./${linkObject.link}`)
+          ? path.resolve(
+              linkObject.topLevelDirectory,
+              `./${linkObject.linkPath}`
+            )
           : getFullPathFromRelativeLink(linkObject),
       };
 };
@@ -83,9 +87,9 @@ const addFullPathToObject = (linkObject) => {
 const getFullPathFromRelativeLink = (linkObject) => {
   return path.resolve(
     linkObject.directory,
-    doesLinkStartWithRelativePath(linkObject.link)
-      ? linkObject.link
-      : `./${linkObject.link}`
+    doesLinkStartWithRelativePath(linkObject.linkPath)
+      ? linkObject.linkPath
+      : `./${linkObject.linkPath}`
   );
 };
 
@@ -131,17 +135,19 @@ const isMatchFile = (linkObject) => (fileInDirectory) => {
 };
 
 const addFileExtension = (linkObject) => {
+  const { linkPath, fullPath } = linkObject;
+
   const fileExtension =
-    getFileExtension(linkObject.link) || getFileExtension(linkObject.fullPath);
+    getFileExtension(linkPath) || getFileExtension(fullPath);
   const fileExtensionToUse =
     fileExtension || getFileExtension(linkObject?.matchedFile);
 
   return {
     ...linkObject,
-    rawLink: linkObject.link,
-    link: fileExtension
-      ? linkObject.link
-      : `${linkObject.link}${fileExtensionToUse || ""}`,
+    rawLinkPath: linkPath,
+    linkPath: fileExtension
+      ? linkPath
+      : `${linkPath}${fileExtensionToUse || ""}`,
     isLinkMissingFileExtension: !fileExtension,
     linkFileExtension: fileExtensionToUse, // TODO make it clear why isLinkMissingFileExtension might be false and linkFileExtension might be a value
   };

@@ -35,15 +35,16 @@ export const makeLinkObjectFromAnchorLink = ({ markdownLink }) => {
 
 const makeLinkObject = ({ type, markdownLink, fullLink, isImage }) => {
   const linkWithTag = removeLabelText(fullLink).trim();
-  const [link, tag] = linkWithTag.startsWith("#")
+  const [linkPath, linkTag] = linkWithTag.startsWith("#")
     ? [undefined, removeHashCharsFromStart(linkWithTag)]
     : linkWithTag.split("#");
 
-  const trimmedLinkData = mapValues({ markdownLink, link, tag }, (value) =>
-    value?.trim()
+  const trimmedLinkData = mapValues(
+    { markdownLink, linkPath, linkTag, link: linkWithTag },
+    (value) => value?.trim()
   );
 
-  return isValidLink(link, tag)
+  return isValidLink(linkPath, linkTag)
     ? Object.freeze({ ...trimmedLinkData, type, isImage })
     : null;
 };
