@@ -4,6 +4,7 @@
 <a href='./test.md    '>an anchor link</a>
 <a href='    ./test.md'>an anchor link</a>
 <a href='    ./test.md    '>an anchor link</a>
+<a href='/src'>an anchor link</a>
 
 [foobar1](#todo)
 [foobar2](##todo)
