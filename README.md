@@ -1,6 +1,9 @@
 # bad-links-in-markdown
 
 <a href='./test.md'>an anchor link</a>
+<a href='./test.md    '>an anchor link</a>
+<a href='    ./test.md'>an anchor link</a>
+<a href='    ./test.md    '>an anchor link</a>
 
 [foobar1](#todo)
 [foobar2](##todo)
