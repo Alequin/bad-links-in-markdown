@@ -1,10 +1,6 @@
 # bad-links-in-markdown
 
-<a href='./test.md'>an anchor link</a>
-<a href='./test.md    '>an anchor link</a>
-<a href='    ./test.md'>an anchor link</a>
-<a href='    ./test.md    '>an anchor link</a>
-<a href='/src'>an anchor link</a>
+<a href='#syntax-notes'>an anchor link</a>
 
 [foobar1](#todo)
 [foobar2](##todo)
@@ -74,7 +70,9 @@ The script:
 - make images without alt tag show up, broken images only show up a broken when given an alt tag
 - should some "badLinkReasons" block others. 
   - Should FILE_NOT_FOUND show if MISSING_FILE_EXTENSION is also showing?
-### Syntax notes
+  
+Syntax notes
+===
 
 https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet#links
 https://www.markdownguide.org/basic-syntax/#links
