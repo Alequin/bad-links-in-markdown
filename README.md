@@ -72,7 +72,7 @@ The script:
   - Should FILE_NOT_FOUND show if MISSING_FILE_EXTENSION is also showing?
   
 Syntax notes
-===
+=
 
 https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet#links
 https://www.markdownguide.org/basic-syntax/#links
