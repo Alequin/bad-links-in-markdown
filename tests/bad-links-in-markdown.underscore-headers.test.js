@@ -1,731 +1,464 @@
-import fs from "fs";
 import { badLinksInMarkdown } from "../bad-links-in-markdown";
 import { badLinkReasons } from "../src/config/bad-link-reasons";
 import {
+  anchorLinkDoubleQuoteTemplate,
+  anchorLinkSingleQuoteTemplate,
+  applyTemplate,
+  inlineLinkTemplate,
+  referenceLinkTemplate,
+  shorthandReferenceLinkTemplate,
+} from "./markdown-templates";
+import {
   newTestDirectory,
-  newTestFile,
   newTestMarkdownFile,
   runTestWithDirectoryCleanup,
   TOP_LEVEL_DIRECTORY,
 } from "./test-utils";
 
-describe("bad-links-in-markdown - underscore headers", () => {
-  describe("local inline links to headers in current file", () => {
-    it("Ignores local inline links which point at headers in the current file that use the equals syntax", async () => {
-      const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
-      });
-
-      const { filePath } = newTestMarkdownFile({ directory: testDirectory });
-
-      fs.writeFileSync(
-        filePath,
-        [
-          "[Solution A](#solution-a-foo-x-bar-hybrid)",
-          "",
-          "Solution A: Foo x Bar Hybrid",
-          "=",
-          "",
-          "[Solution B](#solution-b-foo-x-bar-hybrid)",
-          "",
-          "Solution B: Foo x Bar Hybrid",
-          "==",
-          "",
-          "[Solution C](#solution-c-foo-x-bar-hybrid)",
-          "",
-          "Solution C: Foo x Bar Hybrid",
-          "===",
-        ].join("\n")
-      );
-
-      await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
-          badLocalLinks: [],
-        });
-      }, testDirectory);
+describe.each([
+  inlineLinkTemplate,
+  referenceLinkTemplate,
+  shorthandReferenceLinkTemplate,
+  anchorLinkSingleQuoteTemplate,
+  anchorLinkDoubleQuoteTemplate,
+])("bad-links-in-markdown - underscore headers for link", (markdown) => {
+  it(`Ignores local ${markdown.linkType} which point at headers in the current file that use the equals syntax`, async () => {
+    const { path: testDirectory } = await newTestDirectory({
+      parentDirectory: TOP_LEVEL_DIRECTORY,
     });
 
-    it("Ignores local inline links which point at headers in the current file that use the dash syntax", async () => {
-      const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
-      });
-
-      const { filePath } = newTestMarkdownFile({ directory: testDirectory });
-
-      fs.writeFileSync(
-        filePath,
-        [
-          "[Solution A](#solution-a-foo-x-bar-hybrid)",
-          "",
-          "Solution A: Foo x Bar Hybrid",
-          "-",
-          "",
-          "[Solution B](#solution-b-foo-x-bar-hybrid)",
-          "",
-          "Solution B: Foo x Bar Hybrid",
-          "--",
-          "",
-          "[Solution C](#solution-c-foo-x-bar-hybrid)",
-          "",
-          "Solution C: Foo x Bar Hybrid",
-          "---",
-        ].join("\n")
-      );
-
-      await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
-          badLocalLinks: [],
-        });
-      }, testDirectory);
+    newTestMarkdownFile({
+      directory: testDirectory,
+      content: [
+        "Solution A: Foo x Bar Hybrid",
+        "=",
+        "",
+        applyTemplate(markdown.template, {
+          link: "#solution-a-foo-x-bar-hybrid",
+        }),
+      ].join("\n"),
     });
 
-    it("Identifies local inline links which point at invalid headers in the current file that use the equals syntax", async () => {
-      const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
-      });
-
-      const { filePath } = newTestMarkdownFile({ directory: testDirectory });
-
-      fs.writeFileSync(
-        filePath,
-        [
-          "[Solution A](#solution-a-foo-x-bar-hybrid)",
-          "",
-          "Solution A: Foo x Bar Hybrid",
-          "",
-          "===",
-          "",
-          "[Solution C](#solution-c-foo-x-bar-hybrid)",
-          "",
-          "Solution C",
-          "Foo x Bar Hybrid",
-          "===",
-        ].join("\n")
-      );
-
-      await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
-          badLocalLinks: [
-            {
-              filePath,
-              missingLinks: [
-                {
-                  link: "[Solution A](#solution-a-foo-x-bar-hybrid)",
-                  reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
-                },
-                {
-                  link: "[Solution C](#solution-c-foo-x-bar-hybrid)",
-                  reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
-                },
-              ],
-            },
-          ],
-        });
-      }, testDirectory);
+    newTestMarkdownFile({
+      directory: testDirectory,
+      content: [
+        "Solution B: Foo x Bar Hybrid",
+        "==",
+        "",
+        applyTemplate(markdown.template, {
+          link: "#solution-b-foo-x-bar-hybrid",
+        }),
+      ].join("\n"),
     });
 
-    it("Identifies local inline links which point at invalid headers in the current file that use the dash syntax", async () => {
-      const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
-      });
-
-      const { filePath } = newTestMarkdownFile({ directory: testDirectory });
-
-      fs.writeFileSync(
-        filePath,
-        [
-          "[Solution A](#solution-a-foo-x-bar-hybrid)",
-          "",
-          "Solution A: Foo x Bar Hybrid",
-          "",
-          "---",
-          "",
-          "[Solution C](#solution-c-foo-x-bar-hybrid)",
-          "",
-          "Solution C",
-          "Foo x Bar Hybrid",
-          "---",
-        ].join("\n")
-      );
-
-      await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
-          badLocalLinks: [
-            {
-              filePath,
-              missingLinks: [
-                {
-                  link: "[Solution A](#solution-a-foo-x-bar-hybrid)",
-                  reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
-                },
-                {
-                  link: "[Solution C](#solution-c-foo-x-bar-hybrid)",
-                  reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
-                },
-              ],
-            },
-          ],
-        });
-      }, testDirectory);
+    newTestMarkdownFile({
+      directory: testDirectory,
+      content: [
+        "Solution C: Foo x Bar Hybrid",
+        "===",
+        "",
+        applyTemplate(markdown.template, {
+          link: "#solution-c-foo-x-bar-hybrid",
+        }),
+      ].join("\n"),
     });
+
+    await runTestWithDirectoryCleanup(async () => {
+      expect(await badLinksInMarkdown(testDirectory)).toEqual({
+        badLocalLinks: [],
+      });
+    }, testDirectory);
   });
 
-  describe("local inline links to headers in another file", () => {
-    it("Ignores local inline links which point at headers in a different file that use the equals syntax", async () => {
-      const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
-      });
-
-      const fileToLinkTo = newTestMarkdownFile({
-        directory: testDirectory,
-      });
-      fs.writeFileSync(
-        fileToLinkTo.filePath,
-        [
-          "Solution A: Foo x Bar Hybrid",
-          "=",
-          "",
-          "Solution B: Foo x Bar Hybrid",
-          "==",
-          "",
-          "Solution C: Foo x Bar Hybrid",
-          "===",
-        ].join("\n")
-      );
-
-      const { filePath } = newTestMarkdownFile({ directory: testDirectory });
-
-      fs.writeFileSync(
-        filePath,
-        [
-          `[Solution A](./${fileToLinkTo.fileName}#solution-a-foo-x-bar-hybrid)`,
-          `[Solution B](./${fileToLinkTo.fileName}#solution-b-foo-x-bar-hybrid)`,
-          `[Solution C](./${fileToLinkTo.fileName}#solution-c-foo-x-bar-hybrid)`,
-        ].join("\n")
-      );
-
-      await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
-          badLocalLinks: [],
-        });
-      }, testDirectory);
+  it(`Ignores local ${markdown.linkType} which point at headers in the current file that use the dash syntax`, async () => {
+    const { path: testDirectory } = await newTestDirectory({
+      parentDirectory: TOP_LEVEL_DIRECTORY,
     });
 
-    it("Ignores local inline links which point at headers in a different file that use the dash syntax", async () => {
-      const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
-      });
+    const { filePath } = newTestMarkdownFile({ directory: testDirectory });
 
-      const fileToLinkTo = newTestMarkdownFile({
-        directory: testDirectory,
-      });
-
-      fs.writeFileSync(
-        fileToLinkTo.filePath,
-        [
-          "Solution A: Foo x Bar Hybrid",
-          "-",
-          "",
-          "Solution B: Foo x Bar Hybrid",
-          "--",
-          "",
-          "Solution C: Foo x Bar Hybrid",
-          "---",
-        ].join("\n")
-      );
-
-      const { filePath } = newTestMarkdownFile({ directory: testDirectory });
-
-      fs.writeFileSync(
-        filePath,
-        [
-          `[Solution A](./${fileToLinkTo.fileName}#solution-a-foo-x-bar-hybrid)`,
-          `[Solution B](./${fileToLinkTo.fileName}#solution-b-foo-x-bar-hybrid)`,
-          `[Solution C](./${fileToLinkTo.fileName}#solution-c-foo-x-bar-hybrid)`,
-        ].join("\n")
-      );
-
-      await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
-          badLocalLinks: [],
-        });
-      }, testDirectory);
+    newTestMarkdownFile({
+      directory: testDirectory,
+      content: [
+        "Solution A: Foo x Bar Hybrid",
+        "-",
+        "",
+        applyTemplate(markdown.template, {
+          link: "#solution-a-foo-x-bar-hybrid",
+        }),
+      ].join("\n"),
     });
 
-    it("Identifies local inline links which point at invalid headers in a different file that use the equals syntax", async () => {
-      const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
-      });
-
-      const fileToLinkTo = newTestMarkdownFile({
-        directory: testDirectory,
-      });
-
-      fs.writeFileSync(
-        fileToLinkTo.filePath,
-        [
-          "Solution A: Foo x Bar Hybrid",
-          "",
-          "===",
-          "",
-          "Solution C",
-          "Foo x Bar Hybrid",
-          "===",
-        ].join("\n")
-      );
-
-      const { filePath } = newTestMarkdownFile({ directory: testDirectory });
-
-      fs.writeFileSync(
-        filePath,
-        [
-          `[Solution A](./${fileToLinkTo.fileName}#solution-a-foo-x-bar-hybrid)`,
-          `[Solution C](./${fileToLinkTo.fileName}#solution-c-foo-x-bar-hybrid)`,
-        ].join("\n")
-      );
-
-      await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
-          badLocalLinks: [
-            {
-              filePath,
-              missingLinks: [
-                {
-                  link: `[Solution A](./${fileToLinkTo.fileName}#solution-a-foo-x-bar-hybrid)`,
-                  reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
-                },
-                {
-                  link: `[Solution C](./${fileToLinkTo.fileName}#solution-c-foo-x-bar-hybrid)`,
-                  reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
-                },
-              ],
-            },
-          ],
-        });
-      }, testDirectory);
+    newTestMarkdownFile({
+      directory: testDirectory,
+      content: [
+        "Solution B: Foo x Bar Hybrid",
+        "--",
+        "",
+        applyTemplate(markdown.template, {
+          link: "#solution-b-foo-x-bar-hybrid",
+        }),
+      ].join("\n"),
     });
 
-    it("Identifies local inline links which point at invalid headers in a different file that use the dash syntax", async () => {
-      const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
-      });
-
-      const fileToLinkTo = newTestMarkdownFile({
-        directory: testDirectory,
-      });
-
-      fs.writeFileSync(
-        fileToLinkTo.filePath,
-        [
-          "Solution A: Foo x Bar Hybrid",
-          "",
-          "---",
-          "",
-          "Solution C",
-          "Foo x Bar Hybrid",
-          "---",
-        ].join("\n")
-      );
-
-      const { filePath } = newTestMarkdownFile({ directory: testDirectory });
-
-      fs.writeFileSync(
-        filePath,
-        [
-          `[Solution A](./${fileToLinkTo.fileName}#solution-a-foo-x-bar-hybrid)`,
-          `[Solution C](./${fileToLinkTo.fileName}#solution-c-foo-x-bar-hybrid)`,
-        ].join("\n")
-      );
-
-      await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
-          badLocalLinks: [
-            {
-              filePath,
-              missingLinks: [
-                {
-                  link: `[Solution A](./${fileToLinkTo.fileName}#solution-a-foo-x-bar-hybrid)`,
-                  reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
-                },
-                {
-                  link: `[Solution C](./${fileToLinkTo.fileName}#solution-c-foo-x-bar-hybrid)`,
-                  reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
-                },
-              ],
-            },
-          ],
-        });
-      }, testDirectory);
+    newTestMarkdownFile({
+      directory: testDirectory,
+      content: [
+        "Solution C: Foo x Bar Hybrid",
+        "---",
+        "",
+        applyTemplate(markdown.template, {
+          link: "#solution-c-foo-x-bar-hybrid",
+        }),
+      ].join("\n"),
     });
+
+    await runTestWithDirectoryCleanup(async () => {
+      expect(await badLinksInMarkdown(testDirectory)).toEqual({
+        badLocalLinks: [],
+      });
+    }, testDirectory);
   });
 
-  describe("local reference links to headers in current file", () => {
-    it("Ignores local reference links which point at headers in the current file that use the equals syntax", async () => {
-      const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
-      });
-
-      const { filePath } = newTestMarkdownFile({ directory: testDirectory });
-
-      fs.writeFileSync(
-        filePath,
-        [
-          "[Solution A][A]",
-          "",
-          "Solution A: Foo x Bar Hybrid",
-          "=",
-          "",
-          "[Solution B][B]",
-          "",
-          "Solution B: Foo x Bar Hybrid",
-          "==",
-          "",
-          "[Solution C][C]",
-          "",
-          "Solution C: Foo x Bar Hybrid",
-          "===",
-          "",
-          "[A]: #solution-a-foo-x-bar-hybrid",
-          "[B]: #solution-b-foo-x-bar-hybrid",
-          "[C]: #solution-c-foo-x-bar-hybrid",
-        ].join("\n")
-      );
-
-      await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
-          badLocalLinks: [],
-        });
-      }, testDirectory);
+  it(`Identifies local ${markdown.linkType} which point at invalid headers in the current file that use the equals syntax`, async () => {
+    const { path: testDirectory } = await newTestDirectory({
+      parentDirectory: TOP_LEVEL_DIRECTORY,
     });
 
-    it("Ignores local reference links which point at headers in the current file that use the dash syntax", async () => {
-      const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
-      });
-
-      const { filePath } = newTestMarkdownFile({ directory: testDirectory });
-
-      fs.writeFileSync(
-        filePath,
-        [
-          "[Solution A][A]",
-          "",
-          "Solution A: Foo x Bar Hybrid",
-          "-",
-          "",
-          "[Solution B][B]",
-          "",
-          "Solution B: Foo x Bar Hybrid",
-          "--",
-          "",
-          "[Solution C][C]",
-          "",
-          "Solution C: Foo x Bar Hybrid",
-          "---",
-          "",
-          "[A]: #solution-a-foo-x-bar-hybrid",
-          "[B]: #solution-b-foo-x-bar-hybrid",
-          "[C]: #solution-c-foo-x-bar-hybrid",
-        ].join("\n")
-      );
-
-      await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
-          badLocalLinks: [],
-        });
-      }, testDirectory);
+    const firstLink = "#solution-a-foo-x-bar-hybrid";
+    const { filePath: firstFilePath } = newTestMarkdownFile({
+      directory: testDirectory,
+      content: [
+        "Solution A: Foo x Bar Hybrid",
+        "",
+        "===",
+        "",
+        applyTemplate(markdown.template, {
+          link: firstLink,
+        }),
+      ].join("\n"),
+    });
+    const firstExpectedBadLink = applyTemplate(markdown.expectedLink, {
+      link: firstLink,
     });
 
-    it("Identifies local reference links which point at invalid headers in the current file that use the equals syntax", async () => {
-      const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
-      });
-
-      const { filePath } = newTestMarkdownFile({ directory: testDirectory });
-
-      fs.writeFileSync(
-        filePath,
-        [
-          "[Solution A][A]",
-          "",
-          "Solution A: Foo x Bar Hybrid",
-          "",
-          "=",
-          "",
-          "[Solution C][C]",
-          "",
-          "Solution C: Foo x Bar Hybrid",
-          "",
-          "===",
-          "",
-          "[A]: #solution-a-foo-x-bar-hybrid",
-          "[C]: #solution-c-foo-x-bar-hybrid",
-        ].join("\n")
-      );
-
-      await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
-          badLocalLinks: [
-            {
-              filePath,
-              missingLinks: [
-                {
-                  link: "[A]: #solution-a-foo-x-bar-hybrid",
-                  reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
-                },
-                {
-                  link: "[C]: #solution-c-foo-x-bar-hybrid",
-                  reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
-                },
-              ],
-            },
-          ],
-        });
-      }, testDirectory);
+    const secondLink = "#solution-b-foo-x-bar-hybrid";
+    const { filePath: secondFilePath } = newTestMarkdownFile({
+      directory: testDirectory,
+      content: [
+        "Solution B",
+        "Foo x Bar Hybrid",
+        "===",
+        "",
+        applyTemplate(markdown.template, {
+          link: secondLink,
+        }),
+      ].join("\n"),
+    });
+    const secondExpectedBadLink = applyTemplate(markdown.expectedLink, {
+      link: secondLink,
     });
 
-    it("Identifies local reference links which point at invalid headers in the current file that use the dash syntax", async () => {
-      const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
+    await runTestWithDirectoryCleanup(async () => {
+      expect(await badLinksInMarkdown(testDirectory)).toEqual({
+        badLocalLinks: [
+          {
+            filePath: firstFilePath,
+            missingLinks: [
+              {
+                link: firstExpectedBadLink,
+                reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
+              },
+            ],
+          },
+          {
+            filePath: secondFilePath,
+            missingLinks: [
+              {
+                link: secondExpectedBadLink,
+                reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
+              },
+            ],
+          },
+        ],
       });
-
-      const { filePath } = newTestMarkdownFile({ directory: testDirectory });
-
-      fs.writeFileSync(
-        filePath,
-        [
-          "[Solution A][A]",
-          "",
-          "Solution A: Foo x Bar Hybrid",
-          "",
-          "-",
-          "",
-          "[Solution C][C]",
-          "",
-          "Solution C: Foo x Bar Hybrid",
-          "",
-          "---",
-          "",
-          "[A]: #solution-a-foo-x-bar-hybrid",
-          "[C]: #solution-c-foo-x-bar-hybrid",
-        ].join("\n")
-      );
-
-      await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
-          badLocalLinks: [
-            {
-              filePath,
-              missingLinks: [
-                {
-                  link: "[A]: #solution-a-foo-x-bar-hybrid",
-                  reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
-                },
-                {
-                  link: "[C]: #solution-c-foo-x-bar-hybrid",
-                  reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
-                },
-              ],
-            },
-          ],
-        });
-      }, testDirectory);
-    });
+    }, testDirectory);
   });
 
-  describe("local reference links to headers in another file", () => {
-    it("Ignores local reference links which point at headers in a different file that use the equals syntax", async () => {
-      const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
-      });
-
-      const fileToLinkTo = newTestMarkdownFile({
-        directory: testDirectory,
-      });
-
-      fs.writeFileSync(
-        fileToLinkTo.filePath,
-        [
-          "Solution A: Foo x Bar Hybrid",
-          "=",
-          "",
-          "Solution B: Foo x Bar Hybrid",
-          "==",
-          "",
-          "Solution C: Foo x Bar Hybrid",
-          "===",
-        ].join("\n")
-      );
-
-      const { filePath } = newTestMarkdownFile({ directory: testDirectory });
-
-      fs.writeFileSync(
-        filePath,
-        [
-          "[Solution A][A]",
-          "[Solution B][B]",
-          "[Solution C][C]",
-          `[A]: ./${fileToLinkTo}#solution-a-foo-x-bar-hybrid`,
-          `[B]: ./${fileToLinkTo}#solution-b-foo-x-bar-hybrid`,
-          `[C]: ./${fileToLinkTo}#solution-c-foo-x-bar-hybrid`,
-        ].join("\n")
-      );
-
-      await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
-          badLocalLinks: [],
-        });
-      }, testDirectory);
+  it(`Identifies local ${markdown.linkType} which point at invalid headers in the current file that use the dash syntax`, async () => {
+    const { path: testDirectory } = await newTestDirectory({
+      parentDirectory: TOP_LEVEL_DIRECTORY,
     });
 
-    it("Ignores local reference links which point at headers in a different file that use the dash syntax", async () => {
-      const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
-      });
-
-      const fileToLinkTo = newTestMarkdownFile({
-        directory: testDirectory,
-      });
-
-      fs.writeFileSync(
-        fileToLinkTo.filePath,
-        [
-          "Solution A: Foo x Bar Hybrid",
-          "-",
-          "",
-          "Solution B: Foo x Bar Hybrid",
-          "--",
-          "",
-          "Solution C: Foo x Bar Hybrid",
-          "---",
-        ].join("\n")
-      );
-
-      const { filePath } = newTestMarkdownFile({ directory: testDirectory });
-
-      fs.writeFileSync(
-        filePath,
-        [
-          "[Solution A][A]",
-          "[Solution B][B]",
-          "[Solution C][C]",
-          `[A]: ./${fileToLinkTo}#solution-a-foo-x-bar-hybrid`,
-          `[B]: ./${fileToLinkTo}#solution-b-foo-x-bar-hybrid`,
-          `[C]: ./${fileToLinkTo}#solution-c-foo-x-bar-hybrid`,
-        ].join("\n")
-      );
-
-      await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
-          badLocalLinks: [],
-        });
-      }, testDirectory);
+    const firstLink = "#solution-a-foo-x-bar-hybrid";
+    const { filePath: firstFilePath } = newTestMarkdownFile({
+      directory: testDirectory,
+      content: [
+        "Solution A: Foo x Bar Hybrid",
+        "",
+        "---",
+        "",
+        applyTemplate(markdown.template, {
+          link: firstLink,
+        }),
+      ].join("\n"),
+    });
+    const firstExpectedBadLink = applyTemplate(markdown.expectedLink, {
+      link: firstLink,
     });
 
-    it("Identifies local reference links which point at invalid headers in a different file that use the equals syntax", async () => {
-      const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
-      });
-
-      const fileToLinkTo = newTestMarkdownFile({
-        directory: testDirectory,
-      });
-
-      fs.writeFileSync(
-        fileToLinkTo.filePath,
-        [
-          "Solution A: Foo x Bar Hybrid",
-          "",
-          "=",
-          "",
-          "Solution C: Foo x Bar Hybrid",
-          "",
-          "===",
-        ].join("\n")
-      );
-
-      const { filePath } = newTestMarkdownFile({ directory: testDirectory });
-
-      fs.writeFileSync(
-        filePath,
-        [
-          `[A]: ./${fileToLinkTo.fileName}#solution-a-foo-x-bar-hybrid`,
-          `[C]: ./${fileToLinkTo.fileName}#solution-c-foo-x-bar-hybrid`,
-        ].join("\n")
-      );
-
-      await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
-          badLocalLinks: [
-            {
-              filePath,
-              missingLinks: [
-                {
-                  link: `[A]: ./${fileToLinkTo.fileName}#solution-a-foo-x-bar-hybrid`,
-                  reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
-                },
-                {
-                  link: `[C]: ./${fileToLinkTo.fileName}#solution-c-foo-x-bar-hybrid`,
-                  reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
-                },
-              ],
-            },
-          ],
-        });
-      }, testDirectory);
+    const secondLink = "#solution-c-foo-x-bar-hybrid";
+    const { filePath: secondFilePath } = newTestMarkdownFile({
+      directory: testDirectory,
+      content: [
+        "Solution B",
+        "Foo x Bar Hybrid",
+        "---",
+        "",
+        applyTemplate(markdown.template, {
+          link: secondLink,
+        }),
+      ].join("\n"),
+    });
+    const secondExpectedBadLink = applyTemplate(markdown.expectedLink, {
+      link: secondLink,
     });
 
-    it("Identifies local reference links which point at invalid headers in a different file that use the dash syntax", async () => {
-      const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
+    await runTestWithDirectoryCleanup(async () => {
+      expect(await badLinksInMarkdown(testDirectory)).toEqual({
+        badLocalLinks: [
+          {
+            filePath: firstFilePath,
+            missingLinks: [
+              {
+                link: firstExpectedBadLink,
+                reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
+              },
+            ],
+          },
+          {
+            filePath: secondFilePath,
+            missingLinks: [
+              {
+                link: secondExpectedBadLink,
+                reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
+              },
+            ],
+          },
+        ],
       });
+    }, testDirectory);
+  });
 
-      const fileToLinkTo = newTestMarkdownFile({
-        directory: testDirectory,
-      });
-
-      fs.writeFileSync(
-        fileToLinkTo.filePath,
-        [
-          "Solution A: Foo x Bar Hybrid",
-          "",
-          "-",
-          "",
-          "Solution C: Foo x Bar Hybrid",
-          "",
-          "---",
-        ].join("\n")
-      );
-
-      const { filePath } = newTestMarkdownFile({ directory: testDirectory });
-
-      fs.writeFileSync(
-        filePath,
-        [
-          `[A]: ./${fileToLinkTo.fileName}#solution-a-foo-x-bar-hybrid`,
-          `[C]: ./${fileToLinkTo.fileName}#solution-c-foo-x-bar-hybrid`,
-        ].join("\n")
-      );
-
-      await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
-          badLocalLinks: [
-            {
-              filePath,
-              missingLinks: [
-                {
-                  link: `[A]: ./${fileToLinkTo.fileName}#solution-a-foo-x-bar-hybrid`,
-                  reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
-                },
-                {
-                  link: `[C]: ./${fileToLinkTo.fileName}#solution-c-foo-x-bar-hybrid`,
-                  reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
-                },
-              ],
-            },
-          ],
-        });
-      }, testDirectory);
+  it(`Ignores local ${markdown.linkType} which point at headers in a different file that use the equals syntax`, async () => {
+    const { path: testDirectory } = await newTestDirectory({
+      parentDirectory: TOP_LEVEL_DIRECTORY,
     });
+
+    const fileA = newTestMarkdownFile({
+      directory: testDirectory,
+      content: ["Solution A: Foo x Bar Hybrid", "="].join("\n"),
+    });
+    newTestMarkdownFile({
+      directory: testDirectory,
+      content: applyTemplate(markdown.template, {
+        link: `./${fileA.fileName}#solution-a-foo-x-bar-hybrid`,
+      }),
+    });
+
+    const fileB = newTestMarkdownFile({
+      directory: testDirectory,
+      content: ["Solution B: Foo x Bar Hybrid", "=="].join("\n"),
+    });
+    newTestMarkdownFile({
+      directory: testDirectory,
+      content: applyTemplate(markdown.template, {
+        link: `./${fileB.fileName}#solution-b-foo-x-bar-hybrid`,
+      }),
+    });
+
+    const fileC = newTestMarkdownFile({
+      directory: testDirectory,
+      content: ["Solution C: Foo x Bar Hybrid", "==="].join("\n"),
+    });
+    newTestMarkdownFile({
+      directory: testDirectory,
+      content: applyTemplate(markdown.template, {
+        link: `./${fileC.fileName}#solution-c-foo-x-bar-hybrid`,
+      }),
+    });
+
+    await runTestWithDirectoryCleanup(async () => {
+      expect(await badLinksInMarkdown(testDirectory)).toEqual({
+        badLocalLinks: [],
+      });
+    }, testDirectory);
+  });
+
+  it(`Ignores local ${markdown.linkType} which point at headers in a different file that use the dash syntax`, async () => {
+    const { path: testDirectory } = await newTestDirectory({
+      parentDirectory: TOP_LEVEL_DIRECTORY,
+    });
+
+    const fileA = newTestMarkdownFile({
+      directory: testDirectory,
+      content: ["Solution A: Foo x Bar Hybrid", "-"].join("\n"),
+    });
+    newTestMarkdownFile({
+      directory: testDirectory,
+      content: applyTemplate(markdown.template, {
+        link: `./${fileA.fileName}#solution-a-foo-x-bar-hybrid`,
+      }),
+    });
+
+    const fileB = newTestMarkdownFile({
+      directory: testDirectory,
+      content: ["Solution B: Foo x Bar Hybrid", "--"].join("\n"),
+    });
+    newTestMarkdownFile({
+      directory: testDirectory,
+      content: applyTemplate(markdown.template, {
+        link: `./${fileB.fileName}#solution-b-foo-x-bar-hybrid`,
+      }),
+    });
+
+    const fileC = newTestMarkdownFile({
+      directory: testDirectory,
+      content: ["Solution C: Foo x Bar Hybrid", "---"].join("\n"),
+    });
+    newTestMarkdownFile({
+      directory: testDirectory,
+      content: applyTemplate(markdown.template, {
+        link: `./${fileC.fileName}#solution-c-foo-x-bar-hybrid`,
+      }),
+    });
+
+    await runTestWithDirectoryCleanup(async () => {
+      expect(await badLinksInMarkdown(testDirectory)).toEqual({
+        badLocalLinks: [],
+      });
+    }, testDirectory);
+  });
+
+  it(`Identifies local ${markdown.linkType} which point at invalid headers in a different file that use the equals syntax`, async () => {
+    const { path: testDirectory } = await newTestDirectory({
+      parentDirectory: TOP_LEVEL_DIRECTORY,
+    });
+
+    const firstTargetFile = newTestMarkdownFile({
+      directory: testDirectory,
+      content: ["Solution A: Foo x Bar Hybrid", "", "===", ""].join("\n"),
+    });
+    const firstLink = `./${firstTargetFile.fileName}#solution-a-foo-x-bar-hybrid`;
+    const { filePath: firstFilePath } = newTestMarkdownFile({
+      directory: testDirectory,
+      content: applyTemplate(markdown.template, {
+        link: firstLink,
+      }),
+    });
+    const firstExpectedBadLink = applyTemplate(markdown.expectedLink, {
+      link: firstLink,
+    });
+
+    const secondTargetFile = newTestMarkdownFile({
+      directory: testDirectory,
+      content: ["Solution B: Foo x Bar Hybrid", "", "===", ""].join("\n"),
+    });
+    const secondLink = `./${secondTargetFile.fileName}#solution-b-foo-x-bar-hybrid`;
+    const { filePath: secondFilePath } = newTestMarkdownFile({
+      directory: testDirectory,
+      content: applyTemplate(markdown.template, {
+        link: secondLink,
+      }),
+    });
+    const secondExpectedBadLink = applyTemplate(markdown.expectedLink, {
+      link: secondLink,
+    });
+
+    await runTestWithDirectoryCleanup(async () => {
+      expect(await badLinksInMarkdown(testDirectory)).toEqual({
+        badLocalLinks: [
+          {
+            filePath: firstFilePath,
+            missingLinks: [
+              {
+                link: firstExpectedBadLink,
+                reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
+              },
+            ],
+          },
+          {
+            filePath: secondFilePath,
+            missingLinks: [
+              {
+                link: secondExpectedBadLink,
+                reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
+              },
+            ],
+          },
+        ],
+      });
+    }, testDirectory);
+  });
+
+  it(`Identifies local ${markdown.linkType} which point at invalid headers in a different file that use the dash syntax`, async () => {
+    const { path: testDirectory } = await newTestDirectory({
+      parentDirectory: TOP_LEVEL_DIRECTORY,
+    });
+
+    const firstTargetFile = newTestMarkdownFile({
+      directory: testDirectory,
+      content: ["Solution A: Foo x Bar Hybrid", "", "---", ""].join("\n"),
+    });
+    const firstLink = `./${firstTargetFile.fileName}#solution-a-foo-x-bar-hybrid`;
+    const { filePath: firstFilePath } = newTestMarkdownFile({
+      directory: testDirectory,
+      content: applyTemplate(markdown.template, {
+        link: firstLink,
+      }),
+    });
+    const firstExpectedBadLink = applyTemplate(markdown.expectedLink, {
+      link: firstLink,
+    });
+
+    const secondTargetFile = newTestMarkdownFile({
+      directory: testDirectory,
+      content: ["Solution B: Foo x Bar Hybrid", "", "---", ""].join("\n"),
+    });
+    const secondLink = `./${secondTargetFile.fileName}#solution-b-foo-x-bar-hybrid`;
+    const { filePath: secondFilePath } = newTestMarkdownFile({
+      directory: testDirectory,
+      content: applyTemplate(markdown.template, {
+        link: secondLink,
+      }),
+    });
+    const secondExpectedBadLink = applyTemplate(markdown.expectedLink, {
+      link: secondLink,
+    });
+
+    await runTestWithDirectoryCleanup(async () => {
+      expect(await badLinksInMarkdown(testDirectory)).toEqual({
+        badLocalLinks: [
+          {
+            filePath: firstFilePath,
+            missingLinks: [
+              {
+                link: firstExpectedBadLink,
+                reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
+              },
+            ],
+          },
+          {
+            filePath: secondFilePath,
+            missingLinks: [
+              {
+                link: secondExpectedBadLink,
+                reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
+              },
+            ],
+          },
+        ],
+      });
+    }, testDirectory);
   });
 });

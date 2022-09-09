@@ -1,27 +1,42 @@
 import fs from "fs";
 import { badLinksInMarkdown } from "../bad-links-in-markdown";
 import {
+  anchorLinkDoubleQuoteTemplate,
+  anchorLinkSingleQuoteTemplate,
+  applyTemplate,
+  inlineLinkTemplate,
+  referenceLinkTemplate,
+  shorthandReferenceLinkTemplate,
+} from "./markdown-templates";
+import {
   newTestMarkdownFile,
   newTestDirectory,
   runTestWithDirectoryCleanup,
   TOP_LEVEL_DIRECTORY,
 } from "./test-utils";
 
-describe("bad-links-in-markdown - web links", () => {
-  it("Does not include inline web links in list of bad local links", async () => {
+describe.each([
+  inlineLinkTemplate,
+  referenceLinkTemplate,
+  shorthandReferenceLinkTemplate,
+  anchorLinkSingleQuoteTemplate,
+  anchorLinkDoubleQuoteTemplate,
+])("bad-links-in-markdown - web links for $linkType", (markdown) => {
+  it(`Does not web ${markdown.linkType} in list of bad local links`, async () => {
     const { path: testDirectory } = await newTestDirectory({
       parentDirectory: TOP_LEVEL_DIRECTORY,
     });
 
-    const { filePath } = newTestMarkdownFile({ directory: testDirectory });
-
-    fs.writeFileSync(
-      filePath,
-      `
-      [I am a local link](http://www.google.com)
-      [foobar (eggs)](https://github.com/fun-repo)
-    `
-    );
+    newTestMarkdownFile({
+      directory: testDirectory,
+      content: [
+        applyTemplate(markdown.template, { link: "http://www.google.com" }),
+        applyTemplate(markdown.template, {
+          link: "http://www.google.com",
+          linkText: "foobar (eggs)",
+        }),
+      ].join("\n"),
+    });
 
     await runTestWithDirectoryCleanup(async () => {
       expect(await badLinksInMarkdown(testDirectory)).toEqual({
@@ -30,57 +45,18 @@ describe("bad-links-in-markdown - web links", () => {
     }, testDirectory);
   });
 
-  it("Does not include reference web links in the list of bad local links", async () => {
+  it(`Does not email ${markdown.linkType} in list of bad local links`, async () => {
     const { path: testDirectory } = await newTestDirectory({
       parentDirectory: TOP_LEVEL_DIRECTORY,
     });
 
-    const { filePath } = newTestMarkdownFile({ directory: testDirectory });
-
-    fs.writeFileSync(
-      filePath,
-      `
-      Here is some text\n[and then a link to a file][1]\n\n[1]: http://www.google.com
-      Here is some text\n[and then a link to a file][1(eggs)]\n\n[1(eggs)]: https://github.com/fun-repo
-      `
-    );
-
-    await runTestWithDirectoryCleanup(async () => {
-      expect(await badLinksInMarkdown(testDirectory)).toEqual({
-        badLocalLinks: [],
-      });
-    }, testDirectory);
-  });
-
-  it("Does not include inline email links in list of bad local links", async () => {
-    const { path: testDirectory } = await newTestDirectory({
-      parentDirectory: TOP_LEVEL_DIRECTORY,
+    newTestMarkdownFile({
+      directory: testDirectory,
+      content: applyTemplate(markdown.template, {
+        link: "mailto:foo@gmail.com",
+        linkText: "foo@gmail.com",
+      }),
     });
-
-    const { filePath } = newTestMarkdownFile({ directory: testDirectory });
-
-    fs.writeFileSync(filePath, `[foo@gmail.com](mailto:foo@gmail.com)`);
-
-    await runTestWithDirectoryCleanup(async () => {
-      expect(await badLinksInMarkdown(testDirectory)).toEqual({
-        badLocalLinks: [],
-      });
-    }, testDirectory);
-  });
-
-  it("Does not include reference email links in list of bad local links", async () => {
-    const { path: testDirectory } = await newTestDirectory({
-      parentDirectory: TOP_LEVEL_DIRECTORY,
-    });
-
-    const { filePath } = newTestMarkdownFile({ directory: testDirectory });
-    fs.writeFileSync(
-      filePath,
-      `
-      Here is some text\n[and then a link to a file][1]\n\n[1]: mailto:foobar@gmail.com
-      `
-    );
-    fs.writeFileSync(filePath, `[foo@gmail.com](mailto:foo@gmail.com)`);
 
     await runTestWithDirectoryCleanup(async () => {
       expect(await badLinksInMarkdown(testDirectory)).toEqual({

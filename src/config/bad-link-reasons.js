@@ -13,7 +13,7 @@ export const badLinkReasons = {
     "This link is potentially a absolute link on a windows machine. These do not work on github",
   BAD_RELATIVE_LINK_SYNTAX:
     "Relative link syntax can only step up by one parent direction at a time. '.../' is invalid",
-  INVALID_ABSOLUTE_LINK:
+  ABSOLUTE_LINK_INVALID_START_POINT:
     "Absolute links must start from the root of the given directory",
   INVALID_IMAGE_EXTENSIONS: `Image extension is not valid. The supported extensions are ${validImageExtensions.join(
     ", "

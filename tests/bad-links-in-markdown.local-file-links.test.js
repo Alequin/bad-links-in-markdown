@@ -175,7 +175,7 @@ describe("bad-links-in-markdown - local file links", () => {
                 {
                   link: expectedBadLink,
                   reasons: [
-                    badLinkReasons.INVALID_ABSOLUTE_LINK,
+                    badLinkReasons.ABSOLUTE_LINK_INVALID_START_POINT,
                     badLinkReasons.FILE_NOT_FOUND,
                   ],
                 },
@@ -225,7 +225,7 @@ describe("bad-links-in-markdown - local file links", () => {
                 {
                   link: expectedBadLink,
                   reasons: [
-                    badLinkReasons.INVALID_ABSOLUTE_LINK,
+                    badLinkReasons.ABSOLUTE_LINK_INVALID_START_POINT,
                     badLinkReasons.FILE_NOT_FOUND,
                   ],
                 },

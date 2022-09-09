@@ -1,5 +1,5 @@
 import fs from "fs";
-import { uniqueId } from "lodash";
+import { isNil, uniqueId } from "lodash";
 import path from "path";
 import { doesFileExist } from "../src/utils/does-file-exist";
 
@@ -72,11 +72,15 @@ export const newTestFile = ({
   };
 
   // TODO remove this condition and update all the tests
-  if (content) {
+  if (!isNil(content)) {
     fs.writeFileSync(fileDetails.filePath, content);
   }
 
   return fileDetails;
 };
 
-const uniqueName = () => `test-${uniqueId()}`;
+const uniqueName = () => {
+  const randomKey = uniqueId().toString();
+  const digitsToAdd = "0".repeat(5 - randomKey.length);
+  return `test-${digitsToAdd}${randomKey}`;
+};

@@ -37,3 +37,21 @@ export const anchorLinkDoubleQuoteTemplate = {
   template: `Here is some text\n<a href="$link">$linkText</a>`,
   expectedLink: `<a href="$link">$linkText</a>`,
 };
+
+export const inlineImageLinkTemplate = {
+  linkType: "inline image link",
+  template: `![$linkText]($link)`,
+  expectedLink: `![$linkText]($link)`,
+};
+
+export const referenceImageLinkTemplate = {
+  linkType: "reference image link",
+  template: `![$displayText][$linkText]\n\n[$linkText]: $link`,
+  expectedLink: `[$linkText]: $link`,
+};
+
+export const shorthandReferenceImageLinkTemplate = {
+  linkType: "reference link",
+  template: `![$linkText]\n\n[$linkText]: $link`,
+  expectedLink: `[$linkText]: $link`,
+};

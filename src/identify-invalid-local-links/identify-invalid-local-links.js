@@ -1,4 +1,4 @@
-import { isEmpty, partition } from "lodash";
+import { isEmpty, orderBy, partition } from "lodash";
 import * as findInvalidAbsoluteLinks from "./find-bad-links/find-invalid-absolute-links";
 import { findInvalidImageExtensions } from "./find-bad-links/find-invalid-image-extensions";
 import { findInvalidRelativeLinkSyntax } from "./find-bad-links/find-invalid-relative-link-syntax";
@@ -10,7 +10,7 @@ import { logProgress } from "./log-progress";
 import { prepareLinkObjects } from "./prepare-link-objects";
 
 export const identifyInvalidLocalLinks = (fileObjects) => {
-  return fileObjects
+  const identifiedInvalidLinks = fileObjects
     .map((fileObject, index) => {
       logProgress(index + 1, fileObjects.length);
 
@@ -38,6 +38,8 @@ export const identifyInvalidLocalLinks = (fileObjects) => {
       };
     })
     .filter(({ missingLinks }) => !isEmpty(missingLinks));
+
+  return orderBy(identifiedInvalidLinks, ({ filePath }) => filePath);
 };
 
 const findInvalidExternalFileLinks = (linkObjects) => {

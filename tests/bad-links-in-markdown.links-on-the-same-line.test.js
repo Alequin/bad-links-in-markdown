@@ -108,4 +108,43 @@ describe("bad-links-in-markdown  - links on the same line", () => {
       });
     }, testDirectory);
   });
+
+  it("Identifies multiple local inline image links on the same file line that point at images that do not exist", async () => {
+    const { path: testDirectory } = await newTestDirectory({
+      parentDirectory: TOP_LEVEL_DIRECTORY,
+    });
+
+    const { filePath } = newTestMarkdownFile({
+      directory: testDirectory,
+      content: `![picture](./path/to/missing/image.png) and ![picture2](./path/to/missing/image.png)![picture3](./path/to/missing/image.png)(foobar)![picture4](./path/to/missing/image.png)`,
+    });
+
+    await runTestWithDirectoryCleanup(async () => {
+      expect(await badLinksInMarkdown(testDirectory)).toEqual({
+        badLocalLinks: [
+          {
+            filePath,
+            missingLinks: [
+              {
+                link: "![picture](./path/to/missing/image.png)",
+                reasons: [badLinkReasons.FILE_NOT_FOUND],
+              },
+              {
+                link: "![picture2](./path/to/missing/image.png)",
+                reasons: [badLinkReasons.FILE_NOT_FOUND],
+              },
+              {
+                link: "![picture3](./path/to/missing/image.png)",
+                reasons: [badLinkReasons.FILE_NOT_FOUND],
+              },
+              {
+                link: "![picture4](./path/to/missing/image.png)",
+                reasons: [badLinkReasons.FILE_NOT_FOUND],
+              },
+            ],
+          },
+        ],
+      });
+    }, testDirectory);
+  });
 });

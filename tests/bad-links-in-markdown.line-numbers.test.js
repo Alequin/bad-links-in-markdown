@@ -9,34 +9,35 @@ import {
 } from "./markdown-templates";
 import {
   newTestDirectory,
+  newTestFile,
   newTestMarkdownFile,
   runTestWithDirectoryCleanup,
   TOP_LEVEL_DIRECTORY,
 } from "./test-utils";
 
-describe.each([
-  inlineLinkTemplate,
-  referenceLinkTemplate,
-  shorthandReferenceLinkTemplate,
-  anchorLinkSingleQuoteTemplate,
-  anchorLinkDoubleQuoteTemplate,
-])(
-  "bad-links-in-markdown - headers preceded by space characters for link type $linkType",
-  (markdown) => {
-    it(`Ignores local ${markdown.linkType} which point at headers which exist and are preceded by space characters`, async () => {
+describe("bad-links-in-markdown - local header file links", () => {
+  describe.each([
+    inlineLinkTemplate,
+    referenceLinkTemplate,
+    shorthandReferenceLinkTemplate,
+    anchorLinkSingleQuoteTemplate,
+    anchorLinkDoubleQuoteTemplate,
+  ])("General scenarios - line numbers $linkType", (markdown) => {
+    it(`Ignores a local ${markdown.linkType} which points at a javascript file that exists and have a valid line number`, async () => {
       const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
-      const fileToLinkTo = newTestMarkdownFile({
+      const fileToLinkTo = newTestFile({
         directory: testDirectory,
-        content: `        # main-title\na story of foo and bar\nand baz`,
+        extension: ".js",
+        content: `const foobar = () => {}\n`.repeat(1000),
       });
 
       newTestMarkdownFile({
         directory: testDirectory,
         content: applyTemplate(markdown.template, {
-          link: `./${fileToLinkTo.fileName}#main-title`,
+          link: `./${fileToLinkTo.fileName}#L100}`,
         }),
       });
 
@@ -47,17 +48,22 @@ describe.each([
       }, testDirectory);
     });
 
-    it(`Ignores local ${markdown.linkType} which point at headers in the same file and are preceded by space characters`, async () => {
+    it(`Ignores a local ${markdown.linkType} which points at a javascript file that exists but does not have a valid line number`, async () => {
       const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
 
-      const fileToLinkTo = newTestMarkdownFile({
+      const fileToLinkTo = newTestFile({
         directory: testDirectory,
-        content: [
-          "  # main-title\na story of foo and bar\nand baz",
-          applyTemplate(markdown.template, { link: "#main-title" }),
-        ].join("\n"),
+        extension: ".js",
+        content: `const foobar = () => {}\n`.repeat(10),
+      });
+
+      newTestMarkdownFile({
+        directory: testDirectory,
+        content: applyTemplate(markdown.template, {
+          link: `./${fileToLinkTo.fileName}#L100}`,
+        }),
       });
 
       await runTestWithDirectoryCleanup(async () => {
@@ -66,5 +72,5 @@ describe.each([
         });
       }, testDirectory);
     });
-  }
-);
+  });
+});

@@ -21,5 +21,5 @@ export const badRootAbsoluteLinks = (linkObjects) =>
     })
     .map((linkObject) => ({
       ...linkObject,
-      reasons: [badLinkReasons.INVALID_ABSOLUTE_LINK],
+      reasons: [badLinkReasons.ABSOLUTE_LINK_INVALID_START_POINT],
     }));
