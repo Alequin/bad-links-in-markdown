@@ -4,7 +4,7 @@
 
 <a href='./test.md       '>an anchor link</a>
 
-<a href="http://www.google.com">some link text</a>
+<a href="    http://www.google.com    ">some link text</a>
 
 [foobar1](      ./test.md)
 [foobar2](##todo)
