@@ -10,7 +10,7 @@ export const badLinkReasons = {
   MULTIPLE_MATCHING_FILES:
     "There are two files the link could be referencing. It is unclear which one it should link to",
   POTENTIAL_WINDOWS_ABSOLUTE_LINK:
-    "This link is potentially a absolute link on a windows machine. These do not work on github",
+    "This link is potentially an absolute link on a windows machine. These do not work on github",
   BAD_RELATIVE_LINK_SYNTAX:
     "Relative link syntax can only step up by one parent direction at a time. '.../' is invalid",
   ABSOLUTE_LINK_INVALID_START_POINT:
@@ -22,4 +22,6 @@ export const badLinkReasons = {
     "Header tag includes upper case characters. It is recommended to only used lower case. It will work in github but may not work in other markdown readers",
   TOO_MANY_HASH_CHARACTERS:
     "A header link should not contain more then one hash character",
+  ANCHOR_TAG_INVALID_QUOTE:
+    "The anchor tag is using invalid quotes and may not work when clicked",
 };

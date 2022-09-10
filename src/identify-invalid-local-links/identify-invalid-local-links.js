@@ -1,4 +1,5 @@
 import { isEmpty, orderBy, partition } from "lodash";
+import { findAnchorLinksWithInvalidWrappingQuotes } from "./find-bad-links/find-anchor-links-with-invalid-wrapping-quotes";
 import * as findInvalidAbsoluteLinks from "./find-bad-links/find-invalid-absolute-links";
 import { findInvalidImageExtensions } from "./find-bad-links/find-invalid-image-extensions";
 import { findInvalidRelativeLinkSyntax } from "./find-bad-links/find-invalid-relative-link-syntax";
@@ -22,7 +23,8 @@ export const identifyInvalidLocalLinks = (fileObjects) => {
       );
 
       const issues = groupMatchingLinkObjectWithIssues([
-        ...findLinksWithBadHeaderTags(internalFileLinks),
+        ...findAnchorLinksWithInvalidWrappingQuotes(linkObjects),
+        ...findInvalidInternalFileLinks(internalFileLinks),
         ...findInvalidExternalFileLinks(externalFileLinks),
       ]).map((issue) => ({
         ...issue,
@@ -41,6 +43,9 @@ export const identifyInvalidLocalLinks = (fileObjects) => {
 
   return orderBy(identifiedInvalidLinks, ({ filePath }) => filePath);
 };
+
+const findInvalidInternalFileLinks = (linkObjects) =>
+  findLinksWithBadHeaderTags(linkObjects);
 
 const findInvalidExternalFileLinks = (linkObjects) => {
   return [

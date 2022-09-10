@@ -3,10 +3,15 @@ export const isValidLink = (link, tag) =>
 
 export const isEmailLink = (link) => link?.startsWith("mailto:");
 export const isWebLink = (link) => link?.startsWith("http");
-export const isLocalLink = (link, tag) => {
+export const isLocalQuotedAnchorLink = (link, tag) => {
   if (!link) return Boolean(tag);
   if (isEmailLink(link) || isWebLink(link)) return false;
-  return isValidUNIXPath(link) && !doesIncludeSpaces(link.trim());
+  return isValidUNIXPath(link);
+};
+export const isLocalLink = (link, tag) => {
+  if (!isLocalQuotedAnchorLink(link, tag)) return false;
+  if (!link) return true;
+  return !doesIncludeSpaces(link.trim());
 };
 
 // https://stackoverflow.com/questions/537772/what-is-the-most-correct-regular-expression-for-a-unix-file-path

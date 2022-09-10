@@ -388,4 +388,136 @@ describe("bad-links-in-markdown links-which-include-spaces", () => {
       });
     }
   );
+
+  describe.each([
+    inlineLinkTemplate,
+    referenceLinkTemplate,
+    shorthandReferenceLinkTemplate,
+    inlineImageLinkTemplate,
+    referenceImageLinkTemplate,
+    shorthandReferenceImageLinkTemplate,
+  ])("For $linkType", (markdown) => {
+    it(`Ignores local ${markdown.linkType} that point at files that do not exist when the file name includes a space character`, async () => {
+      const { path: testDirectory } = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
+
+      newTestMarkdownFile({
+        directory: testDirectory,
+        content: applyTemplate(markdown.template, {
+          link: `./path/to/missing/file- -test.md`,
+        }),
+      });
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [],
+        });
+      }, testDirectory);
+    });
+
+    it(`Ignores local ${markdown.linkType} that point at a files that exists but do not contain the targeted header tag when the file name includes a space character`, async () => {
+      const { path: testDirectory } = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
+
+      const name = `test file`;
+      newTestMarkdownFile({
+        directory: testDirectory,
+        name,
+        content: `# foo bar baz\na story of foo and bar\nand baz`,
+      });
+
+      newTestMarkdownFile({
+        directory: testDirectory,
+        content: applyTemplate(markdown.template, {
+          link: `./${name}.md#main-title`,
+        }),
+      });
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [],
+        });
+      }, testDirectory);
+    });
+  });
+
+  describe.each([anchorLinkDoubleQuoteTemplate, anchorLinkSingleQuoteTemplate])(
+    "For $linkType",
+    (markdown) => {
+      it(`Identifies local ${markdown.linkType} that point at files that do not exist when the file name includes a space character`, async () => {
+        const { path: testDirectory } = await newTestDirectory({
+          parentDirectory: TOP_LEVEL_DIRECTORY,
+        });
+
+        const link = `./path/to/missing/file- -test.md`;
+        const { filePath } = newTestMarkdownFile({
+          directory: testDirectory,
+          content: applyTemplate(markdown.template, {
+            link,
+          }),
+        });
+
+        const expectedBadLink = applyTemplate(markdown.expectedLink, {
+          link,
+        });
+        await runTestWithDirectoryCleanup(async () => {
+          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+            badLocalLinks: [
+              {
+                filePath,
+                missingLinks: [
+                  {
+                    link: expectedBadLink,
+                    reasons: [badLinkReasons.FILE_NOT_FOUND],
+                  },
+                ],
+              },
+            ],
+          });
+        }, testDirectory);
+      });
+
+      it(`Identifies local ${markdown.linkType} that point at a files that exists but do not contain the targeted header tag when the file name includes a space character`, async () => {
+        const { path: testDirectory } = await newTestDirectory({
+          parentDirectory: TOP_LEVEL_DIRECTORY,
+        });
+
+        const name = `test file`;
+        newTestMarkdownFile({
+          directory: testDirectory,
+          name,
+          content: `# foo bar baz\na story of foo and bar\nand baz`,
+        });
+
+        const link = `./${name}.md#main-title`;
+        const { filePath } = newTestMarkdownFile({
+          directory: testDirectory,
+          content: applyTemplate(markdown.template, {
+            link,
+          }),
+        });
+
+        const expectedBadLink = applyTemplate(markdown.expectedLink, {
+          link,
+        });
+        await runTestWithDirectoryCleanup(async () => {
+          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+            badLocalLinks: [
+              {
+                filePath,
+                missingLinks: [
+                  {
+                    link: expectedBadLink,
+                    reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
+                  },
+                ],
+              },
+            ],
+          });
+        }, testDirectory);
+      });
+    }
+  );
 });

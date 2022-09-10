@@ -55,3 +55,5 @@ export const shorthandReferenceImageLinkTemplate = {
   template: `![$linkText]\n\n[$linkText]: $link`,
   expectedLink: `[$linkText]: $link`,
 };
+
+// TODO make template for unquotes anchor tags

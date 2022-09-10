@@ -4,7 +4,10 @@ import path from "path";
 import { LINK_TYPE } from "../config/link-type";
 import { doesFileExist } from "../utils/does-file-exist";
 import { doesLinkStartWithRelativePath } from "../utils/does-link-start-with-relative-path";
-import { isLocalLink } from "../utils/link-type-checks";
+import {
+  isLocalLink,
+  isLocalQuotedAnchorLink,
+} from "../utils/link-type-checks";
 import { match } from "../utils/match";
 
 /**
@@ -13,8 +16,10 @@ import { match } from "../utils/match";
  * linkPath: String | undefined
  * linkTag: String | undefined
  * isImage: Boolean
+ * type: String
  * }} fileObject
  * @returns {{
+ * type: String
  * markdownLink: String
  * link: String
  * linkPath: String | null
@@ -36,7 +41,14 @@ import { match } from "../utils/match";
  */
 export const prepareLinkObjects = (fileObject) =>
   fileObject.links
-    .filter(({ linkPath, linkTag }) => isLocalLink(linkPath, linkTag))
+    .filter(({ type, linkPath, linkTag }) => {
+      if (isLocalLink(linkPath, linkTag)) return true;
+
+      return (
+        type === LINK_TYPE.quotedAnchorLink &&
+        isLocalQuotedAnchorLink(linkPath, linkTag)
+      );
+    })
     .map((linkObject) => ({
       ...linkObject,
       directory: fileObject.directory,
@@ -101,7 +113,11 @@ const addRawFileNameToObject = (linkObject) => {
 };
 
 const addMatchingFilesInDirectoryToLinks = (linkObject) => {
-  if (linkObject.type === LINK_TYPE.anchorLink) {
+  if (
+    [LINK_TYPE.unquotedAnchorLink, LINK_TYPE.quotedAnchorLink].includes(
+      linkObject.type
+    )
+  ) {
     // Anchor tags must have exact links and so cannot have matching files
     return {
       ...linkObject,
