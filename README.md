@@ -2,7 +2,7 @@
 
 <a href='      ./test.md'>an anchor link</a>
 
-<a href=”./test.md”>an anchor link</a>
+<a href=./test.md>an anchor link</a>
 
 <a href="    http://www.google.com    ">some link text</a>
 
