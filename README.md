@@ -10,7 +10,7 @@
 
 <a href=../graphql/how-to-schema.md”>CLICK ME!</a>
 
-[foobar1](      ./test.md)
+[foobar1](./test file.md)
 [foobar2](##todo)
 [foobar3](###todo)
 
