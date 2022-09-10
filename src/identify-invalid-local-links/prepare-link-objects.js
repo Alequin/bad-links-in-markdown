@@ -1,11 +1,11 @@
 import fs from "fs";
 import { first, last } from "lodash";
 import path from "path";
-import { match } from "../utils/match";
-import { isLocalLink } from "../utils/link-type-checks";
-import { doesLinkStartWithRelativePath } from "../utils/does-link-start-with-relative-path";
-import { doesFileExist } from "../utils/does-file-exist";
 import { LINK_TYPE } from "../config/link-type";
+import { doesFileExist } from "../utils/does-file-exist";
+import { doesLinkStartWithRelativePath } from "../utils/does-link-start-with-relative-path";
+import { isLocalLink } from "../utils/link-type-checks";
+import { match } from "../utils/match";
 
 /**
  * @param {{

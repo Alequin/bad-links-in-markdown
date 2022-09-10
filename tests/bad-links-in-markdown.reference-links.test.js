@@ -2,16 +2,7 @@ import fs from "fs";
 import { badLinksInMarkdown } from "../bad-links-in-markdown";
 import { badLinkReasons } from "../src/config/bad-link-reasons";
 import {
-  anchorLinkDoubleQuoteTemplate,
-  anchorLinkSingleQuoteTemplate,
-  applyTemplate,
-  inlineLinkTemplate,
-  referenceLinkTemplate,
-  shorthandReferenceLinkTemplate,
-} from "./markdown-templates";
-import {
   newTestDirectory,
-  newTestFile,
   newTestMarkdownFile,
   runTestWithDirectoryCleanup,
   TOP_LEVEL_DIRECTORY,

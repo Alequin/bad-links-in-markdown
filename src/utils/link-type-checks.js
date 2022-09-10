@@ -6,7 +6,7 @@ export const isWebLink = (link) => link?.startsWith("http");
 export const isLocalLink = (link, tag) => {
   if (!link) return Boolean(tag);
   if (isEmailLink(link) || isWebLink(link)) return false;
-  return isValidUNIXPath(link) && !doesIncludeSpaces(link);
+  return isValidUNIXPath(link) && !doesIncludeSpaces(link.trim());
 };
 
 // https://stackoverflow.com/questions/537772/what-is-the-most-correct-regular-expression-for-a-unix-file-path

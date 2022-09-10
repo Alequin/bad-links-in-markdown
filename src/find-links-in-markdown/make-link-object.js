@@ -1,6 +1,6 @@
-import { mapValues } from "lodash";
+import { trimEnd } from "lodash";
 import { LINK_TYPE } from "../config/link-type";
-import { isValidLink } from "../utils/link-type-checks";
+import { isValidLink, isValidLocalAnchorLink } from "../utils/link-type-checks";
 import { match } from "../utils/match";
 import { MARKDOWN_INLINE_LINK_REGEX } from "./markdown-inline-link-regex";
 
@@ -9,7 +9,7 @@ export const makeLinkObjectFromInlineLink = ({ markdownLink, isImage }) => {
     type: LINK_TYPE.inlineLink,
     markdownLink,
     isImage,
-    fullLink: match(markdownLink, MARKDOWN_INLINE_LINK_REGEX)[2],
+    fullLink: match(markdownLink, MARKDOWN_INLINE_LINK_REGEX)[2].trim(),
   });
 };
 
@@ -19,7 +19,7 @@ export const makeLinkObjectFromReferenceLink = ({ markdownLink, isImage }) => {
     type: LINK_TYPE.referenceLink,
     markdownLink,
     isImage,
-    fullLink: match(markdownLink, REFERENCE_LINK_REGEX)[1],
+    fullLink: match(markdownLink, REFERENCE_LINK_REGEX)[1].trim(),
   });
 };
 
@@ -29,23 +29,27 @@ export const makeLinkObjectFromAnchorLink = ({ markdownLink }) => {
     type: LINK_TYPE.anchorLink,
     markdownLink,
     isImage: false,
-    fullLink: match(markdownLink, ANCHOR_LINK_REGEX)[1],
+    fullLink: trimEnd(
+      removeLabelText(match(markdownLink, ANCHOR_LINK_REGEX)[1])
+    ),
   });
 };
 
 const makeLinkObject = ({ type, markdownLink, fullLink, isImage }) => {
-  const linkWithTag = removeLabelText(fullLink).trim();
+  const linkWithTag = removeLabelText(fullLink);
   const [linkPath, linkTag] = linkWithTag.startsWith("#")
     ? [undefined, removeHashCharsFromStart(linkWithTag)]
     : linkWithTag.split("#");
 
-  const trimmedLinkData = mapValues(
-    { markdownLink, linkPath, linkTag, link: linkWithTag },
-    (value) => value?.trim()
-  );
-
   return isValidLink(linkPath, linkTag)
-    ? Object.freeze({ ...trimmedLinkData, type, isImage })
+    ? Object.freeze({
+        markdownLink,
+        linkPath,
+        linkTag,
+        link: linkWithTag,
+        type,
+        isImage,
+      })
     : null;
 };
 
