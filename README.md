@@ -2,11 +2,13 @@
 
 <a href='      ./test.md'>an anchor link</a>
 
-<a href='./test.md       '>an anchor link</a>
+<a href=”./test.md”>an anchor link</a>
 
 <a href="    http://www.google.com    ">some link text</a>
 
 <a href="http://www.google.com    ">some link text</a>
+
+<a href=../graphql/how-to-schema.md”>CLICK ME!</a>
 
 [foobar1](      ./test.md)
 [foobar2](##todo)
