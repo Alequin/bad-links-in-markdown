@@ -7,7 +7,7 @@
 
 <a href=      #syntax-notes file.md>an anchor link</a>
 
-<a href=./test.md>an anchor link</a>
+<a href=       ./test.md>an anchor link</a>
 
 <a href="    http://www.google.com    ">some web link text</a>
 
