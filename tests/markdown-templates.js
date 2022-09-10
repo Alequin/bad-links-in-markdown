@@ -38,6 +38,12 @@ export const anchorLinkDoubleQuoteTemplate = {
   expectedLink: `<a href="$link">$linkText</a>`,
 };
 
+export const anchorLinkUnquotesTemplate = {
+  linkType: "inline link with double quotes",
+  template: `Here is some text\n<a href=$link>$linkText</a>`,
+  expectedLink: `<a href=$link>$linkText</a>`,
+};
+
 export const inlineImageLinkTemplate = {
   linkType: "inline image link",
   template: `![$linkText]($link)`,
@@ -55,5 +61,3 @@ export const shorthandReferenceImageLinkTemplate = {
   template: `![$linkText]\n\n[$linkText]: $link`,
   expectedLink: `[$linkText]: $link`,
 };
-
-// TODO make template for unquotes anchor tags

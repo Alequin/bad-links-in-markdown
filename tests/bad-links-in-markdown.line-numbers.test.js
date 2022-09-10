@@ -2,6 +2,7 @@ import { badLinksInMarkdown } from "../bad-links-in-markdown";
 import {
   anchorLinkDoubleQuoteTemplate,
   anchorLinkSingleQuoteTemplate,
+  anchorLinkUnquotesTemplate,
   applyTemplate,
   inlineLinkTemplate,
   referenceLinkTemplate,
@@ -22,6 +23,7 @@ describe("bad-links-in-markdown - local header file links", () => {
     shorthandReferenceLinkTemplate,
     anchorLinkSingleQuoteTemplate,
     anchorLinkDoubleQuoteTemplate,
+    anchorLinkUnquotesTemplate,
   ])("General scenarios - line numbers $linkType", (markdown) => {
     it(`Ignores a local ${markdown.linkType} which points at a javascript file that exists and have a valid line number`, async () => {
       const { path: testDirectory } = await newTestDirectory({

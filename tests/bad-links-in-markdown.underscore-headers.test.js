@@ -3,6 +3,7 @@ import { badLinkReasons } from "../src/config/bad-link-reasons";
 import {
   anchorLinkDoubleQuoteTemplate,
   anchorLinkSingleQuoteTemplate,
+  anchorLinkUnquotesTemplate,
   applyTemplate,
   inlineLinkTemplate,
   referenceLinkTemplate,
@@ -21,6 +22,7 @@ describe.each([
   shorthandReferenceLinkTemplate,
   anchorLinkSingleQuoteTemplate,
   anchorLinkDoubleQuoteTemplate,
+  anchorLinkUnquotesTemplate,
 ])("bad-links-in-markdown - underscore headers for link", (markdown) => {
   it(`Ignores local ${markdown.linkType} which point at headers in the current file that use the equals syntax`, async () => {
     const { path: testDirectory } = await newTestDirectory({

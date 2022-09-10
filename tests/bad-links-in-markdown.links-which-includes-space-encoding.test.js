@@ -4,6 +4,7 @@ import { badLinkReasons } from "../src/config/bad-link-reasons";
 import {
   anchorLinkDoubleQuoteTemplate,
   anchorLinkSingleQuoteTemplate,
+  anchorLinkUnquotesTemplate,
   applyTemplate,
   inlineImageLinkTemplate,
   inlineLinkTemplate,
@@ -27,6 +28,7 @@ describe("bad-links-in-markdown - links of type $linkType including space encodi
     shorthandReferenceLinkTemplate,
     anchorLinkSingleQuoteTemplate,
     anchorLinkDoubleQuoteTemplate,
+    anchorLinkUnquotesTemplate,
   ])("for links of type $linkType", (markdown) => {
     it(`Identifies local ${markdown.linkType} that point at files that do not exist, even when the link includes space encoding characters`, async () => {
       const { path: testDirectory } = await newTestDirectory({

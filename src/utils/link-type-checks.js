@@ -2,7 +2,7 @@ export const isValidLink = (link, tag) =>
   isEmailLink(link) || isWebLink(link) || isLocalLink(link, tag);
 
 export const isEmailLink = (link) => link?.startsWith("mailto:");
-export const isWebLink = (link) => link?.startsWith("http");
+export const isWebLink = (link) => /^\s*http.*/.test(link);
 export const isLocalQuotedAnchorLink = (link, tag) => {
   if (!link) return Boolean(tag);
   if (isEmailLink(link) || isWebLink(link)) return false;

@@ -1,9 +1,9 @@
-import fs from "fs";
 import { badLinksInMarkdown } from "../bad-links-in-markdown";
 import { badLinkReasons } from "../src/config/bad-link-reasons";
 import {
   anchorLinkDoubleQuoteTemplate,
   anchorLinkSingleQuoteTemplate,
+  anchorLinkUnquotesTemplate,
   applyTemplate,
   inlineLinkTemplate,
   referenceLinkTemplate,
@@ -23,6 +23,7 @@ describe("bad-links-in-markdown - local directory links", () => {
     shorthandReferenceLinkTemplate,
     anchorLinkSingleQuoteTemplate,
     anchorLinkDoubleQuoteTemplate,
+    anchorLinkUnquotesTemplate,
   ])("for links of type $linkType", (markdown) => {
     it(`Identifies local ${markdown.linkType} that point at directories that do not exist`, async () => {
       const { path: testDirectory } = await newTestDirectory({

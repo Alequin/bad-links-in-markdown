@@ -24,8 +24,6 @@ describe("bad-links-in-markdown - windows specific", () => {
     inlineLinkTemplate,
     referenceLinkTemplate,
     shorthandReferenceLinkTemplate,
-    anchorLinkSingleQuoteTemplate,
-    anchorLinkDoubleQuoteTemplate,
   ])("$linkType", (markdown) => {
     it(`Identifies a windows absolute ${markdown.linkType} that does not start with a forward slash`, async () => {
       const { path: testDirectory } = await newTestDirectory({

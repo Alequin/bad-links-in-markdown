@@ -4,6 +4,7 @@ import { badLinkReasons } from "../src/config/bad-link-reasons";
 import {
   anchorLinkDoubleQuoteTemplate,
   anchorLinkSingleQuoteTemplate,
+  anchorLinkUnquotesTemplate,
   applyTemplate,
   inlineLinkTemplate,
   referenceLinkTemplate,
@@ -22,6 +23,7 @@ describe.each([
   shorthandReferenceLinkTemplate,
   anchorLinkSingleQuoteTemplate,
   anchorLinkDoubleQuoteTemplate,
+  anchorLinkUnquotesTemplate,
 ])(
   "bad-links-in-markdown - headers with upper case characters for link type $linkType",
   (markdown) => {

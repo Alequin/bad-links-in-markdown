@@ -2,6 +2,7 @@ import { badLinksInMarkdown } from "../bad-links-in-markdown";
 import {
   anchorLinkDoubleQuoteTemplate,
   anchorLinkSingleQuoteTemplate,
+  anchorLinkUnquotesTemplate,
   applyTemplate,
   inlineLinkTemplate,
   referenceLinkTemplate,
@@ -20,6 +21,7 @@ describe.each([
   shorthandReferenceLinkTemplate,
   anchorLinkSingleQuoteTemplate,
   anchorLinkDoubleQuoteTemplate,
+  anchorLinkUnquotesTemplate,
 ])(
   "bad-links-in-markdown - headers preceded by space characters for link type $linkType",
   (markdown) => {

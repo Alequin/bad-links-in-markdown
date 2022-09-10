@@ -4,6 +4,7 @@ import { badLinkReasons } from "../src/config/bad-link-reasons";
 import {
   anchorLinkDoubleQuoteTemplate,
   anchorLinkSingleQuoteTemplate,
+  anchorLinkUnquotesTemplate,
   applyTemplate,
   inlineImageLinkTemplate,
   inlineLinkTemplate,
@@ -27,6 +28,7 @@ describe("bad-links-in-markdown - links including parenthesis", () => {
     shorthandReferenceLinkTemplate,
     anchorLinkSingleQuoteTemplate,
     anchorLinkDoubleQuoteTemplate,
+    anchorLinkUnquotesTemplate,
   ])("links of type $linkType ", (markdown) => {
     it(`Identifies a local ${markdown.template} that points at a file that do not exist, even when the link description text contains parentheses`, async () => {
       const { path: testDirectory } = await newTestDirectory({

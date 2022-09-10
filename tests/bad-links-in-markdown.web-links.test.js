@@ -1,16 +1,16 @@
-import fs from "fs";
 import { badLinksInMarkdown } from "../bad-links-in-markdown";
 import {
   anchorLinkDoubleQuoteTemplate,
   anchorLinkSingleQuoteTemplate,
+  anchorLinkUnquotesTemplate,
   applyTemplate,
   inlineLinkTemplate,
   referenceLinkTemplate,
   shorthandReferenceLinkTemplate,
 } from "./markdown-templates";
 import {
-  newTestMarkdownFile,
   newTestDirectory,
+  newTestMarkdownFile,
   runTestWithDirectoryCleanup,
   TOP_LEVEL_DIRECTORY,
 } from "./test-utils";
@@ -21,8 +21,9 @@ describe.each([
   shorthandReferenceLinkTemplate,
   anchorLinkSingleQuoteTemplate,
   anchorLinkDoubleQuoteTemplate,
+  anchorLinkUnquotesTemplate,
 ])("bad-links-in-markdown - web links for $linkType", (markdown) => {
-  it(`Does not web ${markdown.linkType} in list of bad local links`, async () => {
+  it(`Does not identify web link of type ${markdown.linkType} in list of bad local links`, async () => {
     const { path: testDirectory } = await newTestDirectory({
       parentDirectory: TOP_LEVEL_DIRECTORY,
     });
@@ -45,7 +46,7 @@ describe.each([
     }, testDirectory);
   });
 
-  it(`Does not email ${markdown.linkType} in list of bad local links`, async () => {
+  it(`Does not identify email link of type ${markdown.linkType} in list of bad local links`, async () => {
     const { path: testDirectory } = await newTestDirectory({
       parentDirectory: TOP_LEVEL_DIRECTORY,
     });
