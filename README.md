@@ -1,6 +1,6 @@
 # bad-links-in-markdown
 
-<a href='      ./test.md'>an anchor link</a>
+<a href='./test file.md'>an anchor link</a>
 
 <a href=./test.md>an anchor link</a>
 
