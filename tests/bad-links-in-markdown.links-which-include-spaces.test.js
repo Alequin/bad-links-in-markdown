@@ -1,4 +1,3 @@
-import fs from "fs";
 import { badLinksInMarkdown } from "../bad-links-in-markdown";
 import { badLinkReasons } from "../src/config/bad-link-reasons";
 import {
@@ -203,7 +202,6 @@ describe("bad-links-in-markdown links-which-include-spaces", () => {
         extension: ".jpg",
         content: "",
       });
-      fs.writeFileSync(imageFile.filePath, "");
 
       newTestMarkdownFile({
         directory: testDirectory,

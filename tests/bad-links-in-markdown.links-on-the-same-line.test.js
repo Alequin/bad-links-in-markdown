@@ -1,16 +1,7 @@
-import fs from "fs";
 import { badLinksInMarkdown } from "../bad-links-in-markdown";
 import { badLinkReasons } from "../src/config/bad-link-reasons";
 import {
-  anchorLinkDoubleQuoteTemplate,
-  anchorLinkSingleQuoteTemplate,
-  applyTemplate,
-  inlineLinkTemplate,
-  referenceLinkTemplate,
-} from "./markdown-templates";
-import {
   newTestDirectory,
-  newTestFile,
   newTestMarkdownFile,
   runTestWithDirectoryCleanup,
   TOP_LEVEL_DIRECTORY,
@@ -22,17 +13,15 @@ describe("bad-links-in-markdown  - links on the same line", () => {
       parentDirectory: TOP_LEVEL_DIRECTORY,
     });
 
-    const { filePath } = newTestMarkdownFile({ directory: testDirectory });
-
-    fs.writeFileSync(
-      filePath,
-      [
+    const { filePath } = newTestMarkdownFile({
+      directory: testDirectory,
+      content: [
         "[I am a local link](./path/to/missing/file.md)",
         "[I am another local link](./path/to/missing/file.md)",
         "[I am anotherx2 local link](./path/to/missing/file.md)",
         "[I am anotherx3 local link](./path/to/missing/file.md)",
-      ].join(" and ")
-    );
+      ].join(" and "),
+    });
 
     await runTestWithDirectoryCleanup(async () => {
       expect(await badLinksInMarkdown(testDirectory)).toEqual({
@@ -68,17 +57,15 @@ describe("bad-links-in-markdown  - links on the same line", () => {
       parentDirectory: TOP_LEVEL_DIRECTORY,
     });
 
-    const { filePath } = newTestMarkdownFile({ directory: testDirectory });
-
-    fs.writeFileSync(
-      filePath,
-      [
+    const { filePath } = newTestMarkdownFile({
+      directory: testDirectory,
+      content: [
         "<a href='./path/to/missing/file.md'>I am a local link</a>",
         "<a href='./path/to/missing/file.md'>I am another local link</a>",
         "<a href='./path/to/missing/file.md'>I am anotherx2 local link</a>",
         "<a href='./path/to/missing/file.md'>I am anotherx3 local link</a>",
-      ].join(" and ")
-    );
+      ].join(" and "),
+    });
 
     await runTestWithDirectoryCleanup(async () => {
       expect(await badLinksInMarkdown(testDirectory)).toEqual({

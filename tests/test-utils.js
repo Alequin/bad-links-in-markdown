@@ -71,10 +71,11 @@ export const newTestFile = ({
     filePath: path.resolve(directory, `./${fileName}`),
   };
 
-  // TODO remove this condition and update all the tests
-  if (!isNil(content)) {
-    fs.writeFileSync(fileDetails.filePath, content);
-  }
+  if (isNil(content))
+    throw new Error(
+      `When making a new test file content must be defined / Content: ${content}`
+    );
+  fs.writeFileSync(fileDetails.filePath, content);
 
   return fileDetails;
 };

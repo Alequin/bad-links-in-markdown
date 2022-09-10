@@ -1,9 +1,6 @@
-import fs from "fs";
 import { badLinksInMarkdown } from "../bad-links-in-markdown";
 import { badLinkReasons } from "../src/config/bad-link-reasons";
 import {
-  anchorLinkDoubleQuoteTemplate,
-  anchorLinkSingleQuoteTemplate,
   applyTemplate,
   inlineImageLinkTemplate,
   inlineLinkTemplate,
@@ -13,8 +10,8 @@ import {
   shorthandReferenceLinkTemplate,
 } from "./markdown-templates";
 import {
-  newTestMarkdownFile,
   newTestDirectory,
+  newTestMarkdownFile,
   runTestWithDirectoryCleanup,
   TOP_LEVEL_DIRECTORY,
 } from "./test-utils";
@@ -105,13 +102,11 @@ describe("bad-links-in-markdown - windows specific", () => {
       parentDirectory: TOP_LEVEL_DIRECTORY,
     });
 
-    const { filePath } = newTestMarkdownFile({ directory: testDirectory });
-
     const absolutePath = "C:\\path\\to\\missing\\image.png";
-    fs.writeFileSync(
-      filePath,
-      `Here is some text\n[and then a link to a file][picture]\n![and then a link to a image][picture]\n\n[picture]: /${absolutePath}`
-    );
+    const { filePath } = newTestMarkdownFile({
+      directory: testDirectory,
+      content: `Here is some text\n[and then a link to a file][picture]\n![and then a link to a image][picture]\n\n[picture]: /${absolutePath}`,
+    });
 
     await runTestWithDirectoryCleanup(async () => {
       expect(await badLinksInMarkdown(testDirectory)).toEqual({

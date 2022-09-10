@@ -216,12 +216,10 @@ describe("bad-links-in-markdown - links of type $linkType including space encodi
       parentDirectory: TOP_LEVEL_DIRECTORY,
     });
 
-    const { filePath } = newTestMarkdownFile({ directory: testDirectory });
-
-    fs.writeFileSync(
-      filePath,
-      `[I am a local link](./path/to/missing%20file.md) and [I am another local link](./path/to/missing%20file.md)[I am anotherx2 local link](./path/to/missing%20file.md)(foobar)[I am anotherx3 local link](./path/to/missing%20file.md)`
-    );
+    const { filePath } = newTestMarkdownFile({
+      directory: testDirectory,
+      content: `[I am a local link](./path/to/missing%20file.md) and [I am another local link](./path/to/missing%20file.md)[I am anotherx2 local link](./path/to/missing%20file.md)(foobar)[I am anotherx3 local link](./path/to/missing%20file.md)`,
+    });
 
     await runTestWithDirectoryCleanup(async () => {
       expect(await badLinksInMarkdown(testDirectory)).toEqual({
@@ -257,12 +255,10 @@ describe("bad-links-in-markdown - links of type $linkType including space encodi
       parentDirectory: TOP_LEVEL_DIRECTORY,
     });
 
-    const { filePath } = newTestMarkdownFile({ directory: testDirectory });
-
-    fs.writeFileSync(
-      filePath,
-      `![picture](./path/to/missing%20image.png) and ![picture2](./path/to/missing%20image.png)![picture3](./path/to/missing%20image.png)(foobar)![picture4](./path/to/missing%20image.png)`
-    );
+    const { filePath } = newTestMarkdownFile({
+      directory: testDirectory,
+      content: `![picture](./path/to/missing%20image.png) and ![picture2](./path/to/missing%20image.png)![picture3](./path/to/missing%20image.png)(foobar)![picture4](./path/to/missing%20image.png)`,
+    });
 
     await runTestWithDirectoryCleanup(async () => {
       expect(await badLinksInMarkdown(testDirectory)).toEqual({

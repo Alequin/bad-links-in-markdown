@@ -77,8 +77,6 @@ describe.each([
       parentDirectory: TOP_LEVEL_DIRECTORY,
     });
 
-    const { filePath } = newTestMarkdownFile({ directory: testDirectory });
-
     newTestMarkdownFile({
       directory: testDirectory,
       content: [

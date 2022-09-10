@@ -1,4 +1,3 @@
-import fs from "fs";
 import { badLinksInMarkdown } from "../bad-links-in-markdown";
 import { badLinkReasons } from "../src/config/bad-link-reasons";
 import {
@@ -471,17 +470,15 @@ describe("bad-links-in-markdown - code blocks", () => {
           parentDirectory: TOP_LEVEL_DIRECTORY,
         });
 
-        const { filePath } = newTestMarkdownFile({ directory: testDirectory });
-
-        fs.writeFileSync(
-          filePath,
-          [
+        const { filePath } = newTestMarkdownFile({
+          directory: testDirectory,
+          content: [
             "Here is some text to talk about something: [foobar][I am a reference link]",
             // No empty lin here so code block is broken
             `${indentation}[I am a reference link]: ./path/to/missing/file.md`,
             "some more text here that is not in the code block",
-          ].join("\n")
-        );
+          ].join("\n"),
+        });
 
         await runTestWithDirectoryCleanup(async () => {
           expect(await badLinksInMarkdown(testDirectory)).toEqual({
