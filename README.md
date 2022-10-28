@@ -4,8 +4,11 @@
 <a href=      #syntax-notes file.md>an anchor link</a>
 <a href=#syntax-notes     file.md>an anchor link</a>
 
+here
 
 <a href=#syntax-notes>an anchor link</a>
+
+here
 
 <a href=       ./test.md>an anchor link 1432423</a>
 
