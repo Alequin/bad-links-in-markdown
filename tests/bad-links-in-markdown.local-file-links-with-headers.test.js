@@ -539,7 +539,7 @@ describe("bad-links-in-markdown - local header file links", () => {
     referenceLinkTemplate,
     shorthandReferenceLinkTemplate,
   ])("Missing file extensions - $linkType", (markdown) => {
-    it.only(`Identifies a local ${markdown.linkType} that points at a file that exists but does not contain the targeted header tag, even when the file extension is not provided`, async () => {
+    it(`Identifies a local ${markdown.linkType} that points at a file that exists but does not contain the targeted header tag, even when the file extension is not provided`, async () => {
       const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_DIRECTORY,
       });
