@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { flatMap } from "lodash";
-import { isDirectory } from "../utils/is-directory";
+import { isDirectory } from "../../utils/is-directory";
 
 export const findAllMarkdownFiles = (directory) => {
   const itemsInCurrentDirectory = fs.readdirSync(directory).map((name) => ({

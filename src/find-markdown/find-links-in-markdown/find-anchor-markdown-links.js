@@ -1,4 +1,4 @@
-import { match } from "../utils/match";
+import { match } from "../../utils/match";
 import { makeLinkObjectFromAnchorLink } from "./make-link-object";
 
 const MARKDOWN_ANCHOR_LINK_REGEX = /<a.*?a>/;

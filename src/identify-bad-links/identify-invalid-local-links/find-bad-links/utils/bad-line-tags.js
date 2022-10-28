@@ -1,4 +1,4 @@
-import { readMarkdownFileLines } from "../../../utils/read-markdown-file-lines";
+import { readMarkdownFileLines } from "../../../../utils/read-markdown-file-lines";
 
 export const badLineTags = (links) => {
   return links.filter((linkObject) => {

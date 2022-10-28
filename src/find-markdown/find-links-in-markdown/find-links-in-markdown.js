@@ -1,6 +1,6 @@
-import { match } from "../utils/match";
-import { readCleanMarkdownFile } from "../utils/read-clean-markdown-file";
-import { readCleanMarkdownFileLines } from "../utils/read-clean-markdown-file-lines";
+import { match } from "../../utils/match";
+import { readCleanMarkdownFile } from "../../utils/read-clean-markdown-file";
+import { readCleanMarkdownFileLines } from "../../utils/read-clean-markdown-file-lines";
 import { findAnchorMarkdownLinks } from "./find-anchor-markdown-links";
 import { findInlineMarkdownLinks } from "./find-inline-markdown-links";
 import { findReferenceMarkdownLinks } from "./find-reference-markdown-links";

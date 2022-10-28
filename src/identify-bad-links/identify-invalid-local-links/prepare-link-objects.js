@@ -1,14 +1,14 @@
 import fs from "fs";
 import { first, last } from "lodash";
 import path from "path";
-import { LINK_TYPE } from "../config/link-type";
-import { doesFileExist } from "../utils/does-file-exist";
-import { doesLinkStartWithRelativePath } from "../utils/does-link-start-with-relative-path";
+import { LINK_TYPE } from "../../config/link-type";
+import { doesFileExist } from "../../utils/does-file-exist";
+import { doesLinkStartWithRelativePath } from "../../utils/does-link-start-with-relative-path";
 import {
   isLocalLink,
   isLocalQuotedAnchorLink,
-} from "../utils/link-type-checks";
-import { match } from "../utils/match";
+} from "../../utils/link-type-checks";
+import { match } from "../../utils/match";
 
 const ABSOLUTE_PATH_REGEX = /^\//;
 
