@@ -1,9 +1,5 @@
 # bad-links-in-markdown
 
-[foobar]: #syntax-notes foobar
-
- [foobar](./foobar.md#L1000)
-
 A script to identify links in markdown files that no longer work.
 
 The script:
