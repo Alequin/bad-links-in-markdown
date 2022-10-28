@@ -7,312 +7,174 @@ import {
   TOP_LEVEL_DIRECTORY,
 } from "./test-utils";
 
-describe("bad-links-in-markdown - code blocks", () => {
-  describe("triple back ticks code block", () => {
-    it("Ignores local inline links wrapped in triple backticks, even when the link is broken", async () => {
-      const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
-      });
-
-      newTestMarkdownFile({
-        directory: testDirectory,
-        content: [
-          "```",
-          `[I am a local link](./path/to/missing/file.md)`,
-          "```",
-        ].join("\n"),
-      });
-
-      await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
-          badLocalLinks: [],
+describe("bad-links-in-markdown - code sections", () => {
+  describe.each([
+    { openBlock: "`", closeBlock: "`" },
+    { openBlock: "<code>", closeBlock: "<code/>" },
+  ])(
+    "when using single line code blocks created using $openBlock",
+    ({ openBlock, closeBlock }) => {
+      it(`Ignores local inline links wrapped in ${openBlock}`, async () => {
+        const { path: testDirectory } = await newTestDirectory({
+          parentDirectory: TOP_LEVEL_DIRECTORY,
         });
-      }, testDirectory);
-    });
 
-    it("Ignores local reference links wrapped in triple backticks, even when the link is broken", async () => {
-      const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
-      });
-
-      newTestMarkdownFile({
-        directory: testDirectory,
-        content: [
-          "[foobar][I am a reference link]",
-          "```",
-          `[I am a reference link]: ./path/to/missing/file.md`,
-          "```",
-        ].join("\n"),
-      });
-
-      await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
-          badLocalLinks: [],
+        newTestMarkdownFile({
+          directory: testDirectory,
+          content: [
+            `${openBlock}[I am a local link 1](./path/to/missing/file.md)${closeBlock}`,
+            `${openBlock}here is some other text [I am a local link 2](./path/to/missing/file.md) more text over here${closeBlock}`,
+          ].join("\n"),
         });
-      }, testDirectory);
-    });
 
-    it("Identifies local inline links when the header they link to is in triple backticks", async () => {
-      const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
+        await runTestWithDirectoryCleanup(async () => {
+          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+            badLocalLinks: [],
+          });
+        }, testDirectory);
       });
 
-      const { filePath } = newTestMarkdownFile({
-        directory: testDirectory,
-        content: [
-          "```",
-          "# cool header",
-          "```",
-          `[I am a local link](#cool-header)`,
-        ].join("\n"),
-      });
-
-      await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
-          badLocalLinks: [
-            {
-              filePath,
-              missingLinks: [
-                {
-                  link: "[I am a local link](#cool-header)",
-                  reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
-                },
-              ],
-            },
-          ],
+      it(`Ignores local reference links wrapped in ${openBlock}`, async () => {
+        const { path: testDirectory } = await newTestDirectory({
+          parentDirectory: TOP_LEVEL_DIRECTORY,
         });
-      }, testDirectory);
-    });
 
-    it("Identifies local reference links when the header they link to is in triple backticks", async () => {
-      const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
-      });
-
-      const { filePath } = newTestMarkdownFile({
-        directory: testDirectory,
-        content: [
-          "```",
-          "# cool header",
-          "```",
-          "",
-          "[foobar][I am a reference link]",
-          `[I am a reference link]: #cool-header`,
-        ].join("\n"),
-      });
-
-      await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
-          badLocalLinks: [
-            {
-              filePath,
-              missingLinks: [
-                {
-                  link: "[I am a reference link]: #cool-header",
-                  reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
-                },
-              ],
-            },
-          ],
+        newTestMarkdownFile({
+          directory: testDirectory,
+          content: [
+            `${openBlock}[I am a reference link 1]: ./path/to/missing/file.md${closeBlock}`,
+            `${openBlock}this is text [I am a reference link 2]: ./path/to/missing/file.md also this${closeBlock}`,
+          ].join("\n"),
         });
-      }, testDirectory);
-    });
 
-    it("Ignores local inline links which point at headers placed between two backtick sections", async () => {
-      const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
+        await runTestWithDirectoryCleanup(async () => {
+          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+            badLocalLinks: [],
+          });
+        }, testDirectory);
       });
 
-      newTestMarkdownFile({
-        directory: testDirectory,
-        content: [
-          "```",
-          "backtick contents 1",
-          "```",
-          "# header",
-          "```",
-          "backtick contents 1",
-          "```",
-          "[header link](#header)",
-        ].join("\n"),
-      });
-
-      await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
-          badLocalLinks: [],
+      it(`Identifies local inline links the point to files that don't exist, even when the link text contains text wrapped in ${openBlock}`, async () => {
+        const { path: testDirectory } = await newTestDirectory({
+          parentDirectory: TOP_LEVEL_DIRECTORY,
         });
-      }, testDirectory);
-    });
 
-    it("Ignores local reference links which point at headers placed between two backtick sections", async () => {
-      const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
-      });
-
-      newTestMarkdownFile({
-        directory: testDirectory,
-        content: [
-          "```",
-          "backtick contents 1",
-          "```",
-          "# header",
-          "```",
-          "backtick contents 1",
-          "```",
-          "[header link][foo]",
-          "[foo][#header]",
-        ].join("\n"),
-      });
-
-      await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
-          badLocalLinks: [],
+        const { filePath } = newTestMarkdownFile({
+          directory: testDirectory,
+          content: `[I am a ${openBlock}local link${closeBlock}](./path/to/missing/file.md)`,
         });
-      }, testDirectory);
-    });
-  });
 
-  describe("single back ticks code block", () => {
-    it("Ignores local inline links wrapped in single backticks", async () => {
-      const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
+        await runTestWithDirectoryCleanup(async () => {
+          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+            badLocalLinks: [
+              {
+                filePath,
+                missingLinks: [
+                  {
+                    link: `[I am a ${openBlock}local link${closeBlock}](./path/to/missing/file.md)`,
+                    reasons: [badLinkReasons.FILE_NOT_FOUND],
+                  },
+                ],
+              },
+            ],
+          });
+        }, testDirectory);
       });
 
-      newTestMarkdownFile({
-        directory: testDirectory,
-        content: [
-          "`[I am a local link 1](./path/to/missing/file.md)`",
-          "`here is some other text [I am a local link 2](./path/to/missing/file.md) more text over here`",
-        ].join("\n"),
-      });
-
-      await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
-          badLocalLinks: [],
+      it(`Identifies local reference links the point to files that don't exist, even when the link text contains text wrapped in ${openBlock}`, async () => {
+        const { path: testDirectory } = await newTestDirectory({
+          parentDirectory: TOP_LEVEL_DIRECTORY,
         });
-      }, testDirectory);
-    });
 
-    it("Ignores local reference links wrapped in single backticks", async () => {
-      const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
-      });
-
-      newTestMarkdownFile({
-        directory: testDirectory,
-        content: [
-          "`[I am a reference link 1]: ./path/to/missing/file.md`",
-          "`this is text [I am a reference link 2]: ./path/to/missing/file.md also this`",
-        ].join("\n"),
-      });
-
-      await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
-          badLocalLinks: [],
+        const { filePath } = newTestMarkdownFile({
+          directory: testDirectory,
+          content: [
+            `[I am a ${openBlock}reference${closeBlock} link 1]: ./path/to/missing/file.md`,
+          ].join("\n"),
         });
-      }, testDirectory);
-    });
 
-    it("Identifies local inline links the point to files that don't exist, even when the link text contains backticks", async () => {
-      const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
+        await runTestWithDirectoryCleanup(async () => {
+          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+            badLocalLinks: [
+              {
+                filePath,
+                missingLinks: [
+                  {
+                    link: `[I am a ${openBlock}reference${closeBlock} link 1]: ./path/to/missing/file.md`,
+                    reasons: [badLinkReasons.FILE_NOT_FOUND],
+                  },
+                ],
+              },
+            ],
+          });
+        }, testDirectory);
       });
 
-      const { filePath } = newTestMarkdownFile({
-        directory: testDirectory,
-        content: "[I am a `local link`](./path/to/missing/file.md)",
-      });
-
-      await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
-          badLocalLinks: [
-            {
-              filePath,
-              missingLinks: [
-                {
-                  link: "[I am a `local link`](./path/to/missing/file.md)",
-                  reasons: [badLinkReasons.FILE_NOT_FOUND],
-                },
-              ],
-            },
-          ],
+      it(`Identifies local inline links the point to files that don't exist when they follow a complete code block and are within an incomplete code block, where the block is created with ${openBlock}`, async () => {
+        const { path: testDirectory } = await newTestDirectory({
+          parentDirectory: TOP_LEVEL_DIRECTORY,
         });
-      }, testDirectory);
-    });
 
-    it("Identifies local reference links the point to files that don't exist, even when the link text contains backticks", async () => {
-      const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
-      });
+        const completeCodeBlock = `${openBlock}code block contents${closeBlock}`;
+        const incompleteCodeBlock = `[I am a local link](./path/to/missing/file.md) ${closeBlock}`;
 
-      const { filePath } = newTestMarkdownFile({
-        directory: testDirectory,
-        content: [
-          "[I am a `reference` link 1]: ./path/to/missing/file.md",
-        ].join("\n"),
-      });
-
-      await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
-          badLocalLinks: [
-            {
-              filePath,
-              missingLinks: [
-                {
-                  link: "[I am a `reference` link 1]: ./path/to/missing/file.md",
-                  reasons: [badLinkReasons.FILE_NOT_FOUND],
-                },
-              ],
-            },
-          ],
+        const { filePath } = newTestMarkdownFile({
+          directory: testDirectory,
+          content: `${completeCodeBlock} ${incompleteCodeBlock}`,
         });
-      }, testDirectory);
-    });
 
-    it("Ignores a local inline link that points at header that includes backticks", async () => {
-      const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
+        await runTestWithDirectoryCleanup(async () => {
+          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+            badLocalLinks: [
+              {
+                filePath,
+                missingLinks: [
+                  {
+                    link: `[I am a local link](./path/to/missing/file.md)`,
+                    reasons: [badLinkReasons.FILE_NOT_FOUND],
+                  },
+                ],
+              },
+            ],
+          });
+        }, testDirectory);
       });
 
-      newTestMarkdownFile({
-        directory: testDirectory,
-        content: `
-      # Header \`text\`
-
-      [I am a local link 1](#header-text)
-      `,
-      });
-
-      await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
-          badLocalLinks: [],
+      it(`Identifies local inline links the point to files that don't exist when they follow a complete code block and are within an incomplete code block, where the block is created with ${openBlock}`, async () => {
+        const { path: testDirectory } = await newTestDirectory({
+          parentDirectory: TOP_LEVEL_DIRECTORY,
         });
-      }, testDirectory);
-    });
 
-    it("Ignores a local reference link that points at header that includes backticks", async () => {
-      const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
-      });
+        const completeCodeBlock = `${openBlock}code block contents${closeBlock}`;
 
-      newTestMarkdownFile({
-        directory: testDirectory,
-        content: `
-      # Header \`text\`
-
-      [I am a local link 1][foobar]
-
-      [foobar]: #header-text
-      `,
-      });
-
-      await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
-          badLocalLinks: [],
+        const { filePath } = newTestMarkdownFile({
+          directory: testDirectory,
+          content: [
+            completeCodeBlock,
+            "",
+            `[I am a reference link 1]: ./path/to/missing/file.md`,
+            closeBlock,
+          ].join("\n"),
         });
-      }, testDirectory);
-    });
-  });
+
+        await runTestWithDirectoryCleanup(async () => {
+          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+            badLocalLinks: [
+              {
+                filePath,
+                missingLinks: [
+                  {
+                    link: `[I am a reference link 1]: ./path/to/missing/file.md`,
+                    reasons: [badLinkReasons.FILE_NOT_FOUND],
+                  },
+                ],
+              },
+            ],
+          });
+        }, testDirectory);
+      });
+    }
+  );
 
   describe.each([1, 2, 3])(
     "indented code block - indented %sX",
@@ -499,7 +361,274 @@ describe("bad-links-in-markdown - code blocks", () => {
     }
   );
 
-  describe("html code block", () => {
-    it.todo("works as expected");
+  describe.each([
+    { openBlock: "```", closeBlock: "```" },
+    { openBlock: "<pre>", closeBlock: "<pre/>" },
+  ])(
+    "When using a code multiline block created with '$openBlock'",
+    ({ openBlock, closeBlock }) => {
+      it(`Ignores local inline links wrapped in a ${openBlock} block, even when the link is broken`, async () => {
+        const { path: testDirectory } = await newTestDirectory({
+          parentDirectory: TOP_LEVEL_DIRECTORY,
+        });
+
+        newTestMarkdownFile({
+          directory: testDirectory,
+          content: [
+            openBlock,
+            `[I am a local link](./path/to/missing/file.md)`,
+            closeBlock,
+          ].join("\n"),
+        });
+
+        await runTestWithDirectoryCleanup(async () => {
+          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+            badLocalLinks: [],
+          });
+        }, testDirectory);
+      });
+
+      it(`Ignores local reference links wrapped in a ${openBlock} block, even when the link is broken`, async () => {
+        const { path: testDirectory } = await newTestDirectory({
+          parentDirectory: TOP_LEVEL_DIRECTORY,
+        });
+
+        newTestMarkdownFile({
+          directory: testDirectory,
+          content: [
+            "[foobar][I am a reference link]",
+            openBlock,
+            `[I am a reference link]: ./path/to/missing/file.md`,
+            closeBlock,
+          ].join("\n"),
+        });
+
+        await runTestWithDirectoryCleanup(async () => {
+          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+            badLocalLinks: [],
+          });
+        }, testDirectory);
+      });
+
+      it(`Identifies local inline links when the header they link to is in a ${openBlock} block`, async () => {
+        const { path: testDirectory } = await newTestDirectory({
+          parentDirectory: TOP_LEVEL_DIRECTORY,
+        });
+
+        const { filePath } = newTestMarkdownFile({
+          directory: testDirectory,
+          content: [
+            openBlock,
+            "# cool header",
+            closeBlock,
+            `[I am a local link](#cool-header)`,
+          ].join("\n"),
+        });
+
+        await runTestWithDirectoryCleanup(async () => {
+          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+            badLocalLinks: [
+              {
+                filePath,
+                missingLinks: [
+                  {
+                    link: "[I am a local link](#cool-header)",
+                    reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
+                  },
+                ],
+              },
+            ],
+          });
+        }, testDirectory);
+      });
+
+      it(`Identifies local reference links when the header they link to is in a ${openBlock} block`, async () => {
+        const { path: testDirectory } = await newTestDirectory({
+          parentDirectory: TOP_LEVEL_DIRECTORY,
+        });
+
+        const { filePath } = newTestMarkdownFile({
+          directory: testDirectory,
+          content: [
+            openBlock,
+            "# cool header",
+            closeBlock,
+            "",
+            "[foobar][I am a reference link]",
+            `[I am a reference link]: #cool-header`,
+          ].join("\n"),
+        });
+
+        await runTestWithDirectoryCleanup(async () => {
+          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+            badLocalLinks: [
+              {
+                filePath,
+                missingLinks: [
+                  {
+                    link: "[I am a reference link]: #cool-header",
+                    reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
+                  },
+                ],
+              },
+            ],
+          });
+        }, testDirectory);
+      });
+
+      it(`Ignores local inline links which point at headers placed within a ${openBlock} block`, async () => {
+        const { path: testDirectory } = await newTestDirectory({
+          parentDirectory: TOP_LEVEL_DIRECTORY,
+        });
+
+        newTestMarkdownFile({
+          directory: testDirectory,
+          content: [
+            openBlock,
+            "pre contents 1",
+            closeBlock,
+            "# header",
+            openBlock,
+            "pre contents 2",
+            closeBlock,
+            "[header link](#header)",
+          ].join("\n"),
+        });
+
+        await runTestWithDirectoryCleanup(async () => {
+          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+            badLocalLinks: [],
+          });
+        }, testDirectory);
+      });
+
+      it(`Ignores local reference links which point at headers placed within a ${openBlock} block`, async () => {
+        const { path: testDirectory } = await newTestDirectory({
+          parentDirectory: TOP_LEVEL_DIRECTORY,
+        });
+
+        newTestMarkdownFile({
+          directory: testDirectory,
+          content: [
+            openBlock,
+            "pre contents 1",
+            closeBlock,
+            "# header",
+            openBlock,
+            "pre contents 2",
+            closeBlock,
+            "[header link][foo]",
+            "[foo][#header]",
+          ].join("\n"),
+        });
+
+        await runTestWithDirectoryCleanup(async () => {
+          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+            badLocalLinks: [],
+          });
+        }, testDirectory);
+      });
+    }
+  );
+
+  describe("When header text includes text wrapped in a single backtick", () => {
+    it("Ignores a local inline link that points at header that includes content wrapped in a single backtick", async () => {
+      const { path: testDirectory } = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
+      newTestMarkdownFile({
+        directory: testDirectory,
+        content: `
+        # Header \`text\`
+        [I am a local link 1](#header-text)
+        `,
+      });
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [],
+        });
+      }, testDirectory);
+    });
+
+    it("Ignores a local reference link that points at header that includes content wrapped in a single backtick", async () => {
+      const { path: testDirectory } = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
+      newTestMarkdownFile({
+        directory: testDirectory,
+        content: `
+        # Header \`text\`
+        [I am a local link 1][foobar]
+        [foobar]: #header-text
+        `,
+      });
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [],
+        });
+      }, testDirectory);
+    });
+  });
+
+  describe("When header text includes text wrapped in a <code> tag", () => {
+    it("Identifies a local inline link that points at header that includes content wrapped in <code> tags", async () => {
+      const { path: testDirectory } = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
+      const { filePath } = newTestMarkdownFile({
+        directory: testDirectory,
+        content: `
+        # Header <code>text</code>
+        [I am a local link 1](#header-text)
+        `,
+      });
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [
+            {
+              filePath,
+              missingLinks: [
+                {
+                  link: "[I am a local link 1](#header-text)",
+                  reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
+                },
+              ],
+            },
+          ],
+        });
+      }, testDirectory);
+    });
+
+    it("Identifies a local reference link that points at header that includes content wrapped in <code> tags", async () => {
+      const { path: testDirectory } = await newTestDirectory({
+        parentDirectory: TOP_LEVEL_DIRECTORY,
+      });
+
+      const { filePath } = newTestMarkdownFile({
+        directory: testDirectory,
+        content: `
+        # Header <code>text</code>
+        [I am a local link 1][foobar]
+        [foobar]: #header-text
+        `,
+      });
+
+      await runTestWithDirectoryCleanup(async () => {
+        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          badLocalLinks: [
+            {
+              filePath,
+              missingLinks: [
+                {
+                  link: "[foobar]: #header-text",
+                  reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
+                },
+              ],
+            },
+          ],
+        });
+      }, testDirectory);
+    });
   });
 });

@@ -19,12 +19,16 @@ export const findLinksInMarkdown = (filePath) => {
   );
 };
 
-const WRAPPED_IN_BACKTICKS_REGEX = /`.*`/g;
+const WRAPPED_IN_BACKTICKS_REGEX = /`.*?`/g;
+const WRAPPED_IN_CODE_BLOCK_REGEX = /<code>.*?<code\/>/g;
 const removeLinksInsideBackticks = (links, markdown) => {
-  const singleBacktickContents = match(markdown, WRAPPED_IN_BACKTICKS_REGEX);
+  const wrappedContents = [
+    ...match(markdown, WRAPPED_IN_BACKTICKS_REGEX),
+    ...match(markdown, WRAPPED_IN_CODE_BLOCK_REGEX),
+  ];
 
   return links.filter((link) => {
-    const isLinkWrappedInBackticks = singleBacktickContents.some((content) =>
+    const isLinkWrappedInBackticks = wrappedContents.some((content) =>
       content.includes(link.markdownLink)
     );
 
