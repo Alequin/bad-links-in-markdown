@@ -5,7 +5,7 @@
 <a href=#syntax-notes     file.md>an anchor link</a>
 
 
-<a href=      #syntax-notes file.md>an anchor link</a>
+<a href=#syntax-notes>an anchor link</a>
 
 <a href=       ./test.md>an anchor link 1432423</a>
 
@@ -84,13 +84,4 @@ The script:
 - should some "badLinkReasons" block others. 
   - Should FILE_NOT_FOUND show if MISSING_FILE_EXTENSION is also showing?
   
-Syntax notes
----
-
-https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet#links
-https://www.markdownguide.org/basic-syntax/#links
-https://www.w3schools.io/file/markdown-links/
-
-foobar 
-test header
----
+<h2>Syntax notes</h2>
