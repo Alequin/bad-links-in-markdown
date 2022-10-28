@@ -34,6 +34,7 @@ import { match } from "../utils/match";
  * name: String
  * matchedFileCount: number | null
  * matchedFile: String | null
+ * matchedFileExtension: String | null
  * rawLink: String
  * isLinkMissingFileExtension: Boolean
  * linkFileExtension: String
@@ -127,10 +128,14 @@ const addMatchingFilesInDirectoryToLinks = (linkObject) => {
   }
 
   const matchedFiles = findMatchingFiles(linkObject);
+  const firstMatchedFile = first(matchedFiles) || null;
   return {
     ...linkObject,
     matchedFileCount: matchedFiles?.length || 0,
-    matchedFile: first(matchedFiles) || null,
+    matchedFile: firstMatchedFile,
+    matchedFileExtension: firstMatchedFile
+      ? getFileExtension(firstMatchedFile)
+      : null,
   };
 };
 
@@ -151,21 +156,19 @@ const isMatchFile = (linkObject) => (fileInDirectory) => {
 };
 
 const addFileExtension = (linkObject) => {
-  const { linkPath, fullPath } = linkObject;
+  const { linkPath, fullPath, matchedFileExtension } = linkObject;
 
   const fileExtension =
     getFileExtension(linkPath) || getFileExtension(fullPath);
-  const fileExtensionToUse =
-    fileExtension || getFileExtension(linkObject?.matchedFile);
 
   return {
     ...linkObject,
     rawLinkPath: linkPath,
     linkPath: fileExtension
       ? linkPath
-      : `${linkPath}${fileExtensionToUse || ""}`,
+      : `${linkPath}${matchedFileExtension || ""}`,
     isLinkMissingFileExtension: !fileExtension,
-    linkFileExtension: fileExtensionToUse, // TODO make it clear why isLinkMissingFileExtension might be false and linkFileExtension might be a value
+    linkFileExtension: fileExtension,
   };
 };
 
@@ -180,6 +183,8 @@ const appendFileExtensionToFullPath = (linkObject) => {
   return {
     ...linkObject,
     rawFullPath: linkObject.fullPath,
-    fullPath: `${linkObject.fullPath}${linkObject.linkFileExtension || ""}`,
+    fullPath: `${linkObject.fullPath}${
+      linkObject.linkFileExtension || linkObject.matchedFileExtension || ""
+    }`,
   };
 };
