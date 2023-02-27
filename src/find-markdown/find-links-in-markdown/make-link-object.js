@@ -2,10 +2,7 @@ import { trimEnd } from "lodash";
 import { LINK_TYPE } from "../../config/link-type";
 import { extractHrefLinkFromQuotedAnchorTag } from "../../utils/extract-href-link-from-quoted-anchor-tag";
 import { extractHrefLinkFromUnquotedAnchorTag } from "../../utils/extract-href-link-from-unquoted-anchor-tag";
-import {
-  isLocalQuotedAnchorLink,
-  isValidLink,
-} from "../../utils/link-type-checks";
+import { isValidLink } from "../../utils/link-type-checks";
 import { match } from "../../utils/match";
 import { MARKDOWN_INLINE_LINK_REGEX } from "./markdown-inline-link-regex";
 
@@ -70,12 +67,7 @@ const makeLinkObject = ({ type, markdownLink, fullLink, isImage }) => {
     ? [undefined, removeHashCharsFromStart(linkWithTag)]
     : linkWithTag.split("#");
 
-  const isLinkValid =
-    type === LINK_TYPE.quotedAnchorLink
-      ? isLocalQuotedAnchorLink(linkPath, linkTag)
-      : isValidLink(linkPath, linkTag);
-
-  return isLinkValid
+  return isValidLink(linkPath, linkTag, type)
     ? Object.freeze({
         markdownLink,
         linkPath,

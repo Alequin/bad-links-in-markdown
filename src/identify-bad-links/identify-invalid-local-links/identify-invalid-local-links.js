@@ -8,14 +8,14 @@ import { findLinksWithoutExtensions } from "./find-bad-links/find-links-without-
 import { findMissingLinksWithFileExtensions } from "./find-bad-links/find-missing-links-with-file-extensions";
 import { groupMatchingLinkObjectWithIssues } from "./group-matching-link-objects-with-issues";
 import { logProgress } from "./log-progress";
-import { prepareLinkObjects } from "./prepare-link-objects";
+import { prepareLocalLinkObjects } from "./prepare-local-link-objects";
 
 export const identifyInvalidLocalLinks = (fileObjects) => {
   const identifiedInvalidLinks = fileObjects
     .map((fileObject, index) => {
       logProgress(index + 1, fileObjects.length);
 
-      const linkObjects = prepareLinkObjects(fileObject);
+      const linkObjects = prepareLocalLinkObjects(fileObject);
 
       const [internalFileLinks, externalFileLinks] = partition(
         linkObjects,

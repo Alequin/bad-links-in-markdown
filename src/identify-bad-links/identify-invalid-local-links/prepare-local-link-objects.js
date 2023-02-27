@@ -4,10 +4,7 @@ import path from "path";
 import { LINK_TYPE } from "../../config/link-type";
 import { doesFileExist } from "../../utils/does-file-exist";
 import { doesLinkStartWithRelativePath } from "../../utils/does-link-start-with-relative-path";
-import {
-  isLocalLink,
-  isLocalQuotedAnchorLink,
-} from "../../utils/link-type-checks";
+import { isLocalLink } from "../../utils/link-type-checks";
 import { match } from "../../utils/match";
 
 const ABSOLUTE_PATH_REGEX = /^\//;
@@ -36,21 +33,16 @@ const ABSOLUTE_PATH_REGEX = /^\//;
  * matchedFileExtension: String | null
  * }}
  */
-export const prepareLinkObjects = ({
+export const prepareLocalLinkObjects = ({
   links,
   directory,
   topLevelDirectory,
   sourceFilePath,
 }) => {
   return links
-    .filter(({ type, linkPath, linkTag }) => {
-      if (isLocalLink(linkPath, linkTag)) return true;
-
-      return (
-        type === LINK_TYPE.quotedAnchorLink &&
-        isLocalQuotedAnchorLink(linkPath, linkTag)
-      );
-    })
+    .filter(({ type, linkPath, linkTag }) =>
+      isLocalLink(linkPath, linkTag, type)
+    )
     .map((baseObject) => {
       const isAbsoluteLink = ABSOLUTE_PATH_REGEX.test(baseObject.link);
       const isInternalFileLink = Boolean(
