@@ -361,7 +361,7 @@ describe("bad-links-in-markdown links-which-include-spaces", () => {
         }, testDirectory);
       });
 
-      it(`Ignores a local ${markdown.linkType} that points at a file that exists when the file name includes a space character`, async () => {
+      it(`Identifies a local ${markdown.linkType} that points at a file that exists when the file name includes a space character`, async () => {
         const { path: testDirectory } = await newTestDirectory({
           parentDirectory: TOP_LEVEL_DIRECTORY,
         });
@@ -373,16 +373,30 @@ describe("bad-links-in-markdown links-which-include-spaces", () => {
           name,
         });
 
-        newTestMarkdownFile({
+        const link = `./${name}.md`;
+        const { filePath } = newTestMarkdownFile({
           directory: testDirectory,
           content: applyTemplate(markdown.template, {
-            link: `./${name}.md`,
+            link,
           }),
         });
 
+        const expectedBadLink = applyTemplate(markdown.expectedLink, {
+          link,
+        });
         await runTestWithDirectoryCleanup(async () => {
           expect(await badLinksInMarkdown(testDirectory)).toEqual({
-            badLocalLinks: [],
+            badLocalLinks: [
+              {
+                filePath,
+                missingLinks: [
+                  {
+                    link: expectedBadLink,
+                    reasons: [badLinkReasons.INVALID_SPACE_CHARACTER],
+                  },
+                ],
+              },
+            ],
           });
         }, testDirectory);
       });
@@ -411,7 +425,7 @@ describe("bad-links-in-markdown links-which-include-spaces", () => {
                 missingLinks: [
                   {
                     link: expectedBadLink,
-                    reasons: [badLinkReasons.FILE_NOT_FOUND],
+                    reasons: [badLinkReasons.INVALID_SPACE_CHARACTER],
                   },
                 ],
               },
@@ -420,7 +434,7 @@ describe("bad-links-in-markdown links-which-include-spaces", () => {
         }, testDirectory);
       });
 
-      it(`Identifies a local ${markdown.linkType} that points at a file that exists but do not contain the targeted header tag when the file name includes a space character`, async () => {
+      it(`Identifies a local ${markdown.linkType} that points at a file that exists but does not contain the targeted header tag when the file name includes a space character`, async () => {
         const { path: testDirectory } = await newTestDirectory({
           parentDirectory: TOP_LEVEL_DIRECTORY,
         });
@@ -451,7 +465,7 @@ describe("bad-links-in-markdown links-which-include-spaces", () => {
                 missingLinks: [
                   {
                     link: expectedBadLink,
-                    reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
+                    reasons: [badLinkReasons.INVALID_SPACE_CHARACTER],
                   },
                 ],
               },
@@ -569,7 +583,7 @@ describe("bad-links-in-markdown links-which-include-spaces", () => {
         }, testDirectory);
       });
 
-      it(`Identifies a local ${markdown.linkType} that points at a file that exists but do not contain the targeted header tag when the file name includes a space character`, async () => {
+      it(`Identifies a local ${markdown.linkType} that points at a file that exists but does not contain the targeted header tag when the file name includes a space character`, async () => {
         const { path: testDirectory } = await newTestDirectory({
           parentDirectory: TOP_LEVEL_DIRECTORY,
         });

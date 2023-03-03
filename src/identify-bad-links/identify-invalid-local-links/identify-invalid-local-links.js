@@ -1,4 +1,5 @@
 import { isEmpty, orderBy, partition } from "lodash";
+import { badLinkReasons } from "../../config/bad-link-reasons";
 import { findAnchorLinksWithInvalidWrappingQuotes } from "./find-bad-links/find-anchor-links-with-invalid-wrapping-quotes";
 import * as findInvalidAbsoluteLinks from "./find-bad-links/find-invalid-absolute-links";
 import { findInvalidImageExtensions } from "./find-bad-links/find-invalid-image-extensions";
@@ -15,28 +16,26 @@ export const identifyInvalidLocalLinks = (fileObjects) => {
     .map((fileObject, index) => {
       logProgress(index + 1, fileObjects.length);
 
-      const linkObjects = prepareLocalLinkObjects(fileObject);
+      const {
+        linksWithGoodSyntax,
+        linksWithBadSyntax,
+        internalFileLinks,
+        externalFileLinks,
+      } = partitionLinksObjects(prepareLocalLinkObjects(fileObject));
 
-      const [internalFileLinks, externalFileLinks] = partition(
-        linkObjects,
-        ({ isTagOnlyLink }) => isTagOnlyLink
-      );
-
-      const issues = groupMatchingLinkObjectWithIssues([
-        ...findAnchorLinksWithInvalidWrappingQuotes(linkObjects),
+      const missingLinks = groupMatchingLinkObjectWithIssues([
+        ...addBadSyntaxReasonToLinks(linksWithBadSyntax),
+        ...findAnchorLinksWithInvalidWrappingQuotes(linksWithGoodSyntax),
         ...findInvalidInternalFileLinks(internalFileLinks),
         ...findInvalidExternalFileLinks(externalFileLinks),
-      ]).map((issue) => ({
-        ...issue,
-        reasons: issue.reasons.sort(),
+      ]).map(({ markdownLink, reasons }) => ({
+        link: markdownLink,
+        reasons: reasons.sort(),
       }));
 
       return {
+        missingLinks,
         filePath: fileObject.sourceFilePath,
-        missingLinks: issues.map(({ markdownLink, reasons }) => ({
-          link: markdownLink,
-          reasons,
-        })),
       };
     })
     .filter(({ missingLinks }) => !isEmpty(missingLinks));
@@ -44,8 +43,42 @@ export const identifyInvalidLocalLinks = (fileObjects) => {
   return orderBy(identifiedInvalidLinks, ({ filePath }) => filePath);
 };
 
-const findInvalidInternalFileLinks = (linkObjects) =>
-  findLinksWithBadHeaderTags(linkObjects);
+const partitionLinksObjects = (linkObjects) => {
+  const [linksWithGoodSyntax, linksWithBadSyntax] = partition(
+    linkObjects,
+    doesLinkHaveBadSyntax
+  );
+
+  const [internalFileLinks, externalFileLinks] = partition(
+    linksWithGoodSyntax,
+    ({ isTagOnlyLink }) => isTagOnlyLink
+  );
+
+  return {
+    linksWithGoodSyntax,
+    linksWithBadSyntax,
+    internalFileLinks,
+    externalFileLinks,
+  };
+};
+
+const doesLinkHaveBadSyntax = ({ linkPath }) => {
+  if (!linkPath) return true;
+  return !linkPath.trim().includes(" ");
+};
+
+const addBadSyntaxReasonToLinks = (linkObjects) => {
+  return linkObjects.map((linkObject) => {
+    return {
+      ...linkObject,
+      reasons: [badLinkReasons.INVALID_SPACE_CHARACTER],
+    };
+  });
+};
+
+const findInvalidInternalFileLinks = (linkObjects) => {
+  return findLinksWithBadHeaderTags(linkObjects);
+};
 
 const findInvalidExternalFileLinks = (linkObjects) => {
   return [

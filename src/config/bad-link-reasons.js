@@ -24,4 +24,6 @@ export const badLinkReasons = {
     "A header link should not contain more then one hash character",
   ANCHOR_TAG_INVALID_QUOTE:
     "The anchor tag is using invalid quotes and may not work when clicked",
+  INVALID_SPACE_CHARACTER:
+    "The link includes a space charater in an unexpected location",
 };
