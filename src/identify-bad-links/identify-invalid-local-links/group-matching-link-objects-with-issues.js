@@ -6,7 +6,9 @@ export const groupMatchingLinkObjectWithIssues = (linkObjectsToGroup) => {
   );
 
   return groupedLinkedObjects
-    .map((linkObjectsList) => linkObjectsList.reduce(mergeLinkObjects, { reasons: [] }))
+    .map((linkObjectsList) =>
+      linkObjectsList.reduce(mergeLinkObjects, { reasons: [] })
+    )
     .map((linkObject) => ({
       ...linkObject,
       reasons: uniq(linkObject.reasons),
@@ -16,5 +18,5 @@ export const groupMatchingLinkObjectWithIssues = (linkObjectsToGroup) => {
 const mergeLinkObjects = (primaryLinkObject, secondaryLinkObject) => ({
   ...primaryLinkObject,
   ...secondaryLinkObject,
-  reasons: uniq([...primaryLinkObject.reasons, ...secondaryLinkObject.reasons]),
+  reasons: [...primaryLinkObject.reasons, ...secondaryLinkObject.reasons],
 });

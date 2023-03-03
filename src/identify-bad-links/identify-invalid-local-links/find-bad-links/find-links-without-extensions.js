@@ -13,12 +13,8 @@ export const findLinksWithoutExtensions = (linksWithoutFileExtensions) => {
     ({ matchedFileCount }) => matchedFileCount >= 2
   );
 
-  const extensionlessLinksWhichDontExist = linksWithoutFileExtensions.filter(
-    ({ rawFullPath }) => !doesFileExist(rawFullPath)
-  );
-
   return [
-    ...extensionlessLinksWhichDontExist.map((linkObject) => ({
+    ...linksWithoutFileExtensions.map((linkObject) => ({
       ...linkObject,
       reasons: [badLinkReasons.MISSING_FILE_EXTENSION],
     })),

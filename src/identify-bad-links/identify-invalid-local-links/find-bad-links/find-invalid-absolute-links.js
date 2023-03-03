@@ -14,7 +14,7 @@ export const badRootAbsoluteLinks = (linkObjects) =>
     .filter((linkObject) => linkObject.isAbsoluteLink)
     .filter((linkObject) => {
       const doesLinkStartWithAnyRootFileNames = fs
-        .readdirSync(linkObject.topLevelDirectory)
+        .readdirSync(linkObject.containingFile.topLevelDirectory)
         .some((fileName) => linkObject.linkPath.startsWith(`/${fileName}`));
 
       return !doesLinkStartWithAnyRootFileNames;

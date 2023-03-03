@@ -4,9 +4,8 @@ import { badLinkReasons } from "../../../config/bad-link-reasons";
 import { badLineTags } from "./utils/bad-line-tags";
 
 export const findMissingLinksWithFileExtensions = (linkObjects) => {
-  const [badLinks, workingLinks] = partition(
-    linkObjects,
-    (linkObject) => !doesFileExist(linkObject.fullPath)
+  const [workingLinks, badLinks] = partition(linkObjects, (linkObject) =>
+    doesFileExist(linkObject.fullPath)
   );
 
   const linkWithBadTargetLineNumbers = badLineTags(

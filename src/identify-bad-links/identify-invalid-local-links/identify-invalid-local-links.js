@@ -19,7 +19,7 @@ export const identifyInvalidLocalLinks = (fileObjects) => {
 
       const [internalFileLinks, externalFileLinks] = partition(
         linkObjects,
-        ({ isInternalFileLink }) => isInternalFileLink
+        ({ isTagOnlyLink }) => isTagOnlyLink
       );
 
       const issues = groupMatchingLinkObjectWithIssues([
@@ -55,12 +55,14 @@ const findInvalidExternalFileLinks = (linkObjects) => {
     ...findInvalidRelativeLinkSyntax(linkObjects),
     ...findMissingLinksWithFileExtensions(
       linkObjects.filter(
-        ({ isLinkMissingFileExtension }) => !isLinkMissingFileExtension
+        ({ isExistingDirectory, linkFileExtension }) =>
+          !isExistingDirectory && linkFileExtension
       )
     ),
     ...findLinksWithoutExtensions(
       linkObjects.filter(
-        ({ isLinkMissingFileExtension }) => isLinkMissingFileExtension
+        ({ isExistingDirectory, linkFileExtension }) =>
+          !isExistingDirectory && !linkFileExtension
       )
     ),
     ...findLinksWithBadHeaderTags(linkObjects),

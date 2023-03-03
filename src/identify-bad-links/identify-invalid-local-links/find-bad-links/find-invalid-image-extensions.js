@@ -5,9 +5,9 @@ export const findInvalidImageExtensions = (linkObjects) => {
   return linkObjects
 
     .filter(
-      ({ isImage, isLinkMissingFileExtension, linkFileExtension }) =>
+      ({ isImage, linkFileExtension }) =>
         isImage &&
-        !isLinkMissingFileExtension &&
+        linkFileExtension &&
         !validImageExtensions.includes(linkFileExtension.toLowerCase())
     )
     .map((linkObject) => ({

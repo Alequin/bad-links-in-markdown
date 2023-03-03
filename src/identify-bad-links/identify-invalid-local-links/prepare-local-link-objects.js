@@ -1,38 +1,14 @@
-import fs from "fs";
 import { first, last } from "lodash";
 import path from "path";
 import { LINK_TYPE } from "../../config/link-type";
-import { doesFileExist } from "../../utils/does-file-exist";
 import { doesLinkStartWithRelativePath } from "../../utils/does-link-start-with-relative-path";
+import { isDirectory } from "../../utils/is-directory";
 import { isLocalLink } from "../../utils/link-type-checks";
 import { match } from "../../utils/match";
+import { findMatchingFiles } from "./find-matching-files";
 
 const ABSOLUTE_PATH_REGEX = /^\//;
 
-/**
- * @returns {{
- * type: String
- * name: String
- * link: String
- * isImage: Boolean
- * linkPath: String | null
- * linkTag: String | null
- * markdownLink: String
- * directory: String
- * rawFullPath: String
- * sourceFilePath: String
- * isAbsoluteLink: Boolean
- * topLevelDirectory: String
- * isInternalFileLink: Boolean
- * linkFileExtension: String
- * rawLinkPath: String
- * isLinkMissingFileExtension: String
- * fullPath: String
- * matchedFileCount: number | null
- * matchedFile: String | null
- * matchedFileExtension: String | null
- * }}
- */
 export const prepareLocalLinkObjects = ({
   links,
   directory,
@@ -45,51 +21,48 @@ export const prepareLocalLinkObjects = ({
     )
     .map((baseObject) => {
       const isAbsoluteLink = ABSOLUTE_PATH_REGEX.test(baseObject.link);
-      const isInternalFileLink = Boolean(
-        !baseObject.linkPath && baseObject.linkTag
-      );
+      const isTagOnlyLink = Boolean(!baseObject.linkPath && baseObject.linkTag);
 
-      const rawFullPath = isInternalFileLink
+      const rawFullLinkPath = isTagOnlyLink
         ? sourceFilePath
-        : getRawFullPath({
+        : getlinkRawFullPath({
             directory,
             isAbsoluteLink,
             topLevelDirectory,
             linkPath: baseObject.linkPath,
           });
 
-      const name = last(rawFullPath.replace(/\\|\//g, " ").split(" "));
+      const name = last(rawFullLinkPath.replace(/\\|\//g, " ").split(" "));
       const matchedFiles = getMatchingFiles({
-        fullPath: rawFullPath,
+        fullPath: rawFullLinkPath,
         name,
         type: baseObject.type,
       });
+
       const fileExtension =
-        getFileExtension(baseObject.linkPath) || getFileExtension(rawFullPath);
+        getFileExtension(baseObject.linkPath) ||
+        getFileExtension(rawFullLinkPath);
 
       return {
         ...baseObject,
         ...matchedFiles,
+        containingFile: {
+          directory,
+          topLevelDirectory,
+        },
         name,
-        directory,
-        rawFullPath, // --
+        isTagOnlyLink,
         isAbsoluteLink,
-        sourceFilePath,
-        isAbsoluteLink,
-        topLevelDirectory,
-        isInternalFileLink,
-        linkPath: baseObject.linkPath,
         linkFileExtension: fileExtension,
-        rawLinkPath: baseObject.linkPath, // --
-        isLinkMissingFileExtension: !fileExtension,
+        isExistingDirectory: isDirectory(rawFullLinkPath),
         fullPath: fileExtension
-          ? rawFullPath
-          : `${rawFullPath}${matchedFiles.matchedFileExtension || ""}`,
+          ? rawFullLinkPath
+          : `${rawFullLinkPath}${matchedFiles.matchedFileExtension || ""}`,
       };
     });
 };
 
-const getRawFullPath = ({
+const getlinkRawFullPath = ({
   isAbsoluteLink,
   topLevelDirectory,
   linkPath,
@@ -111,29 +84,19 @@ const getMatchingFiles = ({ fullPath, name, type }) => {
     return {
       matchedFileCount: 0,
       matchedFile: null,
+      matchedFileExtension: null,
     };
   }
 
   const matchedFiles = findMatchingFiles({ fullPath, name });
-  const firstMatchedFile = first(matchedFiles) || null;
+  const firstMatchedFile = first(matchedFiles);
   return {
     matchedFileCount: matchedFiles?.length || 0,
-    matchedFile: firstMatchedFile,
+    matchedFile: firstMatchedFile || null,
     matchedFileExtension: firstMatchedFile
       ? getFileExtension(firstMatchedFile)
       : null,
   };
-};
-
-const findMatchingFiles = ({ fullPath, name }) => {
-  const directoryToCheckForMatchingFiles = fullPath.replace(name, "");
-  const filesInDirectory = doesFileExist(directoryToCheckForMatchingFiles)
-    ? fs.readdirSync(directoryToCheckForMatchingFiles)
-    : null;
-
-  return filesInDirectory?.filter((fileInDirectory) => {
-    return fileInDirectory.startsWith(name);
-  });
 };
 
 // https://www.computerhope.com/jargon/f/fileext.htm
