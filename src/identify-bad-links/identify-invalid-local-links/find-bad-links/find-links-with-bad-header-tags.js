@@ -34,8 +34,9 @@ const findMissingHeaderTags = (linkObjects) => {
 
   return badHeaderTags(
     workingLinks.filter(
-      ({ linkTag, linkFileExtension, matchedFileExtension }) =>
-        linkTag && [linkFileExtension, matchedFileExtension].includes(".md")
+      ({ linkTag, linkFileExtension, matchedFiles }) =>
+        linkTag &&
+        [linkFileExtension, matchedFiles[0]?.extension].includes(".md")
     )
   ).map((linkObject) => ({
     ...linkObject,

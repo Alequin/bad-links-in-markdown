@@ -52,17 +52,81 @@ describe("prepare-local-link-objects", () => {
     }
   );
 
-  it("returns the expected details", () => {
+  it.each(Object.values(LINK_TYPE))(
+    "returns a link object for the given file when it contains one link when the link type is $s",
+    (linkType) => {
+      const fileObject = {
+        ...MOCK_FILE_OBJECT,
+        links: [
+          {
+            markdownLink: "[foobar](./file-path.md#header-tag)",
+            type: linkType,
+            linkPath: "./file-path.md",
+            linkTag: "#header-tag",
+            link: "./file-path.md#header-tag",
+            isImage: false,
+          },
+        ],
+      };
+
+      jest
+        .spyOn(findMatchingFiles, "findMatchingFiles")
+        .mockImplementation(() => []);
+      jest.spyOn(isDirectory, "isDirectory").mockImplementation(() => false);
+
+      expect(prepareLocalLinkObjects(fileObject)).toEqual([
+        {
+          containingFile: {
+            directory: fileObject.directory,
+            topLevelDirectory: fileObject.topLevelDirectory,
+          },
+          base: {
+            ...fileObject.links[0],
+          },
+          matchedFiles: [],
+          markdownLink: "[foobar](./file-path.md#header-tag)",
+          type: linkType,
+          linkPath: "./file-path.md",
+          linkTag: "#header-tag",
+          link: "./file-path.md#header-tag",
+          name: "file-path.md",
+          isImage: false,
+          isAbsoluteLink: false,
+          isTagOnlyLink: false,
+          linkFileExtension: ".md",
+          isExistingDirectory: false,
+          fullPath: path.resolve(
+            fileObject.directory,
+            fileObject.links[0].linkPath
+          ),
+        },
+      ]);
+    }
+  );
+
+  it("returns multiple link objects for the given file when it contains muiltiple links", () => {
+    const link = {
+      type: LINK_TYPE.inlineLink,
+      linkPath: "./file-path.md",
+      linkTag: "#header-tag",
+      link: "./file-path.md#header-tag",
+      isImage: false,
+    };
+
     const fileObject = {
       ...MOCK_FILE_OBJECT,
       links: [
         {
-          markdownLink: "[foobar](./file-path.md#header-tag)",
-          type: LINK_TYPE.inlineLink,
-          linkPath: "./file-path.md",
-          linkTag: "#header-tag",
-          link: "./file-path.md#header-tag",
-          isImage: false,
+          ...link,
+          markdownLink: "[foobar1](./file-path.md#header-tag)",
+        },
+        {
+          ...link,
+          markdownLink: "[foobar2](./file-path.md#header-tag)",
+        },
+        {
+          ...link,
+          markdownLink: "[foobar3](./file-path.md#header-tag)",
         },
       ],
     };
@@ -72,87 +136,355 @@ describe("prepare-local-link-objects", () => {
       .mockImplementation(() => []);
     jest.spyOn(isDirectory, "isDirectory").mockImplementation(() => false);
 
-    expect(prepareLocalLinkObjects(fileObject)).toEqual([
-      {
-        containingFile: {
-          directory: fileObject.directory,
-          topLevelDirectory: fileObject.topLevelDirectory,
-        },
+    const linkObjects = prepareLocalLinkObjects(fileObject);
+    expect(linkObjects).toHaveLength(3);
+    expect(linkObjects[0].base.markdownLink).toBe(
+      "[foobar1](./file-path.md#header-tag)"
+    );
+    expect(linkObjects[1].base.markdownLink).toBe(
+      "[foobar2](./file-path.md#header-tag)"
+    );
+    expect(linkObjects[2].base.markdownLink).toBe(
+      "[foobar3](./file-path.md#header-tag)"
+    );
+  });
+
+  it.each([
+    {
+      state: "the link is not an absolute link",
+      expectedValue: { isAbsoluteLink: false },
+      linkPropertiesUnderTest: {
         markdownLink: "[foobar](./file-path.md#header-tag)",
         type: LINK_TYPE.inlineLink,
         linkPath: "./file-path.md",
         linkTag: "#header-tag",
         link: "./file-path.md#header-tag",
-        name: "file-path.md",
         isImage: false,
-        isAbsoluteLink: false,
-        isTagOnlyLink: false,
-        matchedFileCount: 0,
-        matchedFile: null,
-        matchedFileExtension: null,
-        linkFileExtension: ".md",
-        isExistingDirectory: false,
+      },
+    },
+    {
+      state: "the link is an absolute link",
+      expectedValue: { isAbsoluteLink: true },
+      linkPropertiesUnderTest: {
+        markdownLink: "[foobar](/full/path/to/file/file-path.md#header-tag)",
+        type: LINK_TYPE.inlineLink,
+        linkPath: "/full/path/to/file/file-path.md",
+        linkTag: null,
+        link: "/full/path/to/file/file-path.md#header-tag",
+        isImage: false,
+      },
+    },
+  ])(
+    "returns the expected value for 'isAbsoluteLink' when $state",
+    ({ linkPropertiesUnderTest, expectedValue }) => {
+      const fileObject = {
+        ...MOCK_FILE_OBJECT,
+        links: [linkPropertiesUnderTest],
+      };
+
+      jest
+        .spyOn(findMatchingFiles, "findMatchingFiles")
+        .mockImplementation(() => []);
+      jest.spyOn(isDirectory, "isDirectory").mockImplementation(() => false);
+
+      expect(prepareLocalLinkObjects(fileObject)[0].isAbsoluteLink).toBe(
+        expectedValue.isAbsoluteLink
+      );
+    }
+  );
+
+  it.each([
+    {
+      state: "the link only contains a tag",
+      expectedValue: { isTagOnlyLink: true },
+      linkPropertiesUnderTest: {
+        markdownLink: "[foobar](#header-tag)",
+        linkTag: "#header-tag",
+        link: "#header-tag",
+        linkPath: null,
+      },
+    },
+    {
+      state: "the link contains a file path and a tag",
+      expectedValue: { isTagOnlyLink: false },
+      linkPropertiesUnderTest: {
+        markdownLink: "[foobar](./file-path.md#header-tag)",
+        linkPath: "./file-path.md",
+        linkTag: "#header-tag",
+        link: "./file-path.md#header-tag",
+      },
+    },
+    {
+      state: "the link contains only a file path",
+      expectedValue: { isTagOnlyLink: false },
+      linkPropertiesUnderTest: {
+        markdownLink: "[foobar](./file-path.md)",
+        linkPath: "./file-path.md",
+        linkTag: null,
+        link: "./file-path.md",
+      },
+    },
+  ])(
+    "returns the expected value for 'isTagOnlyLink' when $state (expected value $isTagOnlyLink.expectedValue)",
+    ({ linkPropertiesUnderTest, expectedValue }) => {
+      const fileObject = {
+        ...MOCK_FILE_OBJECT,
+        links: [
+          {
+            type: LINK_TYPE.inlineLink,
+            isImage: false,
+            ...linkPropertiesUnderTest,
+          },
+        ],
+      };
+
+      jest
+        .spyOn(findMatchingFiles, "findMatchingFiles")
+        .mockImplementation(() => []);
+      jest.spyOn(isDirectory, "isDirectory").mockImplementation(() => false);
+
+      expect(prepareLocalLinkObjects(fileObject)[0].isTagOnlyLink).toBe(
+        expectedValue.isTagOnlyLink
+      );
+    }
+  );
+
+  it.each([
+    {
+      state: "the link is an absolute link",
+      expectedValue: {
         fullPath: path.resolve(
-          fileObject.directory,
-          fileObject.links[0].linkPath
+          MOCK_FILE_OBJECT.topLevelDirectory,
+          "./full/path/to/file/file-path.md"
         ),
       },
-    ]);
+      linkPropertiesUnderTest: {
+        markdownLink: "[foobar](/full/path/to/file/file-path.md#header-tag)",
+        linkPath: "/full/path/to/file/file-path.md",
+        linkTag: "#header-tag",
+        link: "/full/path/to/file/file-path.md",
+      },
+    },
+    {
+      state: "the link is a tag only link",
+      expectedValue: { fullPath: MOCK_FILE_OBJECT.sourceFilePath },
+      linkPropertiesUnderTest: {
+        markdownLink: "[foobar](#header-tag)",
+        linkPath: null,
+        linkTag: "#header-tag",
+        link: "#header-tag",
+      },
+    },
+    {
+      state: "the link is a relative link",
+      expectedValue: {
+        fullPath: path.resolve(MOCK_FILE_OBJECT.directory, "./file-path.md"),
+      },
+      linkPropertiesUnderTest: {
+        markdownLink: "[foobar](./file-path.md#header-tag)",
+        linkPath: "./file-path.md",
+        linkTag: "#header-tag",
+        link: "./file-path.md#header-tag",
+      },
+    },
+    {
+      state: "the link points to a file without a path",
+      expectedValue: {
+        fullPath: path.resolve(MOCK_FILE_OBJECT.directory, "./file-path.md"),
+      },
+      linkPropertiesUnderTest: {
+        markdownLink: "[foobar](file-path.md#header-tag)",
+        linkPath: "file-path.md",
+        linkTag: "#header-tag",
+        link: "file-path.md#header-tag",
+      },
+    },
+    {
+      state: "the link points to a file without a path",
+      expectedValue: {
+        fullPath: path.resolve(MOCK_FILE_OBJECT.directory, "./file-path.md"),
+      },
+      linkPropertiesUnderTest: {
+        markdownLink: "[foobar](file-path.md#header-tag)",
+        linkPath: "file-path.md",
+        linkTag: "#header-tag",
+        link: "file-path.md#header-tag",
+      },
+    },
+    {
+      state: "the link does not contain a file extension",
+      expectedValue: {
+        fullPath: path.resolve(MOCK_FILE_OBJECT.directory, "./file-path"),
+      },
+      linkPropertiesUnderTest: {
+        markdownLink: "[foobar](./file-path)",
+        linkPath: "./file-path",
+        linkTag: "#header-tag",
+        link: "./file-path#header-tag",
+      },
+    },
+  ])(
+    "returns the expected value for 'fullPath' when $state",
+    ({ linkPropertiesUnderTest, expectedValue }) => {
+      const fileObject = {
+        ...MOCK_FILE_OBJECT,
+        links: [
+          {
+            ...linkPropertiesUnderTest,
+            isImage: false,
+            type: LINK_TYPE.inlineLink,
+          },
+        ],
+      };
+
+      jest
+        .spyOn(findMatchingFiles, "findMatchingFiles")
+        .mockImplementation(() => []);
+      jest.spyOn(isDirectory, "isDirectory").mockImplementation(() => false);
+
+      expect(prepareLocalLinkObjects(fileObject)[0].fullPath).toBe(
+        expectedValue.fullPath
+      );
+    }
+  );
+
+  it("returns the expected value for 'fullPath' when the link does not contain a file extension and a match file is available", () => {
+    const fileObject = {
+      ...MOCK_FILE_OBJECT,
+      links: [
+        {
+          markdownLink: "[foobar](./file-path)",
+          linkPath: "./file-path",
+          linkTag: "#header-tag",
+          link: "./file-path#header-tag",
+          isImage: false,
+          type: LINK_TYPE.inlineLink,
+        },
+      ],
+    };
+
+    jest
+      .spyOn(findMatchingFiles, "findMatchingFiles")
+      .mockImplementation(() => ["file-path.md"]);
+    jest.spyOn(isDirectory, "isDirectory").mockImplementation(() => false);
+
+    expect(prepareLocalLinkObjects(fileObject)[0].fullPath).toBe(
+      path.resolve(MOCK_FILE_OBJECT.directory, "./file-path.md")
+    );
   });
 
-  it.todo("returns false for absolute links when the link is absolute");
+  it.each([
+    {
+      state: "the link is an unquoted anchor link",
+      expectedValue: { matchedFiles: [] },
+      linkPropertiesUnderTest: {
+        markdownLink: "[foobar](./file-path#header-tag)",
+        type: LINK_TYPE.unquotedAnchorLink,
+        linkPath: "./file-path",
+        linkTag: "#header-tag",
+        link: "./file-path#header-tag",
+        isImage: false,
+      },
+    },
+    {
+      state: "the link is a quoted anchor link",
+      expectedValue: { matchedFiles: [] },
+      linkPropertiesUnderTest: {
+        markdownLink: "[foobar](./file-path#header-tag)",
+        type: LINK_TYPE.unquotedAnchorLink,
+        linkPath: "./file-path",
+        linkTag: "#header-tag",
+        link: "./file-path#header-tag",
+        isImage: false,
+      },
+    },
+    {
+      state: "the link is an inline link with matching files",
+      expectedValue: {
+        matchedFiles: [
+          { name: "matching-file.md", extension: ".md" },
+          { name: "matching-file.jpg", extension: ".jpg" },
+        ],
+      },
+      linkPropertiesUnderTest: {
+        markdownLink: "[foobar](./file-path#header-tag)",
+        type: LINK_TYPE.inlineLink,
+        linkPath: "./file-path",
+        linkTag: "#header-tag",
+        link: "./file-path#header-tag",
+        isImage: false,
+      },
+    },
+  ])(
+    "returns the expected value for 'matchedFiles' when $state",
+    ({ linkPropertiesUnderTest, expectedValue }) => {
+      const fileObject = {
+        ...MOCK_FILE_OBJECT,
+        links: [linkPropertiesUnderTest],
+      };
 
-  it.todo("returns true for absolute links when the link is absolute");
+      jest
+        .spyOn(findMatchingFiles, "findMatchingFiles")
+        .mockImplementation(() => ["matching-file.md", "matching-file.jpg"]);
+      jest.spyOn(isDirectory, "isDirectory").mockImplementation(() => false);
 
-  it.todo("has no issues for all link types");
-
-  it.todo("returns true for 'isTagOnlyLink' link when it is one");
-
-  it.todo("returns false for 'isTagOnlyLink' link when it is not one");
-
-  it.todo("returns the sourceFilePath for 'fullPath' for tag only links");
-
-  it.todo(
-    "returns the correct value for 'fullPath' when the link does not start with a relative path"
+      expect(prepareLocalLinkObjects(fileObject)[0].matchedFiles).toEqual(
+        expectedValue.matchedFiles
+      );
+    }
   );
 
-  it.todo(
-    "returns the correct value for 'fullPath' when the link starts with a relative path"
-  );
+  it("returns the expected value for 'matchedFiles' when no matched files can be found", () => {
+    const fileObject = {
+      ...MOCK_FILE_OBJECT,
+      links: [
+        {
+          markdownLink: "[foobar](./file-path)",
+          linkPath: "./file-path",
+          linkTag: "#header-tag",
+          link: "./file-path#header-tag",
+          isImage: false,
+          type: LINK_TYPE.inlineLink,
+        },
+      ],
+    };
 
-  it.todo("returns nothing on matched files when nothing can be found");
+    jest
+      .spyOn(findMatchingFiles, "findMatchingFiles")
+      .mockImplementation(() => []); // No matched files can be found
 
-  it.todo(
-    "return nothing on matched files when the link type is an unquotedAnchorLink"
-  );
+    jest.spyOn(isDirectory, "isDirectory").mockImplementation(() => false);
 
-  it.todo(
-    "return nothing on matched files when the link type is an quotedAnchorLink"
-  );
+    expect(prepareLocalLinkObjects(fileObject)[0].matchedFiles).toEqual([]);
+  });
 
-  it.todo("return details on matched files when they can be found");
+  it.each([true, false])(
+    "returns the expected value for 'isExistingDirectory' when 'isDirectory' returns %s",
+    (expectedValue) => {
+      const fileObject = {
+        ...MOCK_FILE_OBJECT,
+        links: [
+          {
+            markdownLink: "[foobar](./file-path.md#header-tag)",
+            type: LINK_TYPE.inlineLink,
+            linkPath: "./file-path.md",
+            linkTag: "#header-tag",
+            link: "./file-path.md#header-tag",
+            isImage: false,
+          },
+        ],
+      };
 
-  it.todo(
-    "sets the full path to the raw full path when the file extention is known"
-  );
+      jest
+        .spyOn(findMatchingFiles, "findMatchingFiles")
+        .mockImplementation(() => []);
+      jest
+        .spyOn(isDirectory, "isDirectory")
+        .mockImplementation(() => expectedValue);
 
-  it.todo(
-    "sets the full path to the raw full path when the file extention is not known and no matched files can be found"
-  );
-
-  it.todo(
-    "creates a fullPath, which includes a potential file extenstion, when a matched file with an extension is available"
-  );
-
-  it.todo(
-    "sets 'isExistingDirectory' to true when the link points at a valid directory"
-  );
-
-  it.todo(
-    "sets 'isExistingDirectory' to false when the link points at an invalid directory"
-  );
-
-  it.todo(
-    "sets 'directory', 'topLevelDirectory' and 'sourceFilePath' based on the file containing the link"
+      expect(prepareLocalLinkObjects(fileObject)[0].isExistingDirectory).toBe(
+        expectedValue
+      );
+    }
   );
 });

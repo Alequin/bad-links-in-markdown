@@ -1,4 +1,4 @@
-import { first, last } from "lodash";
+import { first, isEmpty, last } from "lodash";
 import path from "path";
 import { LINK_TYPE } from "../../config/link-type";
 import { doesLinkStartWithRelativePath } from "../../utils/does-link-start-with-relative-path";
@@ -45,7 +45,8 @@ export const prepareLocalLinkObjects = ({
 
       return {
         ...baseObject,
-        ...matchedFiles,
+        base: baseObject,
+        matchedFiles,
         containingFile: {
           directory,
           topLevelDirectory,
@@ -57,7 +58,7 @@ export const prepareLocalLinkObjects = ({
         isExistingDirectory: isDirectory(rawFullLinkPath),
         fullPath: fileExtension
           ? rawFullLinkPath
-          : `${rawFullLinkPath}${matchedFiles.matchedFileExtension || ""}`,
+          : `${rawFullLinkPath}${matchedFiles[0]?.extension || ""}`,
       };
     });
 };
@@ -81,22 +82,16 @@ const getMatchingFiles = ({ fullPath, name, type }) => {
     [LINK_TYPE.unquotedAnchorLink, LINK_TYPE.quotedAnchorLink].includes(type)
   ) {
     // Anchor tags must have exact links and so cannot have matching files
-    return {
-      matchedFileCount: 0,
-      matchedFile: null,
-      matchedFileExtension: null,
-    };
+    return [];
   }
 
   const matchedFiles = findMatchingFiles({ fullPath, name });
-  const firstMatchedFile = first(matchedFiles);
-  return {
-    matchedFileCount: matchedFiles?.length || 0,
-    matchedFile: firstMatchedFile || null,
-    matchedFileExtension: firstMatchedFile
-      ? getFileExtension(firstMatchedFile)
-      : null,
-  };
+  if (isEmpty(matchedFiles)) return [];
+
+  return matchedFiles.map((fileName) => ({
+    name: fileName,
+    extension: getFileExtension(fileName),
+  }));
 };
 
 // https://www.computerhope.com/jargon/f/fileext.htm

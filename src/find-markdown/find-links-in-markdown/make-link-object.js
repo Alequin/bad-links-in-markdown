@@ -64,14 +64,14 @@ const makeLinkObject = ({ type, markdownLink, fullLink, isImage }) => {
   const linkWithTag = removeLabelText(fullLink);
 
   const [linkPath, linkTag] = linkWithTag.startsWith("#")
-    ? [undefined, removeHashCharsFromStart(linkWithTag)]
+    ? [null, removeHashCharsFromStart(linkWithTag)]
     : linkWithTag.split("#");
 
   return isValidLink(linkPath, linkTag, type)
     ? Object.freeze({
         markdownLink,
-        linkPath,
-        linkTag,
+        linkPath: linkPath || null,
+        linkTag: linkTag || null,
         link: linkWithTag,
         type,
         isImage,

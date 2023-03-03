@@ -6,11 +6,11 @@ import { badLinkReasons } from "../../../config/bad-link-reasons";
 export const findLinksWithoutExtensions = (linksWithoutFileExtensions) => {
   const [linksWithMatchedFiles, badLinks] = partition(
     removeDirectoryLinkObjects(linksWithoutFileExtensions),
-    ({ matchedFile }) => matchedFile
+    ({ matchedFiles }) => matchedFiles[0]
   );
 
   const linksWithMultiplePossibleFiles = linksWithMatchedFiles.filter(
-    ({ matchedFileCount }) => matchedFileCount >= 2
+    ({ matchedFiles }) => matchedFiles.length >= 2
   );
 
   return [
