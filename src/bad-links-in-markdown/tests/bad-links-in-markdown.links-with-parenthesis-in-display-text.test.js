@@ -1,25 +1,22 @@
-import fs from "fs";
-import { badLinksInMarkdown } from "../../bad-links-in-markdown";
-import { badLinkReasons } from "../../src/constants";
 import {
+  TOP_LEVEL_TEST_DIRECTORY,
   anchorLinkDoubleQuoteTemplate,
   anchorLinkSingleQuoteTemplate,
   anchorLinkUnquotesTemplate,
   applyTemplate,
   inlineImageLinkTemplate,
   inlineLinkTemplate,
-  referenceImageLinkTemplate,
-  referenceLinkTemplate,
-  shorthandReferenceImageLinkTemplate,
-  shorthandReferenceLinkTemplate,
-} from "../markdown-templates";
-import {
   newTestDirectory,
   newTestFile,
   newTestMarkdownFile,
+  referenceImageLinkTemplate,
+  referenceLinkTemplate,
   runTestWithDirectoryCleanup,
-  TOP_LEVEL_TEST_DIRECTORY,
-} from "../test-utils";
+  shorthandReferenceImageLinkTemplate,
+  shorthandReferenceLinkTemplate,
+} from "../../../integration-test-utils";
+import { badLinkReasons } from "../../constants";
+import { badLinksInMarkdown } from "../bad-links-in-markdown";
 
 describe("bad-links-in-markdown - links including parenthesis", () => {
   describe.each([

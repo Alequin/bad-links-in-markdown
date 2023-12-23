@@ -1,11 +1,11 @@
-import { badLinksInMarkdown } from "../../bad-links-in-markdown";
-import { badLinkReasons } from "../../src/constants";
+import { badLinksInMarkdown } from "../bad-links-in-markdown";
+import { badLinkReasons } from "../../constants";
 import {
   newTestDirectory,
   newTestMarkdownFile,
   runTestWithDirectoryCleanup,
   TOP_LEVEL_TEST_DIRECTORY,
-} from "../test-utils";
+} from "../../../integration-test-utils";
 
 describe("bad-links-in-markdown - anchor tags", () => {
   it("Identifies anchor links which make use of invalid quote marks such as '”'", async () => {

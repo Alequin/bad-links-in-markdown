@@ -3,7 +3,6 @@ import path from "path";
 import { isDirectory, readFilesInDirectory } from "../../utils";
 
 /**
- *
  * @param {String} directory
  * @returns {{name: String, directory: String, sourceFilePath: String}[]}
  */

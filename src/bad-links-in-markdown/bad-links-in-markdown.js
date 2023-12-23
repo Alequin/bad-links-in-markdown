@@ -1,9 +1,8 @@
-import { chain, chunk, orderBy, sumBy } from "lodash";
-import { findAllMarkdownFiles } from "./src/find-markdown/find-all-markdown-files";
-import { findLinksInMarkdown } from "./src/find-markdown/find-links-in-markdown";
-import { identifyInvalidLocalLinks } from "./src/identify-bad-links/identify-invalid-local-links";
-import targetDirectoryFromConsoleArgs from "./src/top-level-directory-from-console-args";
-import { logProgress, logger } from "./src/utils";
+import { chain, chunk } from "lodash";
+import { findAllMarkdownFiles } from "../find-markdown/find-all-markdown-files";
+import { findLinksInMarkdown } from "../find-markdown/find-links-in-markdown";
+import { identifyInvalidLocalLinks } from "../identify-bad-links/identify-invalid-local-links";
+import { logProgress } from "../utils";
 
 const BATCH_SIZE = 10;
 
@@ -50,26 +49,3 @@ const processBatchOfFiles = (markdownFileBatch, targetDirectory) => {
     // await identifyInvalidLinksToWebSites(markdownFilesWithLinks);
   };
 };
-
-if (module === require.main) {
-  badLinksInMarkdown({ targetDirectory: targetDirectoryFromConsoleArgs() })
-    .then((result) => {
-      logger.info(
-        JSON.stringify(
-          orderBy(result.badLocalLinks, ({ filePath }) => filePath),
-          null,
-          2
-        )
-      );
-      logger.info(
-        `Total bad local links: ${sumBy(
-          result.badLocalLinks,
-          ({ foundIssues }) => foundIssues.length
-        )}`
-      );
-    })
-    .catch((error) => {
-      console.error(error);
-      process.exit(1);
-    });
-}

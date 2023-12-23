@@ -11,5 +11,3 @@ export const targetDirectoryFromConsoleArgs = () => {
 
   return path.resolve(directory);
 };
-
-export default targetDirectoryFromConsoleArgs;

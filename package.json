@@ -6,7 +6,7 @@
   "scripts": {
     "test": "jest --runInBand",
     "test:coverage": "jest --runInBand --coverage",
-    "find-bad-links": "npx babel-node ./bad-links-in-markdown"
+    "find-bad-links": "npx babel-node ./run.js"
   },
   "repository": {
     "type": "git",

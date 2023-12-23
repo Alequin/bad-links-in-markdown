@@ -1,7 +1,8 @@
-import fs from "fs";
-import { badLinksInMarkdown } from "../../bad-links-in-markdown";
-import { badLinkReasons } from "../../src/constants";
 import {
+  TOP_LEVEL_TEST_DIRECTORY,
+  newTestDirectory,
+  newTestMarkdownFile,
+  runTestWithDirectoryCleanup,
   anchorLinkDoubleQuoteTemplate,
   anchorLinkSingleQuoteTemplate,
   anchorLinkUnquotesTemplate,
@@ -9,13 +10,9 @@ import {
   inlineLinkTemplate,
   referenceLinkTemplate,
   shorthandReferenceLinkTemplate,
-} from "../markdown-templates";
-import {
-  newTestDirectory,
-  newTestMarkdownFile,
-  runTestWithDirectoryCleanup,
-  TOP_LEVEL_TEST_DIRECTORY,
-} from "../test-utils";
+} from "../../../integration-test-utils";
+import { badLinkReasons } from "../../constants";
+import { badLinksInMarkdown } from "../bad-links-in-markdown";
 
 describe.each([
   inlineLinkTemplate,

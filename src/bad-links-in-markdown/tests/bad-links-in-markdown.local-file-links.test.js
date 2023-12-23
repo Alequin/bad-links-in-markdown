@@ -1,21 +1,19 @@
-import { badLinksInMarkdown } from "../../bad-links-in-markdown";
-import { badLinkReasons } from "../../src/constants";
 import {
+  TOP_LEVEL_TEST_DIRECTORY,
   anchorLinkDoubleQuoteTemplate,
   anchorLinkSingleQuoteTemplate,
   anchorLinkUnquotesTemplate,
   applyTemplate,
   inlineLinkTemplate,
-  referenceLinkTemplate,
-  shorthandReferenceLinkTemplate,
-} from "../markdown-templates";
-import {
   newTestDirectory,
   newTestFile,
   newTestMarkdownFile,
+  referenceLinkTemplate,
   runTestWithDirectoryCleanup,
-  TOP_LEVEL_TEST_DIRECTORY,
-} from "../test-utils";
+  shorthandReferenceLinkTemplate,
+} from "../../../integration-test-utils";
+import { badLinkReasons } from "../../constants";
+import { badLinksInMarkdown } from "../bad-links-in-markdown";
 
 describe("bad-links-in-markdown - local file links", () => {
   describe.each([
