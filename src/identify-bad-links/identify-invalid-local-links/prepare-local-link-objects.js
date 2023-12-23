@@ -1,10 +1,12 @@
-import { first, isEmpty, last } from "lodash";
+import { isEmpty, last } from "lodash";
 import path from "path";
-import { LINK_TYPE } from "../../config/link-type";
-import { doesLinkStartWithRelativePath } from "../../utils/does-link-start-with-relative-path";
-import { isDirectory } from "../../utils/is-directory";
-import { isLocalLink } from "../../utils/link-type-checks";
-import { match } from "../../utils/match";
+import { LINK_TYPE } from "../../constants";
+import {
+  doesLinkStartWithRelativePath,
+  isDirectory,
+  isLocalLink,
+  match,
+} from "../../utils";
 import { findMatchingFiles } from "./find-matching-files";
 
 const ABSOLUTE_PATH_REGEX = /^\//;
@@ -45,7 +47,6 @@ export const prepareLocalLinkObjects = ({
 
       return {
         ...baseObject,
-        base: baseObject,
         matchedFiles,
         containingFile: {
           directory,

@@ -1,6 +1,5 @@
 import { badLinksInMarkdown } from "../bad-links-in-markdown";
-import { badLinkReasons } from "../src/config/bad-link-reasons";
-import { validImageExtensions } from "../src/config/valid-image-extensions";
+import { badLinkReasons, validImageExtensions } from "../src/constants";
 import {
   applyTemplate,
   inlineImageLinkTemplate,

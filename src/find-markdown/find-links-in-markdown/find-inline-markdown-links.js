@@ -1,4 +1,4 @@
-import { match } from "../../utils/match";
+import { match } from "../../utils";
 import { makeLinkObjectFromInlineLink } from "./make-link-object";
 import { MARKDOWN_INLINE_LINK_REGEX } from "./markdown-inline-link-regex";
 

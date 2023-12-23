@@ -1,13 +1,15 @@
-import { match } from "../../utils/match";
-import { readCleanMarkdownFile } from "../../utils/read-clean-markdown-file";
-import { readCleanMarkdownFileLines } from "../../utils/read-clean-markdown-file-lines";
+import {
+  match,
+  readCleanMarkdownFile,
+  readCleanMarkdownFileLines,
+} from "../../utils";
 import { findAnchorMarkdownLinks } from "./find-anchor-markdown-links";
 import { findInlineMarkdownLinks } from "./find-inline-markdown-links";
 import { findReferenceMarkdownLinks } from "./find-reference-markdown-links";
 
 export const findLinksInMarkdown = (filePath) => {
-  const cleanedMarkdownLines = readCleanMarkdownFileLines(filePath);
   const cleanedMarkdown = readCleanMarkdownFile(filePath);
+  const cleanedMarkdownLines = readCleanMarkdownFileLines(filePath);
 
   return removeLinksInsideBackticks(
     [

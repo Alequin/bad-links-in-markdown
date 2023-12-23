@@ -1,7 +1,7 @@
 import { orderBy, sumBy } from "lodash";
-import { findAllMarkdownFiles } from "./src/find-markdown/find-all-markdown-files/find-all-markdown-files";
-import { findLinksInMarkdown } from "./src/find-markdown/find-links-in-markdown/find-links-in-markdown";
-import { identifyInvalidLocalLinks } from "./src/identify-bad-links/identify-invalid-local-links/identify-invalid-local-links";
+import { findAllMarkdownFiles } from "./src/find-markdown/find-all-markdown-files";
+import { findLinksInMarkdown } from "./src/find-markdown/find-links-in-markdown";
+import { identifyInvalidLocalLinks } from "./src/identify-bad-links/identify-invalid-local-links";
 import topLevelDirectoryFromConsoleArgs from "./src/top-level-directory-from-console-args";
 import { logger } from "./src/utils/logger";
 

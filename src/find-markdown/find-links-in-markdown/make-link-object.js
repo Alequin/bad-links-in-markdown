@@ -1,10 +1,12 @@
 import { trimEnd } from "lodash";
-import { LINK_TYPE } from "../../config/link-type";
-import { extractHrefLinkFromQuotedAnchorTag } from "../../utils/extract-href-link-from-quoted-anchor-tag";
-import { extractHrefLinkFromUnquotedAnchorTag } from "../../utils/extract-href-link-from-unquoted-anchor-tag";
-import { isValidLink } from "../../utils/link-type-checks";
-import { match } from "../../utils/match";
+import {
+  extractHrefLinkFromQuotedAnchorTag,
+  extractHrefLinkFromUnquotedAnchorTag,
+  isValidLink,
+  match,
+} from "../../utils";
 import { MARKDOWN_INLINE_LINK_REGEX } from "./markdown-inline-link-regex";
+import { LINK_TYPE } from "../../constants";
 
 export const makeLinkObjectFromInlineLink = ({ markdownLink, isImage }) => {
   return makeLinkObject({

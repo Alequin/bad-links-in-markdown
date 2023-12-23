@@ -1,5 +1,4 @@
-import { badLinkReasons } from "../../../config/bad-link-reasons";
-import { validImageExtensions } from "../../../config/valid-image-extensions";
+import { badLinkReasons, validImageExtensions } from "../../../constants";
 
 export const findInvalidImageExtensions = (linkObjects) => {
   return linkObjects

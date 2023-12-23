@@ -1,7 +1,6 @@
 import { reject } from "lodash";
-import { badLinkReasons } from "../../../config/bad-link-reasons";
-import { doesFileExist } from "../../../utils/does-file-exist";
-import { match } from "../../../utils/match";
+import { badLinkReasons } from "../../../constants";
+import { doesFileExist, match } from "../../../utils";
 import { badHeaderTags } from "./utils/bad-header-tags";
 
 export const findLinksWithBadHeaderTags = (linkObjects) => {

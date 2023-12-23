@@ -1,4 +1,4 @@
-import { LINK_TYPE } from "../config/link-type";
+import { LINK_TYPE } from "../constants";
 
 export const isValidLink = (link, tag, type) =>
   isWebLink(link) || isLocalLink(link, tag, type);

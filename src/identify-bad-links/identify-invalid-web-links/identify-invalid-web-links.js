@@ -1,5 +1,5 @@
 import fetch from "node-fetch";
-import { logger } from "../utils/logger";
+import { logger } from "../utils";
 
 // TODO fix issue with github links: https://docs.github.com/en/enterprise-server@2.22/rest/reference/repos#get-repository-content
 export const identifyInvalidWebLinks = async (fileObjects) => {

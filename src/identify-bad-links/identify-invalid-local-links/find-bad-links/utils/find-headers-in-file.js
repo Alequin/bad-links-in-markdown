@@ -1,4 +1,4 @@
-import { readCleanMarkdownFileLines } from "../../../../utils/read-clean-markdown-file-lines";
+import { readCleanMarkdownFileLines } from "../../../../utils";
 
 export const findHeadersInFile = (filePath) => {
   const fileLines = readCleanMarkdownFileLines(filePath);

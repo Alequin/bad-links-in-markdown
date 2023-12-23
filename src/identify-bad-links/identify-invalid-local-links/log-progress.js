@@ -1,4 +1,4 @@
-import { logger } from "../../utils/logger";
+import { logger } from "../../utils";
 
 export const logProgress = (currentFileNumber, totalFiles) => {
   if (

@@ -1,6 +1,10 @@
 import fs from "fs";
 import { isError } from "lodash";
 
+export const readFileAsString = (filePath) => {
+  return readFile(filePath).toString();
+};
+
 /**
  * Reads the file at the given path
  *
@@ -9,7 +13,7 @@ import { isError } from "lodash";
  * - with the path after it has been URI decoded
  *
  */
-export const readFile = (filePath) => {
+const readFile = (filePath) => {
   const standardReadResult = attemptToRead(filePath);
   if (!isError(standardReadResult)) return standardReadResult;
 

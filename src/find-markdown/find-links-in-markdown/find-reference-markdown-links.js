@@ -1,4 +1,4 @@
-import { match } from "../../utils/match";
+import { match } from "../../utils";
 import { makeLinkObjectFromReferenceLink } from "./make-link-object";
 
 const MARKDOWN_REFERENCE_LINK_REGEX = /^[\s,\>]*!?\[.*\]:.*/;

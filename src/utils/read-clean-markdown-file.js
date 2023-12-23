@@ -1,6 +1,6 @@
 import { cleanMarkdownContents } from "./clean-markdown-contents";
-import { readFile } from "./read-file";
+import { readFileAsString } from "./read-file-as-string";
 
 export const readCleanMarkdownFile = (filePath) => {
-  return cleanMarkdownContents(readFile(filePath).toString());
+  return cleanMarkdownContents(readFileAsString(filePath));
 };

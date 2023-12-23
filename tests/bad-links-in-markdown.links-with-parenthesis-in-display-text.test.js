@@ -1,6 +1,6 @@
 import fs from "fs";
 import { badLinksInMarkdown } from "../bad-links-in-markdown";
-import { badLinkReasons } from "../src/config/bad-link-reasons";
+import { badLinkReasons } from "../src/constants";
 import {
   anchorLinkDoubleQuoteTemplate,
   anchorLinkSingleQuoteTemplate,

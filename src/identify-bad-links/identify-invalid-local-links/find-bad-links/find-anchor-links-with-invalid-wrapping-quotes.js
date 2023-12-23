@@ -1,5 +1,4 @@
-import { badLinkReasons } from "../../../config/bad-link-reasons";
-import { LINK_TYPE } from "../../../config/link-type";
+import { LINK_TYPE, badLinkReasons } from "../../../constants";
 
 const INVALID_ANCHOR_QUOTES_REGEX = /^[”]|[”]$/;
 export const findAnchorLinksWithInvalidWrappingQuotes = (linkObjects) =>

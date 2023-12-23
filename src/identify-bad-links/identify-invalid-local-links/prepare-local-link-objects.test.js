@@ -1,8 +1,15 @@
+jest.mock("../../utils", () => {
+  return {
+    ...jest.requireActual("../../utils"),
+    isDirectory: jest.fn(),
+  };
+});
+
 import path from "path";
-import { LINK_TYPE } from "../../config/link-type";
-import * as isDirectory from "../../utils/is-directory";
+import { LINK_TYPE } from "../../constants";
 import * as findMatchingFiles from "./find-matching-files";
 import { prepareLocalLinkObjects } from "./prepare-local-link-objects";
+import { isDirectory } from "../../utils";
 
 const MOCK_FILE_OBJECT = {
   name: "markdown-file.md",
@@ -72,16 +79,13 @@ describe("prepare-local-link-objects", () => {
       jest
         .spyOn(findMatchingFiles, "findMatchingFiles")
         .mockImplementation(() => []);
-      jest.spyOn(isDirectory, "isDirectory").mockImplementation(() => false);
+      isDirectory.mockImplementation(() => false);
 
       expect(prepareLocalLinkObjects(fileObject)).toEqual([
         {
           containingFile: {
             directory: fileObject.directory,
             topLevelDirectory: fileObject.topLevelDirectory,
-          },
-          base: {
-            ...fileObject.links[0],
           },
           matchedFiles: [],
           markdownLink: "[foobar](./file-path.md#header-tag)",
@@ -134,17 +138,17 @@ describe("prepare-local-link-objects", () => {
     jest
       .spyOn(findMatchingFiles, "findMatchingFiles")
       .mockImplementation(() => []);
-    jest.spyOn(isDirectory, "isDirectory").mockImplementation(() => false);
+    isDirectory.mockImplementation(() => false);
 
     const linkObjects = prepareLocalLinkObjects(fileObject);
     expect(linkObjects).toHaveLength(3);
-    expect(linkObjects[0].base.markdownLink).toBe(
+    expect(linkObjects[0].markdownLink).toBe(
       "[foobar1](./file-path.md#header-tag)"
     );
-    expect(linkObjects[1].base.markdownLink).toBe(
+    expect(linkObjects[1].markdownLink).toBe(
       "[foobar2](./file-path.md#header-tag)"
     );
-    expect(linkObjects[2].base.markdownLink).toBe(
+    expect(linkObjects[2].markdownLink).toBe(
       "[foobar3](./file-path.md#header-tag)"
     );
   });
@@ -185,7 +189,7 @@ describe("prepare-local-link-objects", () => {
       jest
         .spyOn(findMatchingFiles, "findMatchingFiles")
         .mockImplementation(() => []);
-      jest.spyOn(isDirectory, "isDirectory").mockImplementation(() => false);
+      isDirectory.mockImplementation(() => false);
 
       expect(prepareLocalLinkObjects(fileObject)[0].isAbsoluteLink).toBe(
         expectedValue.isAbsoluteLink
@@ -241,7 +245,7 @@ describe("prepare-local-link-objects", () => {
       jest
         .spyOn(findMatchingFiles, "findMatchingFiles")
         .mockImplementation(() => []);
-      jest.spyOn(isDirectory, "isDirectory").mockImplementation(() => false);
+      isDirectory.mockImplementation(() => false);
 
       expect(prepareLocalLinkObjects(fileObject)[0].isTagOnlyLink).toBe(
         expectedValue.isTagOnlyLink
@@ -340,7 +344,7 @@ describe("prepare-local-link-objects", () => {
       jest
         .spyOn(findMatchingFiles, "findMatchingFiles")
         .mockImplementation(() => []);
-      jest.spyOn(isDirectory, "isDirectory").mockImplementation(() => false);
+      isDirectory.mockImplementation(() => false);
 
       expect(prepareLocalLinkObjects(fileObject)[0].fullPath).toBe(
         expectedValue.fullPath
@@ -366,7 +370,7 @@ describe("prepare-local-link-objects", () => {
     jest
       .spyOn(findMatchingFiles, "findMatchingFiles")
       .mockImplementation(() => ["file-path.md"]);
-    jest.spyOn(isDirectory, "isDirectory").mockImplementation(() => false);
+    isDirectory.mockImplementation(() => false);
 
     expect(prepareLocalLinkObjects(fileObject)[0].fullPath).toBe(
       path.resolve(MOCK_FILE_OBJECT.directory, "./file-path.md")
@@ -426,7 +430,7 @@ describe("prepare-local-link-objects", () => {
       jest
         .spyOn(findMatchingFiles, "findMatchingFiles")
         .mockImplementation(() => ["matching-file.md", "matching-file.jpg"]);
-      jest.spyOn(isDirectory, "isDirectory").mockImplementation(() => false);
+      isDirectory.mockImplementation(() => false);
 
       expect(prepareLocalLinkObjects(fileObject)[0].matchedFiles).toEqual(
         expectedValue.matchedFiles
@@ -453,7 +457,7 @@ describe("prepare-local-link-objects", () => {
       .spyOn(findMatchingFiles, "findMatchingFiles")
       .mockImplementation(() => []); // No matched files can be found
 
-    jest.spyOn(isDirectory, "isDirectory").mockImplementation(() => false);
+    isDirectory.mockImplementation(() => false);
 
     expect(prepareLocalLinkObjects(fileObject)[0].matchedFiles).toEqual([]);
   });
@@ -478,9 +482,7 @@ describe("prepare-local-link-objects", () => {
       jest
         .spyOn(findMatchingFiles, "findMatchingFiles")
         .mockImplementation(() => []);
-      jest
-        .spyOn(isDirectory, "isDirectory")
-        .mockImplementation(() => expectedValue);
+      isDirectory.mockImplementation(() => expectedValue);
 
       expect(prepareLocalLinkObjects(fileObject)[0].isExistingDirectory).toBe(
         expectedValue

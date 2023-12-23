@@ -1,5 +1,5 @@
 import fs from "fs";
-import { doesFileExist } from "../../utils/does-file-exist";
+import { doesFileExist } from "../../utils";
 
 export const findMatchingFiles = ({ fullPath, name }) => {
   const directoryToCheckForMatchingFiles = fullPath.replace(name, "");

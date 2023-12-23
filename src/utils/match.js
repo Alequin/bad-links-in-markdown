@@ -1,1 +1,1 @@
-export const match = (markdown, regex) => markdown?.match(regex) || [];
+export const match = (string, regex) => string?.match(regex) || [];

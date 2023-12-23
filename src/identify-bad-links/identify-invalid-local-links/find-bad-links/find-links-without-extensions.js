@@ -1,7 +1,6 @@
 import { partition } from "lodash";
-import { doesFileExist } from "../../../utils/does-file-exist";
-import { isDirectory } from "../../../utils/is-directory";
-import { badLinkReasons } from "../../../config/bad-link-reasons";
+import { badLinkReasons } from "../../../constants";
+import { isDirectory } from "../../../utils";
 
 export const findLinksWithoutExtensions = (linksWithoutFileExtensions) => {
   const [linksWithMatchedFiles, badLinks] = partition(
