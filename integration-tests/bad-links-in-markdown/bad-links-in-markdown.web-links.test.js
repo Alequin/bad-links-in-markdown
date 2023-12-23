@@ -1,4 +1,4 @@
-import { badLinksInMarkdown } from "../bad-links-in-markdown";
+import { badLinksInMarkdown } from "../../bad-links-in-markdown";
 import {
   anchorLinkDoubleQuoteTemplate,
   anchorLinkSingleQuoteTemplate,
@@ -7,13 +7,13 @@ import {
   inlineLinkTemplate,
   referenceLinkTemplate,
   shorthandReferenceLinkTemplate,
-} from "./markdown-templates";
+} from "../markdown-templates";
 import {
   newTestDirectory,
   newTestMarkdownFile,
   runTestWithDirectoryCleanup,
   TOP_LEVEL_DIRECTORY,
-} from "./test-utils";
+} from "../test-utils";
 
 describe.each([
   inlineLinkTemplate,

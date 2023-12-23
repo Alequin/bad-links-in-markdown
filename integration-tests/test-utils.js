@@ -3,9 +3,9 @@ import { isNil, uniqueId } from "lodash";
 import path from "path";
 import { doesFileExist } from "../src/utils";
 
-export const TOP_LEVEL_DIRECTORY = path.resolve(
+export const TOP_LEVEL_TEST_DIRECTORY = path.resolve(
   __dirname,
-  "../test-markdown-files"
+  "../test-generated-output"
 );
 
 /**

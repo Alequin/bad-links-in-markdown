@@ -1,5 +1,5 @@
-import { badLinksInMarkdown } from "../bad-links-in-markdown";
-import { badLinkReasons } from "../src/constants";
+import { badLinksInMarkdown } from "../../bad-links-in-markdown";
+import { badLinkReasons } from "../../src/constants";
 import {
   anchorLinkDoubleQuoteTemplate,
   anchorLinkSingleQuoteTemplate,
@@ -8,14 +8,14 @@ import {
   inlineLinkTemplate,
   referenceLinkTemplate,
   shorthandReferenceLinkTemplate,
-} from "./markdown-templates";
+} from "../markdown-templates";
 import {
   newTestDirectory,
   newTestFile,
   newTestMarkdownFile,
   runTestWithDirectoryCleanup,
   TOP_LEVEL_DIRECTORY,
-} from "./test-utils";
+} from "../test-utils";
 
 describe("bad-links-in-markdown - local header file links", () => {
   describe.each([

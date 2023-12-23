@@ -1,4 +1,4 @@
-import { badLinksInMarkdown } from "../bad-links-in-markdown";
+import { badLinksInMarkdown } from "../../bad-links-in-markdown";
 import {
   anchorLinkDoubleQuoteTemplate,
   anchorLinkSingleQuoteTemplate,
@@ -7,13 +7,13 @@ import {
   inlineLinkTemplate,
   referenceLinkTemplate,
   shorthandReferenceLinkTemplate,
-} from "./markdown-templates";
+} from "../markdown-templates";
 import {
   newTestDirectory,
   newTestMarkdownFile,
   runTestWithDirectoryCleanup,
-  TOP_LEVEL_DIRECTORY,
-} from "./test-utils";
+  TOP_LEVEL_TEST_DIRECTORY,
+} from "../test-utils";
 
 describe.each([
   inlineLinkTemplate,
@@ -27,7 +27,7 @@ describe.each([
   (markdown) => {
     it(`Ignores local ${markdown.linkType} which point at headers which exist and are preceded by space characters`, async () => {
       const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
+        parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
 
       const fileToLinkTo = newTestMarkdownFile({
@@ -51,7 +51,7 @@ describe.each([
 
     it(`Ignores local ${markdown.linkType} which point at headers in the same file and are preceded by space characters`, async () => {
       const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
+        parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
 
       const fileToLinkTo = newTestMarkdownFile({

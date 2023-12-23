@@ -1,6 +1,6 @@
 import fs from "fs";
-import { badLinksInMarkdown } from "../bad-links-in-markdown";
-import { badLinkReasons } from "../src/constants";
+import { badLinksInMarkdown } from "../../bad-links-in-markdown";
+import { badLinkReasons } from "../../src/constants";
 import {
   anchorLinkDoubleQuoteTemplate,
   anchorLinkSingleQuoteTemplate,
@@ -11,14 +11,14 @@ import {
   referenceLinkTemplate,
   shorthandReferenceImageLinkTemplate,
   shorthandReferenceLinkTemplate,
-} from "./markdown-templates";
+} from "../markdown-templates";
 import {
   newTestDirectory,
   newTestFile,
   newTestMarkdownFile,
   runTestWithDirectoryCleanup,
   TOP_LEVEL_DIRECTORY,
-} from "./test-utils";
+} from "../test-utils";
 
 describe("bad-links-in-markdown - links with label text", () => {
   describe.each([`"`, `'`].slice(0, 1))(

@@ -1,18 +1,18 @@
-import { badLinksInMarkdown } from "../bad-links-in-markdown";
-import { badLinkReasons, validImageExtensions } from "../src/constants";
+import { badLinksInMarkdown } from "../../bad-links-in-markdown";
+import { badLinkReasons, validImageExtensions } from "../../src/constants";
 import {
   applyTemplate,
   inlineImageLinkTemplate,
   referenceImageLinkTemplate,
   shorthandReferenceImageLinkTemplate,
-} from "./markdown-templates";
+} from "../markdown-templates";
 import {
   newTestDirectory,
   newTestFile,
   newTestMarkdownFile,
   runTestWithDirectoryCleanup,
   TOP_LEVEL_DIRECTORY,
-} from "./test-utils";
+} from "../test-utils";
 
 describe.each([
   inlineImageLinkTemplate,

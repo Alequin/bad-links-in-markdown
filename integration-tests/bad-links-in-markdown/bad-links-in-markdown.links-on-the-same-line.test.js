@@ -1,11 +1,11 @@
-import { badLinksInMarkdown } from "../bad-links-in-markdown";
-import { badLinkReasons } from "../src/constants";
+import { badLinksInMarkdown } from "../../bad-links-in-markdown";
+import { badLinkReasons } from "../../src/constants";
 import {
   newTestDirectory,
   newTestMarkdownFile,
   runTestWithDirectoryCleanup,
   TOP_LEVEL_DIRECTORY,
-} from "./test-utils";
+} from "../test-utils";
 
 describe("bad-links-in-markdown  - links on the same line", () => {
   it("Identifies multiple local inline links on the same file line that point at files that do not exist", async () => {

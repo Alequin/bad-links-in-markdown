@@ -1,5 +1,5 @@
-import { badLinksInMarkdown } from "../bad-links-in-markdown";
-import { badLinkReasons } from "../src/constants";
+import { badLinksInMarkdown } from "../../bad-links-in-markdown";
+import { badLinkReasons } from "../../src/constants";
 import {
   applyTemplate,
   inlineImageLinkTemplate,
@@ -8,13 +8,13 @@ import {
   referenceLinkTemplate,
   shorthandReferenceImageLinkTemplate,
   shorthandReferenceLinkTemplate,
-} from "./markdown-templates";
+} from "../markdown-templates";
 import {
   newTestDirectory,
   newTestMarkdownFile,
   runTestWithDirectoryCleanup,
   TOP_LEVEL_DIRECTORY,
-} from "./test-utils";
+} from "../test-utils";
 
 describe("bad-links-in-markdown - windows specific", () => {
   describe.each([

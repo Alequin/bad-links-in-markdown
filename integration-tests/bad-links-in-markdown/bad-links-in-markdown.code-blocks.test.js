@@ -1,11 +1,11 @@
-import { badLinksInMarkdown } from "../bad-links-in-markdown";
-import { badLinkReasons } from "../src/constants";
+import { badLinksInMarkdown } from "../../bad-links-in-markdown";
+import { badLinkReasons } from "../../src/constants";
 import {
   newTestDirectory,
   newTestMarkdownFile,
   runTestWithDirectoryCleanup,
-  TOP_LEVEL_DIRECTORY,
-} from "./test-utils";
+  TOP_LEVEL_TEST_DIRECTORY,
+} from "../test-utils";
 
 describe("bad-links-in-markdown - code sections", () => {
   describe.each([
@@ -16,7 +16,7 @@ describe("bad-links-in-markdown - code sections", () => {
     ({ openBlock, closeBlock }) => {
       it(`Ignores local inline links wrapped in ${openBlock}`, async () => {
         const { path: testDirectory } = await newTestDirectory({
-          parentDirectory: TOP_LEVEL_DIRECTORY,
+          parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
         });
 
         newTestMarkdownFile({
@@ -36,7 +36,7 @@ describe("bad-links-in-markdown - code sections", () => {
 
       it(`Ignores local reference links wrapped in ${openBlock}`, async () => {
         const { path: testDirectory } = await newTestDirectory({
-          parentDirectory: TOP_LEVEL_DIRECTORY,
+          parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
         });
 
         newTestMarkdownFile({
@@ -56,7 +56,7 @@ describe("bad-links-in-markdown - code sections", () => {
 
       it(`Identifies local inline links the point to files that don't exist, even when the link text contains text wrapped in ${openBlock}`, async () => {
         const { path: testDirectory } = await newTestDirectory({
-          parentDirectory: TOP_LEVEL_DIRECTORY,
+          parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
         });
 
         const { filePath } = newTestMarkdownFile({
@@ -83,7 +83,7 @@ describe("bad-links-in-markdown - code sections", () => {
 
       it(`Identifies local reference links the point to files that don't exist, even when the link text contains text wrapped in ${openBlock}`, async () => {
         const { path: testDirectory } = await newTestDirectory({
-          parentDirectory: TOP_LEVEL_DIRECTORY,
+          parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
         });
 
         const { filePath } = newTestMarkdownFile({
@@ -112,7 +112,7 @@ describe("bad-links-in-markdown - code sections", () => {
 
       it(`Identifies local inline links the point to files that don't exist when they follow a complete code block and are within an incomplete code block, where the block is created with ${openBlock}`, async () => {
         const { path: testDirectory } = await newTestDirectory({
-          parentDirectory: TOP_LEVEL_DIRECTORY,
+          parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
         });
 
         const completeCodeBlock = `${openBlock}code block contents${closeBlock}`;
@@ -142,7 +142,7 @@ describe("bad-links-in-markdown - code sections", () => {
 
       it(`Identifies local inline links the point to files that don't exist when they follow a complete code block and are within an incomplete code block, where the block is created with ${openBlock}`, async () => {
         const { path: testDirectory } = await newTestDirectory({
-          parentDirectory: TOP_LEVEL_DIRECTORY,
+          parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
         });
 
         const completeCodeBlock = `${openBlock}code block contents${closeBlock}`;
@@ -184,7 +184,7 @@ describe("bad-links-in-markdown - code sections", () => {
 
       it("Ignores local inline links included in indented code blocks, even when the link is broken", async () => {
         const { path: testDirectory } = await newTestDirectory({
-          parentDirectory: TOP_LEVEL_DIRECTORY,
+          parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
         });
 
         newTestMarkdownFile({
@@ -207,7 +207,7 @@ describe("bad-links-in-markdown - code sections", () => {
 
       it("Ignores local reference links in indented code blocks, even when the link is broken", async () => {
         const { path: testDirectory } = await newTestDirectory({
-          parentDirectory: TOP_LEVEL_DIRECTORY,
+          parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
         });
 
         newTestMarkdownFile({
@@ -230,7 +230,7 @@ describe("bad-links-in-markdown - code sections", () => {
 
       it("Identifies local inline links when the header they link to is in an indented code block", async () => {
         const { path: testDirectory } = await newTestDirectory({
-          parentDirectory: TOP_LEVEL_DIRECTORY,
+          parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
         });
 
         const { filePath } = newTestMarkdownFile({
@@ -263,7 +263,7 @@ describe("bad-links-in-markdown - code sections", () => {
 
       it("Identifies local reference links when the header they link to is in an indented code block", async () => {
         const { path: testDirectory } = await newTestDirectory({
-          parentDirectory: TOP_LEVEL_DIRECTORY,
+          parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
         });
 
         const { filePath } = newTestMarkdownFile({
@@ -297,7 +297,7 @@ describe("bad-links-in-markdown - code sections", () => {
 
       it("Identifies a local inline link in an indented code block when the block is not preceded by a blank line", async () => {
         const { path: testDirectory } = await newTestDirectory({
-          parentDirectory: TOP_LEVEL_DIRECTORY,
+          parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
         });
 
         const { filePath } = newTestMarkdownFile({
@@ -329,7 +329,7 @@ describe("bad-links-in-markdown - code sections", () => {
 
       it("Identifies a local reference link in an indented code block when the block is not preceded by a blank line", async () => {
         const { path: testDirectory } = await newTestDirectory({
-          parentDirectory: TOP_LEVEL_DIRECTORY,
+          parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
         });
 
         const { filePath } = newTestMarkdownFile({
@@ -369,7 +369,7 @@ describe("bad-links-in-markdown - code sections", () => {
     ({ openBlock, closeBlock }) => {
       it(`Ignores local inline links wrapped in a ${openBlock} block, even when the link is broken`, async () => {
         const { path: testDirectory } = await newTestDirectory({
-          parentDirectory: TOP_LEVEL_DIRECTORY,
+          parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
         });
 
         newTestMarkdownFile({
@@ -390,7 +390,7 @@ describe("bad-links-in-markdown - code sections", () => {
 
       it(`Ignores local reference links wrapped in a ${openBlock} block, even when the link is broken`, async () => {
         const { path: testDirectory } = await newTestDirectory({
-          parentDirectory: TOP_LEVEL_DIRECTORY,
+          parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
         });
 
         newTestMarkdownFile({
@@ -412,7 +412,7 @@ describe("bad-links-in-markdown - code sections", () => {
 
       it(`Identifies local inline links when the header they link to is in a ${openBlock} block`, async () => {
         const { path: testDirectory } = await newTestDirectory({
-          parentDirectory: TOP_LEVEL_DIRECTORY,
+          parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
         });
 
         const { filePath } = newTestMarkdownFile({
@@ -444,7 +444,7 @@ describe("bad-links-in-markdown - code sections", () => {
 
       it(`Identifies local reference links when the header they link to is in a ${openBlock} block`, async () => {
         const { path: testDirectory } = await newTestDirectory({
-          parentDirectory: TOP_LEVEL_DIRECTORY,
+          parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
         });
 
         const { filePath } = newTestMarkdownFile({
@@ -478,7 +478,7 @@ describe("bad-links-in-markdown - code sections", () => {
 
       it(`Ignores local inline links which point at headers placed within a ${openBlock} block`, async () => {
         const { path: testDirectory } = await newTestDirectory({
-          parentDirectory: TOP_LEVEL_DIRECTORY,
+          parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
         });
 
         newTestMarkdownFile({
@@ -504,7 +504,7 @@ describe("bad-links-in-markdown - code sections", () => {
 
       it(`Ignores local reference links which point at headers placed within a ${openBlock} block`, async () => {
         const { path: testDirectory } = await newTestDirectory({
-          parentDirectory: TOP_LEVEL_DIRECTORY,
+          parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
         });
 
         newTestMarkdownFile({
@@ -534,7 +534,7 @@ describe("bad-links-in-markdown - code sections", () => {
   describe("When header text includes text wrapped in a single backtick", () => {
     it("Ignores a local inline link that points at header that includes content wrapped in a single backtick", async () => {
       const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
+        parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
       newTestMarkdownFile({
         directory: testDirectory,
@@ -552,7 +552,7 @@ describe("bad-links-in-markdown - code sections", () => {
 
     it("Ignores a local reference link that points at header that includes content wrapped in a single backtick", async () => {
       const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
+        parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
       newTestMarkdownFile({
         directory: testDirectory,
@@ -573,7 +573,7 @@ describe("bad-links-in-markdown - code sections", () => {
   describe("When header text includes text wrapped in a <code> tag", () => {
     it("Identifies a local inline link that points at header that includes content wrapped in <code> tags", async () => {
       const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
+        parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
       const { filePath } = newTestMarkdownFile({
         directory: testDirectory,
@@ -602,7 +602,7 @@ describe("bad-links-in-markdown - code sections", () => {
 
     it("Identifies a local reference link that points at header that includes content wrapped in <code> tags", async () => {
       const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
+        parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
 
       const { filePath } = newTestMarkdownFile({
