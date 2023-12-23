@@ -47,7 +47,7 @@ describe("bad-links-in-markdown links-which-include-spaces", () => {
               filePath,
               missingLinks: [
                 {
-                  link: expectedBadLink.trim(),
+                  markdownLink: expectedBadLink.trim(),
                   reasons: [badLinkReasons.FILE_NOT_FOUND],
                 },
               ],
@@ -108,7 +108,7 @@ describe("bad-links-in-markdown links-which-include-spaces", () => {
               filePath,
               missingLinks: [
                 {
-                  link: expectedBadLink.trim(),
+                  markdownLink: expectedBadLink.trim(),
                   reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
                 },
               ],
@@ -182,7 +182,7 @@ describe("bad-links-in-markdown links-which-include-spaces", () => {
               filePath,
               missingLinks: [
                 {
-                  link: expectedBadLink.trim(),
+                  markdownLink: expectedBadLink.trim(),
                   reasons: [badLinkReasons.FILE_NOT_FOUND],
                 },
               ],
@@ -242,7 +242,7 @@ describe("bad-links-in-markdown links-which-include-spaces", () => {
                 filePath,
                 missingLinks: [
                   {
-                    link: expectedBadLink.trim(),
+                    markdownLink: expectedBadLink.trim(),
                     reasons: [badLinkReasons.FILE_NOT_FOUND],
                   },
                 ],
@@ -351,7 +351,7 @@ describe("bad-links-in-markdown links-which-include-spaces", () => {
                 filePath,
                 missingLinks: [
                   {
-                    link: expectedBadLink,
+                    markdownLink: expectedBadLink,
                     reasons: [badLinkReasons.FILE_NOT_FOUND],
                   },
                 ],
@@ -391,7 +391,7 @@ describe("bad-links-in-markdown links-which-include-spaces", () => {
                 filePath,
                 missingLinks: [
                   {
-                    link: expectedBadLink,
+                    markdownLink: expectedBadLink,
                     reasons: [badLinkReasons.INVALID_SPACE_CHARACTER],
                   },
                 ],
@@ -424,7 +424,7 @@ describe("bad-links-in-markdown links-which-include-spaces", () => {
                 filePath,
                 missingLinks: [
                   {
-                    link: expectedBadLink,
+                    markdownLink: expectedBadLink,
                     reasons: [badLinkReasons.INVALID_SPACE_CHARACTER],
                   },
                 ],
@@ -464,7 +464,7 @@ describe("bad-links-in-markdown links-which-include-spaces", () => {
                 filePath,
                 missingLinks: [
                   {
-                    link: expectedBadLink,
+                    markdownLink: expectedBadLink,
                     reasons: [badLinkReasons.INVALID_SPACE_CHARACTER],
                   },
                 ],
@@ -534,7 +534,7 @@ describe("bad-links-in-markdown links-which-include-spaces", () => {
                 filePath,
                 missingLinks: [
                   {
-                    link: expectedBadLink,
+                    markdownLink: expectedBadLink,
                     reasons: [
                       badLinkReasons.MISSING_FILE_EXTENSION,
                       badLinkReasons.FILE_NOT_FOUND,
@@ -570,7 +570,7 @@ describe("bad-links-in-markdown links-which-include-spaces", () => {
                 filePath,
                 missingLinks: [
                   {
-                    link: expectedBadLink,
+                    markdownLink: expectedBadLink,
                     reasons: [
                       badLinkReasons.MISSING_FILE_EXTENSION,
                       badLinkReasons.FILE_NOT_FOUND,
@@ -613,7 +613,7 @@ describe("bad-links-in-markdown links-which-include-spaces", () => {
                 filePath,
                 missingLinks: [
                   {
-                    link: expectedBadLink,
+                    markdownLink: expectedBadLink,
                     reasons: [
                       badLinkReasons.MISSING_FILE_EXTENSION,
                       badLinkReasons.FILE_NOT_FOUND,

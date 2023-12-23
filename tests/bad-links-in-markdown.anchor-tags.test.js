@@ -25,7 +25,7 @@ describe("bad-links-in-markdown - anchor tags", () => {
             filePath,
             missingLinks: [
               {
-                link: "<a href=”./file.md”>a link</a>",
+                markdownLink: "<a href=”./file.md”>a link</a>",
                 reasons: [
                   badLinkReasons.MISSING_FILE_EXTENSION,
                   badLinkReasons.FILE_NOT_FOUND,

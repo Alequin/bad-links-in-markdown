@@ -1,22 +1,21 @@
-import { groupBy, uniq } from "lodash";
+import { chain, groupBy, uniq } from "lodash";
+import { mergeReasonObjects, newReasonObject } from "./reason-object";
 
-export const groupMatchingLinkObjectWithIssues = (linkObjectsToGroup) => {
-  const groupedLinkedObjects = Object.values(
-    groupBy(linkObjectsToGroup, ({ markdownLink }) => markdownLink)
+export const groupMatchingReasonObjectWithIssues = (reasonObjects) => {
+  const groupedReasonObjects = groupBy(
+    reasonObjects,
+    ({ markdownLink }) => markdownLink
   );
 
-  return groupedLinkedObjects
-    .map((linkObjectsList) =>
-      linkObjectsList.reduce(mergeLinkObjects, { reasons: [] })
+  return chain(groupedReasonObjects)
+    .map((reasonObjectsList, markdownLink) =>
+      reasonObjectsList.reduce(
+        mergeReasonObjects,
+        newReasonObject(markdownLink, [])
+      )
     )
-    .map((linkObject) => ({
-      ...linkObject,
-      reasons: uniq(linkObject.reasons),
-    }));
+    .map((reasonObject) =>
+      newReasonObject(reasonObject.markdownLink, uniq(reasonObject.reasons))
+    )
+    .value();
 };
-
-const mergeLinkObjects = (primaryLinkObject, secondaryLinkObject) => ({
-  ...primaryLinkObject,
-  ...secondaryLinkObject,
-  reasons: [...primaryLinkObject.reasons, ...secondaryLinkObject.reasons],
-});

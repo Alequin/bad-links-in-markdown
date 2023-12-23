@@ -84,7 +84,8 @@ describe("bad-links-in-markdown - reference links", () => {
               filePath,
               missingLinks: [
                 {
-                  link: `${precedingText} [1]: ./path/to/missing/file.md`.trim(),
+                  markdownLink:
+                    `${precedingText} [1]: ./path/to/missing/file.md`.trim(),
                   reasons: [badLinkReasons.FILE_NOT_FOUND],
                 },
               ],

@@ -30,19 +30,22 @@ describe("bad-links-in-markdown  - links on the same line", () => {
             filePath,
             missingLinks: [
               {
-                link: "[I am a local link](./path/to/missing/file.md)",
+                markdownLink: "[I am a local link](./path/to/missing/file.md)",
                 reasons: [badLinkReasons.FILE_NOT_FOUND],
               },
               {
-                link: "[I am another local link](./path/to/missing/file.md)",
+                markdownLink:
+                  "[I am another local link](./path/to/missing/file.md)",
                 reasons: [badLinkReasons.FILE_NOT_FOUND],
               },
               {
-                link: "[I am anotherx2 local link](./path/to/missing/file.md)",
+                markdownLink:
+                  "[I am anotherx2 local link](./path/to/missing/file.md)",
                 reasons: [badLinkReasons.FILE_NOT_FOUND],
               },
               {
-                link: "[I am anotherx3 local link](./path/to/missing/file.md)",
+                markdownLink:
+                  "[I am anotherx3 local link](./path/to/missing/file.md)",
                 reasons: [badLinkReasons.FILE_NOT_FOUND],
               },
             ],
@@ -74,19 +77,23 @@ describe("bad-links-in-markdown  - links on the same line", () => {
             filePath,
             missingLinks: [
               {
-                link: "<a href='./path/to/missing/file.md'>I am a local link</a>",
+                markdownLink:
+                  "<a href='./path/to/missing/file.md'>I am a local link</a>",
                 reasons: [badLinkReasons.FILE_NOT_FOUND],
               },
               {
-                link: "<a href='./path/to/missing/file.md'>I am another local link</a>",
+                markdownLink:
+                  "<a href='./path/to/missing/file.md'>I am another local link</a>",
                 reasons: [badLinkReasons.FILE_NOT_FOUND],
               },
               {
-                link: "<a href='./path/to/missing/file.md'>I am anotherx2 local link</a>",
+                markdownLink:
+                  "<a href='./path/to/missing/file.md'>I am anotherx2 local link</a>",
                 reasons: [badLinkReasons.FILE_NOT_FOUND],
               },
               {
-                link: "<a href='./path/to/missing/file.md'>I am anotherx3 local link</a>",
+                markdownLink:
+                  "<a href='./path/to/missing/file.md'>I am anotherx3 local link</a>",
                 reasons: [badLinkReasons.FILE_NOT_FOUND],
               },
             ],
@@ -113,19 +120,19 @@ describe("bad-links-in-markdown  - links on the same line", () => {
             filePath,
             missingLinks: [
               {
-                link: "![picture](./path/to/missing/image.png)",
+                markdownLink: "![picture](./path/to/missing/image.png)",
                 reasons: [badLinkReasons.FILE_NOT_FOUND],
               },
               {
-                link: "![picture2](./path/to/missing/image.png)",
+                markdownLink: "![picture2](./path/to/missing/image.png)",
                 reasons: [badLinkReasons.FILE_NOT_FOUND],
               },
               {
-                link: "![picture3](./path/to/missing/image.png)",
+                markdownLink: "![picture3](./path/to/missing/image.png)",
                 reasons: [badLinkReasons.FILE_NOT_FOUND],
               },
               {
-                link: "![picture4](./path/to/missing/image.png)",
+                markdownLink: "![picture4](./path/to/missing/image.png)",
                 reasons: [badLinkReasons.FILE_NOT_FOUND],
               },
             ],

@@ -2,6 +2,7 @@ import { partition } from "lodash";
 import { doesFileExist } from "../../../utils";
 import { badLinkReasons } from "../../../constants";
 import { badLineTags } from "./utils/bad-line-tags";
+import { newReasonObject } from "../reason-object";
 
 export const findMissingLinksWithFileExtensions = (linkObjects) => {
   const [workingLinks, badLinks] = partition(linkObjects, (linkObject) =>
@@ -13,13 +14,13 @@ export const findMissingLinksWithFileExtensions = (linkObjects) => {
   );
 
   return [
-    ...badLinks.map((linkObject) => ({
-      ...linkObject,
-      reasons: [badLinkReasons.FILE_NOT_FOUND],
-    })),
-    ...linkWithBadTargetLineNumbers.map((linkObject) => ({
-      ...linkObject,
-      reasons: [badLinkReasons.INVALID_TARGET_LINE_NUMBER],
-    })),
+    ...badLinks.map((linkObject) =>
+      newReasonObject(linkObject.markdownLink, [badLinkReasons.FILE_NOT_FOUND])
+    ),
+    ...linkWithBadTargetLineNumbers.map((linkObject) =>
+      newReasonObject(linkObject.markdownLink, [
+        badLinkReasons.INVALID_TARGET_LINE_NUMBER,
+      ])
+    ),
   ];
 };

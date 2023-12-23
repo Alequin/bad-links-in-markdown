@@ -53,7 +53,7 @@ describe("bad-links-in-markdown - links including parenthesis", () => {
               filePath,
               missingLinks: [
                 {
-                  link: expectedBadLink,
+                  markdownLink: expectedBadLink,
                   reasons: [badLinkReasons.FILE_NOT_FOUND],
                 },
               ],
@@ -116,7 +116,7 @@ describe("bad-links-in-markdown - links including parenthesis", () => {
               filePath,
               missingLinks: [
                 {
-                  link: expectedBadLink,
+                  markdownLink: expectedBadLink,
                   reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
                 },
               ],
@@ -200,7 +200,7 @@ describe("bad-links-in-markdown - links including parenthesis", () => {
               filePath,
               missingLinks: [
                 {
-                  link: expectedBadLink,
+                  markdownLink: expectedBadLink,
                   reasons: [badLinkReasons.FILE_NOT_FOUND],
                 },
               ],

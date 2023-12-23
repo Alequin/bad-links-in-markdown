@@ -52,7 +52,7 @@ describe("bad-links-in-markdown - links with label text", () => {
                   filePath,
                   missingLinks: [
                     {
-                      link: expectedBadLink,
+                      markdownLink: expectedBadLink,
                       reasons: [badLinkReasons.FILE_NOT_FOUND],
                     },
                   ],
@@ -114,7 +114,7 @@ describe("bad-links-in-markdown - links with label text", () => {
                   filePath,
                   missingLinks: [
                     {
-                      link: expectedBadLink,
+                      markdownLink: expectedBadLink,
                       reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
                     },
                   ],
@@ -169,7 +169,7 @@ describe("bad-links-in-markdown - links with label text", () => {
                   filePath,
                   missingLinks: [
                     {
-                      link: expectedBadLink,
+                      markdownLink: expectedBadLink,
                       reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
                     },
                   ],
@@ -230,7 +230,7 @@ describe("bad-links-in-markdown - links with label text", () => {
                   filePath,
                   missingLinks: [
                     {
-                      link: expectedBadLink,
+                      markdownLink: expectedBadLink,
                       reasons: [badLinkReasons.FILE_NOT_FOUND],
                     },
                   ],
@@ -283,19 +283,19 @@ describe("bad-links-in-markdown - links with label text", () => {
                 filePath,
                 missingLinks: [
                   {
-                    link: `[I am a local link](./path/to/missing/file.md ${labelText})`,
+                    markdownLink: `[I am a local link](./path/to/missing/file.md ${labelText})`,
                     reasons: [badLinkReasons.FILE_NOT_FOUND],
                   },
                   {
-                    link: `[I am another local link](./path/to/missing/file.md ${labelText})`,
+                    markdownLink: `[I am another local link](./path/to/missing/file.md ${labelText})`,
                     reasons: [badLinkReasons.FILE_NOT_FOUND],
                   },
                   {
-                    link: `[I am anotherx2 local link](./path/to/missing/file.md ${labelText})`,
+                    markdownLink: `[I am anotherx2 local link](./path/to/missing/file.md ${labelText})`,
                     reasons: [badLinkReasons.FILE_NOT_FOUND],
                   },
                   {
-                    link: `[I am anotherx3 local link](./path/to/missing/file.md ${labelText})`,
+                    markdownLink: `[I am anotherx3 local link](./path/to/missing/file.md ${labelText})`,
                     reasons: [badLinkReasons.FILE_NOT_FOUND],
                   },
                 ],
@@ -322,19 +322,19 @@ describe("bad-links-in-markdown - links with label text", () => {
                 filePath,
                 missingLinks: [
                   {
-                    link: `![picture](./path/to/missing/image.png ${labelText})`,
+                    markdownLink: `![picture](./path/to/missing/image.png ${labelText})`,
                     reasons: [badLinkReasons.FILE_NOT_FOUND],
                   },
                   {
-                    link: `![picture2](./path/to/missing/image.png ${labelText})`,
+                    markdownLink: `![picture2](./path/to/missing/image.png ${labelText})`,
                     reasons: [badLinkReasons.FILE_NOT_FOUND],
                   },
                   {
-                    link: `![picture3](./path/to/missing/image.png ${labelText})`,
+                    markdownLink: `![picture3](./path/to/missing/image.png ${labelText})`,
                     reasons: [badLinkReasons.FILE_NOT_FOUND],
                   },
                   {
-                    link: `![picture4](./path/to/missing/image.png ${labelText})`,
+                    markdownLink: `![picture4](./path/to/missing/image.png ${labelText})`,
                     reasons: [badLinkReasons.FILE_NOT_FOUND],
                   },
                 ],

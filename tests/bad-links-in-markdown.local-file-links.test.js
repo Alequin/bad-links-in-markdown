@@ -50,7 +50,7 @@ describe("bad-links-in-markdown - local file links", () => {
               filePath,
               missingLinks: [
                 {
-                  link: expectedBadLink,
+                  markdownLink: expectedBadLink,
                   reasons: [badLinkReasons.FILE_NOT_FOUND],
                 },
               ],
@@ -175,7 +175,7 @@ describe("bad-links-in-markdown - local file links", () => {
               filePath: fileContainingLink,
               missingLinks: [
                 {
-                  link: expectedBadLink,
+                  markdownLink: expectedBadLink,
                   reasons: [
                     badLinkReasons.ABSOLUTE_LINK_INVALID_START_POINT,
                     badLinkReasons.FILE_NOT_FOUND,
@@ -225,7 +225,7 @@ describe("bad-links-in-markdown - local file links", () => {
               filePath: fileContainingLink,
               missingLinks: [
                 {
-                  link: expectedBadLink,
+                  markdownLink: expectedBadLink,
                   reasons: [
                     badLinkReasons.ABSOLUTE_LINK_INVALID_START_POINT,
                     badLinkReasons.FILE_NOT_FOUND,
@@ -262,7 +262,7 @@ describe("bad-links-in-markdown - local file links", () => {
               filePath,
               missingLinks: [
                 {
-                  link: expectedBadLink,
+                  markdownLink: expectedBadLink,
                   reasons: [
                     badLinkReasons.MISSING_FILE_EXTENSION,
                     badLinkReasons.FILE_NOT_FOUND,
@@ -324,7 +324,7 @@ describe("bad-links-in-markdown - local file links", () => {
               filePath,
               missingLinks: [
                 {
-                  link: expectedBadLink,
+                  markdownLink: expectedBadLink,
                   reasons: [badLinkReasons.FILE_NOT_FOUND],
                 },
               ],
@@ -386,7 +386,7 @@ describe("bad-links-in-markdown - local file links", () => {
               filePath,
               missingLinks: [
                 {
-                  link: expectedBadLink,
+                  markdownLink: expectedBadLink,
                   reasons: [
                     badLinkReasons.MISSING_FILE_EXTENSION,
                     badLinkReasons.FILE_NOT_FOUND,
@@ -425,7 +425,7 @@ describe("bad-links-in-markdown - local file links", () => {
               filePath,
               missingLinks: [
                 {
-                  link: expectedBadLink,
+                  markdownLink: expectedBadLink,
                   reasons: [badLinkReasons.FILE_NOT_FOUND],
                 },
               ],
@@ -522,7 +522,7 @@ describe("bad-links-in-markdown - local file links", () => {
               filePath: fileContainingLink,
               missingLinks: [
                 {
-                  link: expectedBadLink,
+                  markdownLink: expectedBadLink,
                   reasons: [
                     badLinkReasons.BAD_RELATIVE_LINK_SYNTAX,
                     badLinkReasons.FILE_NOT_FOUND,
@@ -602,7 +602,7 @@ describe("bad-links-in-markdown - local file links", () => {
               filePath: fileContainingLink,
               missingLinks: [
                 {
-                  link: expectedBadLink,
+                  markdownLink: expectedBadLink,
                   reasons: [badLinkReasons.MISSING_FILE_EXTENSION],
                 },
               ],
@@ -645,7 +645,7 @@ describe("bad-links-in-markdown - local file links", () => {
               filePath,
               missingLinks: [
                 {
-                  link: expectedBadLink,
+                  markdownLink: expectedBadLink,
                   reasons: [badLinkReasons.MISSING_FILE_EXTENSION],
                 },
               ],
@@ -686,7 +686,7 @@ describe("bad-links-in-markdown - local file links", () => {
               filePath: fileContainingLink,
               missingLinks: [
                 {
-                  link: expectedBadLink,
+                  markdownLink: expectedBadLink,
                   reasons: [badLinkReasons.MISSING_FILE_EXTENSION],
                 },
               ],
@@ -737,7 +737,7 @@ describe("bad-links-in-markdown - local file links", () => {
               filePath: fileContainingLink,
               missingLinks: [
                 {
-                  link: expectedBadLink,
+                  markdownLink: expectedBadLink,
                   reasons: [
                     badLinkReasons.MISSING_FILE_EXTENSION,
                     badLinkReasons.MULTIPLE_MATCHING_FILES,
@@ -785,7 +785,7 @@ describe("bad-links-in-markdown - local file links", () => {
               filePath: fileContainingLink,
               missingLinks: [
                 {
-                  link: expectedBadLink,
+                  markdownLink: expectedBadLink,
                   reasons: [badLinkReasons.MISSING_FILE_EXTENSION],
                 },
               ],
@@ -825,7 +825,7 @@ describe("bad-links-in-markdown - local file links", () => {
               filePath: fileContainingLink,
               missingLinks: [
                 {
-                  link: expectedBadLink,
+                  markdownLink: expectedBadLink,
                   reasons: [badLinkReasons.MISSING_FILE_EXTENSION],
                 },
               ],
@@ -877,7 +877,7 @@ describe("bad-links-in-markdown - local file links", () => {
               filePath: fileContainingLink,
               missingLinks: [
                 {
-                  link: expectedBadLink,
+                  markdownLink: expectedBadLink,
                   reasons: [
                     badLinkReasons.MISSING_FILE_EXTENSION,
                     badLinkReasons.MULTIPLE_MATCHING_FILES,
@@ -932,7 +932,7 @@ describe("bad-links-in-markdown - local file links", () => {
               filePath: fileContainingLink,
               missingLinks: [
                 {
-                  link: expectedBadLink,
+                  markdownLink: expectedBadLink,
                   reasons: [
                     badLinkReasons.MISSING_FILE_EXTENSION,
                     badLinkReasons.MULTIPLE_MATCHING_FILES,
@@ -981,7 +981,7 @@ describe("bad-links-in-markdown - local file links", () => {
               filePath: fileContainingLink,
               missingLinks: [
                 {
-                  link: expectedBadLink,
+                  markdownLink: expectedBadLink,
                   reasons: [
                     badLinkReasons.MISSING_FILE_EXTENSION,
                     badLinkReasons.FILE_NOT_FOUND,
@@ -1027,7 +1027,7 @@ describe("bad-links-in-markdown - local file links", () => {
               filePath,
               missingLinks: [
                 {
-                  link: expectedBadLink,
+                  markdownLink: expectedBadLink,
                   reasons: [
                     badLinkReasons.MISSING_FILE_EXTENSION,
                     badLinkReasons.FILE_NOT_FOUND,
@@ -1071,7 +1071,7 @@ describe("bad-links-in-markdown - local file links", () => {
               filePath: fileContainingLink,
               missingLinks: [
                 {
-                  link: expectedBadLink,
+                  markdownLink: expectedBadLink,
                   reasons: [
                     badLinkReasons.MISSING_FILE_EXTENSION,
                     badLinkReasons.FILE_NOT_FOUND,
@@ -1125,7 +1125,7 @@ describe("bad-links-in-markdown - local file links", () => {
               filePath: fileContainingLink,
               missingLinks: [
                 {
-                  link: expectedBadLink,
+                  markdownLink: expectedBadLink,
                   reasons: [
                     badLinkReasons.MISSING_FILE_EXTENSION,
                     badLinkReasons.FILE_NOT_FOUND,
@@ -1172,7 +1172,7 @@ describe("bad-links-in-markdown - local file links", () => {
               filePath: fileContainingLink,
               missingLinks: [
                 {
-                  link: expectedBadLink,
+                  markdownLink: expectedBadLink,
                   reasons: [
                     badLinkReasons.MISSING_FILE_EXTENSION,
                     badLinkReasons.FILE_NOT_FOUND,
@@ -1215,7 +1215,7 @@ describe("bad-links-in-markdown - local file links", () => {
               filePath: fileContainingLink,
               missingLinks: [
                 {
-                  link: expectedBadLink,
+                  markdownLink: expectedBadLink,
                   reasons: [
                     badLinkReasons.MISSING_FILE_EXTENSION,
                     badLinkReasons.FILE_NOT_FOUND,
@@ -1270,7 +1270,7 @@ describe("bad-links-in-markdown - local file links", () => {
               filePath: fileContainingLink,
               missingLinks: [
                 {
-                  link: expectedBadLink,
+                  markdownLink: expectedBadLink,
                   reasons: [
                     badLinkReasons.MISSING_FILE_EXTENSION,
                     badLinkReasons.FILE_NOT_FOUND,
@@ -1325,7 +1325,7 @@ describe("bad-links-in-markdown - local file links", () => {
               filePath: fileContainingLink,
               missingLinks: [
                 {
-                  link: expectedBadLink,
+                  markdownLink: expectedBadLink,
                   reasons: [
                     badLinkReasons.MISSING_FILE_EXTENSION,
                     badLinkReasons.FILE_NOT_FOUND,

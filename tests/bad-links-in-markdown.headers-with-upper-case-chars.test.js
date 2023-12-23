@@ -51,7 +51,7 @@ describe.each([
               filePath: fileContainingLink,
               missingLinks: [
                 {
-                  link: expectedBadLink,
+                  markdownLink: expectedBadLink,
                   reasons: [badLinkReasons.CASE_SENSITIVE_HEADER_TAG],
                 },
               ],
@@ -90,7 +90,7 @@ describe.each([
               filePath: fileContainingLink,
               missingLinks: [
                 {
-                  link: expectedBadLink,
+                  markdownLink: expectedBadLink,
                   reasons: [badLinkReasons.CASE_SENSITIVE_HEADER_TAG],
                 },
               ],

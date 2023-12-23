@@ -1,4 +1,5 @@
 import { badLinkReasons, validImageExtensions } from "../../../constants";
+import { newReasonObject } from "../reason-object";
 
 export const findInvalidImageExtensions = (linkObjects) => {
   return linkObjects
@@ -9,8 +10,9 @@ export const findInvalidImageExtensions = (linkObjects) => {
         linkFileExtension &&
         !validImageExtensions.includes(linkFileExtension.toLowerCase())
     )
-    .map((linkObject) => ({
-      ...linkObject,
-      reasons: [badLinkReasons.INVALID_IMAGE_EXTENSIONS],
-    }));
+    .map((linkObject) =>
+      newReasonObject(linkObject.markdownLink, [
+        badLinkReasons.INVALID_IMAGE_EXTENSIONS,
+      ])
+    );
 };

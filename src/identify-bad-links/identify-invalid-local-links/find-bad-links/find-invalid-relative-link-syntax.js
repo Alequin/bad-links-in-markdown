@@ -1,11 +1,13 @@
 import { badLinkReasons } from "../../../constants";
+import { newReasonObject } from "../reason-object";
 
 const MULTIPLE_DOTS_AT_START_REGEX = /^\.\.\.+/;
 export const findInvalidRelativeLinkSyntax = (linkObjects) => {
   return linkObjects
     .filter(({ linkPath }) => MULTIPLE_DOTS_AT_START_REGEX.test(linkPath))
-    .map((linkObject) => ({
-      ...linkObject,
-      reasons: [badLinkReasons.BAD_RELATIVE_LINK_SYNTAX],
-    }));
+    .map((linkObject) =>
+      newReasonObject(linkObject.markdownLink, [
+        badLinkReasons.BAD_RELATIVE_LINK_SYNTAX,
+      ])
+    );
 };

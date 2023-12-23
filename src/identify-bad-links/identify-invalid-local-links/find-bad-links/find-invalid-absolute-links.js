@@ -1,13 +1,15 @@
 import fs from "fs";
 import { badLinkReasons } from "../../../constants";
+import { newReasonObject } from "../reason-object";
 
 export const windowsAbsoluteLinks = (linkObjects) =>
   linkObjects
     .filter(({ linkPath }) => /^\/?\w:/.test(linkPath))
-    .map((linkObject) => ({
-      ...linkObject,
-      reasons: [badLinkReasons.POTENTIAL_WINDOWS_ABSOLUTE_LINK],
-    }));
+    .map((linkObject) =>
+      newReasonObject(linkObject.markdownLink, [
+        badLinkReasons.POTENTIAL_WINDOWS_ABSOLUTE_LINK,
+      ])
+    );
 
 export const badRootAbsoluteLinks = (linkObjects) =>
   linkObjects
@@ -19,7 +21,8 @@ export const badRootAbsoluteLinks = (linkObjects) =>
 
       return !doesLinkStartWithAnyRootFileNames;
     })
-    .map((linkObject) => ({
-      ...linkObject,
-      reasons: [badLinkReasons.ABSOLUTE_LINK_INVALID_START_POINT],
-    }));
+    .map((linkObject) =>
+      newReasonObject(linkObject.markdownLink, [
+        badLinkReasons.ABSOLUTE_LINK_INVALID_START_POINT,
+      ])
+    );

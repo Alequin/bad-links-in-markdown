@@ -71,7 +71,7 @@ describe("bad-links-in-markdown - code sections", () => {
                 filePath,
                 missingLinks: [
                   {
-                    link: `[I am a ${openBlock}local link${closeBlock}](./path/to/missing/file.md)`,
+                    markdownLink: `[I am a ${openBlock}local link${closeBlock}](./path/to/missing/file.md)`,
                     reasons: [badLinkReasons.FILE_NOT_FOUND],
                   },
                 ],
@@ -100,7 +100,7 @@ describe("bad-links-in-markdown - code sections", () => {
                 filePath,
                 missingLinks: [
                   {
-                    link: `[I am a ${openBlock}reference${closeBlock} link 1]: ./path/to/missing/file.md`,
+                    markdownLink: `[I am a ${openBlock}reference${closeBlock} link 1]: ./path/to/missing/file.md`,
                     reasons: [badLinkReasons.FILE_NOT_FOUND],
                   },
                 ],
@@ -130,7 +130,7 @@ describe("bad-links-in-markdown - code sections", () => {
                 filePath,
                 missingLinks: [
                   {
-                    link: `[I am a local link](./path/to/missing/file.md)`,
+                    markdownLink: `[I am a local link](./path/to/missing/file.md)`,
                     reasons: [badLinkReasons.FILE_NOT_FOUND],
                   },
                 ],
@@ -164,7 +164,7 @@ describe("bad-links-in-markdown - code sections", () => {
                 filePath,
                 missingLinks: [
                   {
-                    link: `[I am a reference link 1]: ./path/to/missing/file.md`,
+                    markdownLink: `[I am a reference link 1]: ./path/to/missing/file.md`,
                     reasons: [badLinkReasons.FILE_NOT_FOUND],
                   },
                 ],
@@ -251,7 +251,7 @@ describe("bad-links-in-markdown - code sections", () => {
                 filePath,
                 missingLinks: [
                   {
-                    link: "[I am a local link](#cool-header)",
+                    markdownLink: "[I am a local link](#cool-header)",
                     reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
                   },
                 ],
@@ -285,7 +285,7 @@ describe("bad-links-in-markdown - code sections", () => {
                 filePath,
                 missingLinks: [
                   {
-                    link: "[I am a reference link]: #cool-header",
+                    markdownLink: "[I am a reference link]: #cool-header",
                     reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
                   },
                 ],
@@ -317,7 +317,7 @@ describe("bad-links-in-markdown - code sections", () => {
                 filePath,
                 missingLinks: [
                   {
-                    link: `[I am a local link](./path/to/missing/file.md)`,
+                    markdownLink: `[I am a local link](./path/to/missing/file.md)`,
                     reasons: [badLinkReasons.FILE_NOT_FOUND],
                   },
                 ],
@@ -349,7 +349,7 @@ describe("bad-links-in-markdown - code sections", () => {
                 filePath,
                 missingLinks: [
                   {
-                    link: `[I am a reference link]: ./path/to/missing/file.md`,
+                    markdownLink: `[I am a reference link]: ./path/to/missing/file.md`,
                     reasons: [badLinkReasons.FILE_NOT_FOUND],
                   },
                 ],
@@ -432,7 +432,7 @@ describe("bad-links-in-markdown - code sections", () => {
                 filePath,
                 missingLinks: [
                   {
-                    link: "[I am a local link](#cool-header)",
+                    markdownLink: "[I am a local link](#cool-header)",
                     reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
                   },
                 ],
@@ -466,7 +466,7 @@ describe("bad-links-in-markdown - code sections", () => {
                 filePath,
                 missingLinks: [
                   {
-                    link: "[I am a reference link]: #cool-header",
+                    markdownLink: "[I am a reference link]: #cool-header",
                     reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
                   },
                 ],
@@ -590,7 +590,7 @@ describe("bad-links-in-markdown - code sections", () => {
               filePath,
               missingLinks: [
                 {
-                  link: "[I am a local link 1](#header-text)",
+                  markdownLink: "[I am a local link 1](#header-text)",
                   reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
                 },
               ],
@@ -621,7 +621,7 @@ describe("bad-links-in-markdown - code sections", () => {
               filePath,
               missingLinks: [
                 {
-                  link: "[foobar]: #header-text",
+                  markdownLink: "[foobar]: #header-text",
                   reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
                 },
               ],

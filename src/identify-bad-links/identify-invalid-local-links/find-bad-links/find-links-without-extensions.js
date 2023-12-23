@@ -1,6 +1,7 @@
 import { partition } from "lodash";
 import { badLinkReasons } from "../../../constants";
 import { isDirectory } from "../../../utils";
+import { newReasonObject } from "../reason-object";
 
 export const findLinksWithoutExtensions = (linksWithoutFileExtensions) => {
   const [linksWithMatchedFiles, badLinks] = partition(
@@ -13,18 +14,19 @@ export const findLinksWithoutExtensions = (linksWithoutFileExtensions) => {
   );
 
   return [
-    ...linksWithoutFileExtensions.map((linkObject) => ({
-      ...linkObject,
-      reasons: [badLinkReasons.MISSING_FILE_EXTENSION],
-    })),
-    ...badLinks.map((linkObject) => ({
-      ...linkObject,
-      reasons: [badLinkReasons.FILE_NOT_FOUND],
-    })),
-    ...linksWithMultiplePossibleFiles.map((linkObject) => ({
-      ...linkObject,
-      reasons: [badLinkReasons.MULTIPLE_MATCHING_FILES],
-    })),
+    ...linksWithoutFileExtensions.map((linkObject) =>
+      newReasonObject(linkObject.markdownLink, [
+        badLinkReasons.MISSING_FILE_EXTENSION,
+      ])
+    ),
+    ...badLinks.map((linkObject) =>
+      newReasonObject(linkObject.markdownLink, [badLinkReasons.FILE_NOT_FOUND])
+    ),
+    ...linksWithMultiplePossibleFiles.map((linkObject) =>
+      newReasonObject(linkObject.markdownLink, [
+        badLinkReasons.MULTIPLE_MATCHING_FILES,
+      ])
+    ),
   ];
 };
 

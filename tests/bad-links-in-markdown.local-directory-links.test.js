@@ -46,7 +46,7 @@ describe("bad-links-in-markdown - local directory links", () => {
               filePath,
               missingLinks: [
                 {
-                  link: expectedBadLink,
+                  markdownLink: expectedBadLink,
                   reasons: [
                     badLinkReasons.MISSING_FILE_EXTENSION,
                     badLinkReasons.FILE_NOT_FOUND,

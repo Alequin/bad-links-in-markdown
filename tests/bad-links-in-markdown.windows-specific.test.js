@@ -43,7 +43,7 @@ describe("bad-links-in-markdown - windows specific", () => {
               filePath,
               missingLinks: [
                 {
-                  link: expectedBadLink,
+                  markdownLink: expectedBadLink,
                   reasons: [
                     badLinkReasons.FILE_NOT_FOUND,
                     badLinkReasons.POTENTIAL_WINDOWS_ABSOLUTE_LINK,
@@ -83,7 +83,7 @@ describe("bad-links-in-markdown - windows specific", () => {
               filePath,
               missingLinks: [
                 {
-                  link: expectedBadLink,
+                  markdownLink: expectedBadLink,
                   reasons: [
                     badLinkReasons.FILE_NOT_FOUND,
                     badLinkReasons.POTENTIAL_WINDOWS_ABSOLUTE_LINK,
@@ -115,7 +115,7 @@ describe("bad-links-in-markdown - windows specific", () => {
             filePath,
             missingLinks: [
               {
-                link: `[picture]: /${absolutePath}`,
+                markdownLink: `[picture]: /${absolutePath}`,
                 reasons: [
                   badLinkReasons.POTENTIAL_WINDOWS_ABSOLUTE_LINK,
                   badLinkReasons.ABSOLUTE_LINK_INVALID_START_POINT,

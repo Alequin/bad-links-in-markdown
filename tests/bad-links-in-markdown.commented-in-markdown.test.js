@@ -67,14 +67,15 @@ describe("bad-links-in-markdown - comments in markdown", () => {
             filePath,
             missingLinks: [
               {
-                link: "[//]: #[I am a local link](./path/to/missing/file.md)",
+                markdownLink:
+                  "[//]: #[I am a local link](./path/to/missing/file.md)",
                 reasons: [
                   badLinkReasons.HEADER_TAG_NOT_FOUND,
                   badLinkReasons.CASE_SENSITIVE_HEADER_TAG,
                 ],
               },
               {
-                link: "[I am a local link](./path/to/missing/file.md)",
+                markdownLink: "[I am a local link](./path/to/missing/file.md)",
                 reasons: [badLinkReasons.FILE_NOT_FOUND],
               },
             ],
@@ -107,7 +108,7 @@ describe("bad-links-in-markdown - comments in markdown", () => {
             filePath,
             missingLinks: [
               {
-                link: "[I am a local link](./path/to/missing/file.md)",
+                markdownLink: "[I am a local link](./path/to/missing/file.md)",
                 reasons: [badLinkReasons.FILE_NOT_FOUND],
               },
             ],
@@ -196,7 +197,7 @@ describe("bad-links-in-markdown - comments in markdown", () => {
             filePath: fileContainingLink,
             missingLinks: [
               {
-                link: `[I am a local link](./${fileToLinkTo.fileName}#main-title)`,
+                markdownLink: `[I am a local link](./${fileToLinkTo.fileName}#main-title)`,
                 reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
               },
             ],
@@ -250,7 +251,7 @@ describe("bad-links-in-markdown - comments in markdown", () => {
             filePath: fileContainingLink,
             missingLinks: [
               {
-                link: `[I am a local link](./${fileToLinkTo.fileName}#main-title)`,
+                markdownLink: `[I am a local link](./${fileToLinkTo.fileName}#main-title)`,
                 reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
               },
             ],

@@ -49,7 +49,7 @@ describe("bad-links-in-markdown - links of type $linkType including space encodi
               filePath,
               missingLinks: [
                 {
-                  link: expectedBadLink,
+                  markdownLink: expectedBadLink,
                   reasons: [badLinkReasons.FILE_NOT_FOUND],
                 },
               ],
@@ -113,7 +113,7 @@ describe("bad-links-in-markdown - links of type $linkType including space encodi
               filePath,
               missingLinks: [
                 {
-                  link: expectedBadLink,
+                  markdownLink: expectedBadLink,
                   reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
                 },
               ],
@@ -174,7 +174,7 @@ describe("bad-links-in-markdown - links of type $linkType including space encodi
               filePath,
               missingLinks: [
                 {
-                  link: expectedBadLink,
+                  markdownLink: expectedBadLink,
                   reasons: [badLinkReasons.FILE_NOT_FOUND],
                 },
               ],
@@ -228,19 +228,19 @@ describe("bad-links-in-markdown - links of type $linkType including space encodi
             filePath,
             missingLinks: [
               {
-                link: `[I am a local link](./path/to/missing%20file.md)`,
+                markdownLink: `[I am a local link](./path/to/missing%20file.md)`,
                 reasons: [badLinkReasons.FILE_NOT_FOUND],
               },
               {
-                link: `[I am another local link](./path/to/missing%20file.md)`,
+                markdownLink: `[I am another local link](./path/to/missing%20file.md)`,
                 reasons: [badLinkReasons.FILE_NOT_FOUND],
               },
               {
-                link: `[I am anotherx2 local link](./path/to/missing%20file.md)`,
+                markdownLink: `[I am anotherx2 local link](./path/to/missing%20file.md)`,
                 reasons: [badLinkReasons.FILE_NOT_FOUND],
               },
               {
-                link: `[I am anotherx3 local link](./path/to/missing%20file.md)`,
+                markdownLink: `[I am anotherx3 local link](./path/to/missing%20file.md)`,
                 reasons: [badLinkReasons.FILE_NOT_FOUND],
               },
             ],
@@ -267,19 +267,19 @@ describe("bad-links-in-markdown - links of type $linkType including space encodi
             filePath,
             missingLinks: [
               {
-                link: `![picture](./path/to/missing%20image.png)`,
+                markdownLink: `![picture](./path/to/missing%20image.png)`,
                 reasons: [badLinkReasons.FILE_NOT_FOUND],
               },
               {
-                link: `![picture2](./path/to/missing%20image.png)`,
+                markdownLink: `![picture2](./path/to/missing%20image.png)`,
                 reasons: [badLinkReasons.FILE_NOT_FOUND],
               },
               {
-                link: `![picture3](./path/to/missing%20image.png)`,
+                markdownLink: `![picture3](./path/to/missing%20image.png)`,
                 reasons: [badLinkReasons.FILE_NOT_FOUND],
               },
               {
-                link: `![picture4](./path/to/missing%20image.png)`,
+                markdownLink: `![picture4](./path/to/missing%20image.png)`,
                 reasons: [badLinkReasons.FILE_NOT_FOUND],
               },
             ],
