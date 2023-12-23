@@ -1,4 +1,4 @@
-import { logger } from ".";
+import { logger } from "./logger";
 
 export const logProgress = ({
   position,

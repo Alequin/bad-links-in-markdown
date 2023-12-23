@@ -1,7 +1,6 @@
-import fs from "fs";
-import path from "path";
 import { flatMap, partition } from "lodash";
-import { isDirectory } from "../../utils";
+import path from "path";
+import { isDirectory, readFilesInDirectory } from "../../utils";
 
 /**
  *
@@ -23,7 +22,7 @@ export const findAllMarkdownFiles = (directory) => {
 };
 
 const itemsInDirectory = (directory) => {
-  return fs.readdirSync(directory).map((name) => ({
+  return readFilesInDirectory(directory).map((name) => ({
     name,
     directory,
     sourceFilePath: path.resolve(directory, `./${name}`),

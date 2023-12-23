@@ -1,10 +1,9 @@
-import { chain, chunk, flatMap, orderBy, sumBy } from "lodash";
+import { chain, chunk, orderBy, sumBy } from "lodash";
 import { findAllMarkdownFiles } from "./src/find-markdown/find-all-markdown-files";
 import { findLinksInMarkdown } from "./src/find-markdown/find-links-in-markdown";
 import { identifyInvalidLocalLinks } from "./src/identify-bad-links/identify-invalid-local-links";
 import topLevelDirectoryFromConsoleArgs from "./src/top-level-directory-from-console-args";
-import { logger } from "./src/utils/logger";
-import { logProgress } from "./src/utils";
+import { logProgress, logger } from "./src/utils";
 
 const BATCH_SIZE = 10;
 

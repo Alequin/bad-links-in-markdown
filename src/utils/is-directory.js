@@ -1,4 +1,5 @@
 import fs from "fs";
 
-export const isDirectory = (filePath) =>
-  fs.existsSync(filePath) && fs.lstatSync(filePath).isDirectory();
+export const isDirectory = (path) => {
+  return fs.existsSync(path) && fs.lstatSync(path).isDirectory();
+};

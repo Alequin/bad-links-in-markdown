@@ -1,6 +1,6 @@
-import { cleanMarkdownContents } from "./clean-markdown-contents";
+import { cleanMarkdownContents } from "../clean-markdown-contents";
+import { splitByNewLineCharacters } from "../split-by-new-line-characters";
 import { readFileAsString } from "./read-file-as-string";
-import { splitByNewLineCharacters } from "./split-by-new-line-characters";
 
 /**
  * Reads the given markdown file and then returns an array of each line in the file
