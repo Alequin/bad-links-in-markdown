@@ -2,13 +2,19 @@ import { chain, chunk, orderBy, sumBy } from "lodash";
 import { findAllMarkdownFiles } from "./src/find-markdown/find-all-markdown-files";
 import { findLinksInMarkdown } from "./src/find-markdown/find-links-in-markdown";
 import { identifyInvalidLocalLinks } from "./src/identify-bad-links/identify-invalid-local-links";
-import topLevelDirectoryFromConsoleArgs from "./src/top-level-directory-from-console-args";
+import targetDirectoryFromConsoleArgs from "./src/top-level-directory-from-console-args";
 import { logProgress, logger } from "./src/utils";
 
 const BATCH_SIZE = 10;
 
-export const badLinksInMarkdown = async (topLevelDirectory) => {
-  const allMarkdownFiles = findAllMarkdownFiles(topLevelDirectory);
+/**
+ *
+ * @param {object} options
+ * @param {string} [options.targetDirectory] - All files contained in this directory will be reviewed, including subdirectories
+ * @returns
+ */
+export const badLinksInMarkdown = async (options) => {
+  const allMarkdownFiles = findAllMarkdownFiles(options.targetDirectory);
 
   const markdownFileBatches = chunk(allMarkdownFiles, BATCH_SIZE);
   const resultsForAllBatches = markdownFileBatches.map(
@@ -18,7 +24,7 @@ export const badLinksInMarkdown = async (topLevelDirectory) => {
         total: markdownFileBatches.length,
         messagePrefix: "- Current batch",
       });
-      return processBatchOfFiles(markdownFileBatch, topLevelDirectory);
+      return processBatchOfFiles(markdownFileBatch, options.targetDirectory);
     }
   );
 
@@ -30,11 +36,11 @@ export const badLinksInMarkdown = async (topLevelDirectory) => {
   };
 };
 
-const processBatchOfFiles = (markdownFileBatch, topLevelDirectory) => {
+const processBatchOfFiles = (markdownFileBatch, targetDirectory) => {
   const markdownFilesWithLinks = markdownFileBatch.map((file) => {
     return {
       ...file,
-      topLevelDirectory,
+      targetDirectory,
       links: findLinksInMarkdown(file.sourceFilePath),
     };
   });
@@ -46,7 +52,7 @@ const processBatchOfFiles = (markdownFileBatch, topLevelDirectory) => {
 };
 
 if (module === require.main) {
-  badLinksInMarkdown(topLevelDirectoryFromConsoleArgs())
+  badLinksInMarkdown({ targetDirectory: targetDirectoryFromConsoleArgs() })
     .then((result) => {
       logger.info(
         JSON.stringify(

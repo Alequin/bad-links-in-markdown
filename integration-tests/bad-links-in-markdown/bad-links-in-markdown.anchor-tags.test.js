@@ -19,7 +19,9 @@ describe("bad-links-in-markdown - anchor tags", () => {
     });
 
     await runTestWithDirectoryCleanup(async () => {
-      expect(await badLinksInMarkdown(testDirectory)).toEqual({
+      expect(
+        await badLinksInMarkdown({ targetDirectory: testDirectory })
+      ).toEqual({
         badLocalLinks: [
           {
             filePath,

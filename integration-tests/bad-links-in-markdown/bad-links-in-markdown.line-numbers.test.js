@@ -13,7 +13,7 @@ import {
   newTestFile,
   newTestMarkdownFile,
   runTestWithDirectoryCleanup,
-  TOP_LEVEL_DIRECTORY,
+  TOP_LEVEL_TEST_DIRECTORY,
 } from "../test-utils";
 
 describe("bad-links-in-markdown - local header file links", () => {
@@ -27,7 +27,7 @@ describe("bad-links-in-markdown - local header file links", () => {
   ])("General scenarios - line numbers $linkType", (markdown) => {
     it(`Ignores a local ${markdown.linkType} which points at a javascript file that exists and have a valid line number`, async () => {
       const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
+        parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
 
       const fileToLinkTo = newTestFile({
@@ -44,7 +44,9 @@ describe("bad-links-in-markdown - local header file links", () => {
       });
 
       await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+        expect(
+          await badLinksInMarkdown({ targetDirectory: testDirectory })
+        ).toEqual({
           badLocalLinks: [],
         });
       }, testDirectory);
@@ -52,7 +54,7 @@ describe("bad-links-in-markdown - local header file links", () => {
 
     it(`Ignores a local ${markdown.linkType} which points at a javascript file that exists but does not have a valid line number`, async () => {
       const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
+        parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
 
       const fileToLinkTo = newTestFile({
@@ -69,7 +71,9 @@ describe("bad-links-in-markdown - local header file links", () => {
       });
 
       await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+        expect(
+          await badLinksInMarkdown({ targetDirectory: testDirectory })
+        ).toEqual({
           badLocalLinks: [],
         });
       }, testDirectory);

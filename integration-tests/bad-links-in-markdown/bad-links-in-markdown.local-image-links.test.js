@@ -11,7 +11,7 @@ import {
   newTestFile,
   newTestMarkdownFile,
   runTestWithDirectoryCleanup,
-  TOP_LEVEL_DIRECTORY,
+  TOP_LEVEL_TEST_DIRECTORY,
 } from "../test-utils";
 
 describe.each([
@@ -23,7 +23,7 @@ describe.each([
   (markdown) => {
     it(`Identifies a local ${markdown.linkType} that points at an image that does not exist`, async () => {
       const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
+        parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
 
       const link = "./path/to/missing/image.png";
@@ -34,7 +34,9 @@ describe.each([
 
       const expectedBadLink = applyTemplate(markdown.expectedLink, { link });
       await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+        expect(
+          await badLinksInMarkdown({ targetDirectory: testDirectory })
+        ).toEqual({
           badLocalLinks: [
             {
               filePath,
@@ -52,7 +54,7 @@ describe.each([
 
     it(`Ignores local ${markdown.linkType} which point at an images which exist`, async () => {
       const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
+        parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
 
       const imageFile = newTestFile({
@@ -69,7 +71,9 @@ describe.each([
       });
 
       await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+        expect(
+          await badLinksInMarkdown({ targetDirectory: testDirectory })
+        ).toEqual({
           badLocalLinks: [],
         });
       }, testDirectory);
@@ -77,7 +81,7 @@ describe.each([
 
     it(`Ignores absolute local ${markdown.linkType} which point at files which exist`, async () => {
       const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
+        parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
 
       const imageFile = newTestFile({
@@ -94,7 +98,9 @@ describe.each([
       });
 
       await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+        expect(
+          await badLinksInMarkdown({ targetDirectory: testDirectory })
+        ).toEqual({
           badLocalLinks: [],
         });
       }, testDirectory);
@@ -102,7 +108,7 @@ describe.each([
 
     it(`Ignores absolute local ${markdown.linkType} which point at nested files that exist`, async () => {
       const testDirectory = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
+        parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
 
       const innerDirectory1 = await newTestDirectory({
@@ -128,7 +134,9 @@ describe.each([
       });
 
       await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory.path)).toEqual({
+        expect(
+          await badLinksInMarkdown({ targetDirectory: testDirectory.path })
+        ).toEqual({
           badLocalLinks: [],
         });
       }, testDirectory.path);
@@ -136,7 +144,7 @@ describe.each([
 
     it(`identifies absolute local ${markdown.linkType} which starts from outside the given directory`, async () => {
       const testDirectory = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
+        parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
 
       const mockAbsoluteLink = `/${testDirectory.name}/test-image-9832982.jpg`;
@@ -149,7 +157,9 @@ describe.each([
         link: mockAbsoluteLink,
       });
       await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory.path)).toEqual({
+        expect(
+          await badLinksInMarkdown({ targetDirectory: testDirectory.path })
+        ).toEqual({
           badLocalLinks: [
             {
               filePath: fileContainingLink,
@@ -170,7 +180,7 @@ describe.each([
 
     it(`identifies absolute local ${markdown.linkType} which starts from within the given directory`, async () => {
       const testDirectory = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
+        parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
 
       const innerDirectory1 = await newTestDirectory({
@@ -198,7 +208,9 @@ describe.each([
         link: mockAbsoluteLink,
       });
       await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory.path)).toEqual({
+        expect(
+          await badLinksInMarkdown({ targetDirectory: testDirectory.path })
+        ).toEqual({
           badLocalLinks: [
             {
               filePath: fileContainingLink,
@@ -219,7 +231,7 @@ describe.each([
 
     it(`Identifies a local ${markdown.linkType} that points at a file that exist when the link does not contain a file extension`, async () => {
       const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
+        parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
 
       const name = "test-image-923of03";
@@ -242,7 +254,9 @@ describe.each([
         link,
       });
       await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+        expect(
+          await badLinksInMarkdown({ targetDirectory: testDirectory })
+        ).toEqual({
           badLocalLinks: [
             {
               filePath,
@@ -260,7 +274,7 @@ describe.each([
 
     it(`Identifies a local ${markdown.linkType} that points at a file that does not exist when the file path does not include either absolute or relative path`, async () => {
       const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
+        parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
 
       const link = "image.png";
@@ -275,7 +289,9 @@ describe.each([
         link,
       });
       await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+        expect(
+          await badLinksInMarkdown({ targetDirectory: testDirectory })
+        ).toEqual({
           badLocalLinks: [
             {
               filePath,
@@ -293,7 +309,7 @@ describe.each([
 
     it(`Ignores local ${markdown.linkType} which point at files which exist when the file path does not include either absolute or relative path`, async () => {
       const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
+        parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
 
       const imageFile = newTestFile({
@@ -310,7 +326,9 @@ describe.each([
       });
 
       await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+        expect(
+          await badLinksInMarkdown({ targetDirectory: testDirectory })
+        ).toEqual({
           badLocalLinks: [],
         });
       }, testDirectory);
@@ -318,7 +336,7 @@ describe.each([
 
     it(`Identifies a local ${markdown.linkType} that points at a file that does not exist when the file path is missing and the extension is missing and does not include either absolute or relative path`, async () => {
       const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
+        parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
 
       const link = "image";
@@ -333,7 +351,9 @@ describe.each([
         link,
       });
       await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+        expect(
+          await badLinksInMarkdown({ targetDirectory: testDirectory })
+        ).toEqual({
           badLocalLinks: [
             {
               filePath,
@@ -354,7 +374,7 @@ describe.each([
 
     it(`Identifies local ${markdown.linkType} which point at files which exist when the file path is missing and extension is missing and does not include either absolute or relative path`, async () => {
       const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
+        parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
 
       const name = "test-file-name-89329840";
@@ -377,7 +397,9 @@ describe.each([
         link,
       });
       await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+        expect(
+          await badLinksInMarkdown({ targetDirectory: testDirectory })
+        ).toEqual({
           badLocalLinks: [
             {
               filePath,
@@ -395,7 +417,7 @@ describe.each([
 
     it(`Identifies a local ${markdown.linkType} that is missing a file extension and could potentially refer to two separate files`, async () => {
       const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
+        parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
 
       const name = "test-image-98230923";
@@ -425,7 +447,9 @@ describe.each([
         link,
       });
       await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+        expect(
+          await badLinksInMarkdown({ targetDirectory: testDirectory })
+        ).toEqual({
           badLocalLinks: [
             {
               filePath,
@@ -446,7 +470,7 @@ describe.each([
 
     it(`Ignores local ${markdown.linkType} which point at files which exist, even when the name includes multiple delimiters`, async () => {
       const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
+        parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
 
       const imageFile = newTestFile({
@@ -464,7 +488,9 @@ describe.each([
       });
 
       await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+        expect(
+          await badLinksInMarkdown({ targetDirectory: testDirectory })
+        ).toEqual({
           badLocalLinks: [],
         });
       }, testDirectory);
@@ -472,7 +498,7 @@ describe.each([
 
     it(`Identifies an issue with local ${markdown.linkType} when they are relative links which attempts to link through multiple parent directories at once with invalid syntax`, async () => {
       const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
+        parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
 
       const innerDirectory1 = await newTestDirectory({
@@ -501,7 +527,9 @@ describe.each([
         link,
       });
       await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+        expect(
+          await badLinksInMarkdown({ targetDirectory: testDirectory })
+        ).toEqual({
           badLocalLinks: [
             {
               filePath,
@@ -522,7 +550,7 @@ describe.each([
 
     it(`Ignores local ${markdown.linkType} when they are relative links which link through multiple parent directories`, async () => {
       const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
+        parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
 
       const innerDirectory1 = await newTestDirectory({
@@ -547,7 +575,9 @@ describe.each([
       });
 
       await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+        expect(
+          await badLinksInMarkdown({ targetDirectory: testDirectory })
+        ).toEqual({
           badLocalLinks: [],
         });
       }, testDirectory);
@@ -555,7 +585,7 @@ describe.each([
 
     it(`Identifies a local ${markdown.linkType} that points at an image that uses an invalid extension`, async () => {
       const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
+        parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
 
       const { fileName: imageFileName } = newTestFile({
@@ -576,7 +606,9 @@ describe.each([
         link,
       });
       await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+        expect(
+          await badLinksInMarkdown({ targetDirectory: testDirectory })
+        ).toEqual({
           badLocalLinks: [
             {
               filePath,
@@ -596,7 +628,7 @@ describe.each([
       `Ignores a local ${markdown.linkType} that points at an existing image with an extension %s`,
       async (imageFileExtension) => {
         const { path: testDirectory } = await newTestDirectory({
-          parentDirectory: TOP_LEVEL_DIRECTORY,
+          parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
         });
 
         const { fileName: imageFileName } = newTestFile({
@@ -613,7 +645,9 @@ describe.each([
         });
 
         await runTestWithDirectoryCleanup(async () => {
-          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          expect(
+            await badLinksInMarkdown({ targetDirectory: testDirectory })
+          ).toEqual({
             badLocalLinks: [],
           });
         }, testDirectory);
@@ -624,7 +658,7 @@ describe.each([
       "Ignores a local reference image link that points at an existing image with an extension %s, even when the casing is upper case",
       async (imageFileExtension) => {
         const { path: testDirectory } = await newTestDirectory({
-          parentDirectory: TOP_LEVEL_DIRECTORY,
+          parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
         });
 
         const { fileName: imageFileName } = newTestFile({
@@ -641,7 +675,9 @@ describe.each([
         });
 
         await runTestWithDirectoryCleanup(async () => {
-          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          expect(
+            await badLinksInMarkdown({ targetDirectory: testDirectory })
+          ).toEqual({
             badLocalLinks: [],
           });
         }, testDirectory);

@@ -43,7 +43,9 @@ describe.each([
       });
 
       await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+        expect(
+          await badLinksInMarkdown({ targetDirectory: testDirectory })
+        ).toEqual({
           badLocalLinks: [],
         });
       }, testDirectory);
@@ -63,7 +65,9 @@ describe.each([
       });
 
       await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+        expect(
+          await badLinksInMarkdown({ targetDirectory: testDirectory })
+        ).toEqual({
           badLocalLinks: [],
         });
       }, testDirectory);

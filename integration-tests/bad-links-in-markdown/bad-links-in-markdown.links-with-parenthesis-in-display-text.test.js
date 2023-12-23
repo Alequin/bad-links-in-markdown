@@ -18,7 +18,7 @@ import {
   newTestFile,
   newTestMarkdownFile,
   runTestWithDirectoryCleanup,
-  TOP_LEVEL_DIRECTORY,
+  TOP_LEVEL_TEST_DIRECTORY,
 } from "../test-utils";
 
 describe("bad-links-in-markdown - links including parenthesis", () => {
@@ -32,7 +32,7 @@ describe("bad-links-in-markdown - links including parenthesis", () => {
   ])("links of type $linkType ", (markdown) => {
     it(`Identifies a local ${markdown.template} that points at a file that do not exist, even when the link description text contains parentheses`, async () => {
       const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
+        parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
 
       const linkText = "I am a local link (with parens)";
@@ -47,7 +47,9 @@ describe("bad-links-in-markdown - links including parenthesis", () => {
         link,
       });
       await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+        expect(
+          await badLinksInMarkdown({ targetDirectory: testDirectory })
+        ).toEqual({
           badLocalLinks: [
             {
               filePath,
@@ -65,7 +67,7 @@ describe("bad-links-in-markdown - links including parenthesis", () => {
 
     it(`Ignores a local ${markdown.template} which points at a file that exist, even when the link description text contains parentheses`, async () => {
       const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
+        parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
 
       const fileToLinkTo = newTestMarkdownFile({
@@ -82,7 +84,9 @@ describe("bad-links-in-markdown - links including parenthesis", () => {
       });
 
       await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+        expect(
+          await badLinksInMarkdown({ targetDirectory: testDirectory })
+        ).toEqual({
           badLocalLinks: [],
         });
       }, testDirectory);
@@ -90,7 +94,7 @@ describe("bad-links-in-markdown - links including parenthesis", () => {
 
     it(`Identifies a local ${markdown.template} that points at a file that exists but do not contain the targeted header tag, even when the link description text contains parentheses`, async () => {
       const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
+        parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
 
       const fileToLinkTo = newTestMarkdownFile({
@@ -110,7 +114,9 @@ describe("bad-links-in-markdown - links including parenthesis", () => {
         link,
       });
       await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+        expect(
+          await badLinksInMarkdown({ targetDirectory: testDirectory })
+        ).toEqual({
           badLocalLinks: [
             {
               filePath,
@@ -128,7 +134,7 @@ describe("bad-links-in-markdown - links including parenthesis", () => {
 
     it(`Ignores a local ${markdown.template} which points at a file that exists and contains the targeted header, even when the link description text contains parentheses`, async () => {
       const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
+        parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
 
       const fileToLinkTo = newTestMarkdownFile({
@@ -145,7 +151,9 @@ describe("bad-links-in-markdown - links including parenthesis", () => {
       });
 
       await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+        expect(
+          await badLinksInMarkdown({ targetDirectory: testDirectory })
+        ).toEqual({
           badLocalLinks: [],
         });
       }, testDirectory);
@@ -153,7 +161,7 @@ describe("bad-links-in-markdown - links including parenthesis", () => {
 
     it(`Does not include inline web links in list of bad local links, even when the links description text contains parentheses`, async () => {
       const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
+        parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
 
       newTestMarkdownFile({
@@ -165,7 +173,9 @@ describe("bad-links-in-markdown - links including parenthesis", () => {
       });
 
       await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+        expect(
+          await badLinksInMarkdown({ targetDirectory: testDirectory })
+        ).toEqual({
           badLocalLinks: [],
         });
       }, testDirectory);
@@ -179,7 +189,7 @@ describe("bad-links-in-markdown - links including parenthesis", () => {
   ])("links of type $linkType ", (markdown) => {
     it(`Identifies a local ${markdown.template} link that points at an image that does not exist, even when the link description text contains parentheses`, async () => {
       const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
+        parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
 
       const linkText = "picture (check it out)";
@@ -194,7 +204,9 @@ describe("bad-links-in-markdown - links including parenthesis", () => {
         link,
       });
       await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+        expect(
+          await badLinksInMarkdown({ targetDirectory: testDirectory })
+        ).toEqual({
           badLocalLinks: [
             {
               filePath,
@@ -212,7 +224,7 @@ describe("bad-links-in-markdown - links including parenthesis", () => {
 
     it(`Ignores a local ${markdown.template} link which points at an image which exist, even when the link description text contains parentheses`, async () => {
       const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
+        parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
 
       const imageFile = newTestFile({
@@ -230,7 +242,9 @@ describe("bad-links-in-markdown - links including parenthesis", () => {
       });
 
       await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+        expect(
+          await badLinksInMarkdown({ targetDirectory: testDirectory })
+        ).toEqual({
           badLocalLinks: [],
         });
       }, testDirectory);

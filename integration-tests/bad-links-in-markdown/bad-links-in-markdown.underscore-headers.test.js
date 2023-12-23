@@ -13,7 +13,7 @@ import {
   newTestDirectory,
   newTestMarkdownFile,
   runTestWithDirectoryCleanup,
-  TOP_LEVEL_DIRECTORY,
+  TOP_LEVEL_TEST_DIRECTORY,
 } from "../test-utils";
 
 describe.each([
@@ -26,7 +26,7 @@ describe.each([
 ])("bad-links-in-markdown - underscore headers for link", (markdown) => {
   it(`Ignores local ${markdown.linkType} which point at headers in the current file that use the equals syntax`, async () => {
     const { path: testDirectory } = await newTestDirectory({
-      parentDirectory: TOP_LEVEL_DIRECTORY,
+      parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
     });
 
     newTestMarkdownFile({
@@ -66,7 +66,9 @@ describe.each([
     });
 
     await runTestWithDirectoryCleanup(async () => {
-      expect(await badLinksInMarkdown(testDirectory)).toEqual({
+      expect(
+        await badLinksInMarkdown({ targetDirectory: testDirectory })
+      ).toEqual({
         badLocalLinks: [],
       });
     }, testDirectory);
@@ -74,7 +76,7 @@ describe.each([
 
   it(`Ignores local ${markdown.linkType} which point at headers in the current file that use the dash syntax`, async () => {
     const { path: testDirectory } = await newTestDirectory({
-      parentDirectory: TOP_LEVEL_DIRECTORY,
+      parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
     });
 
     newTestMarkdownFile({
@@ -114,7 +116,9 @@ describe.each([
     });
 
     await runTestWithDirectoryCleanup(async () => {
-      expect(await badLinksInMarkdown(testDirectory)).toEqual({
+      expect(
+        await badLinksInMarkdown({ targetDirectory: testDirectory })
+      ).toEqual({
         badLocalLinks: [],
       });
     }, testDirectory);
@@ -122,7 +126,7 @@ describe.each([
 
   it(`Identifies local ${markdown.linkType} which point at invalid headers in the current file that use the equals syntax`, async () => {
     const { path: testDirectory } = await newTestDirectory({
-      parentDirectory: TOP_LEVEL_DIRECTORY,
+      parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
     });
 
     const firstLink = "#solution-a-foo-x-bar-hybrid";
@@ -160,7 +164,9 @@ describe.each([
     });
 
     await runTestWithDirectoryCleanup(async () => {
-      expect(await badLinksInMarkdown(testDirectory)).toEqual({
+      expect(
+        await badLinksInMarkdown({ targetDirectory: testDirectory })
+      ).toEqual({
         badLocalLinks: [
           {
             filePath: firstFilePath,
@@ -187,7 +193,7 @@ describe.each([
 
   it(`Identifies local ${markdown.linkType} which point at invalid headers in the current file that use the dash syntax`, async () => {
     const { path: testDirectory } = await newTestDirectory({
-      parentDirectory: TOP_LEVEL_DIRECTORY,
+      parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
     });
 
     const firstLink = "#solution-a-foo-x-bar-hybrid";
@@ -225,7 +231,9 @@ describe.each([
     });
 
     await runTestWithDirectoryCleanup(async () => {
-      expect(await badLinksInMarkdown(testDirectory)).toEqual({
+      expect(
+        await badLinksInMarkdown({ targetDirectory: testDirectory })
+      ).toEqual({
         badLocalLinks: [
           {
             filePath: firstFilePath,
@@ -252,7 +260,7 @@ describe.each([
 
   it(`Ignores local ${markdown.linkType} which point at headers in a different file that use the equals syntax`, async () => {
     const { path: testDirectory } = await newTestDirectory({
-      parentDirectory: TOP_LEVEL_DIRECTORY,
+      parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
     });
 
     const fileA = newTestMarkdownFile({
@@ -289,7 +297,9 @@ describe.each([
     });
 
     await runTestWithDirectoryCleanup(async () => {
-      expect(await badLinksInMarkdown(testDirectory)).toEqual({
+      expect(
+        await badLinksInMarkdown({ targetDirectory: testDirectory })
+      ).toEqual({
         badLocalLinks: [],
       });
     }, testDirectory);
@@ -297,7 +307,7 @@ describe.each([
 
   it(`Ignores local ${markdown.linkType} which point at headers in a different file that use the dash syntax`, async () => {
     const { path: testDirectory } = await newTestDirectory({
-      parentDirectory: TOP_LEVEL_DIRECTORY,
+      parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
     });
 
     const fileA = newTestMarkdownFile({
@@ -334,7 +344,9 @@ describe.each([
     });
 
     await runTestWithDirectoryCleanup(async () => {
-      expect(await badLinksInMarkdown(testDirectory)).toEqual({
+      expect(
+        await badLinksInMarkdown({ targetDirectory: testDirectory })
+      ).toEqual({
         badLocalLinks: [],
       });
     }, testDirectory);
@@ -342,7 +354,7 @@ describe.each([
 
   it(`Identifies local ${markdown.linkType} which point at invalid headers in a different file that use the equals syntax`, async () => {
     const { path: testDirectory } = await newTestDirectory({
-      parentDirectory: TOP_LEVEL_DIRECTORY,
+      parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
     });
 
     const firstTargetFile = newTestMarkdownFile({
@@ -376,7 +388,9 @@ describe.each([
     });
 
     await runTestWithDirectoryCleanup(async () => {
-      expect(await badLinksInMarkdown(testDirectory)).toEqual({
+      expect(
+        await badLinksInMarkdown({ targetDirectory: testDirectory })
+      ).toEqual({
         badLocalLinks: [
           {
             filePath: firstFilePath,
@@ -403,7 +417,7 @@ describe.each([
 
   it(`Identifies local ${markdown.linkType} which point at invalid headers in a different file that use the dash syntax`, async () => {
     const { path: testDirectory } = await newTestDirectory({
-      parentDirectory: TOP_LEVEL_DIRECTORY,
+      parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
     });
 
     const firstTargetFile = newTestMarkdownFile({
@@ -437,7 +451,9 @@ describe.each([
     });
 
     await runTestWithDirectoryCleanup(async () => {
-      expect(await badLinksInMarkdown(testDirectory)).toEqual({
+      expect(
+        await badLinksInMarkdown({ targetDirectory: testDirectory })
+      ).toEqual({
         badLocalLinks: [
           {
             filePath: firstFilePath,

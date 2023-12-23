@@ -17,7 +17,7 @@ import {
   newTestFile,
   newTestMarkdownFile,
   runTestWithDirectoryCleanup,
-  TOP_LEVEL_DIRECTORY,
+  TOP_LEVEL_TEST_DIRECTORY,
 } from "../test-utils";
 
 describe("bad-links-in-markdown links-which-include-spaces", () => {
@@ -28,7 +28,7 @@ describe("bad-links-in-markdown links-which-include-spaces", () => {
   ])("bad-links-in-markdown - For $linkType", (markdown) => {
     it(`Identifies local ${markdown.linkType} that point at files that do not exist, even when the links contain spaces at the start and end`, async () => {
       const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
+        parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
 
       const link = "    ./path/to/missing/file.md    ";
@@ -41,7 +41,9 @@ describe("bad-links-in-markdown links-which-include-spaces", () => {
         link,
       });
       await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+        expect(
+          await badLinksInMarkdown({ targetDirectory: testDirectory })
+        ).toEqual({
           badLocalLinks: [
             {
               filePath,
@@ -59,7 +61,7 @@ describe("bad-links-in-markdown links-which-include-spaces", () => {
 
     it(`Ignores local ${markdown.linkType} which point at files which exist, even when the links contain spaces at the start and end`, async () => {
       const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
+        parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
 
       const fileToLinkTo = newTestMarkdownFile({
@@ -75,7 +77,9 @@ describe("bad-links-in-markdown links-which-include-spaces", () => {
       });
 
       await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+        expect(
+          await badLinksInMarkdown({ targetDirectory: testDirectory })
+        ).toEqual({
           badLocalLinks: [],
         });
       }, testDirectory);
@@ -83,7 +87,7 @@ describe("bad-links-in-markdown links-which-include-spaces", () => {
 
     it(`Identifies local ${markdown.linkType} that point at files that exists but do not contain the targeted header tag, even when the links contain spaces at the start and end`, async () => {
       const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
+        parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
 
       const fileToLinkTo = newTestMarkdownFile({
@@ -102,7 +106,9 @@ describe("bad-links-in-markdown links-which-include-spaces", () => {
       });
 
       await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+        expect(
+          await badLinksInMarkdown({ targetDirectory: testDirectory })
+        ).toEqual({
           badLocalLinks: [
             {
               filePath,
@@ -120,7 +126,7 @@ describe("bad-links-in-markdown links-which-include-spaces", () => {
 
     it(`Ignores local ${markdown.linkType} which point at files that exist and contain the targeted header, even when the links contain spaces at the start and end`, async () => {
       const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
+        parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
 
       const fileToLinkTo = newTestMarkdownFile({
@@ -136,7 +142,9 @@ describe("bad-links-in-markdown links-which-include-spaces", () => {
       });
 
       await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+        expect(
+          await badLinksInMarkdown({ targetDirectory: testDirectory })
+        ).toEqual({
           badLocalLinks: [],
         });
       }, testDirectory);
@@ -144,7 +152,7 @@ describe("bad-links-in-markdown links-which-include-spaces", () => {
 
     it(`Does not include web links of type ${markdown.linkType} in the list of bad local links, even when the links contain spaces at the start and end`, async () => {
       const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
+        parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
 
       newTestMarkdownFile({
@@ -155,7 +163,9 @@ describe("bad-links-in-markdown links-which-include-spaces", () => {
       });
 
       await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+        expect(
+          await badLinksInMarkdown({ targetDirectory: testDirectory })
+        ).toEqual({
           badLocalLinks: [],
         });
       }, testDirectory);
@@ -163,7 +173,7 @@ describe("bad-links-in-markdown links-which-include-spaces", () => {
 
     it(`Identifies local ${markdown.linkType} that point at images that does not exist, even when the links contain spaces at the start and end`, async () => {
       const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
+        parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
 
       const link = "     ./path/to/missing/image.png     ";
@@ -176,7 +186,9 @@ describe("bad-links-in-markdown links-which-include-spaces", () => {
         link,
       });
       await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+        expect(
+          await badLinksInMarkdown({ targetDirectory: testDirectory })
+        ).toEqual({
           badLocalLinks: [
             {
               filePath,
@@ -194,7 +206,7 @@ describe("bad-links-in-markdown links-which-include-spaces", () => {
 
     it(`Ignores local ${markdown.linkType} which point at images which exist, even when the links contain spaces at the start and end`, async () => {
       const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
+        parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
 
       const imageFile = newTestFile({
@@ -211,7 +223,9 @@ describe("bad-links-in-markdown links-which-include-spaces", () => {
       });
 
       await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+        expect(
+          await badLinksInMarkdown({ targetDirectory: testDirectory })
+        ).toEqual({
           badLocalLinks: [],
         });
       }, testDirectory);
@@ -223,7 +237,7 @@ describe("bad-links-in-markdown links-which-include-spaces", () => {
     (markdown) => {
       it(`Identifies local ${markdown.linkType} that points at a file that do not exists, even when the links contain spaces at the start and end`, async () => {
         const { path: testDirectory } = await newTestDirectory({
-          parentDirectory: TOP_LEVEL_DIRECTORY,
+          parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
         });
 
         const link = "    ./path/to/missing/file.md    ";
@@ -236,7 +250,9 @@ describe("bad-links-in-markdown links-which-include-spaces", () => {
           link,
         });
         await runTestWithDirectoryCleanup(async () => {
-          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          expect(
+            await badLinksInMarkdown({ targetDirectory: testDirectory })
+          ).toEqual({
             badLocalLinks: [
               {
                 filePath,
@@ -254,7 +270,7 @@ describe("bad-links-in-markdown links-which-include-spaces", () => {
 
       it(`Ignores a local ${markdown.linkType} which points at a file which exists when the link contains spaces at the end`, async () => {
         const { path: testDirectory } = await newTestDirectory({
-          parentDirectory: TOP_LEVEL_DIRECTORY,
+          parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
         });
 
         const fileToLinkTo = newTestMarkdownFile({
@@ -274,7 +290,9 @@ describe("bad-links-in-markdown links-which-include-spaces", () => {
           link,
         });
         await runTestWithDirectoryCleanup(async () => {
-          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          expect(
+            await badLinksInMarkdown({ targetDirectory: testDirectory })
+          ).toEqual({
             badLocalLinks: [],
           });
         }, testDirectory);
@@ -282,7 +300,7 @@ describe("bad-links-in-markdown links-which-include-spaces", () => {
 
       it(`Ignores a web link of type ${markdown.linkType} in the list of bad local links when the links contain spaces at the start and end`, async () => {
         const { path: testDirectory } = await newTestDirectory({
-          parentDirectory: TOP_LEVEL_DIRECTORY,
+          parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
         });
 
         const link = `    http://www.google.com    `;
@@ -294,7 +312,9 @@ describe("bad-links-in-markdown links-which-include-spaces", () => {
         });
 
         await runTestWithDirectoryCleanup(async () => {
-          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          expect(
+            await badLinksInMarkdown({ targetDirectory: testDirectory })
+          ).toEqual({
             badLocalLinks: [],
           });
         }, testDirectory);
@@ -302,7 +322,7 @@ describe("bad-links-in-markdown links-which-include-spaces", () => {
 
       it(`Does not include a web link of type ${markdown.linkType} in the list of bad local links when the links contain spaces at the end`, async () => {
         const { path: testDirectory } = await newTestDirectory({
-          parentDirectory: TOP_LEVEL_DIRECTORY,
+          parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
         });
 
         const link = `http://www.google.com    `;
@@ -317,7 +337,9 @@ describe("bad-links-in-markdown links-which-include-spaces", () => {
           link,
         });
         await runTestWithDirectoryCleanup(async () => {
-          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          expect(
+            await badLinksInMarkdown({ targetDirectory: testDirectory })
+          ).toEqual({
             badLocalLinks: [],
           });
         }, testDirectory);
@@ -325,7 +347,7 @@ describe("bad-links-in-markdown links-which-include-spaces", () => {
 
       it(`Identifies local ${markdown.linkType} which points at a file which exists when the link includes empty space at the start`, async () => {
         const { path: testDirectory } = await newTestDirectory({
-          parentDirectory: TOP_LEVEL_DIRECTORY,
+          parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
         });
 
         const fileToLinkTo = newTestMarkdownFile({
@@ -345,7 +367,9 @@ describe("bad-links-in-markdown links-which-include-spaces", () => {
           link,
         });
         await runTestWithDirectoryCleanup(async () => {
-          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          expect(
+            await badLinksInMarkdown({ targetDirectory: testDirectory })
+          ).toEqual({
             badLocalLinks: [
               {
                 filePath,
@@ -363,7 +387,7 @@ describe("bad-links-in-markdown links-which-include-spaces", () => {
 
       it(`Identifies a local ${markdown.linkType} that points at a file that exists when the file name includes a space character`, async () => {
         const { path: testDirectory } = await newTestDirectory({
-          parentDirectory: TOP_LEVEL_DIRECTORY,
+          parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
         });
 
         const name = "file- -test";
@@ -385,7 +409,9 @@ describe("bad-links-in-markdown links-which-include-spaces", () => {
           link,
         });
         await runTestWithDirectoryCleanup(async () => {
-          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          expect(
+            await badLinksInMarkdown({ targetDirectory: testDirectory })
+          ).toEqual({
             badLocalLinks: [
               {
                 filePath,
@@ -403,7 +429,7 @@ describe("bad-links-in-markdown links-which-include-spaces", () => {
 
       it(`Identifies a local ${markdown.linkType} that points at file that does not exist when the file name includes a space character`, async () => {
         const { path: testDirectory } = await newTestDirectory({
-          parentDirectory: TOP_LEVEL_DIRECTORY,
+          parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
         });
 
         const link = `./path/to/missing/file- -test.md`;
@@ -418,7 +444,9 @@ describe("bad-links-in-markdown links-which-include-spaces", () => {
           link,
         });
         await runTestWithDirectoryCleanup(async () => {
-          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          expect(
+            await badLinksInMarkdown({ targetDirectory: testDirectory })
+          ).toEqual({
             badLocalLinks: [
               {
                 filePath,
@@ -436,7 +464,7 @@ describe("bad-links-in-markdown links-which-include-spaces", () => {
 
       it(`Identifies a local ${markdown.linkType} that points at a file that exists but does not contain the targeted header tag when the file name includes a space character`, async () => {
         const { path: testDirectory } = await newTestDirectory({
-          parentDirectory: TOP_LEVEL_DIRECTORY,
+          parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
         });
 
         const name = `test file`;
@@ -458,7 +486,9 @@ describe("bad-links-in-markdown links-which-include-spaces", () => {
           link,
         });
         await runTestWithDirectoryCleanup(async () => {
-          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          expect(
+            await badLinksInMarkdown({ targetDirectory: testDirectory })
+          ).toEqual({
             badLocalLinks: [
               {
                 filePath,
@@ -481,7 +511,7 @@ describe("bad-links-in-markdown links-which-include-spaces", () => {
     (markdown) => {
       it(`Ignores a local ${markdown.linkType} which points at a file that exists when the link includes empty space at the start`, async () => {
         const { path: testDirectory } = await newTestDirectory({
-          parentDirectory: TOP_LEVEL_DIRECTORY,
+          parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
         });
 
         const fileToLinkTo = newTestMarkdownFile({
@@ -498,7 +528,9 @@ describe("bad-links-in-markdown links-which-include-spaces", () => {
         });
 
         await runTestWithDirectoryCleanup(async () => {
-          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          expect(
+            await badLinksInMarkdown({ targetDirectory: testDirectory })
+          ).toEqual({
             badLocalLinks: [],
           });
         }, testDirectory);
@@ -506,7 +538,7 @@ describe("bad-links-in-markdown links-which-include-spaces", () => {
 
       it(`Identifies a local ${markdown.linkType} that points at a file that exists when the file name includes a space character`, async () => {
         const { path: testDirectory } = await newTestDirectory({
-          parentDirectory: TOP_LEVEL_DIRECTORY,
+          parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
         });
 
         const name = "file- -test";
@@ -528,7 +560,9 @@ describe("bad-links-in-markdown links-which-include-spaces", () => {
           link,
         });
         await runTestWithDirectoryCleanup(async () => {
-          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          expect(
+            await badLinksInMarkdown({ targetDirectory: testDirectory })
+          ).toEqual({
             badLocalLinks: [
               {
                 filePath,
@@ -549,7 +583,7 @@ describe("bad-links-in-markdown links-which-include-spaces", () => {
 
       it(`Identifies a local ${markdown.linkType} that points at file that does not exist when the file name includes a space character`, async () => {
         const { path: testDirectory } = await newTestDirectory({
-          parentDirectory: TOP_LEVEL_DIRECTORY,
+          parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
         });
 
         const link = `./path/to/missing/file- -test.md`;
@@ -564,7 +598,9 @@ describe("bad-links-in-markdown links-which-include-spaces", () => {
           link,
         });
         await runTestWithDirectoryCleanup(async () => {
-          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          expect(
+            await badLinksInMarkdown({ targetDirectory: testDirectory })
+          ).toEqual({
             badLocalLinks: [
               {
                 filePath,
@@ -585,7 +621,7 @@ describe("bad-links-in-markdown links-which-include-spaces", () => {
 
       it(`Identifies a local ${markdown.linkType} that points at a file that exists but does not contain the targeted header tag when the file name includes a space character`, async () => {
         const { path: testDirectory } = await newTestDirectory({
-          parentDirectory: TOP_LEVEL_DIRECTORY,
+          parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
         });
 
         const name = `test file`;
@@ -607,7 +643,9 @@ describe("bad-links-in-markdown links-which-include-spaces", () => {
           link,
         });
         await runTestWithDirectoryCleanup(async () => {
-          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          expect(
+            await badLinksInMarkdown({ targetDirectory: testDirectory })
+          ).toEqual({
             badLocalLinks: [
               {
                 filePath,
@@ -638,7 +676,7 @@ describe("bad-links-in-markdown links-which-include-spaces", () => {
   ])("For $linkType", (markdown) => {
     it(`Ignores local ${markdown.linkType} that point at files that do not exist when the file name includes a space character`, async () => {
       const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
+        parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
 
       newTestMarkdownFile({
@@ -649,7 +687,9 @@ describe("bad-links-in-markdown links-which-include-spaces", () => {
       });
 
       await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+        expect(
+          await badLinksInMarkdown({ targetDirectory: testDirectory })
+        ).toEqual({
           badLocalLinks: [],
         });
       }, testDirectory);
@@ -657,7 +697,7 @@ describe("bad-links-in-markdown links-which-include-spaces", () => {
 
     it(`Ignores local ${markdown.linkType} that point at a files that exists but do not contain the targeted header tag when the file name includes a space character`, async () => {
       const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
+        parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
 
       const name = `test file`;
@@ -675,7 +715,9 @@ describe("bad-links-in-markdown links-which-include-spaces", () => {
       });
 
       await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+        expect(
+          await badLinksInMarkdown({ targetDirectory: testDirectory })
+        ).toEqual({
           badLocalLinks: [],
         });
       }, testDirectory);

@@ -14,7 +14,7 @@ const ABSOLUTE_PATH_REGEX = /^\//;
 export const prepareLocalLinkObjects = ({
   links,
   directory,
-  topLevelDirectory,
+  targetDirectory,
   sourceFilePath,
 }) => {
   return links
@@ -30,7 +30,7 @@ export const prepareLocalLinkObjects = ({
         : getlinkRawFullPath({
             directory,
             isAbsoluteLink,
-            topLevelDirectory,
+            targetDirectory,
             linkPath: baseObject.linkPath,
           });
 
@@ -50,7 +50,7 @@ export const prepareLocalLinkObjects = ({
         matchedFiles,
         containingFile: {
           directory,
-          topLevelDirectory,
+          targetDirectory,
         },
         name,
         isTagOnlyLink,
@@ -66,12 +66,12 @@ export const prepareLocalLinkObjects = ({
 
 const getlinkRawFullPath = ({
   isAbsoluteLink,
-  topLevelDirectory,
+  targetDirectory,
   linkPath,
   directory,
 }) => {
   return isAbsoluteLink
-    ? path.resolve(topLevelDirectory, `./${linkPath}`)
+    ? path.resolve(targetDirectory, `./${linkPath}`)
     : path.resolve(
         directory,
         doesLinkStartWithRelativePath(linkPath) ? linkPath : `./${linkPath}`

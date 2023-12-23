@@ -4,13 +4,13 @@ import {
   newTestDirectory,
   newTestMarkdownFile,
   runTestWithDirectoryCleanup,
-  TOP_LEVEL_DIRECTORY,
+  TOP_LEVEL_TEST_DIRECTORY,
 } from "../test-utils";
 
 describe("bad-links-in-markdown  - links on the same line", () => {
   it("Identifies multiple local inline links on the same file line that point at files that do not exist", async () => {
     const { path: testDirectory } = await newTestDirectory({
-      parentDirectory: TOP_LEVEL_DIRECTORY,
+      parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
     });
 
     const { filePath } = newTestMarkdownFile({
@@ -24,7 +24,9 @@ describe("bad-links-in-markdown  - links on the same line", () => {
     });
 
     await runTestWithDirectoryCleanup(async () => {
-      expect(await badLinksInMarkdown(testDirectory)).toEqual({
+      expect(
+        await badLinksInMarkdown({ targetDirectory: testDirectory })
+      ).toEqual({
         badLocalLinks: [
           {
             filePath,
@@ -57,7 +59,7 @@ describe("bad-links-in-markdown  - links on the same line", () => {
 
   it("Identifies multiple local anchor links on the same file line that point at files that do not exist", async () => {
     const { path: testDirectory } = await newTestDirectory({
-      parentDirectory: TOP_LEVEL_DIRECTORY,
+      parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
     });
 
     const { filePath } = newTestMarkdownFile({
@@ -71,7 +73,9 @@ describe("bad-links-in-markdown  - links on the same line", () => {
     });
 
     await runTestWithDirectoryCleanup(async () => {
-      expect(await badLinksInMarkdown(testDirectory)).toEqual({
+      expect(
+        await badLinksInMarkdown({ targetDirectory: testDirectory })
+      ).toEqual({
         badLocalLinks: [
           {
             filePath,
@@ -105,7 +109,7 @@ describe("bad-links-in-markdown  - links on the same line", () => {
 
   it("Identifies multiple local inline image links on the same file line that point at images that do not exist", async () => {
     const { path: testDirectory } = await newTestDirectory({
-      parentDirectory: TOP_LEVEL_DIRECTORY,
+      parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
     });
 
     const { filePath } = newTestMarkdownFile({
@@ -114,7 +118,9 @@ describe("bad-links-in-markdown  - links on the same line", () => {
     });
 
     await runTestWithDirectoryCleanup(async () => {
-      expect(await badLinksInMarkdown(testDirectory)).toEqual({
+      expect(
+        await badLinksInMarkdown({ targetDirectory: testDirectory })
+      ).toEqual({
         badLocalLinks: [
           {
             filePath,

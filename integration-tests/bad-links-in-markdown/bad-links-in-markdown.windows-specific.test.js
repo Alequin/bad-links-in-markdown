@@ -13,7 +13,7 @@ import {
   newTestDirectory,
   newTestMarkdownFile,
   runTestWithDirectoryCleanup,
-  TOP_LEVEL_DIRECTORY,
+  TOP_LEVEL_TEST_DIRECTORY,
 } from "../test-utils";
 
 describe("bad-links-in-markdown - windows specific", () => {
@@ -24,7 +24,7 @@ describe("bad-links-in-markdown - windows specific", () => {
   ])("$linkType", (markdown) => {
     it(`Identifies a windows absolute ${markdown.linkType} that does not start with a forward slash`, async () => {
       const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
+        parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
 
       const absolutePath = "C:\\path\\to\\missing\\file.md";
@@ -37,7 +37,9 @@ describe("bad-links-in-markdown - windows specific", () => {
         link: absolutePath,
       });
       await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+        expect(
+          await badLinksInMarkdown({ targetDirectory: testDirectory })
+        ).toEqual({
           badLocalLinks: [
             {
               filePath,
@@ -64,7 +66,7 @@ describe("bad-links-in-markdown - windows specific", () => {
   ])("$linkType", (markdown) => {
     it(`Identifies a windows absolute ${markdown.linkType} for an image that does not start with a forward slash`, async () => {
       const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
+        parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
 
       const absolutePath = "C:\\path\\to\\missing\\image.png";
@@ -77,7 +79,9 @@ describe("bad-links-in-markdown - windows specific", () => {
         link: absolutePath,
       });
       await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+        expect(
+          await badLinksInMarkdown({ targetDirectory: testDirectory })
+        ).toEqual({
           badLocalLinks: [
             {
               filePath,
@@ -99,7 +103,7 @@ describe("bad-links-in-markdown - windows specific", () => {
 
   it("Identifies an absolute local reference image as invalid even when the reference is used as both an image and a file link", async () => {
     const { path: testDirectory } = await newTestDirectory({
-      parentDirectory: TOP_LEVEL_DIRECTORY,
+      parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
     });
 
     const absolutePath = "C:\\path\\to\\missing\\image.png";
@@ -109,7 +113,9 @@ describe("bad-links-in-markdown - windows specific", () => {
     });
 
     await runTestWithDirectoryCleanup(async () => {
-      expect(await badLinksInMarkdown(testDirectory)).toEqual({
+      expect(
+        await badLinksInMarkdown({ targetDirectory: testDirectory })
+      ).toEqual({
         badLocalLinks: [
           {
             filePath,

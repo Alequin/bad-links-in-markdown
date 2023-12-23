@@ -13,7 +13,7 @@ import {
   newTestDirectory,
   newTestMarkdownFile,
   runTestWithDirectoryCleanup,
-  TOP_LEVEL_DIRECTORY,
+  TOP_LEVEL_TEST_DIRECTORY,
 } from "../test-utils";
 
 describe("bad-links-in-markdown - local directory links", () => {
@@ -27,7 +27,7 @@ describe("bad-links-in-markdown - local directory links", () => {
   ])("for links of type $linkType", (markdown) => {
     it(`Identifies local ${markdown.linkType} that point at directories that do not exist`, async () => {
       const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
+        parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
 
       const link = "./path";
@@ -40,7 +40,9 @@ describe("bad-links-in-markdown - local directory links", () => {
         link,
       });
       await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+        expect(
+          await badLinksInMarkdown({ targetDirectory: testDirectory })
+        ).toEqual({
           badLocalLinks: [
             {
               filePath,
@@ -61,7 +63,7 @@ describe("bad-links-in-markdown - local directory links", () => {
 
     it(`Ignores local ${markdown.linkType} which point at directories which exist`, async () => {
       const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
+        parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
 
       const innerDirectory = await newTestDirectory({
@@ -76,7 +78,9 @@ describe("bad-links-in-markdown - local directory links", () => {
       });
 
       await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+        expect(
+          await badLinksInMarkdown({ targetDirectory: testDirectory })
+        ).toEqual({
           badLocalLinks: [],
         });
       }, testDirectory);
@@ -84,7 +88,7 @@ describe("bad-links-in-markdown - local directory links", () => {
 
     it(`Ignores local ${markdown.linkType} which point at directories which exist and have names similar to other directories in the same location`, async () => {
       const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
+        parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
 
       const baseDirectoryName = "test-directory-i3oni3fpo";
@@ -106,7 +110,9 @@ describe("bad-links-in-markdown - local directory links", () => {
       });
 
       await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+        expect(
+          await badLinksInMarkdown({ targetDirectory: testDirectory })
+        ).toEqual({
           badLocalLinks: [],
         });
       }, testDirectory);

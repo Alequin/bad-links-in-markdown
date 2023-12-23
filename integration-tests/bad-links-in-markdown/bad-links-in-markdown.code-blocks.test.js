@@ -28,7 +28,9 @@ describe("bad-links-in-markdown - code sections", () => {
         });
 
         await runTestWithDirectoryCleanup(async () => {
-          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          expect(
+            await badLinksInMarkdown({ targetDirectory: testDirectory })
+          ).toEqual({
             badLocalLinks: [],
           });
         }, testDirectory);
@@ -48,7 +50,9 @@ describe("bad-links-in-markdown - code sections", () => {
         });
 
         await runTestWithDirectoryCleanup(async () => {
-          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          expect(
+            await badLinksInMarkdown({ targetDirectory: testDirectory })
+          ).toEqual({
             badLocalLinks: [],
           });
         }, testDirectory);
@@ -65,7 +69,9 @@ describe("bad-links-in-markdown - code sections", () => {
         });
 
         await runTestWithDirectoryCleanup(async () => {
-          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          expect(
+            await badLinksInMarkdown({ targetDirectory: testDirectory })
+          ).toEqual({
             badLocalLinks: [
               {
                 filePath,
@@ -94,7 +100,9 @@ describe("bad-links-in-markdown - code sections", () => {
         });
 
         await runTestWithDirectoryCleanup(async () => {
-          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          expect(
+            await badLinksInMarkdown({ targetDirectory: testDirectory })
+          ).toEqual({
             badLocalLinks: [
               {
                 filePath,
@@ -124,7 +132,9 @@ describe("bad-links-in-markdown - code sections", () => {
         });
 
         await runTestWithDirectoryCleanup(async () => {
-          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          expect(
+            await badLinksInMarkdown({ targetDirectory: testDirectory })
+          ).toEqual({
             badLocalLinks: [
               {
                 filePath,
@@ -158,7 +168,9 @@ describe("bad-links-in-markdown - code sections", () => {
         });
 
         await runTestWithDirectoryCleanup(async () => {
-          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          expect(
+            await badLinksInMarkdown({ targetDirectory: testDirectory })
+          ).toEqual({
             badLocalLinks: [
               {
                 filePath,
@@ -199,7 +211,9 @@ describe("bad-links-in-markdown - code sections", () => {
         });
 
         await runTestWithDirectoryCleanup(async () => {
-          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          expect(
+            await badLinksInMarkdown({ targetDirectory: testDirectory })
+          ).toEqual({
             badLocalLinks: [],
           });
         }, testDirectory);
@@ -222,7 +236,9 @@ describe("bad-links-in-markdown - code sections", () => {
         });
 
         await runTestWithDirectoryCleanup(async () => {
-          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          expect(
+            await badLinksInMarkdown({ targetDirectory: testDirectory })
+          ).toEqual({
             badLocalLinks: [],
           });
         }, testDirectory);
@@ -245,7 +261,9 @@ describe("bad-links-in-markdown - code sections", () => {
         });
 
         await runTestWithDirectoryCleanup(async () => {
-          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          expect(
+            await badLinksInMarkdown({ targetDirectory: testDirectory })
+          ).toEqual({
             badLocalLinks: [
               {
                 filePath,
@@ -279,7 +297,9 @@ describe("bad-links-in-markdown - code sections", () => {
         });
 
         await runTestWithDirectoryCleanup(async () => {
-          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          expect(
+            await badLinksInMarkdown({ targetDirectory: testDirectory })
+          ).toEqual({
             badLocalLinks: [
               {
                 filePath,
@@ -311,7 +331,9 @@ describe("bad-links-in-markdown - code sections", () => {
         });
 
         await runTestWithDirectoryCleanup(async () => {
-          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          expect(
+            await badLinksInMarkdown({ targetDirectory: testDirectory })
+          ).toEqual({
             badLocalLinks: [
               {
                 filePath,
@@ -343,7 +365,9 @@ describe("bad-links-in-markdown - code sections", () => {
         });
 
         await runTestWithDirectoryCleanup(async () => {
-          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          expect(
+            await badLinksInMarkdown({ targetDirectory: testDirectory })
+          ).toEqual({
             badLocalLinks: [
               {
                 filePath,
@@ -382,7 +406,9 @@ describe("bad-links-in-markdown - code sections", () => {
         });
 
         await runTestWithDirectoryCleanup(async () => {
-          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          expect(
+            await badLinksInMarkdown({ targetDirectory: testDirectory })
+          ).toEqual({
             badLocalLinks: [],
           });
         }, testDirectory);
@@ -404,7 +430,9 @@ describe("bad-links-in-markdown - code sections", () => {
         });
 
         await runTestWithDirectoryCleanup(async () => {
-          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          expect(
+            await badLinksInMarkdown({ targetDirectory: testDirectory })
+          ).toEqual({
             badLocalLinks: [],
           });
         }, testDirectory);
@@ -426,7 +454,9 @@ describe("bad-links-in-markdown - code sections", () => {
         });
 
         await runTestWithDirectoryCleanup(async () => {
-          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          expect(
+            await badLinksInMarkdown({ targetDirectory: testDirectory })
+          ).toEqual({
             badLocalLinks: [
               {
                 filePath,
@@ -460,7 +490,9 @@ describe("bad-links-in-markdown - code sections", () => {
         });
 
         await runTestWithDirectoryCleanup(async () => {
-          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          expect(
+            await badLinksInMarkdown({ targetDirectory: testDirectory })
+          ).toEqual({
             badLocalLinks: [
               {
                 filePath,
@@ -496,7 +528,9 @@ describe("bad-links-in-markdown - code sections", () => {
         });
 
         await runTestWithDirectoryCleanup(async () => {
-          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          expect(
+            await badLinksInMarkdown({ targetDirectory: testDirectory })
+          ).toEqual({
             badLocalLinks: [],
           });
         }, testDirectory);
@@ -523,7 +557,9 @@ describe("bad-links-in-markdown - code sections", () => {
         });
 
         await runTestWithDirectoryCleanup(async () => {
-          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          expect(
+            await badLinksInMarkdown({ targetDirectory: testDirectory })
+          ).toEqual({
             badLocalLinks: [],
           });
         }, testDirectory);
@@ -544,7 +580,9 @@ describe("bad-links-in-markdown - code sections", () => {
         `,
       });
       await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+        expect(
+          await badLinksInMarkdown({ targetDirectory: testDirectory })
+        ).toEqual({
           badLocalLinks: [],
         });
       }, testDirectory);
@@ -563,7 +601,9 @@ describe("bad-links-in-markdown - code sections", () => {
         `,
       });
       await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+        expect(
+          await badLinksInMarkdown({ targetDirectory: testDirectory })
+        ).toEqual({
           badLocalLinks: [],
         });
       }, testDirectory);
@@ -584,7 +624,9 @@ describe("bad-links-in-markdown - code sections", () => {
       });
 
       await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+        expect(
+          await badLinksInMarkdown({ targetDirectory: testDirectory })
+        ).toEqual({
           badLocalLinks: [
             {
               filePath,
@@ -615,7 +657,9 @@ describe("bad-links-in-markdown - code sections", () => {
       });
 
       await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+        expect(
+          await badLinksInMarkdown({ targetDirectory: testDirectory })
+        ).toEqual({
           badLocalLinks: [
             {
               filePath,

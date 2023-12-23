@@ -5,7 +5,7 @@ import { doesFileExist } from "../src/utils";
 
 export const TOP_LEVEL_TEST_DIRECTORY = path.resolve(
   __dirname,
-  "../test-generated-output"
+  "./test-generated-output"
 );
 
 /**

@@ -17,7 +17,7 @@ import {
   newTestFile,
   newTestMarkdownFile,
   runTestWithDirectoryCleanup,
-  TOP_LEVEL_DIRECTORY,
+  TOP_LEVEL_TEST_DIRECTORY,
 } from "../test-utils";
 
 describe("bad-links-in-markdown - links with label text", () => {
@@ -33,7 +33,7 @@ describe("bad-links-in-markdown - links with label text", () => {
       ])("For link type $linkType", (markdown) => {
         it(`Identifies a local ${markdown.linkType} that points at file that does not exist, even when the link includes label text`, async () => {
           const { path: testDirectory } = await newTestDirectory({
-            parentDirectory: TOP_LEVEL_DIRECTORY,
+            parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
           });
 
           const link = `./path/to/missing/file.md ${labelText}`;
@@ -46,7 +46,9 @@ describe("bad-links-in-markdown - links with label text", () => {
             link,
           });
           await runTestWithDirectoryCleanup(async () => {
-            expect(await badLinksInMarkdown(testDirectory)).toEqual({
+            expect(
+              await badLinksInMarkdown({ targetDirectory: testDirectory })
+            ).toEqual({
               badLocalLinks: [
                 {
                   filePath,
@@ -64,7 +66,7 @@ describe("bad-links-in-markdown - links with label text", () => {
 
         it(`Ignores a local ${markdown.linkType} which points at file that exist, even when the link includes label text`, async () => {
           const { path: testDirectory } = await newTestDirectory({
-            parentDirectory: TOP_LEVEL_DIRECTORY,
+            parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
           });
 
           const fileToLinkTo = newTestMarkdownFile({
@@ -80,7 +82,9 @@ describe("bad-links-in-markdown - links with label text", () => {
           });
 
           await runTestWithDirectoryCleanup(async () => {
-            expect(await badLinksInMarkdown(testDirectory)).toEqual({
+            expect(
+              await badLinksInMarkdown({ targetDirectory: testDirectory })
+            ).toEqual({
               badLocalLinks: [],
             });
           }, testDirectory);
@@ -88,7 +92,7 @@ describe("bad-links-in-markdown - links with label text", () => {
 
         it(`Identifies a local ${markdown.linkType} that points at a file that exists but do not contain the targeted header tag, even when the link includes label text`, async () => {
           const { path: testDirectory } = await newTestDirectory({
-            parentDirectory: TOP_LEVEL_DIRECTORY,
+            parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
           });
 
           const fileToLinkTo = newTestMarkdownFile({
@@ -108,7 +112,9 @@ describe("bad-links-in-markdown - links with label text", () => {
             link,
           });
           await runTestWithDirectoryCleanup(async () => {
-            expect(await badLinksInMarkdown(testDirectory)).toEqual({
+            expect(
+              await badLinksInMarkdown({ targetDirectory: testDirectory })
+            ).toEqual({
               badLocalLinks: [
                 {
                   filePath,
@@ -126,7 +132,7 @@ describe("bad-links-in-markdown - links with label text", () => {
 
         it(`Ignores a local ${markdown.linkType} which points at a file that exist and contain the targeted header, even when the link includes label text`, async () => {
           const { path: testDirectory } = await newTestDirectory({
-            parentDirectory: TOP_LEVEL_DIRECTORY,
+            parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
           });
 
           const fileToLinkTo = newTestMarkdownFile({
@@ -142,7 +148,9 @@ describe("bad-links-in-markdown - links with label text", () => {
           });
 
           await runTestWithDirectoryCleanup(async () => {
-            expect(await badLinksInMarkdown(testDirectory)).toEqual({
+            expect(
+              await badLinksInMarkdown({ targetDirectory: testDirectory })
+            ).toEqual({
               badLocalLinks: [],
             });
           }, testDirectory);
@@ -150,7 +158,7 @@ describe("bad-links-in-markdown - links with label text", () => {
 
         it(`Identifies a local ${markdown.linkType} that points at a header tag in the current file that does not exist, even when the link includes label text`, async () => {
           const { path: testDirectory } = await newTestDirectory({
-            parentDirectory: TOP_LEVEL_DIRECTORY,
+            parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
           });
 
           const link = `#main-title ${labelText}`;
@@ -163,7 +171,9 @@ describe("bad-links-in-markdown - links with label text", () => {
             link,
           });
           await runTestWithDirectoryCleanup(async () => {
-            expect(await badLinksInMarkdown(testDirectory)).toEqual({
+            expect(
+              await badLinksInMarkdown({ targetDirectory: testDirectory })
+            ).toEqual({
               badLocalLinks: [
                 {
                   filePath,
@@ -181,7 +191,7 @@ describe("bad-links-in-markdown - links with label text", () => {
 
         it(`Ignores an local ${markdown.linkType} that points at a header tag in the current file that exist, even when the link includes label text`, async () => {
           const { path: testDirectory } = await newTestDirectory({
-            parentDirectory: TOP_LEVEL_DIRECTORY,
+            parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
           });
 
           newTestMarkdownFile({
@@ -195,7 +205,9 @@ describe("bad-links-in-markdown - links with label text", () => {
           });
 
           await runTestWithDirectoryCleanup(async () => {
-            expect(await badLinksInMarkdown(testDirectory)).toEqual({
+            expect(
+              await badLinksInMarkdown({ targetDirectory: testDirectory })
+            ).toEqual({
               badLocalLinks: [],
             });
           }, testDirectory);
@@ -209,7 +221,7 @@ describe("bad-links-in-markdown - links with label text", () => {
       ])("For link type $linkType", (markdown) => {
         it(`Identifies a local ${markdown.template} link that points at an image that does not exist, even when the link includes label text`, async () => {
           const { path: testDirectory } = await newTestDirectory({
-            parentDirectory: TOP_LEVEL_DIRECTORY,
+            parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
           });
 
           const link = `./path/to/missing/image.png ${labelText}`;
@@ -224,7 +236,9 @@ describe("bad-links-in-markdown - links with label text", () => {
             link,
           });
           await runTestWithDirectoryCleanup(async () => {
-            expect(await badLinksInMarkdown(testDirectory)).toEqual({
+            expect(
+              await badLinksInMarkdown({ targetDirectory: testDirectory })
+            ).toEqual({
               badLocalLinks: [
                 {
                   filePath,
@@ -242,7 +256,7 @@ describe("bad-links-in-markdown - links with label text", () => {
 
         it(`Ignores a local ${markdown.template} link that points at an image that exist, even when the link includes label text`, async () => {
           const { path: testDirectory } = await newTestDirectory({
-            parentDirectory: TOP_LEVEL_DIRECTORY,
+            parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
           });
 
           const imageFile = newTestFile({
@@ -259,7 +273,9 @@ describe("bad-links-in-markdown - links with label text", () => {
           });
 
           await runTestWithDirectoryCleanup(async () => {
-            expect(await badLinksInMarkdown(testDirectory)).toEqual({
+            expect(
+              await badLinksInMarkdown({ targetDirectory: testDirectory })
+            ).toEqual({
               badLocalLinks: [],
             });
           }, testDirectory);
@@ -268,7 +284,7 @@ describe("bad-links-in-markdown - links with label text", () => {
 
       it(`Identifies multiple local inline links on the same file line that point at files that do not exist, even when the link includes label text`, async () => {
         const { path: testDirectory } = await newTestDirectory({
-          parentDirectory: TOP_LEVEL_DIRECTORY,
+          parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
         });
 
         const { filePath } = newTestMarkdownFile({
@@ -277,7 +293,9 @@ describe("bad-links-in-markdown - links with label text", () => {
         });
 
         await runTestWithDirectoryCleanup(async () => {
-          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          expect(
+            await badLinksInMarkdown({ targetDirectory: testDirectory })
+          ).toEqual({
             badLocalLinks: [
               {
                 filePath,
@@ -307,7 +325,7 @@ describe("bad-links-in-markdown - links with label text", () => {
 
       it(`Identifies multiple local inline image links on the same file line that point at files that do not exist, even when the link includes label text`, async () => {
         const { path: testDirectory } = await newTestDirectory({
-          parentDirectory: TOP_LEVEL_DIRECTORY,
+          parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
         });
 
         const { filePath } = newTestMarkdownFile({
@@ -316,7 +334,9 @@ describe("bad-links-in-markdown - links with label text", () => {
         });
 
         await runTestWithDirectoryCleanup(async () => {
-          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          expect(
+            await badLinksInMarkdown({ targetDirectory: testDirectory })
+          ).toEqual({
             badLocalLinks: [
               {
                 filePath,
@@ -353,7 +373,7 @@ describe("bad-links-in-markdown - links with label text", () => {
   ])("For link type $linkType", (markdown) => {
     it(`Ignores a local ${markdown.linkType} that points at file that does not exist when the link includes label text not wrapped in quotes`, async () => {
       const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
+        parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
 
       newTestMarkdownFile({
@@ -364,7 +384,9 @@ describe("bad-links-in-markdown - links with label text", () => {
       });
 
       await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+        expect(
+          await badLinksInMarkdown({ targetDirectory: testDirectory })
+        ).toEqual({
           badLocalLinks: [],
         });
       }, testDirectory);

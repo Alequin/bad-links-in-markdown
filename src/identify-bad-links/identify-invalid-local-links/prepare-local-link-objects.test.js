@@ -15,7 +15,7 @@ const MOCK_FILE_OBJECT = {
   name: "markdown-file.md",
   directory: "/path/to/directory/containing/file",
   sourceFilePath: "/path/to/directory/containing/file/markdown-file.md",
-  topLevelDirectory: "/path/to/directory",
+  targetDirectory: "/path/to/directory",
   links: [],
 };
 
@@ -85,7 +85,7 @@ describe("prepare-local-link-objects", () => {
         {
           containingFile: {
             directory: fileObject.directory,
-            topLevelDirectory: fileObject.topLevelDirectory,
+            targetDirectory: fileObject.targetDirectory,
           },
           matchedFiles: [],
           markdownLink: "[foobar](./file-path.md#header-tag)",
@@ -258,7 +258,7 @@ describe("prepare-local-link-objects", () => {
       state: "the link is an absolute link",
       expectedValue: {
         fullPath: path.resolve(
-          MOCK_FILE_OBJECT.topLevelDirectory,
+          MOCK_FILE_OBJECT.targetDirectory,
           "./full/path/to/file/file-path.md"
         ),
       },

@@ -14,7 +14,7 @@ import {
   newTestFile,
   newTestMarkdownFile,
   runTestWithDirectoryCleanup,
-  TOP_LEVEL_DIRECTORY,
+  TOP_LEVEL_TEST_DIRECTORY,
 } from "../test-utils";
 
 describe("bad-links-in-markdown - local header file links", () => {
@@ -29,7 +29,7 @@ describe("bad-links-in-markdown - local header file links", () => {
     describe("For links pointing in external files", () => {
       it(`Identifies a local ${markdown.linkType} that points at a file that exists but do not contain the targeted header tag`, async () => {
         const { path: testDirectory } = await newTestDirectory({
-          parentDirectory: TOP_LEVEL_DIRECTORY,
+          parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
         });
 
         const fileToLinkTo = newTestMarkdownFile({
@@ -45,7 +45,9 @@ describe("bad-links-in-markdown - local header file links", () => {
 
         const expectedBadLink = applyTemplate(markdown.expectedLink, { link });
         await runTestWithDirectoryCleanup(async () => {
-          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          expect(
+            await badLinksInMarkdown({ targetDirectory: testDirectory })
+          ).toEqual({
             badLocalLinks: [
               {
                 filePath: fileContainingLink,
@@ -63,7 +65,7 @@ describe("bad-links-in-markdown - local header file links", () => {
 
       it(`Ignores a local ${markdown.linkType} which points at a file that exists and contain the targeted header`, async () => {
         const { path: testDirectory } = await newTestDirectory({
-          parentDirectory: TOP_LEVEL_DIRECTORY,
+          parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
         });
 
         const fileToLinkTo = newTestMarkdownFile({
@@ -79,7 +81,9 @@ describe("bad-links-in-markdown - local header file links", () => {
         });
 
         await runTestWithDirectoryCleanup(async () => {
-          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          expect(
+            await badLinksInMarkdown({ targetDirectory: testDirectory })
+          ).toEqual({
             badLocalLinks: [],
           });
         }, testDirectory);
@@ -87,7 +91,7 @@ describe("bad-links-in-markdown - local header file links", () => {
 
       it(`Ignores a local ${markdown.linkType} which points at a file that exists and contain the targeted sub header`, async () => {
         const { path: testDirectory } = await newTestDirectory({
-          parentDirectory: TOP_LEVEL_DIRECTORY,
+          parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
         });
 
         const fileToLinkTo = newTestMarkdownFile({
@@ -103,7 +107,9 @@ describe("bad-links-in-markdown - local header file links", () => {
         });
 
         await runTestWithDirectoryCleanup(async () => {
-          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          expect(
+            await badLinksInMarkdown({ targetDirectory: testDirectory })
+          ).toEqual({
             badLocalLinks: [],
           });
         }, testDirectory);
@@ -111,7 +117,7 @@ describe("bad-links-in-markdown - local header file links", () => {
 
       it(`Identifies an absolute local ${markdown.linkType} that points at a file that exist but does not contain the targeted header tag`, async () => {
         const { path: testDirectory } = await newTestDirectory({
-          parentDirectory: TOP_LEVEL_DIRECTORY,
+          parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
         });
 
         const fileToLinkTo = newTestMarkdownFile({
@@ -127,7 +133,9 @@ describe("bad-links-in-markdown - local header file links", () => {
 
         const expectedBadLink = applyTemplate(markdown.expectedLink, { link });
         await runTestWithDirectoryCleanup(async () => {
-          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          expect(
+            await badLinksInMarkdown({ targetDirectory: testDirectory })
+          ).toEqual({
             badLocalLinks: [
               {
                 filePath: fileContainingLink,
@@ -145,7 +153,7 @@ describe("bad-links-in-markdown - local header file links", () => {
 
       it(`Ignores an absolute local ${markdown.linkType} that points at a file that exist and contain the targeted header tag`, async () => {
         const { path: testDirectory } = await newTestDirectory({
-          parentDirectory: TOP_LEVEL_DIRECTORY,
+          parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
         });
 
         const fileToLinkTo = newTestMarkdownFile({
@@ -161,7 +169,9 @@ describe("bad-links-in-markdown - local header file links", () => {
         });
 
         await runTestWithDirectoryCleanup(async () => {
-          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          expect(
+            await badLinksInMarkdown({ targetDirectory: testDirectory })
+          ).toEqual({
             badLocalLinks: [],
           });
         }, testDirectory);
@@ -169,7 +179,7 @@ describe("bad-links-in-markdown - local header file links", () => {
 
       it(`Ignores a local ${markdown.linkType} which points at a file that exist and contain the targeted sub header that contains varying characters`, async () => {
         const { path: testDirectory } = await newTestDirectory({
-          parentDirectory: TOP_LEVEL_DIRECTORY,
+          parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
         });
 
         const fileToLinkTo = newTestMarkdownFile({
@@ -185,7 +195,9 @@ describe("bad-links-in-markdown - local header file links", () => {
         });
 
         await runTestWithDirectoryCleanup(async () => {
-          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          expect(
+            await badLinksInMarkdown({ targetDirectory: testDirectory })
+          ).toEqual({
             badLocalLinks: [],
           });
         }, testDirectory);
@@ -193,7 +205,7 @@ describe("bad-links-in-markdown - local header file links", () => {
 
       it(`Identifies a local ${markdown.linkType} that points at a file that exists, contains the targeted header but does not contain the specified instance`, async () => {
         const { path: testDirectory } = await newTestDirectory({
-          parentDirectory: TOP_LEVEL_DIRECTORY,
+          parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
         });
 
         const fileToLinkTo = newTestMarkdownFile({
@@ -211,7 +223,9 @@ describe("bad-links-in-markdown - local header file links", () => {
 
         const expectedBadLink = applyTemplate(markdown.expectedLink, { link });
         await runTestWithDirectoryCleanup(async () => {
-          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          expect(
+            await badLinksInMarkdown({ targetDirectory: testDirectory })
+          ).toEqual({
             badLocalLinks: [
               {
                 filePath: fileContainingLink,
@@ -229,7 +243,7 @@ describe("bad-links-in-markdown - local header file links", () => {
 
       it(`Ignores a local ${markdown.linkType} which points at a file that exist and contains the targeted header that appears multiple times and the link points at the first header`, async () => {
         const { path: testDirectory } = await newTestDirectory({
-          parentDirectory: TOP_LEVEL_DIRECTORY,
+          parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
         });
 
         const fileToLinkTo = newTestMarkdownFile({
@@ -245,7 +259,9 @@ describe("bad-links-in-markdown - local header file links", () => {
         });
 
         await runTestWithDirectoryCleanup(async () => {
-          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          expect(
+            await badLinksInMarkdown({ targetDirectory: testDirectory })
+          ).toEqual({
             badLocalLinks: [],
           });
         }, testDirectory);
@@ -253,7 +269,7 @@ describe("bad-links-in-markdown - local header file links", () => {
 
       it(`Ignores a local ${markdown.linkType} which points at a file that exist and contains the targeted header that appears multiple times and the link points at the second header`, async () => {
         const { path: testDirectory } = await newTestDirectory({
-          parentDirectory: TOP_LEVEL_DIRECTORY,
+          parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
         });
 
         const fileToLinkTo = newTestMarkdownFile({
@@ -269,7 +285,9 @@ describe("bad-links-in-markdown - local header file links", () => {
         });
 
         await runTestWithDirectoryCleanup(async () => {
-          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          expect(
+            await badLinksInMarkdown({ targetDirectory: testDirectory })
+          ).toEqual({
             badLocalLinks: [],
           });
         }, testDirectory);
@@ -277,7 +295,7 @@ describe("bad-links-in-markdown - local header file links", () => {
 
       it(`Identifies a local ${markdown.linkType} that points at a file that exists but does not contain the targeted header tag, regardless of the type of new line character used`, async () => {
         const { path: testDirectory } = await newTestDirectory({
-          parentDirectory: TOP_LEVEL_DIRECTORY,
+          parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
         });
 
         const fileToLinkTo = newTestMarkdownFile({
@@ -293,7 +311,9 @@ describe("bad-links-in-markdown - local header file links", () => {
 
         const expectedBadLink = applyTemplate(markdown.expectedLink, { link });
         await runTestWithDirectoryCleanup(async () => {
-          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          expect(
+            await badLinksInMarkdown({ targetDirectory: testDirectory })
+          ).toEqual({
             badLocalLinks: [
               {
                 filePath: fileContainingLink,
@@ -311,7 +331,7 @@ describe("bad-links-in-markdown - local header file links", () => {
 
       it(`Ignores a local ${markdown.linkType} when they are relative links which link through multiple parent directories`, async () => {
         const { path: testDirectory } = await newTestDirectory({
-          parentDirectory: TOP_LEVEL_DIRECTORY,
+          parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
         });
 
         const innerDirectory1 = await newTestDirectory({
@@ -335,7 +355,9 @@ describe("bad-links-in-markdown - local header file links", () => {
         });
 
         await runTestWithDirectoryCleanup(async () => {
-          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          expect(
+            await badLinksInMarkdown({ targetDirectory: testDirectory })
+          ).toEqual({
             badLocalLinks: [],
           });
         }, testDirectory);
@@ -343,7 +365,7 @@ describe("bad-links-in-markdown - local header file links", () => {
 
       it(`Ignores a local ${markdown.linkType} which points at a file that exist and contains the targeted header, even when the header includes non alpha-numeric characters`, async () => {
         const { path: testDirectory } = await newTestDirectory({
-          parentDirectory: TOP_LEVEL_DIRECTORY,
+          parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
         });
 
         const fileToLinkTo = newTestMarkdownFile({
@@ -359,7 +381,9 @@ describe("bad-links-in-markdown - local header file links", () => {
         });
 
         await runTestWithDirectoryCleanup(async () => {
-          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          expect(
+            await badLinksInMarkdown({ targetDirectory: testDirectory })
+          ).toEqual({
             badLocalLinks: [],
           });
         }, testDirectory);
@@ -367,7 +391,7 @@ describe("bad-links-in-markdown - local header file links", () => {
 
       it(`Ignores a local ${markdown.linkType} which points at a file that exist and contains the targeted header and the header is kabab-case`, async () => {
         const { path: testDirectory } = await newTestDirectory({
-          parentDirectory: TOP_LEVEL_DIRECTORY,
+          parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
         });
 
         const fileToLinkTo = newTestMarkdownFile({
@@ -383,7 +407,9 @@ describe("bad-links-in-markdown - local header file links", () => {
         });
 
         await runTestWithDirectoryCleanup(async () => {
-          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          expect(
+            await badLinksInMarkdown({ targetDirectory: testDirectory })
+          ).toEqual({
             badLocalLinks: [],
           });
         }, testDirectory);
@@ -393,7 +419,7 @@ describe("bad-links-in-markdown - local header file links", () => {
     describe("For links pointing at headers in the current file", () => {
       it(`Identifies a local ${markdown.linkType} that points at a header tag in the current file that does not exist`, async () => {
         const { path: testDirectory } = await newTestDirectory({
-          parentDirectory: TOP_LEVEL_DIRECTORY,
+          parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
         });
 
         const link = "#main-title";
@@ -406,7 +432,9 @@ describe("bad-links-in-markdown - local header file links", () => {
           link,
         });
         await runTestWithDirectoryCleanup(async () => {
-          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          expect(
+            await badLinksInMarkdown({ targetDirectory: testDirectory })
+          ).toEqual({
             badLocalLinks: [
               {
                 filePath: fileContainingLink,
@@ -424,7 +452,7 @@ describe("bad-links-in-markdown - local header file links", () => {
 
       it(`Ignores a local ${markdown.linkType} that points at a header tag in the current file that exist`, async () => {
         const { path: testDirectory } = await newTestDirectory({
-          parentDirectory: TOP_LEVEL_DIRECTORY,
+          parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
         });
 
         newTestMarkdownFile({
@@ -436,7 +464,9 @@ describe("bad-links-in-markdown - local header file links", () => {
         });
 
         await runTestWithDirectoryCleanup(async () => {
-          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          expect(
+            await badLinksInMarkdown({ targetDirectory: testDirectory })
+          ).toEqual({
             badLocalLinks: [],
           });
         }, testDirectory);
@@ -444,7 +474,7 @@ describe("bad-links-in-markdown - local header file links", () => {
 
       it(`Identifies a local ${markdown.linkType} that attempts to point at a sub header tag by using multiple hash tags in the link, when the sub header does not exist`, async () => {
         const { path: testDirectory } = await newTestDirectory({
-          parentDirectory: TOP_LEVEL_DIRECTORY,
+          parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
         });
 
         const link = "##main-title";
@@ -457,7 +487,9 @@ describe("bad-links-in-markdown - local header file links", () => {
           link,
         });
         await runTestWithDirectoryCleanup(async () => {
-          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          expect(
+            await badLinksInMarkdown({ targetDirectory: testDirectory })
+          ).toEqual({
             badLocalLinks: [
               {
                 filePath: fileContainingLink,
@@ -478,7 +510,7 @@ describe("bad-links-in-markdown - local header file links", () => {
 
       it(`Identifies a local ${markdown.linkType} that attempts to point at a sub header tag by using multiple hash tags in the link, when the sub header exists`, async () => {
         const { path: testDirectory } = await newTestDirectory({
-          parentDirectory: TOP_LEVEL_DIRECTORY,
+          parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
         });
 
         const link = "##main-title";
@@ -494,7 +526,9 @@ describe("bad-links-in-markdown - local header file links", () => {
           link,
         });
         await runTestWithDirectoryCleanup(async () => {
-          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          expect(
+            await badLinksInMarkdown({ targetDirectory: testDirectory })
+          ).toEqual({
             badLocalLinks: [
               {
                 filePath: fileContainingLink,
@@ -512,7 +546,7 @@ describe("bad-links-in-markdown - local header file links", () => {
 
       it(`Ignores a local ${markdown.linkType} which points at a header in the current file which consist of multiple text cases`, async () => {
         const { path: testDirectory } = await newTestDirectory({
-          parentDirectory: TOP_LEVEL_DIRECTORY,
+          parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
         });
 
         newTestMarkdownFile({
@@ -526,7 +560,9 @@ describe("bad-links-in-markdown - local header file links", () => {
         });
 
         await runTestWithDirectoryCleanup(async () => {
-          expect(await badLinksInMarkdown(testDirectory)).toEqual({
+          expect(
+            await badLinksInMarkdown({ targetDirectory: testDirectory })
+          ).toEqual({
             badLocalLinks: [],
           });
         }, testDirectory);
@@ -541,7 +577,7 @@ describe("bad-links-in-markdown - local header file links", () => {
   ])("Missing file extensions - $linkType", (markdown) => {
     it(`Identifies a local ${markdown.linkType} that points at a file that exists but does not contain the targeted header tag, even when the file extension is not provided`, async () => {
       const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
+        parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
 
       const name = "file-name-j9823ufno";
@@ -561,7 +597,9 @@ describe("bad-links-in-markdown - local header file links", () => {
 
       const expectedBadLink = applyTemplate(markdown.expectedLink, { link });
       await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+        expect(
+          await badLinksInMarkdown({ targetDirectory: testDirectory })
+        ).toEqual({
           badLocalLinks: [
             {
               filePath: fileContainingLink,
@@ -582,7 +620,7 @@ describe("bad-links-in-markdown - local header file links", () => {
 
     it(`Identifies a local ${markdown.linkType} that points at a file that exists and contains the targeted header tag, even when the file extension is not provided`, async () => {
       const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
+        parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
 
       const name = "file-name-j9823ufno";
@@ -602,7 +640,9 @@ describe("bad-links-in-markdown - local header file links", () => {
 
       const expectedBadLink = applyTemplate(markdown.expectedLink, { link });
       await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+        expect(
+          await badLinksInMarkdown({ targetDirectory: testDirectory })
+        ).toEqual({
           badLocalLinks: [
             {
               filePath: fileContainingLink,
@@ -620,7 +660,7 @@ describe("bad-links-in-markdown - local header file links", () => {
 
     it(`Identifies a local ${markdown.linkType} that points at a javascript file that exists but the file extension is missing, even if the line number is valid`, async () => {
       const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
+        parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
 
       const name = "test-file-oi234fnio";
@@ -639,7 +679,9 @@ describe("bad-links-in-markdown - local header file links", () => {
 
       const expectedBadLink = applyTemplate(markdown.expectedLink, { link });
       await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+        expect(
+          await badLinksInMarkdown({ targetDirectory: testDirectory })
+        ).toEqual({
           badLocalLinks: [
             {
               filePath: fileContainingLink,
@@ -663,7 +705,7 @@ describe("bad-links-in-markdown - local header file links", () => {
   ])("Missing file extensions - $linkType", (markdown) => {
     it(`Identifies a local ${markdown.linkType} that points at a file that exists but does not contain the targeted header tag, even when the file extension is not provided`, async () => {
       const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
+        parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
 
       const name = "file-name-j9823ufno";
@@ -683,7 +725,9 @@ describe("bad-links-in-markdown - local header file links", () => {
 
       const expectedBadLink = applyTemplate(markdown.expectedLink, { link });
       await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+        expect(
+          await badLinksInMarkdown({ targetDirectory: testDirectory })
+        ).toEqual({
           badLocalLinks: [
             {
               filePath: fileContainingLink,
@@ -704,7 +748,7 @@ describe("bad-links-in-markdown - local header file links", () => {
 
     it(`Identifies a local ${markdown.linkType} that points at a file that exists and contains the targeted header tag, even when the file extension is not provided`, async () => {
       const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
+        parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
 
       const name = "file-name-j9823ufno";
@@ -724,7 +768,9 @@ describe("bad-links-in-markdown - local header file links", () => {
 
       const expectedBadLink = applyTemplate(markdown.expectedLink, { link });
       await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+        expect(
+          await badLinksInMarkdown({ targetDirectory: testDirectory })
+        ).toEqual({
           badLocalLinks: [
             {
               filePath: fileContainingLink,
@@ -745,7 +791,7 @@ describe("bad-links-in-markdown - local header file links", () => {
 
     it(`Identifies a local ${markdown.linkType} that points at a javascript file that exists but the file extension is missing, even if the line number is valid`, async () => {
       const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
+        parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
 
       const name = "test-file-oi234fnio";
@@ -764,7 +810,9 @@ describe("bad-links-in-markdown - local header file links", () => {
 
       const expectedBadLink = applyTemplate(markdown.expectedLink, { link });
       await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+        expect(
+          await badLinksInMarkdown({ targetDirectory: testDirectory })
+        ).toEqual({
           badLocalLinks: [
             {
               filePath: fileContainingLink,

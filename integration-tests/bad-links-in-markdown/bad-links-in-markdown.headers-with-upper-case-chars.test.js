@@ -14,7 +14,7 @@ import {
   newTestDirectory,
   newTestMarkdownFile,
   runTestWithDirectoryCleanup,
-  TOP_LEVEL_DIRECTORY,
+  TOP_LEVEL_TEST_DIRECTORY,
 } from "../test-utils";
 
 describe.each([
@@ -29,7 +29,7 @@ describe.each([
   (markdown) => {
     it(`Identifies local ${markdown.linkType} which use upper case characters in the header, even when the header exists`, async () => {
       const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
+        parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
 
       const link = "#MAIN-TITLE";
@@ -45,7 +45,9 @@ describe.each([
         link,
       });
       await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+        expect(
+          await badLinksInMarkdown({ targetDirectory: testDirectory })
+        ).toEqual({
           badLocalLinks: [
             {
               filePath: fileContainingLink,
@@ -63,7 +65,7 @@ describe.each([
 
     it(`Identifies local ${markdown.linkType} which point at another files header and uses upper case characters in the header, even when the header exists`, async () => {
       const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
+        parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
 
       const { fileName: targetFileName } = newTestMarkdownFile({
@@ -84,7 +86,9 @@ describe.each([
         link,
       });
       await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+        expect(
+          await badLinksInMarkdown({ targetDirectory: testDirectory })
+        ).toEqual({
           badLocalLinks: [
             {
               filePath: fileContainingLink,

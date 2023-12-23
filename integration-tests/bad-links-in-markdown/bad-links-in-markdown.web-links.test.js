@@ -12,7 +12,7 @@ import {
   newTestDirectory,
   newTestMarkdownFile,
   runTestWithDirectoryCleanup,
-  TOP_LEVEL_DIRECTORY,
+  TOP_LEVEL_TEST_DIRECTORY,
 } from "../test-utils";
 
 describe.each([
@@ -25,7 +25,7 @@ describe.each([
 ])("bad-links-in-markdown - web links for $linkType", (markdown) => {
   it(`Does not identify web link of type ${markdown.linkType} in list of bad local links`, async () => {
     const { path: testDirectory } = await newTestDirectory({
-      parentDirectory: TOP_LEVEL_DIRECTORY,
+      parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
     });
 
     newTestMarkdownFile({
@@ -40,7 +40,9 @@ describe.each([
     });
 
     await runTestWithDirectoryCleanup(async () => {
-      expect(await badLinksInMarkdown(testDirectory)).toEqual({
+      expect(
+        await badLinksInMarkdown({ targetDirectory: testDirectory })
+      ).toEqual({
         badLocalLinks: [],
       });
     }, testDirectory);
@@ -48,7 +50,7 @@ describe.each([
 
   it(`Does not identify email link of type ${markdown.linkType} in list of bad local links`, async () => {
     const { path: testDirectory } = await newTestDirectory({
-      parentDirectory: TOP_LEVEL_DIRECTORY,
+      parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
     });
 
     newTestMarkdownFile({
@@ -60,7 +62,9 @@ describe.each([
     });
 
     await runTestWithDirectoryCleanup(async () => {
-      expect(await badLinksInMarkdown(testDirectory)).toEqual({
+      expect(
+        await badLinksInMarkdown({ targetDirectory: testDirectory })
+      ).toEqual({
         badLocalLinks: [],
       });
     }, testDirectory);

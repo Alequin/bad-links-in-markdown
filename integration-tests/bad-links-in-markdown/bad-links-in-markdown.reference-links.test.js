@@ -4,13 +4,13 @@ import {
   newTestDirectory,
   newTestMarkdownFile,
   runTestWithDirectoryCleanup,
-  TOP_LEVEL_DIRECTORY,
+  TOP_LEVEL_TEST_DIRECTORY,
 } from "../test-utils";
 
 describe("bad-links-in-markdown - reference links", () => {
   it("Does not error if some of the markdown is written in a similar way to a reference link", async () => {
     const { path: testDirectory } = await newTestDirectory({
-      parentDirectory: TOP_LEVEL_DIRECTORY,
+      parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
     });
 
     newTestMarkdownFile({
@@ -19,7 +19,9 @@ describe("bad-links-in-markdown - reference links", () => {
     });
 
     await runTestWithDirectoryCleanup(async () => {
-      expect(await badLinksInMarkdown(testDirectory)).toEqual({
+      expect(
+        await badLinksInMarkdown({ targetDirectory: testDirectory })
+      ).toEqual({
         badLocalLinks: [],
       });
     }, testDirectory);
@@ -27,7 +29,7 @@ describe("bad-links-in-markdown - reference links", () => {
 
   it("Does not error if some of the markdown is written is a similar way to a reference link and the text appears twice in the file", async () => {
     const { path: testDirectory } = await newTestDirectory({
-      parentDirectory: TOP_LEVEL_DIRECTORY,
+      parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
     });
 
     newTestMarkdownFile({
@@ -39,7 +41,9 @@ describe("bad-links-in-markdown - reference links", () => {
     });
 
     await runTestWithDirectoryCleanup(async () => {
-      expect(await badLinksInMarkdown(testDirectory)).toEqual({
+      expect(
+        await badLinksInMarkdown({ targetDirectory: testDirectory })
+      ).toEqual({
         badLocalLinks: [],
       });
     }, testDirectory);
@@ -49,7 +53,7 @@ describe("bad-links-in-markdown - reference links", () => {
     "Ignores local reference links that point at files that do not exist when the link is preceded by %s",
     async (precedingText) => {
       const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
+        parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
 
       newTestMarkdownFile({
@@ -58,7 +62,9 @@ describe("bad-links-in-markdown - reference links", () => {
       });
 
       await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+        expect(
+          await badLinksInMarkdown({ targetDirectory: testDirectory })
+        ).toEqual({
           badLocalLinks: [],
         });
       }, testDirectory);
@@ -69,7 +75,7 @@ describe("bad-links-in-markdown - reference links", () => {
     "Identifies local reference links that point at files that do not exist when the link is preceded only by '%s'",
     async (precedingText) => {
       const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
+        parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
 
       const { filePath } = newTestMarkdownFile({
@@ -78,7 +84,9 @@ describe("bad-links-in-markdown - reference links", () => {
       });
 
       await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+        expect(
+          await badLinksInMarkdown({ targetDirectory: testDirectory })
+        ).toEqual({
           badLocalLinks: [
             {
               filePath,

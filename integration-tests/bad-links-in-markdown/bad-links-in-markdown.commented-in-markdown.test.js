@@ -4,13 +4,13 @@ import {
   newTestDirectory,
   newTestMarkdownFile,
   runTestWithDirectoryCleanup,
-  TOP_LEVEL_DIRECTORY,
+  TOP_LEVEL_TEST_DIRECTORY,
 } from "../test-utils";
 
 describe("bad-links-in-markdown - comments in markdown", () => {
   it("Ignores commented out links", async () => {
     const { path: testDirectory } = await newTestDirectory({
-      parentDirectory: TOP_LEVEL_DIRECTORY,
+      parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
     });
 
     const { filePath } = newTestMarkdownFile({
@@ -37,7 +37,9 @@ describe("bad-links-in-markdown - comments in markdown", () => {
     });
 
     await runTestWithDirectoryCleanup(async () => {
-      expect(await badLinksInMarkdown(testDirectory)).toEqual({
+      expect(
+        await badLinksInMarkdown({ targetDirectory: testDirectory })
+      ).toEqual({
         badLocalLinks: [],
       });
     }, testDirectory);
@@ -45,7 +47,7 @@ describe("bad-links-in-markdown - comments in markdown", () => {
 
   it("Identifies incorrectly commented out lines", async () => {
     const { path: testDirectory } = await newTestDirectory({
-      parentDirectory: TOP_LEVEL_DIRECTORY,
+      parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
     });
 
     const { filePath } = newTestMarkdownFile({
@@ -61,7 +63,9 @@ describe("bad-links-in-markdown - comments in markdown", () => {
     });
 
     await runTestWithDirectoryCleanup(async () => {
-      expect(await badLinksInMarkdown(testDirectory)).toEqual({
+      expect(
+        await badLinksInMarkdown({ targetDirectory: testDirectory })
+      ).toEqual({
         badLocalLinks: [
           {
             filePath,
@@ -87,7 +91,7 @@ describe("bad-links-in-markdown - comments in markdown", () => {
 
   it("Does not get confused between two matching links when one is commented out", async () => {
     const { path: testDirectory } = await newTestDirectory({
-      parentDirectory: TOP_LEVEL_DIRECTORY,
+      parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
     });
 
     const { filePath } = newTestMarkdownFile({
@@ -102,7 +106,9 @@ describe("bad-links-in-markdown - comments in markdown", () => {
     });
 
     await runTestWithDirectoryCleanup(async () => {
-      expect(await badLinksInMarkdown(testDirectory)).toEqual({
+      expect(
+        await badLinksInMarkdown({ targetDirectory: testDirectory })
+      ).toEqual({
         badLocalLinks: [
           {
             filePath,
@@ -125,7 +131,7 @@ describe("bad-links-in-markdown - comments in markdown", () => {
     "Does not incorrectly ignore links when the target header is sat between two comments, using the syntax $openComment $closeComment",
     async () => {
       const { path: testDirectory } = await newTestDirectory({
-        parentDirectory: TOP_LEVEL_DIRECTORY,
+        parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
 
       const { filePath } = newTestMarkdownFile({
@@ -146,7 +152,9 @@ describe("bad-links-in-markdown - comments in markdown", () => {
       });
 
       await runTestWithDirectoryCleanup(async () => {
-        expect(await badLinksInMarkdown(testDirectory)).toEqual({
+        expect(
+          await badLinksInMarkdown({ targetDirectory: testDirectory })
+        ).toEqual({
           badLocalLinks: [],
         });
       }, testDirectory);
@@ -155,7 +163,7 @@ describe("bad-links-in-markdown - comments in markdown", () => {
 
   it("Ignores local inline links which point at existing headers that are followed by a comment", async () => {
     const { path: testDirectory } = await newTestDirectory({
-      parentDirectory: TOP_LEVEL_DIRECTORY,
+      parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
     });
 
     const fileToLinkTo = newTestMarkdownFile({
@@ -169,7 +177,9 @@ describe("bad-links-in-markdown - comments in markdown", () => {
     });
 
     await runTestWithDirectoryCleanup(async () => {
-      expect(await badLinksInMarkdown(testDirectory)).toEqual({
+      expect(
+        await badLinksInMarkdown({ targetDirectory: testDirectory })
+      ).toEqual({
         badLocalLinks: [],
       });
     }, testDirectory);
@@ -177,7 +187,7 @@ describe("bad-links-in-markdown - comments in markdown", () => {
 
   it("Identifies local inline links which point at missing headers that are followed by a comment", async () => {
     const { path: testDirectory } = await newTestDirectory({
-      parentDirectory: TOP_LEVEL_DIRECTORY,
+      parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
     });
 
     const fileToLinkTo = newTestMarkdownFile({
@@ -191,7 +201,9 @@ describe("bad-links-in-markdown - comments in markdown", () => {
     });
 
     await runTestWithDirectoryCleanup(async () => {
-      expect(await badLinksInMarkdown(testDirectory)).toEqual({
+      expect(
+        await badLinksInMarkdown({ targetDirectory: testDirectory })
+      ).toEqual({
         badLocalLinks: [
           {
             filePath: fileContainingLink,
@@ -209,7 +221,7 @@ describe("bad-links-in-markdown - comments in markdown", () => {
 
   it("Ignores local reference links which point at existing headers that are followed by a comment", async () => {
     const { path: testDirectory } = await newTestDirectory({
-      parentDirectory: TOP_LEVEL_DIRECTORY,
+      parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
     });
 
     const fileToLinkTo = newTestMarkdownFile({
@@ -223,7 +235,9 @@ describe("bad-links-in-markdown - comments in markdown", () => {
     });
 
     await runTestWithDirectoryCleanup(async () => {
-      expect(await badLinksInMarkdown(testDirectory)).toEqual({
+      expect(
+        await badLinksInMarkdown({ targetDirectory: testDirectory })
+      ).toEqual({
         badLocalLinks: [],
       });
     }, testDirectory);
@@ -231,7 +245,7 @@ describe("bad-links-in-markdown - comments in markdown", () => {
 
   it("Identifies local reference links which point at missing headers that are followed by a comment", async () => {
     const { path: testDirectory } = await newTestDirectory({
-      parentDirectory: TOP_LEVEL_DIRECTORY,
+      parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
     });
 
     const fileToLinkTo = newTestMarkdownFile({
@@ -245,7 +259,9 @@ describe("bad-links-in-markdown - comments in markdown", () => {
     });
 
     await runTestWithDirectoryCleanup(async () => {
-      expect(await badLinksInMarkdown(testDirectory)).toEqual({
+      expect(
+        await badLinksInMarkdown({ targetDirectory: testDirectory })
+      ).toEqual({
         badLocalLinks: [
           {
             filePath: fileContainingLink,

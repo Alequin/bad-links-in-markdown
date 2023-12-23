@@ -1,7 +1,7 @@
 import path from "path";
 import program from "commander";
 
-export const topLevelDirectoryFromConsoleArgs = () => {
+export const targetDirectoryFromConsoleArgs = () => {
   program.requiredOption(
     "--directory <file-path>",
     "the top level directory to start reviewing markdown files from (all child directories will also be checked)"
@@ -12,4 +12,4 @@ export const topLevelDirectoryFromConsoleArgs = () => {
   return path.resolve(directory);
 };
 
-export default topLevelDirectoryFromConsoleArgs;
+export default targetDirectoryFromConsoleArgs;
