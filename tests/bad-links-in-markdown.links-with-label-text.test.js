@@ -50,7 +50,7 @@ describe("bad-links-in-markdown - links with label text", () => {
               badLocalLinks: [
                 {
                   filePath,
-                  missingLinks: [
+                  foundIssues: [
                     {
                       markdownLink: expectedBadLink,
                       reasons: [badLinkReasons.FILE_NOT_FOUND],
@@ -112,7 +112,7 @@ describe("bad-links-in-markdown - links with label text", () => {
               badLocalLinks: [
                 {
                   filePath,
-                  missingLinks: [
+                  foundIssues: [
                     {
                       markdownLink: expectedBadLink,
                       reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
@@ -167,7 +167,7 @@ describe("bad-links-in-markdown - links with label text", () => {
               badLocalLinks: [
                 {
                   filePath,
-                  missingLinks: [
+                  foundIssues: [
                     {
                       markdownLink: expectedBadLink,
                       reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
@@ -228,7 +228,7 @@ describe("bad-links-in-markdown - links with label text", () => {
               badLocalLinks: [
                 {
                   filePath,
-                  missingLinks: [
+                  foundIssues: [
                     {
                       markdownLink: expectedBadLink,
                       reasons: [badLinkReasons.FILE_NOT_FOUND],
@@ -281,7 +281,7 @@ describe("bad-links-in-markdown - links with label text", () => {
             badLocalLinks: [
               {
                 filePath,
-                missingLinks: [
+                foundIssues: [
                   {
                     markdownLink: `[I am a local link](./path/to/missing/file.md ${labelText})`,
                     reasons: [badLinkReasons.FILE_NOT_FOUND],
@@ -320,7 +320,7 @@ describe("bad-links-in-markdown - links with label text", () => {
             badLocalLinks: [
               {
                 filePath,
-                missingLinks: [
+                foundIssues: [
                   {
                     markdownLink: `![picture](./path/to/missing/image.png ${labelText})`,
                     reasons: [badLinkReasons.FILE_NOT_FOUND],

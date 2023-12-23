@@ -23,7 +23,7 @@ describe("bad-links-in-markdown - anchor tags", () => {
         badLocalLinks: [
           {
             filePath,
-            missingLinks: [
+            foundIssues: [
               {
                 markdownLink: "<a href=”./file.md”>a link</a>",
                 reasons: [

@@ -3,7 +3,9 @@ import { badLinkReasons } from "../../../constants";
 import { isDirectory } from "../../../utils";
 import { newReasonObject } from "../reason-object";
 
-export const findLinksWithoutExtensions = (linksWithoutFileExtensions) => {
+export const findIssuesForLinksWithoutExtensions = (
+  linksWithoutFileExtensions
+) => {
   const [linksWithMatchedFiles, badLinks] = partition(
     removeDirectoryLinkObjects(linksWithoutFileExtensions),
     ({ matchedFiles }) => matchedFiles[0]

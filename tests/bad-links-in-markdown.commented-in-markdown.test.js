@@ -65,7 +65,7 @@ describe("bad-links-in-markdown - comments in markdown", () => {
         badLocalLinks: [
           {
             filePath,
-            missingLinks: [
+            foundIssues: [
               {
                 markdownLink:
                   "[//]: #[I am a local link](./path/to/missing/file.md)",
@@ -106,7 +106,7 @@ describe("bad-links-in-markdown - comments in markdown", () => {
         badLocalLinks: [
           {
             filePath,
-            missingLinks: [
+            foundIssues: [
               {
                 markdownLink: "[I am a local link](./path/to/missing/file.md)",
                 reasons: [badLinkReasons.FILE_NOT_FOUND],
@@ -195,7 +195,7 @@ describe("bad-links-in-markdown - comments in markdown", () => {
         badLocalLinks: [
           {
             filePath: fileContainingLink,
-            missingLinks: [
+            foundIssues: [
               {
                 markdownLink: `[I am a local link](./${fileToLinkTo.fileName}#main-title)`,
                 reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
@@ -249,7 +249,7 @@ describe("bad-links-in-markdown - comments in markdown", () => {
         badLocalLinks: [
           {
             filePath: fileContainingLink,
-            missingLinks: [
+            foundIssues: [
               {
                 markdownLink: `[I am a local link](./${fileToLinkTo.fileName}#main-title)`,
                 reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],

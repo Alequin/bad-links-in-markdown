@@ -11,3 +11,4 @@ export * from "./read-clean-markdown-file";
 export * from "./read-file-as-string";
 export * from "./read-markdown-file-lines";
 export * from "./split-by-new-line-characters";
+export * from "./log-progress";

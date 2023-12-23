@@ -48,7 +48,7 @@ describe("bad-links-in-markdown - local file links", () => {
           badLocalLinks: [
             {
               filePath,
-              missingLinks: [
+              foundIssues: [
                 {
                   markdownLink: expectedBadLink,
                   reasons: [badLinkReasons.FILE_NOT_FOUND],
@@ -173,7 +173,7 @@ describe("bad-links-in-markdown - local file links", () => {
           badLocalLinks: [
             {
               filePath: fileContainingLink,
-              missingLinks: [
+              foundIssues: [
                 {
                   markdownLink: expectedBadLink,
                   reasons: [
@@ -223,7 +223,7 @@ describe("bad-links-in-markdown - local file links", () => {
           badLocalLinks: [
             {
               filePath: fileContainingLink,
-              missingLinks: [
+              foundIssues: [
                 {
                   markdownLink: expectedBadLink,
                   reasons: [
@@ -260,7 +260,7 @@ describe("bad-links-in-markdown - local file links", () => {
           badLocalLinks: [
             {
               filePath,
-              missingLinks: [
+              foundIssues: [
                 {
                   markdownLink: expectedBadLink,
                   reasons: [
@@ -322,7 +322,7 @@ describe("bad-links-in-markdown - local file links", () => {
           badLocalLinks: [
             {
               filePath,
-              missingLinks: [
+              foundIssues: [
                 {
                   markdownLink: expectedBadLink,
                   reasons: [badLinkReasons.FILE_NOT_FOUND],
@@ -384,7 +384,7 @@ describe("bad-links-in-markdown - local file links", () => {
           badLocalLinks: [
             {
               filePath,
-              missingLinks: [
+              foundIssues: [
                 {
                   markdownLink: expectedBadLink,
                   reasons: [
@@ -423,7 +423,7 @@ describe("bad-links-in-markdown - local file links", () => {
           badLocalLinks: [
             {
               filePath,
-              missingLinks: [
+              foundIssues: [
                 {
                   markdownLink: expectedBadLink,
                   reasons: [badLinkReasons.FILE_NOT_FOUND],
@@ -520,7 +520,7 @@ describe("bad-links-in-markdown - local file links", () => {
           badLocalLinks: [
             {
               filePath: fileContainingLink,
-              missingLinks: [
+              foundIssues: [
                 {
                   markdownLink: expectedBadLink,
                   reasons: [
@@ -600,7 +600,7 @@ describe("bad-links-in-markdown - local file links", () => {
           badLocalLinks: [
             {
               filePath: fileContainingLink,
-              missingLinks: [
+              foundIssues: [
                 {
                   markdownLink: expectedBadLink,
                   reasons: [badLinkReasons.MISSING_FILE_EXTENSION],
@@ -643,7 +643,7 @@ describe("bad-links-in-markdown - local file links", () => {
           badLocalLinks: [
             {
               filePath,
-              missingLinks: [
+              foundIssues: [
                 {
                   markdownLink: expectedBadLink,
                   reasons: [badLinkReasons.MISSING_FILE_EXTENSION],
@@ -684,7 +684,7 @@ describe("bad-links-in-markdown - local file links", () => {
           badLocalLinks: [
             {
               filePath: fileContainingLink,
-              missingLinks: [
+              foundIssues: [
                 {
                   markdownLink: expectedBadLink,
                   reasons: [badLinkReasons.MISSING_FILE_EXTENSION],
@@ -735,7 +735,7 @@ describe("bad-links-in-markdown - local file links", () => {
           badLocalLinks: [
             {
               filePath: fileContainingLink,
-              missingLinks: [
+              foundIssues: [
                 {
                   markdownLink: expectedBadLink,
                   reasons: [
@@ -783,7 +783,7 @@ describe("bad-links-in-markdown - local file links", () => {
           badLocalLinks: [
             {
               filePath: fileContainingLink,
-              missingLinks: [
+              foundIssues: [
                 {
                   markdownLink: expectedBadLink,
                   reasons: [badLinkReasons.MISSING_FILE_EXTENSION],
@@ -823,7 +823,7 @@ describe("bad-links-in-markdown - local file links", () => {
           badLocalLinks: [
             {
               filePath: fileContainingLink,
-              missingLinks: [
+              foundIssues: [
                 {
                   markdownLink: expectedBadLink,
                   reasons: [badLinkReasons.MISSING_FILE_EXTENSION],
@@ -875,7 +875,7 @@ describe("bad-links-in-markdown - local file links", () => {
           badLocalLinks: [
             {
               filePath: fileContainingLink,
-              missingLinks: [
+              foundIssues: [
                 {
                   markdownLink: expectedBadLink,
                   reasons: [
@@ -930,7 +930,7 @@ describe("bad-links-in-markdown - local file links", () => {
           badLocalLinks: [
             {
               filePath: fileContainingLink,
-              missingLinks: [
+              foundIssues: [
                 {
                   markdownLink: expectedBadLink,
                   reasons: [
@@ -979,7 +979,7 @@ describe("bad-links-in-markdown - local file links", () => {
           badLocalLinks: [
             {
               filePath: fileContainingLink,
-              missingLinks: [
+              foundIssues: [
                 {
                   markdownLink: expectedBadLink,
                   reasons: [
@@ -1025,7 +1025,7 @@ describe("bad-links-in-markdown - local file links", () => {
           badLocalLinks: [
             {
               filePath,
-              missingLinks: [
+              foundIssues: [
                 {
                   markdownLink: expectedBadLink,
                   reasons: [
@@ -1069,7 +1069,7 @@ describe("bad-links-in-markdown - local file links", () => {
           badLocalLinks: [
             {
               filePath: fileContainingLink,
-              missingLinks: [
+              foundIssues: [
                 {
                   markdownLink: expectedBadLink,
                   reasons: [
@@ -1123,7 +1123,7 @@ describe("bad-links-in-markdown - local file links", () => {
           badLocalLinks: [
             {
               filePath: fileContainingLink,
-              missingLinks: [
+              foundIssues: [
                 {
                   markdownLink: expectedBadLink,
                   reasons: [
@@ -1170,7 +1170,7 @@ describe("bad-links-in-markdown - local file links", () => {
           badLocalLinks: [
             {
               filePath: fileContainingLink,
-              missingLinks: [
+              foundIssues: [
                 {
                   markdownLink: expectedBadLink,
                   reasons: [
@@ -1213,7 +1213,7 @@ describe("bad-links-in-markdown - local file links", () => {
           badLocalLinks: [
             {
               filePath: fileContainingLink,
-              missingLinks: [
+              foundIssues: [
                 {
                   markdownLink: expectedBadLink,
                   reasons: [
@@ -1268,7 +1268,7 @@ describe("bad-links-in-markdown - local file links", () => {
           badLocalLinks: [
             {
               filePath: fileContainingLink,
-              missingLinks: [
+              foundIssues: [
                 {
                   markdownLink: expectedBadLink,
                   reasons: [
@@ -1323,7 +1323,7 @@ describe("bad-links-in-markdown - local file links", () => {
           badLocalLinks: [
             {
               filePath: fileContainingLink,
-              missingLinks: [
+              foundIssues: [
                 {
                   markdownLink: expectedBadLink,
                   reasons: [

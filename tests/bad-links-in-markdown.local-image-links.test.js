@@ -38,7 +38,7 @@ describe.each([
           badLocalLinks: [
             {
               filePath,
-              missingLinks: [
+              foundIssues: [
                 {
                   markdownLink: expectedBadLink,
                   reasons: [badLinkReasons.FILE_NOT_FOUND],
@@ -153,7 +153,7 @@ describe.each([
           badLocalLinks: [
             {
               filePath: fileContainingLink,
-              missingLinks: [
+              foundIssues: [
                 {
                   markdownLink: expectedBadLink,
                   reasons: [
@@ -202,7 +202,7 @@ describe.each([
           badLocalLinks: [
             {
               filePath: fileContainingLink,
-              missingLinks: [
+              foundIssues: [
                 {
                   markdownLink: expectedBadLink,
                   reasons: [
@@ -246,7 +246,7 @@ describe.each([
           badLocalLinks: [
             {
               filePath,
-              missingLinks: [
+              foundIssues: [
                 {
                   markdownLink: expectedBadLink,
                   reasons: [badLinkReasons.MISSING_FILE_EXTENSION],
@@ -279,7 +279,7 @@ describe.each([
           badLocalLinks: [
             {
               filePath,
-              missingLinks: [
+              foundIssues: [
                 {
                   markdownLink: expectedBadLink,
                   reasons: [badLinkReasons.FILE_NOT_FOUND],
@@ -337,7 +337,7 @@ describe.each([
           badLocalLinks: [
             {
               filePath,
-              missingLinks: [
+              foundIssues: [
                 {
                   markdownLink: expectedBadLink,
                   reasons: [
@@ -381,7 +381,7 @@ describe.each([
           badLocalLinks: [
             {
               filePath,
-              missingLinks: [
+              foundIssues: [
                 {
                   markdownLink: expectedBadLink,
                   reasons: [badLinkReasons.MISSING_FILE_EXTENSION],
@@ -429,7 +429,7 @@ describe.each([
           badLocalLinks: [
             {
               filePath,
-              missingLinks: [
+              foundIssues: [
                 {
                   markdownLink: expectedBadLink,
                   reasons: [
@@ -505,7 +505,7 @@ describe.each([
           badLocalLinks: [
             {
               filePath,
-              missingLinks: [
+              foundIssues: [
                 {
                   markdownLink: expectedBadLink,
                   reasons: [
@@ -580,7 +580,7 @@ describe.each([
           badLocalLinks: [
             {
               filePath,
-              missingLinks: [
+              foundIssues: [
                 {
                   markdownLink: expectedBadLink,
                   reasons: [badLinkReasons.INVALID_IMAGE_EXTENSIONS],

@@ -2,7 +2,7 @@ import fs from "fs";
 import { badLinkReasons } from "../../../constants";
 import { newReasonObject } from "../reason-object";
 
-export const windowsAbsoluteLinks = (linkObjects) =>
+export const findIssuesForWindowsAbsoluteLinks = (linkObjects) =>
   linkObjects
     .filter(({ linkPath }) => /^\/?\w:/.test(linkPath))
     .map((linkObject) =>
@@ -11,7 +11,7 @@ export const windowsAbsoluteLinks = (linkObjects) =>
       ])
     );
 
-export const badRootAbsoluteLinks = (linkObjects) =>
+export const findIssuesForBadRootAbsoluteLinks = (linkObjects) =>
   linkObjects
     .filter((linkObject) => linkObject.isAbsoluteLink)
     .filter((linkObject) => {

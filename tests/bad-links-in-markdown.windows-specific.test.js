@@ -41,7 +41,7 @@ describe("bad-links-in-markdown - windows specific", () => {
           badLocalLinks: [
             {
               filePath,
-              missingLinks: [
+              foundIssues: [
                 {
                   markdownLink: expectedBadLink,
                   reasons: [
@@ -81,7 +81,7 @@ describe("bad-links-in-markdown - windows specific", () => {
           badLocalLinks: [
             {
               filePath,
-              missingLinks: [
+              foundIssues: [
                 {
                   markdownLink: expectedBadLink,
                   reasons: [
@@ -113,7 +113,7 @@ describe("bad-links-in-markdown - windows specific", () => {
         badLocalLinks: [
           {
             filePath,
-            missingLinks: [
+            foundIssues: [
               {
                 markdownLink: `[picture]: /${absolutePath}`,
                 reasons: [

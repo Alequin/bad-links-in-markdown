@@ -1,30 +1,25 @@
 import { chain, isEmpty } from "lodash";
 import { badLinkReasons } from "../../constants";
-import { findAnchorLinksWithInvalidWrappingQuotes } from "./find-bad-links/find-anchor-links-with-invalid-wrapping-quotes";
-import * as findInvalidAbsoluteLinks from "./find-bad-links/find-invalid-absolute-links";
-import { findInvalidImageExtensions } from "./find-bad-links/find-invalid-image-extensions";
-import { findInvalidRelativeLinkSyntax } from "./find-bad-links/find-invalid-relative-link-syntax";
+import { findIssuesForAnchorLinksWithInvalidWrappingQuotes } from "./find-bad-links/find-issues-for-anchor-links-with-invalid-wrapping-quotes";
+import * as findInvalidAbsoluteLinks from "./find-bad-links/find-issues-for-invalid-absolute-links";
+import { findIssuesForInvalidImageExtensions } from "./find-bad-links/find-issues-for-invalid-image-extensions";
+import { findIssuesForInvalidRelativeLinkSyntax } from "./find-bad-links/find-issues-for-invalid-relative-link-syntax";
 import { findLinksWithBadHeaderTags } from "./find-bad-links/find-links-with-bad-header-tags";
-import { findLinksWithoutExtensions } from "./find-bad-links/find-links-without-extensions";
-import { findMissingLinksWithFileExtensions } from "./find-bad-links/find-missing-links-with-file-extensions";
+import { findIssuesForLinksWithoutExtensions } from "./find-bad-links/find-issues-for-links-without-extensions";
+import { findIssuesForLinksWithFileExtensions } from "./find-bad-links/find-issues-for-links-with-file-extensions";
 import { groupMatchingReasonObjectWithIssues } from "./group-matching-link-objects-with-issues";
-import { logProgress } from "./log-progress";
-import { newReasonObject } from "./reason-object";
 import { partitionLinksByType } from "./partition-links-by-type";
 import { prepareLocalLinkObjects } from "./prepare-local-link-objects";
+import { newReasonObject } from "./reason-object";
 
 export const identifyInvalidLocalLinks = (fileObjects) => {
   return chain(fileObjects)
-    .map((fileObject, index) => {
-      logProgress(index + 1, fileObjects.length);
-      return processFile(fileObject);
-    })
-    .filter(({ missingLinks }) => !isEmpty(missingLinks))
-    .orderBy(({ filePath }) => filePath)
+    .map(findIssuesInFile)
+    .filter(({ foundIssues }) => !isEmpty(foundIssues))
     .value();
 };
 
-const processFile = (fileObject) => {
+const findIssuesInFile = (fileObject) => {
   const {
     linksWithGoodSyntax,
     linksWithBadSyntax,
@@ -32,48 +27,46 @@ const processFile = (fileObject) => {
     externalFileLinks,
   } = partitionLinksByType(prepareLocalLinkObjects(fileObject));
 
-  const missingLinks = groupMatchingReasonObjectWithIssues([
-    ...linksWithBadSyntax.map((linkObject) =>
-      newReasonObject(linkObject.markdownLink, [
-        badLinkReasons.INVALID_SPACE_CHARACTER,
-      ])
-    ),
-    ...findAnchorLinksWithInvalidWrappingQuotes(linksWithGoodSyntax),
-    ...findInvalidInternalFileLinks(internalFileLinks),
-    ...findInvalidExternalFileLinks(externalFileLinks),
-  ]).map(({ markdownLink, reasons }) =>
-    newReasonObject(markdownLink, reasons.sort())
-  );
-
   return {
-    missingLinks,
     filePath: fileObject.sourceFilePath,
+    foundIssues: groupMatchingReasonObjectWithIssues([
+      ...linksWithBadSyntax.map((linkObject) =>
+        newReasonObject(linkObject.markdownLink, [
+          badLinkReasons.INVALID_SPACE_CHARACTER,
+        ])
+      ),
+      ...findIssuesForAnchorLinksWithInvalidWrappingQuotes(linksWithGoodSyntax),
+      ...findIssuesForInternalFileLinks(internalFileLinks),
+      ...findIssuesForInvalidExternalFileLinks(externalFileLinks),
+    ]).map(({ markdownLink, reasons }) =>
+      newReasonObject(markdownLink, reasons.sort())
+    ),
   };
 };
 
-const findInvalidInternalFileLinks = (linkObjects) => {
+const findIssuesForInternalFileLinks = (linkObjects) => {
   return findLinksWithBadHeaderTags(linkObjects);
 };
 
-const findInvalidExternalFileLinks = (linkObjects) => {
+const findIssuesForInvalidExternalFileLinks = (linkObjects) => {
   return [
-    ...findInvalidAbsoluteLinks.windowsAbsoluteLinks(linkObjects),
-    ...findInvalidAbsoluteLinks.badRootAbsoluteLinks(linkObjects),
+    ...findInvalidAbsoluteLinks.findIssuesForWindowsAbsoluteLinks(linkObjects),
+    ...findInvalidAbsoluteLinks.findIssuesForBadRootAbsoluteLinks(linkObjects),
 
-    ...findInvalidRelativeLinkSyntax(linkObjects),
-    ...findMissingLinksWithFileExtensions(
+    ...findIssuesForInvalidRelativeLinkSyntax(linkObjects),
+    ...findIssuesForLinksWithFileExtensions(
       linkObjects.filter(
         ({ isExistingDirectory, linkFileExtension }) =>
           !isExistingDirectory && linkFileExtension
       )
     ),
-    ...findLinksWithoutExtensions(
+    ...findIssuesForLinksWithoutExtensions(
       linkObjects.filter(
         ({ isExistingDirectory, linkFileExtension }) =>
           !isExistingDirectory && !linkFileExtension
       )
     ),
     ...findLinksWithBadHeaderTags(linkObjects),
-    ...findInvalidImageExtensions(linkObjects),
+    ...findIssuesForInvalidImageExtensions(linkObjects),
   ];
 };

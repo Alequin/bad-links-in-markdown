@@ -28,7 +28,7 @@ describe("bad-links-in-markdown  - links on the same line", () => {
         badLocalLinks: [
           {
             filePath,
-            missingLinks: [
+            foundIssues: [
               {
                 markdownLink: "[I am a local link](./path/to/missing/file.md)",
                 reasons: [badLinkReasons.FILE_NOT_FOUND],
@@ -75,7 +75,7 @@ describe("bad-links-in-markdown  - links on the same line", () => {
         badLocalLinks: [
           {
             filePath,
-            missingLinks: [
+            foundIssues: [
               {
                 markdownLink:
                   "<a href='./path/to/missing/file.md'>I am a local link</a>",
@@ -118,7 +118,7 @@ describe("bad-links-in-markdown  - links on the same line", () => {
         badLocalLinks: [
           {
             filePath,
-            missingLinks: [
+            foundIssues: [
               {
                 markdownLink: "![picture](./path/to/missing/image.png)",
                 reasons: [badLinkReasons.FILE_NOT_FOUND],

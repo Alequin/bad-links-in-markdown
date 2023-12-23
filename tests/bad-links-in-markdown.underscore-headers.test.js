@@ -164,7 +164,7 @@ describe.each([
         badLocalLinks: [
           {
             filePath: firstFilePath,
-            missingLinks: [
+            foundIssues: [
               {
                 markdownLink: firstExpectedBadLink,
                 reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
@@ -173,7 +173,7 @@ describe.each([
           },
           {
             filePath: secondFilePath,
-            missingLinks: [
+            foundIssues: [
               {
                 markdownLink: secondExpectedBadLink,
                 reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
@@ -229,7 +229,7 @@ describe.each([
         badLocalLinks: [
           {
             filePath: firstFilePath,
-            missingLinks: [
+            foundIssues: [
               {
                 markdownLink: firstExpectedBadLink,
                 reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
@@ -238,7 +238,7 @@ describe.each([
           },
           {
             filePath: secondFilePath,
-            missingLinks: [
+            foundIssues: [
               {
                 markdownLink: secondExpectedBadLink,
                 reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
@@ -380,7 +380,7 @@ describe.each([
         badLocalLinks: [
           {
             filePath: firstFilePath,
-            missingLinks: [
+            foundIssues: [
               {
                 markdownLink: firstExpectedBadLink,
                 reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
@@ -389,7 +389,7 @@ describe.each([
           },
           {
             filePath: secondFilePath,
-            missingLinks: [
+            foundIssues: [
               {
                 markdownLink: secondExpectedBadLink,
                 reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
@@ -441,7 +441,7 @@ describe.each([
         badLocalLinks: [
           {
             filePath: firstFilePath,
-            missingLinks: [
+            foundIssues: [
               {
                 markdownLink: firstExpectedBadLink,
                 reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
@@ -450,7 +450,7 @@ describe.each([
           },
           {
             filePath: secondFilePath,
-            missingLinks: [
+            foundIssues: [
               {
                 markdownLink: secondExpectedBadLink,
                 reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],

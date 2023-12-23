@@ -45,7 +45,7 @@ describe("bad-links-in-markdown links-which-include-spaces", () => {
           badLocalLinks: [
             {
               filePath,
-              missingLinks: [
+              foundIssues: [
                 {
                   markdownLink: expectedBadLink.trim(),
                   reasons: [badLinkReasons.FILE_NOT_FOUND],
@@ -106,7 +106,7 @@ describe("bad-links-in-markdown links-which-include-spaces", () => {
           badLocalLinks: [
             {
               filePath,
-              missingLinks: [
+              foundIssues: [
                 {
                   markdownLink: expectedBadLink.trim(),
                   reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
@@ -180,7 +180,7 @@ describe("bad-links-in-markdown links-which-include-spaces", () => {
           badLocalLinks: [
             {
               filePath,
-              missingLinks: [
+              foundIssues: [
                 {
                   markdownLink: expectedBadLink.trim(),
                   reasons: [badLinkReasons.FILE_NOT_FOUND],
@@ -240,7 +240,7 @@ describe("bad-links-in-markdown links-which-include-spaces", () => {
             badLocalLinks: [
               {
                 filePath,
-                missingLinks: [
+                foundIssues: [
                   {
                     markdownLink: expectedBadLink.trim(),
                     reasons: [badLinkReasons.FILE_NOT_FOUND],
@@ -349,7 +349,7 @@ describe("bad-links-in-markdown links-which-include-spaces", () => {
             badLocalLinks: [
               {
                 filePath,
-                missingLinks: [
+                foundIssues: [
                   {
                     markdownLink: expectedBadLink,
                     reasons: [badLinkReasons.FILE_NOT_FOUND],
@@ -389,7 +389,7 @@ describe("bad-links-in-markdown links-which-include-spaces", () => {
             badLocalLinks: [
               {
                 filePath,
-                missingLinks: [
+                foundIssues: [
                   {
                     markdownLink: expectedBadLink,
                     reasons: [badLinkReasons.INVALID_SPACE_CHARACTER],
@@ -422,7 +422,7 @@ describe("bad-links-in-markdown links-which-include-spaces", () => {
             badLocalLinks: [
               {
                 filePath,
-                missingLinks: [
+                foundIssues: [
                   {
                     markdownLink: expectedBadLink,
                     reasons: [badLinkReasons.INVALID_SPACE_CHARACTER],
@@ -462,7 +462,7 @@ describe("bad-links-in-markdown links-which-include-spaces", () => {
             badLocalLinks: [
               {
                 filePath,
-                missingLinks: [
+                foundIssues: [
                   {
                     markdownLink: expectedBadLink,
                     reasons: [badLinkReasons.INVALID_SPACE_CHARACTER],
@@ -532,7 +532,7 @@ describe("bad-links-in-markdown links-which-include-spaces", () => {
             badLocalLinks: [
               {
                 filePath,
-                missingLinks: [
+                foundIssues: [
                   {
                     markdownLink: expectedBadLink,
                     reasons: [
@@ -568,7 +568,7 @@ describe("bad-links-in-markdown links-which-include-spaces", () => {
             badLocalLinks: [
               {
                 filePath,
-                missingLinks: [
+                foundIssues: [
                   {
                     markdownLink: expectedBadLink,
                     reasons: [
@@ -611,7 +611,7 @@ describe("bad-links-in-markdown links-which-include-spaces", () => {
             badLocalLinks: [
               {
                 filePath,
-                missingLinks: [
+                foundIssues: [
                   {
                     markdownLink: expectedBadLink,
                     reasons: [

@@ -47,7 +47,7 @@ describe("bad-links-in-markdown - links of type $linkType including space encodi
           badLocalLinks: [
             {
               filePath,
-              missingLinks: [
+              foundIssues: [
                 {
                   markdownLink: expectedBadLink,
                   reasons: [badLinkReasons.FILE_NOT_FOUND],
@@ -111,7 +111,7 @@ describe("bad-links-in-markdown - links of type $linkType including space encodi
           badLocalLinks: [
             {
               filePath,
-              missingLinks: [
+              foundIssues: [
                 {
                   markdownLink: expectedBadLink,
                   reasons: [badLinkReasons.HEADER_TAG_NOT_FOUND],
@@ -172,7 +172,7 @@ describe("bad-links-in-markdown - links of type $linkType including space encodi
           badLocalLinks: [
             {
               filePath,
-              missingLinks: [
+              foundIssues: [
                 {
                   markdownLink: expectedBadLink,
                   reasons: [badLinkReasons.FILE_NOT_FOUND],
@@ -226,7 +226,7 @@ describe("bad-links-in-markdown - links of type $linkType including space encodi
         badLocalLinks: [
           {
             filePath,
-            missingLinks: [
+            foundIssues: [
               {
                 markdownLink: `[I am a local link](./path/to/missing%20file.md)`,
                 reasons: [badLinkReasons.FILE_NOT_FOUND],
@@ -265,7 +265,7 @@ describe("bad-links-in-markdown - links of type $linkType including space encodi
         badLocalLinks: [
           {
             filePath,
-            missingLinks: [
+            foundIssues: [
               {
                 markdownLink: `![picture](./path/to/missing%20image.png)`,
                 reasons: [badLinkReasons.FILE_NOT_FOUND],

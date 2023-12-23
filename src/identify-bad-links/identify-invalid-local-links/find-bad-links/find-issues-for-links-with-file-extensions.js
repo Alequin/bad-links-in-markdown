@@ -4,7 +4,7 @@ import { badLinkReasons } from "../../../constants";
 import { badLineTags } from "./utils/bad-line-tags";
 import { newReasonObject } from "../reason-object";
 
-export const findMissingLinksWithFileExtensions = (linkObjects) => {
+export const findIssuesForLinksWithFileExtensions = (linkObjects) => {
   const [workingLinks, badLinks] = partition(linkObjects, (linkObject) =>
     doesFileExist(linkObject.fullPath)
   );

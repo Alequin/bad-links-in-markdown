@@ -1,14 +1,38 @@
-import { orderBy, sumBy } from "lodash";
+import { chain, chunk, flatMap, orderBy, sumBy } from "lodash";
 import { findAllMarkdownFiles } from "./src/find-markdown/find-all-markdown-files";
 import { findLinksInMarkdown } from "./src/find-markdown/find-links-in-markdown";
 import { identifyInvalidLocalLinks } from "./src/identify-bad-links/identify-invalid-local-links";
 import topLevelDirectoryFromConsoleArgs from "./src/top-level-directory-from-console-args";
 import { logger } from "./src/utils/logger";
+import { logProgress } from "./src/utils";
+
+const BATCH_SIZE = 10;
 
 export const badLinksInMarkdown = async (topLevelDirectory) => {
   const allMarkdownFiles = findAllMarkdownFiles(topLevelDirectory);
 
-  const markdownFilesWithLinks = allMarkdownFiles.map((file) => {
+  const markdownFileBatches = chunk(allMarkdownFiles, BATCH_SIZE);
+  const resultsForAllBatches = markdownFileBatches.map(
+    (markdownFileBatch, index) => {
+      logProgress({
+        position: index + 1,
+        total: markdownFileBatches.length,
+        messagePrefix: "- Current batch",
+      });
+      return processBatchOfFiles(markdownFileBatch, topLevelDirectory);
+    }
+  );
+
+  return {
+    badLocalLinks: chain(resultsForAllBatches)
+      .flatMap(({ badLocalLinks }) => badLocalLinks)
+      .orderBy(({ filePath }) => filePath)
+      .value(),
+  };
+};
+
+const processBatchOfFiles = (markdownFileBatch, topLevelDirectory) => {
+  const markdownFilesWithLinks = markdownFileBatch.map((file) => {
     return {
       ...file,
       topLevelDirectory,
@@ -18,8 +42,8 @@ export const badLinksInMarkdown = async (topLevelDirectory) => {
 
   return {
     badLocalLinks: identifyInvalidLocalLinks(markdownFilesWithLinks),
+    // await identifyInvalidLinksToWebSites(markdownFilesWithLinks);
   };
-  // await identifyInvalidLinksToWebSites(markdownFilesWithLinks);
 };
 
 if (module === require.main) {
@@ -35,7 +59,7 @@ if (module === require.main) {
       logger.info(
         `Total bad local links: ${sumBy(
           result.badLocalLinks,
-          ({ missingLinks }) => missingLinks.length
+          ({ foundIssues }) => foundIssues.length
         )}`
       );
     })

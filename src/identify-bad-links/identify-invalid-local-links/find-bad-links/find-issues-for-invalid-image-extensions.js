@@ -1,7 +1,7 @@
 import { badLinkReasons, validImageExtensions } from "../../../constants";
 import { newReasonObject } from "../reason-object";
 
-export const findInvalidImageExtensions = (linkObjects) => {
+export const findIssuesForInvalidImageExtensions = (linkObjects) => {
   return linkObjects
 
     .filter(
