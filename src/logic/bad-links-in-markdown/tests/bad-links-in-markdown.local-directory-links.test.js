@@ -23,7 +23,7 @@ describe("bad-links-in-markdown - local directory links", () => {
     anchorLinkDoubleQuoteTemplate,
     anchorLinkUnquotesTemplate,
   ])("for links of type $linkType", (markdown) => {
-    it(`Identifies local ${markdown.linkType} that point at directories that do not exist`, async () => {
+    it(`Identifies local ${markdown.name} that point at directories that do not exist`, async () => {
       const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
@@ -31,10 +31,10 @@ describe("bad-links-in-markdown - local directory links", () => {
       const link = "./path";
       const { filePath } = newTestMarkdownFile({
         directory: testDirectory,
-        content: applyTemplate(markdown.template, { link }),
+        content: applyTemplate(markdown.fullTemplate, { link }),
       });
 
-      const expectedBadLink = applyTemplate(markdown.expectedLink, {
+      const expectedBadLink = applyTemplate(markdown.markdownLinkTemplate, {
         link,
       });
       await runTestWithDirectoryCleanup(async () => {
@@ -59,7 +59,7 @@ describe("bad-links-in-markdown - local directory links", () => {
       }, testDirectory);
     });
 
-    it(`Ignores local ${markdown.linkType} which point at directories which exist`, async () => {
+    it(`Ignores local ${markdown.name} which point at directories which exist`, async () => {
       const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
@@ -70,7 +70,7 @@ describe("bad-links-in-markdown - local directory links", () => {
 
       newTestMarkdownFile({
         directory: testDirectory,
-        content: applyTemplate(markdown.template, {
+        content: applyTemplate(markdown.fullTemplate, {
           link: `./${innerDirectory.name}`,
         }),
       });
@@ -84,7 +84,7 @@ describe("bad-links-in-markdown - local directory links", () => {
       }, testDirectory);
     });
 
-    it(`Ignores local ${markdown.linkType} which point at directories which exist and have names similar to other directories in the same location`, async () => {
+    it(`Ignores local ${markdown.name} which point at directories which exist and have names similar to other directories in the same location`, async () => {
       const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
@@ -102,7 +102,7 @@ describe("bad-links-in-markdown - local directory links", () => {
 
       newTestMarkdownFile({
         directory: testDirectory,
-        content: applyTemplate(markdown.template, {
+        content: applyTemplate(markdown.fullTemplate, {
           link: `./${baseDirectoryName}`,
         }),
       });

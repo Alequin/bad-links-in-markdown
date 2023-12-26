@@ -23,7 +23,7 @@ describe("bad-links-in-markdown - local header file links", () => {
     anchorLinkDoubleQuoteTemplate,
     anchorLinkUnquotesTemplate,
   ])("General scenarios - line numbers $linkType", (markdown) => {
-    it(`Ignores a local ${markdown.linkType} which points at a javascript file that exists and have a valid line number`, async () => {
+    it(`Ignores a local ${markdown.name} which points at a javascript file that exists and have a valid line number`, async () => {
       const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
@@ -36,7 +36,7 @@ describe("bad-links-in-markdown - local header file links", () => {
 
       newTestMarkdownFile({
         directory: testDirectory,
-        content: applyTemplate(markdown.template, {
+        content: applyTemplate(markdown.fullTemplate, {
           link: `./${fileToLinkTo.fileName}#L100}`,
         }),
       });
@@ -50,7 +50,7 @@ describe("bad-links-in-markdown - local header file links", () => {
       }, testDirectory);
     });
 
-    it(`Ignores a local ${markdown.linkType} which points at a javascript file that exists but does not have a valid line number`, async () => {
+    it(`Ignores a local ${markdown.name} which points at a javascript file that exists but does not have a valid line number`, async () => {
       const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
@@ -63,7 +63,7 @@ describe("bad-links-in-markdown - local header file links", () => {
 
       newTestMarkdownFile({
         directory: testDirectory,
-        content: applyTemplate(markdown.template, {
+        content: applyTemplate(markdown.fullTemplate, {
           link: `./${fileToLinkTo.fileName}#L100}`,
         }),
       });

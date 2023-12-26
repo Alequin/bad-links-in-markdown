@@ -21,7 +21,7 @@ describe.each([
   anchorLinkDoubleQuoteTemplate,
   anchorLinkUnquotesTemplate,
 ])("bad-links-in-markdown - web links for $linkType", (markdown) => {
-  it(`Does not identify web link of type ${markdown.linkType} in list of bad local links`, async () => {
+  it(`Does not identify web link of type ${markdown.name} in list of bad local links`, async () => {
     const { path: testDirectory } = await newTestDirectory({
       parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
     });
@@ -29,8 +29,8 @@ describe.each([
     newTestMarkdownFile({
       directory: testDirectory,
       content: [
-        applyTemplate(markdown.template, { link: "http://www.google.com" }),
-        applyTemplate(markdown.template, {
+        applyTemplate(markdown.fullTemplate, { link: "http://www.google.com" }),
+        applyTemplate(markdown.fullTemplate, {
           link: "http://www.google.com",
           linkText: "foobar (eggs)",
         }),
@@ -46,14 +46,14 @@ describe.each([
     }, testDirectory);
   });
 
-  it(`Does not identify email link of type ${markdown.linkType} in list of bad local links`, async () => {
+  it(`Does not identify email link of type ${markdown.name} in list of bad local links`, async () => {
     const { path: testDirectory } = await newTestDirectory({
       parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
     });
 
     newTestMarkdownFile({
       directory: testDirectory,
-      content: applyTemplate(markdown.template, {
+      content: applyTemplate(markdown.fullTemplate, {
         link: "mailto:foo@gmail.com",
         linkText: "foo@gmail.com",
       }),

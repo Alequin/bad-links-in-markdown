@@ -22,7 +22,7 @@ describe.each([
   anchorLinkDoubleQuoteTemplate,
   anchorLinkUnquotesTemplate,
 ])("bad-links-in-markdown - underscore headers for link", (markdown) => {
-  it(`Ignores local ${markdown.linkType} which point at headers in the current file that use the equals syntax`, async () => {
+  it(`Ignores local ${markdown.name} which point at headers in the current file that use the equals syntax`, async () => {
     const { path: testDirectory } = await newTestDirectory({
       parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
     });
@@ -33,7 +33,7 @@ describe.each([
         "Solution A: Foo x Bar Hybrid",
         "=",
         "",
-        applyTemplate(markdown.template, {
+        applyTemplate(markdown.fullTemplate, {
           link: "#solution-a-foo-x-bar-hybrid",
         }),
       ].join("\n"),
@@ -45,7 +45,7 @@ describe.each([
         "Solution B: Foo x Bar Hybrid",
         "==",
         "",
-        applyTemplate(markdown.template, {
+        applyTemplate(markdown.fullTemplate, {
           link: "#solution-b-foo-x-bar-hybrid",
         }),
       ].join("\n"),
@@ -57,7 +57,7 @@ describe.each([
         "Solution C: Foo x Bar Hybrid",
         "===",
         "",
-        applyTemplate(markdown.template, {
+        applyTemplate(markdown.fullTemplate, {
           link: "#solution-c-foo-x-bar-hybrid",
         }),
       ].join("\n"),
@@ -72,7 +72,7 @@ describe.each([
     }, testDirectory);
   });
 
-  it(`Ignores local ${markdown.linkType} which point at headers in the current file that use the dash syntax`, async () => {
+  it(`Ignores local ${markdown.name} which point at headers in the current file that use the dash syntax`, async () => {
     const { path: testDirectory } = await newTestDirectory({
       parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
     });
@@ -83,7 +83,7 @@ describe.each([
         "Solution A: Foo x Bar Hybrid",
         "-",
         "",
-        applyTemplate(markdown.template, {
+        applyTemplate(markdown.fullTemplate, {
           link: "#solution-a-foo-x-bar-hybrid",
         }),
       ].join("\n"),
@@ -95,7 +95,7 @@ describe.each([
         "Solution B: Foo x Bar Hybrid",
         "--",
         "",
-        applyTemplate(markdown.template, {
+        applyTemplate(markdown.fullTemplate, {
           link: "#solution-b-foo-x-bar-hybrid",
         }),
       ].join("\n"),
@@ -107,7 +107,7 @@ describe.each([
         "Solution C: Foo x Bar Hybrid",
         "---",
         "",
-        applyTemplate(markdown.template, {
+        applyTemplate(markdown.fullTemplate, {
           link: "#solution-c-foo-x-bar-hybrid",
         }),
       ].join("\n"),
@@ -122,7 +122,7 @@ describe.each([
     }, testDirectory);
   });
 
-  it(`Identifies local ${markdown.linkType} which point at invalid headers in the current file that use the equals syntax`, async () => {
+  it(`Identifies local ${markdown.name} which point at invalid headers in the current file that use the equals syntax`, async () => {
     const { path: testDirectory } = await newTestDirectory({
       parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
     });
@@ -135,12 +135,12 @@ describe.each([
         "",
         "===",
         "",
-        applyTemplate(markdown.template, {
+        applyTemplate(markdown.fullTemplate, {
           link: firstLink,
         }),
       ].join("\n"),
     });
-    const firstExpectedBadLink = applyTemplate(markdown.expectedLink, {
+    const firstExpectedBadLink = applyTemplate(markdown.markdownLinkTemplate, {
       link: firstLink,
     });
 
@@ -152,12 +152,12 @@ describe.each([
         "Foo x Bar Hybrid",
         "===",
         "",
-        applyTemplate(markdown.template, {
+        applyTemplate(markdown.fullTemplate, {
           link: secondLink,
         }),
       ].join("\n"),
     });
-    const secondExpectedBadLink = applyTemplate(markdown.expectedLink, {
+    const secondExpectedBadLink = applyTemplate(markdown.markdownLinkTemplate, {
       link: secondLink,
     });
 
@@ -189,7 +189,7 @@ describe.each([
     }, testDirectory);
   });
 
-  it(`Identifies local ${markdown.linkType} which point at invalid headers in the current file that use the dash syntax`, async () => {
+  it(`Identifies local ${markdown.name} which point at invalid headers in the current file that use the dash syntax`, async () => {
     const { path: testDirectory } = await newTestDirectory({
       parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
     });
@@ -202,12 +202,12 @@ describe.each([
         "",
         "---",
         "",
-        applyTemplate(markdown.template, {
+        applyTemplate(markdown.fullTemplate, {
           link: firstLink,
         }),
       ].join("\n"),
     });
-    const firstExpectedBadLink = applyTemplate(markdown.expectedLink, {
+    const firstExpectedBadLink = applyTemplate(markdown.markdownLinkTemplate, {
       link: firstLink,
     });
 
@@ -219,12 +219,12 @@ describe.each([
         "Foo x Bar Hybrid",
         "---",
         "",
-        applyTemplate(markdown.template, {
+        applyTemplate(markdown.fullTemplate, {
           link: secondLink,
         }),
       ].join("\n"),
     });
-    const secondExpectedBadLink = applyTemplate(markdown.expectedLink, {
+    const secondExpectedBadLink = applyTemplate(markdown.markdownLinkTemplate, {
       link: secondLink,
     });
 
@@ -256,7 +256,7 @@ describe.each([
     }, testDirectory);
   });
 
-  it(`Ignores local ${markdown.linkType} which point at headers in a different file that use the equals syntax`, async () => {
+  it(`Ignores local ${markdown.name} which point at headers in a different file that use the equals syntax`, async () => {
     const { path: testDirectory } = await newTestDirectory({
       parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
     });
@@ -267,7 +267,7 @@ describe.each([
     });
     newTestMarkdownFile({
       directory: testDirectory,
-      content: applyTemplate(markdown.template, {
+      content: applyTemplate(markdown.fullTemplate, {
         link: `./${fileA.fileName}#solution-a-foo-x-bar-hybrid`,
       }),
     });
@@ -278,7 +278,7 @@ describe.each([
     });
     newTestMarkdownFile({
       directory: testDirectory,
-      content: applyTemplate(markdown.template, {
+      content: applyTemplate(markdown.fullTemplate, {
         link: `./${fileB.fileName}#solution-b-foo-x-bar-hybrid`,
       }),
     });
@@ -289,7 +289,7 @@ describe.each([
     });
     newTestMarkdownFile({
       directory: testDirectory,
-      content: applyTemplate(markdown.template, {
+      content: applyTemplate(markdown.fullTemplate, {
         link: `./${fileC.fileName}#solution-c-foo-x-bar-hybrid`,
       }),
     });
@@ -303,7 +303,7 @@ describe.each([
     }, testDirectory);
   });
 
-  it(`Ignores local ${markdown.linkType} which point at headers in a different file that use the dash syntax`, async () => {
+  it(`Ignores local ${markdown.name} which point at headers in a different file that use the dash syntax`, async () => {
     const { path: testDirectory } = await newTestDirectory({
       parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
     });
@@ -314,7 +314,7 @@ describe.each([
     });
     newTestMarkdownFile({
       directory: testDirectory,
-      content: applyTemplate(markdown.template, {
+      content: applyTemplate(markdown.fullTemplate, {
         link: `./${fileA.fileName}#solution-a-foo-x-bar-hybrid`,
       }),
     });
@@ -325,7 +325,7 @@ describe.each([
     });
     newTestMarkdownFile({
       directory: testDirectory,
-      content: applyTemplate(markdown.template, {
+      content: applyTemplate(markdown.fullTemplate, {
         link: `./${fileB.fileName}#solution-b-foo-x-bar-hybrid`,
       }),
     });
@@ -336,7 +336,7 @@ describe.each([
     });
     newTestMarkdownFile({
       directory: testDirectory,
-      content: applyTemplate(markdown.template, {
+      content: applyTemplate(markdown.fullTemplate, {
         link: `./${fileC.fileName}#solution-c-foo-x-bar-hybrid`,
       }),
     });
@@ -350,7 +350,7 @@ describe.each([
     }, testDirectory);
   });
 
-  it(`Identifies local ${markdown.linkType} which point at invalid headers in a different file that use the equals syntax`, async () => {
+  it(`Identifies local ${markdown.name} which point at invalid headers in a different file that use the equals syntax`, async () => {
     const { path: testDirectory } = await newTestDirectory({
       parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
     });
@@ -362,11 +362,11 @@ describe.each([
     const firstLink = `./${firstTargetFile.fileName}#solution-a-foo-x-bar-hybrid`;
     const { filePath: firstFilePath } = newTestMarkdownFile({
       directory: testDirectory,
-      content: applyTemplate(markdown.template, {
+      content: applyTemplate(markdown.fullTemplate, {
         link: firstLink,
       }),
     });
-    const firstExpectedBadLink = applyTemplate(markdown.expectedLink, {
+    const firstExpectedBadLink = applyTemplate(markdown.markdownLinkTemplate, {
       link: firstLink,
     });
 
@@ -377,11 +377,11 @@ describe.each([
     const secondLink = `./${secondTargetFile.fileName}#solution-b-foo-x-bar-hybrid`;
     const { filePath: secondFilePath } = newTestMarkdownFile({
       directory: testDirectory,
-      content: applyTemplate(markdown.template, {
+      content: applyTemplate(markdown.fullTemplate, {
         link: secondLink,
       }),
     });
-    const secondExpectedBadLink = applyTemplate(markdown.expectedLink, {
+    const secondExpectedBadLink = applyTemplate(markdown.markdownLinkTemplate, {
       link: secondLink,
     });
 
@@ -413,7 +413,7 @@ describe.each([
     }, testDirectory);
   });
 
-  it(`Identifies local ${markdown.linkType} which point at invalid headers in a different file that use the dash syntax`, async () => {
+  it(`Identifies local ${markdown.name} which point at invalid headers in a different file that use the dash syntax`, async () => {
     const { path: testDirectory } = await newTestDirectory({
       parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
     });
@@ -425,11 +425,11 @@ describe.each([
     const firstLink = `./${firstTargetFile.fileName}#solution-a-foo-x-bar-hybrid`;
     const { filePath: firstFilePath } = newTestMarkdownFile({
       directory: testDirectory,
-      content: applyTemplate(markdown.template, {
+      content: applyTemplate(markdown.fullTemplate, {
         link: firstLink,
       }),
     });
-    const firstExpectedBadLink = applyTemplate(markdown.expectedLink, {
+    const firstExpectedBadLink = applyTemplate(markdown.markdownLinkTemplate, {
       link: firstLink,
     });
 
@@ -440,11 +440,11 @@ describe.each([
     const secondLink = `./${secondTargetFile.fileName}#solution-b-foo-x-bar-hybrid`;
     const { filePath: secondFilePath } = newTestMarkdownFile({
       directory: testDirectory,
-      content: applyTemplate(markdown.template, {
+      content: applyTemplate(markdown.fullTemplate, {
         link: secondLink,
       }),
     });
-    const secondExpectedBadLink = applyTemplate(markdown.expectedLink, {
+    const secondExpectedBadLink = applyTemplate(markdown.markdownLinkTemplate, {
       link: secondLink,
     });
 

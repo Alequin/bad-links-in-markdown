@@ -26,7 +26,7 @@ describe("bad-links-in-markdown - links with label text", () => {
         referenceLinkTemplate,
         shorthandReferenceLinkTemplate,
       ])("For link type $linkType", (markdown) => {
-        it(`Identifies a local ${markdown.linkType} that points at file that does not exist, even when the link includes label text`, async () => {
+        it(`Identifies a local ${markdown.name} that points at file that does not exist, even when the link includes label text`, async () => {
           const { path: testDirectory } = await newTestDirectory({
             parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
           });
@@ -34,10 +34,10 @@ describe("bad-links-in-markdown - links with label text", () => {
           const link = `./path/to/missing/file.md ${labelText}`;
           const { filePath } = newTestMarkdownFile({
             directory: testDirectory,
-            content: applyTemplate(markdown.template, { link }),
+            content: applyTemplate(markdown.fullTemplate, { link }),
           });
 
-          const expectedBadLink = applyTemplate(markdown.expectedLink, {
+          const expectedBadLink = applyTemplate(markdown.markdownLinkTemplate, {
             link,
           });
           await runTestWithDirectoryCleanup(async () => {
@@ -59,7 +59,7 @@ describe("bad-links-in-markdown - links with label text", () => {
           }, testDirectory);
         });
 
-        it(`Ignores a local ${markdown.linkType} which points at file that exist, even when the link includes label text`, async () => {
+        it(`Ignores a local ${markdown.name} which points at file that exist, even when the link includes label text`, async () => {
           const { path: testDirectory } = await newTestDirectory({
             parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
           });
@@ -71,7 +71,7 @@ describe("bad-links-in-markdown - links with label text", () => {
 
           newTestMarkdownFile({
             directory: testDirectory,
-            content: applyTemplate(markdown.template, {
+            content: applyTemplate(markdown.fullTemplate, {
               link: `./${fileToLinkTo.fileName} ${labelText}`,
             }),
           });
@@ -85,7 +85,7 @@ describe("bad-links-in-markdown - links with label text", () => {
           }, testDirectory);
         });
 
-        it(`Identifies a local ${markdown.linkType} that points at a file that exists but do not contain the targeted header tag, even when the link includes label text`, async () => {
+        it(`Identifies a local ${markdown.name} that points at a file that exists but do not contain the targeted header tag, even when the link includes label text`, async () => {
           const { path: testDirectory } = await newTestDirectory({
             parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
           });
@@ -98,12 +98,12 @@ describe("bad-links-in-markdown - links with label text", () => {
           const link = `./${fileToLinkTo.fileName}#main-title ${labelText}`;
           const { filePath } = newTestMarkdownFile({
             directory: testDirectory,
-            content: applyTemplate(markdown.template, {
+            content: applyTemplate(markdown.fullTemplate, {
               link,
             }),
           });
 
-          const expectedBadLink = applyTemplate(markdown.expectedLink, {
+          const expectedBadLink = applyTemplate(markdown.markdownLinkTemplate, {
             link,
           });
           await runTestWithDirectoryCleanup(async () => {
@@ -125,7 +125,7 @@ describe("bad-links-in-markdown - links with label text", () => {
           }, testDirectory);
         });
 
-        it(`Ignores a local ${markdown.linkType} which points at a file that exist and contain the targeted header, even when the link includes label text`, async () => {
+        it(`Ignores a local ${markdown.name} which points at a file that exist and contain the targeted header, even when the link includes label text`, async () => {
           const { path: testDirectory } = await newTestDirectory({
             parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
           });
@@ -137,7 +137,7 @@ describe("bad-links-in-markdown - links with label text", () => {
 
           newTestMarkdownFile({
             directory: testDirectory,
-            content: applyTemplate(markdown.template, {
+            content: applyTemplate(markdown.fullTemplate, {
               link: `./${fileToLinkTo.fileName}#main-title ${labelText}`,
             }),
           });
@@ -151,7 +151,7 @@ describe("bad-links-in-markdown - links with label text", () => {
           }, testDirectory);
         });
 
-        it(`Identifies a local ${markdown.linkType} that points at a header tag in the current file that does not exist, even when the link includes label text`, async () => {
+        it(`Identifies a local ${markdown.name} that points at a header tag in the current file that does not exist, even when the link includes label text`, async () => {
           const { path: testDirectory } = await newTestDirectory({
             parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
           });
@@ -159,10 +159,10 @@ describe("bad-links-in-markdown - links with label text", () => {
           const link = `#main-title ${labelText}`;
           const { filePath } = newTestMarkdownFile({
             directory: testDirectory,
-            content: applyTemplate(markdown.template, { link }),
+            content: applyTemplate(markdown.fullTemplate, { link }),
           });
 
-          const expectedBadLink = applyTemplate(markdown.expectedLink, {
+          const expectedBadLink = applyTemplate(markdown.markdownLinkTemplate, {
             link,
           });
           await runTestWithDirectoryCleanup(async () => {
@@ -184,7 +184,7 @@ describe("bad-links-in-markdown - links with label text", () => {
           }, testDirectory);
         });
 
-        it(`Ignores an local ${markdown.linkType} that points at a header tag in the current file that exist, even when the link includes label text`, async () => {
+        it(`Ignores an local ${markdown.name} that points at a header tag in the current file that exist, even when the link includes label text`, async () => {
           const { path: testDirectory } = await newTestDirectory({
             parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
           });
@@ -193,7 +193,7 @@ describe("bad-links-in-markdown - links with label text", () => {
             directory: testDirectory,
             content: [
               "# Main title",
-              applyTemplate(markdown.template, {
+              applyTemplate(markdown.fullTemplate, {
                 link: `#main-title ${labelText}`,
               }),
             ].join("\n"),
@@ -214,7 +214,7 @@ describe("bad-links-in-markdown - links with label text", () => {
         referenceImageLinkTemplate,
         shorthandReferenceImageLinkTemplate,
       ])("For link type $linkType", (markdown) => {
-        it(`Identifies a local ${markdown.template} link that points at an image that does not exist, even when the link includes label text`, async () => {
+        it(`Identifies a local ${markdown.fullTemplate} link that points at an image that does not exist, even when the link includes label text`, async () => {
           const { path: testDirectory } = await newTestDirectory({
             parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
           });
@@ -222,12 +222,12 @@ describe("bad-links-in-markdown - links with label text", () => {
           const link = `./path/to/missing/image.png ${labelText}`;
           const { filePath } = newTestMarkdownFile({
             directory: testDirectory,
-            content: applyTemplate(markdown.template, {
+            content: applyTemplate(markdown.fullTemplate, {
               link,
             }),
           });
 
-          const expectedBadLink = applyTemplate(markdown.expectedLink, {
+          const expectedBadLink = applyTemplate(markdown.markdownLinkTemplate, {
             link,
           });
           await runTestWithDirectoryCleanup(async () => {
@@ -249,7 +249,7 @@ describe("bad-links-in-markdown - links with label text", () => {
           }, testDirectory);
         });
 
-        it(`Ignores a local ${markdown.template} link that points at an image that exist, even when the link includes label text`, async () => {
+        it(`Ignores a local ${markdown.fullTemplate} link that points at an image that exist, even when the link includes label text`, async () => {
           const { path: testDirectory } = await newTestDirectory({
             parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
           });
@@ -262,7 +262,7 @@ describe("bad-links-in-markdown - links with label text", () => {
 
           newTestMarkdownFile({
             directory: testDirectory,
-            content: applyTemplate(markdown.template, {
+            content: applyTemplate(markdown.fullTemplate, {
               link: `./${imageFile.fileName} ${labelText}`,
             }),
           });
@@ -366,14 +366,14 @@ describe("bad-links-in-markdown - links with label text", () => {
     referenceLinkTemplate,
     shorthandReferenceLinkTemplate,
   ])("For link type $linkType", (markdown) => {
-    it(`Ignores a local ${markdown.linkType} that points at file that does not exist when the link includes label text not wrapped in quotes`, async () => {
+    it(`Ignores a local ${markdown.name} that points at file that does not exist when the link includes label text not wrapped in quotes`, async () => {
       const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
 
       newTestMarkdownFile({
         directory: testDirectory,
-        content: applyTemplate(markdown.template, {
+        content: applyTemplate(markdown.fullTemplate, {
           link: "./path/to/missing/file.md invalid-label-text",
         }),
       });

@@ -1,13 +1,11 @@
-import { groupBy, mapValues } from "lodash";
+import { groupBy, mapValues, uniq } from "lodash";
 import { findHeadersInFile } from "./find-headers-in-file";
 
 export const badHeaderTags = (links) => {
   return links.filter((linkObject) => {
-    const headerTagsFromFile = convertHeadersToLinkFormat(
-      findHeadersInFile(linkObject.fullPath)
-    );
-
-    return !headerTagsFromFile.includes(linkObject.linkTag.toLowerCase());
+    const headers = findHeadersInFile(linkObject.fullPath);
+    const headersInLinkFormat = convertHeadersToLinkFormat(headers);
+    return !headersInLinkFormat.includes(linkObject.linkTag.toLowerCase());
   });
 };
 
@@ -16,10 +14,10 @@ const convertHeadersToLinkFormat = (headers) => {
     headers.map(markdownHeaderToTag)
   );
 
-  return [
+  return uniq([
     ...headersAsTags,
     ...headersAsTags.map((header) => header.replaceAll("_", "")), // account for variation of links for snake case headers
-  ];
+  ]);
 };
 
 /**
@@ -45,8 +43,10 @@ const differentiateDuplicateHeaders = (linksToHeaders) => {
 // https://stackoverflow.com/questions/51221730/markdown-link-to-header
 const markdownHeaderToTag = (header) => {
   return header
-    .toLowerCase() // lower case all chars
-    .replace(/[^\w-\s]/g, "") // remove chars which are not alpha-numeric, dashes or spaces
-    .trim() // remove trailing white space
+    .toLowerCase()
+    .replace(/<pre>|<\/pre>/g, "") // Remove pre HTML tags
+    .replace(/<code>|<\/code>/g, "") // Remove code HTML tags
+    .replace(/[^\w-\s]/g, "") // remove chars which are not alpha-numeric, dashes or spaces. Also deals with tripple tick code blocks
+    .trim()
     .replace(/\s/g, "-"); // replace spaces with hyphens
 };

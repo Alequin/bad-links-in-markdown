@@ -1,4 +1,3 @@
-export * from "./clean-markdown-contents";
 export * from "./does-file-exist";
 export * from "./does-link-start-with-relative-path";
 export * from "./extract-href-link-from-quoted-anchor-tag";
@@ -9,3 +8,4 @@ export * from "./log";
 export * from "./match";
 export * from "./read";
 export * from "./split-by-new-line-characters";
+export * from "./is-ignored-directory-name";

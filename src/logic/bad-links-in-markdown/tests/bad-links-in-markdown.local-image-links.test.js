@@ -19,7 +19,7 @@ describe.each([
 ])(
   "bad-links-in-markdown - local image links of type $linkType",
   (markdown) => {
-    it(`Identifies a local ${markdown.linkType} that points at an image that does not exist`, async () => {
+    it(`Identifies a local ${markdown.name} that points at an image that does not exist`, async () => {
       const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
@@ -27,10 +27,12 @@ describe.each([
       const link = "./path/to/missing/image.png";
       const { filePath } = newTestMarkdownFile({
         directory: testDirectory,
-        content: applyTemplate(markdown.template, { link }),
+        content: applyTemplate(markdown.fullTemplate, { link }),
       });
 
-      const expectedBadLink = applyTemplate(markdown.expectedLink, { link });
+      const expectedBadLink = applyTemplate(markdown.markdownLinkTemplate, {
+        link,
+      });
       await runTestWithDirectoryCleanup(async () => {
         expect(
           await badLinksInMarkdown({ targetDirectory: testDirectory })
@@ -50,7 +52,7 @@ describe.each([
       }, testDirectory);
     });
 
-    it(`Ignores local ${markdown.linkType} which point at an images which exist`, async () => {
+    it(`Ignores local ${markdown.name} which point at an images which exist`, async () => {
       const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
@@ -63,7 +65,7 @@ describe.each([
 
       newTestMarkdownFile({
         directory: testDirectory,
-        content: applyTemplate(markdown.template, {
+        content: applyTemplate(markdown.fullTemplate, {
           link: `./${imageFile.fileName}`,
         }),
       });
@@ -77,7 +79,7 @@ describe.each([
       }, testDirectory);
     });
 
-    it(`Ignores absolute local ${markdown.linkType} which point at files which exist`, async () => {
+    it(`Ignores absolute local ${markdown.name} which point at files which exist`, async () => {
       const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
@@ -90,7 +92,7 @@ describe.each([
 
       newTestMarkdownFile({
         directory: testDirectory,
-        content: applyTemplate(markdown.template, {
+        content: applyTemplate(markdown.fullTemplate, {
           link: `/${imageFile.fileName}`,
         }),
       });
@@ -104,7 +106,7 @@ describe.each([
       }, testDirectory);
     });
 
-    it(`Ignores absolute local ${markdown.linkType} which point at nested files that exist`, async () => {
+    it(`Ignores absolute local ${markdown.name} which point at nested files that exist`, async () => {
       const testDirectory = await newTestDirectory({
         parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
@@ -126,7 +128,7 @@ describe.each([
       const mockAbsoluteLink = `/${innerDirectory1.name}/${innerDirectory2.name}/${nestedImageFile.fileName}`;
       newTestMarkdownFile({
         directory: innerDirectory2.path,
-        content: applyTemplate(markdown.template, {
+        content: applyTemplate(markdown.fullTemplate, {
           link: mockAbsoluteLink,
         }),
       });
@@ -140,7 +142,7 @@ describe.each([
       }, testDirectory.path);
     });
 
-    it(`identifies absolute local ${markdown.linkType} which starts from outside the given directory`, async () => {
+    it(`identifies absolute local ${markdown.name} which starts from outside the given directory`, async () => {
       const testDirectory = await newTestDirectory({
         parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
@@ -148,10 +150,12 @@ describe.each([
       const mockAbsoluteLink = `/${testDirectory.name}/test-image-9832982.jpg`;
       const { filePath: fileContainingLink } = newTestMarkdownFile({
         directory: testDirectory.path,
-        content: applyTemplate(markdown.template, { link: mockAbsoluteLink }),
+        content: applyTemplate(markdown.fullTemplate, {
+          link: mockAbsoluteLink,
+        }),
       });
 
-      const expectedBadLink = applyTemplate(markdown.expectedLink, {
+      const expectedBadLink = applyTemplate(markdown.markdownLinkTemplate, {
         link: mockAbsoluteLink,
       });
       await runTestWithDirectoryCleanup(async () => {
@@ -176,7 +180,7 @@ describe.each([
       }, testDirectory.path);
     });
 
-    it(`identifies absolute local ${markdown.linkType} which starts from within the given directory`, async () => {
+    it(`identifies absolute local ${markdown.name} which starts from within the given directory`, async () => {
       const testDirectory = await newTestDirectory({
         parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
@@ -199,10 +203,12 @@ describe.each([
 
       const { filePath: fileContainingLink } = newTestMarkdownFile({
         directory: innerDirectory1.path,
-        content: applyTemplate(markdown.template, { link: mockAbsoluteLink }),
+        content: applyTemplate(markdown.fullTemplate, {
+          link: mockAbsoluteLink,
+        }),
       });
 
-      const expectedBadLink = applyTemplate(markdown.expectedLink, {
+      const expectedBadLink = applyTemplate(markdown.markdownLinkTemplate, {
         link: mockAbsoluteLink,
       });
       await runTestWithDirectoryCleanup(async () => {
@@ -227,7 +233,7 @@ describe.each([
       }, testDirectory.path);
     });
 
-    it(`Identifies a local ${markdown.linkType} that points at a file that exist when the link does not contain a file extension`, async () => {
+    it(`Identifies a local ${markdown.name} that points at a file that exist when the link does not contain a file extension`, async () => {
       const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
@@ -243,12 +249,12 @@ describe.each([
       const link = `./${name}`;
       const { filePath } = newTestMarkdownFile({
         directory: testDirectory,
-        content: applyTemplate(markdown.template, {
+        content: applyTemplate(markdown.fullTemplate, {
           link,
         }),
       });
 
-      const expectedBadLink = applyTemplate(markdown.expectedLink, {
+      const expectedBadLink = applyTemplate(markdown.markdownLinkTemplate, {
         link,
       });
       await runTestWithDirectoryCleanup(async () => {
@@ -270,7 +276,7 @@ describe.each([
       }, testDirectory);
     });
 
-    it(`Identifies a local ${markdown.linkType} that points at a file that does not exist when the file path does not include either absolute or relative path`, async () => {
+    it(`Identifies a local ${markdown.name} that points at a file that does not exist when the file path does not include either absolute or relative path`, async () => {
       const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
@@ -278,12 +284,12 @@ describe.each([
       const link = "image.png";
       const { filePath } = newTestMarkdownFile({
         directory: testDirectory,
-        content: applyTemplate(markdown.template, {
+        content: applyTemplate(markdown.fullTemplate, {
           link,
         }),
       });
 
-      const expectedBadLink = applyTemplate(markdown.expectedLink, {
+      const expectedBadLink = applyTemplate(markdown.markdownLinkTemplate, {
         link,
       });
       await runTestWithDirectoryCleanup(async () => {
@@ -305,7 +311,7 @@ describe.each([
       }, testDirectory);
     });
 
-    it(`Ignores local ${markdown.linkType} which point at files which exist when the file path does not include either absolute or relative path`, async () => {
+    it(`Ignores local ${markdown.name} which point at files which exist when the file path does not include either absolute or relative path`, async () => {
       const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
@@ -318,7 +324,7 @@ describe.each([
 
       newTestMarkdownFile({
         directory: testDirectory,
-        content: applyTemplate(markdown.template, {
+        content: applyTemplate(markdown.fullTemplate, {
           link: imageFile.fileName,
         }),
       });
@@ -332,7 +338,7 @@ describe.each([
       }, testDirectory);
     });
 
-    it(`Identifies a local ${markdown.linkType} that points at a file that does not exist when the file path is missing and the extension is missing and does not include either absolute or relative path`, async () => {
+    it(`Identifies a local ${markdown.name} that points at a file that does not exist when the file path is missing and the extension is missing and does not include either absolute or relative path`, async () => {
       const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
@@ -340,12 +346,12 @@ describe.each([
       const link = "image";
       const { filePath } = newTestMarkdownFile({
         directory: testDirectory,
-        content: applyTemplate(markdown.expectedLink, {
+        content: applyTemplate(markdown.markdownLinkTemplate, {
           link,
         }),
       });
 
-      const expectedBadLink = applyTemplate(markdown.expectedLink, {
+      const expectedBadLink = applyTemplate(markdown.markdownLinkTemplate, {
         link,
       });
       await runTestWithDirectoryCleanup(async () => {
@@ -370,7 +376,7 @@ describe.each([
       }, testDirectory);
     });
 
-    it(`Identifies local ${markdown.linkType} which point at files which exist when the file path is missing and extension is missing and does not include either absolute or relative path`, async () => {
+    it(`Identifies local ${markdown.name} which point at files which exist when the file path is missing and extension is missing and does not include either absolute or relative path`, async () => {
       const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
@@ -386,12 +392,12 @@ describe.each([
       const link = name;
       const { filePath } = newTestMarkdownFile({
         directory: testDirectory,
-        content: applyTemplate(markdown.expectedLink, {
+        content: applyTemplate(markdown.markdownLinkTemplate, {
           link,
         }),
       });
 
-      const expectedBadLink = applyTemplate(markdown.expectedLink, {
+      const expectedBadLink = applyTemplate(markdown.markdownLinkTemplate, {
         link,
       });
       await runTestWithDirectoryCleanup(async () => {
@@ -413,7 +419,7 @@ describe.each([
       }, testDirectory);
     });
 
-    it(`Identifies a local ${markdown.linkType} that is missing a file extension and could potentially refer to two separate files`, async () => {
+    it(`Identifies a local ${markdown.name} that is missing a file extension and could potentially refer to two separate files`, async () => {
       const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
@@ -436,12 +442,12 @@ describe.each([
       const link = name;
       const { filePath } = newTestMarkdownFile({
         directory: testDirectory,
-        content: applyTemplate(markdown.expectedLink, {
+        content: applyTemplate(markdown.markdownLinkTemplate, {
           link,
         }),
       });
 
-      const expectedBadLink = applyTemplate(markdown.expectedLink, {
+      const expectedBadLink = applyTemplate(markdown.markdownLinkTemplate, {
         link,
       });
       await runTestWithDirectoryCleanup(async () => {
@@ -466,7 +472,7 @@ describe.each([
       }, testDirectory);
     });
 
-    it(`Ignores local ${markdown.linkType} which point at files which exist, even when the name includes multiple delimiters`, async () => {
+    it(`Ignores local ${markdown.name} which point at files which exist, even when the name includes multiple delimiters`, async () => {
       const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
@@ -480,7 +486,7 @@ describe.each([
 
       newTestMarkdownFile({
         directory: testDirectory,
-        content: applyTemplate(markdown.expectedLink, {
+        content: applyTemplate(markdown.markdownLinkTemplate, {
           link: `./${imageFile.fileName}`,
         }),
       });
@@ -494,7 +500,7 @@ describe.each([
       }, testDirectory);
     });
 
-    it(`Identifies an issue with local ${markdown.linkType} when they are relative links which attempts to link through multiple parent directories at once with invalid syntax`, async () => {
+    it(`Identifies an issue with local ${markdown.name} when they are relative links which attempts to link through multiple parent directories at once with invalid syntax`, async () => {
       const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
@@ -516,12 +522,12 @@ describe.each([
       const link = `.../${imageFile.fileName}`;
       const { filePath } = newTestMarkdownFile({
         directory: innerDirectory2.path, // markdown file two directories down from top level
-        content: applyTemplate(markdown.expectedLink, {
+        content: applyTemplate(markdown.markdownLinkTemplate, {
           link,
         }),
       });
 
-      const expectedBadLink = applyTemplate(markdown.expectedLink, {
+      const expectedBadLink = applyTemplate(markdown.markdownLinkTemplate, {
         link,
       });
       await runTestWithDirectoryCleanup(async () => {
@@ -546,7 +552,7 @@ describe.each([
       }, testDirectory);
     });
 
-    it(`Ignores local ${markdown.linkType} when they are relative links which link through multiple parent directories`, async () => {
+    it(`Ignores local ${markdown.name} when they are relative links which link through multiple parent directories`, async () => {
       const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
@@ -567,7 +573,7 @@ describe.each([
 
       newTestMarkdownFile({
         directory: innerDirectory2.path, // markdown file two directories down from top level
-        content: applyTemplate(markdown.expectedLink, {
+        content: applyTemplate(markdown.markdownLinkTemplate, {
           link: `../../${imageFile.fileName}`,
         }),
       });
@@ -581,7 +587,7 @@ describe.each([
       }, testDirectory);
     });
 
-    it(`Identifies a local ${markdown.linkType} that points at an image that uses an invalid extension`, async () => {
+    it(`Identifies a local ${markdown.name} that points at an image that uses an invalid extension`, async () => {
       const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
@@ -595,12 +601,12 @@ describe.each([
       const link = `./${imageFileName}`;
       const { filePath } = newTestMarkdownFile({
         directory: testDirectory, // markdown file two directories down from top level
-        content: applyTemplate(markdown.template, {
+        content: applyTemplate(markdown.fullTemplate, {
           link,
         }),
       });
 
-      const expectedBadLink = applyTemplate(markdown.expectedLink, {
+      const expectedBadLink = applyTemplate(markdown.markdownLinkTemplate, {
         link,
       });
       await runTestWithDirectoryCleanup(async () => {
@@ -623,7 +629,7 @@ describe.each([
     });
 
     it.each(validImageExtensions)(
-      `Ignores a local ${markdown.linkType} that points at an existing image with an extension %s`,
+      `Ignores a local ${markdown.name} that points at an existing image with an extension %s`,
       async (imageFileExtension) => {
         const { path: testDirectory } = await newTestDirectory({
           parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
@@ -637,7 +643,7 @@ describe.each([
 
         newTestMarkdownFile({
           directory: testDirectory,
-          content: applyTemplate(markdown.template, {
+          content: applyTemplate(markdown.fullTemplate, {
             link: `./${imageFileName}`,
           }),
         });
@@ -667,7 +673,7 @@ describe.each([
 
         newTestMarkdownFile({
           directory: testDirectory,
-          content: applyTemplate(markdown.template, {
+          content: applyTemplate(markdown.fullTemplate, {
             link: `./${imageFileName}`,
           }),
         });

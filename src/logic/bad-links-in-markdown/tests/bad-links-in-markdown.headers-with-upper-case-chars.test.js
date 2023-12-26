@@ -24,7 +24,7 @@ describe.each([
 ])(
   "bad-links-in-markdown - headers with upper case characters for link type $linkType",
   (markdown) => {
-    it(`Identifies local ${markdown.linkType} which use upper case characters in the header, even when the header exists`, async () => {
+    it(`Identifies local ${markdown.name} which use upper case characters in the header, even when the header exists`, async () => {
       const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
@@ -34,11 +34,11 @@ describe.each([
         directory: testDirectory,
         content: [
           "# MAIN TITLE",
-          applyTemplate(markdown.template, { link }),
+          applyTemplate(markdown.fullTemplate, { link }),
         ].join("\n"),
       });
 
-      const expectedBadLink = applyTemplate(markdown.expectedLink, {
+      const expectedBadLink = applyTemplate(markdown.markdownLinkTemplate, {
         link,
       });
       await runTestWithDirectoryCleanup(async () => {
@@ -60,7 +60,7 @@ describe.each([
       }, testDirectory);
     });
 
-    it(`Identifies local ${markdown.linkType} which point at another files header and uses upper case characters in the header, even when the header exists`, async () => {
+    it(`Identifies local ${markdown.name} which point at another files header and uses upper case characters in the header, even when the header exists`, async () => {
       const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
@@ -75,11 +75,11 @@ describe.each([
         directory: testDirectory,
         content: [
           "# MAIN TITLE",
-          applyTemplate(markdown.template, { link }),
+          applyTemplate(markdown.fullTemplate, { link }),
         ].join("\n"),
       });
 
-      const expectedBadLink = applyTemplate(markdown.expectedLink, {
+      const expectedBadLink = applyTemplate(markdown.markdownLinkTemplate, {
         link,
       });
       await runTestWithDirectoryCleanup(async () => {

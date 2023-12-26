@@ -1,39 +1,61 @@
+import { flatMap, uniqBy } from "lodash";
 import {
   match,
-  readCleanMarkdownFile,
-  readCleanMarkdownFileLines,
+  readFileAsString,
+  splitByNewLineCharacters,
 } from "../../../utils";
+import {
+  BACKTICKS_CODE_BLOCK_REGEX,
+  CODE_TAG_REGEX,
+  PRE_TAG_REGEX,
+  TRIPLE_TICK_REGEX,
+  removeCommentsFromMarkdown,
+} from "../../../utils/clean-markdown";
 import { findAnchorMarkdownLinks } from "./find-anchor-markdown-links";
 import { findInlineMarkdownLinks } from "./find-inline-markdown-links";
 import { findReferenceMarkdownLinks } from "./find-reference-markdown-links";
 
 export const findLinksInMarkdown = (filePath) => {
-  const cleanedMarkdown = readCleanMarkdownFile(filePath);
-  const cleanedMarkdownLines = readCleanMarkdownFileLines(filePath);
+  const markdown = readFileAsString(filePath);
+  const commentlessMarkdown = removeCommentsFromMarkdown(markdown);
+  const commentlessMarkdownLines =
+    splitByNewLineCharacters(commentlessMarkdown);
 
-  return removeLinksInsideBackticks(
+  const uniqueLinks = uniqBy(
     [
-      ...findInlineMarkdownLinks(cleanedMarkdown),
-      ...findReferenceMarkdownLinks(cleanedMarkdown, cleanedMarkdownLines),
-      ...findAnchorMarkdownLinks(cleanedMarkdown),
+      ...findInlineMarkdownLinks(commentlessMarkdown),
+      ...findReferenceMarkdownLinks(
+        commentlessMarkdown,
+        commentlessMarkdownLines
+      ),
+      ...findAnchorMarkdownLinks(commentlessMarkdown),
     ],
-    cleanedMarkdown
+    ({ markdownLink }) => markdownLink
   );
+
+  return removeLinksInsideBlocks(uniqueLinks, commentlessMarkdown);
 };
 
-const WRAPPED_IN_BACKTICKS_REGEX = /`.*?`/g;
-const WRAPPED_IN_CODE_BLOCK_REGEX = /<code>.*?<code\/>/g;
-const removeLinksInsideBackticks = (links, markdown) => {
-  const wrappedContents = [
-    ...match(markdown, WRAPPED_IN_BACKTICKS_REGEX),
-    ...match(markdown, WRAPPED_IN_CODE_BLOCK_REGEX),
-  ];
+/**
+ * These blocks can be used as part of links and the links will continue to work if they
+ * are inside the display text part of the link only
+ */
+const BLOCK_WHICH_CAN_BE_USED_IN_LINKS = [
+  BACKTICKS_CODE_BLOCK_REGEX,
+  TRIPLE_TICK_REGEX,
+  CODE_TAG_REGEX,
+  PRE_TAG_REGEX,
+];
+
+const removeLinksInsideBlocks = (links, markdown) => {
+  const markdownWrappedInBlocks = flatMap(
+    BLOCK_WHICH_CAN_BE_USED_IN_LINKS,
+    (pattern) => match(markdown, pattern)
+  );
 
   return links.filter((link) => {
-    const isLinkWrappedInBackticks = wrappedContents.some((content) =>
-      content.includes(link.markdownLink)
+    return markdownWrappedInBlocks.every(
+      (block) => !block.includes(link.markdownLink)
     );
-
-    return !isLinkWrappedInBackticks;
   });
 };

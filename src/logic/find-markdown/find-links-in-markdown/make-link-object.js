@@ -62,6 +62,7 @@ const makeLinkObjectFromUnquotedAnchorLink = (markdownLink, anchorLink) => {
   });
 };
 
+// TODO try to add link location information
 const makeLinkObject = ({ type, markdownLink, fullLink, isImage }) => {
   const linkWithTag = removeLabelText(fullLink);
 

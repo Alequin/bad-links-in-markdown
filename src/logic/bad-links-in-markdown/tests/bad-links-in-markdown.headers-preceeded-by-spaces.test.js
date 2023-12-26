@@ -23,7 +23,7 @@ describe.each([
 ])(
   "bad-links-in-markdown - headers preceded by space characters for link type $linkType",
   (markdown) => {
-    it(`Ignores local ${markdown.linkType} which point at headers which exist and are preceded by space characters`, async () => {
+    it(`Ignores local ${markdown.name} which point at headers which exist and are preceded by space characters`, async () => {
       const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
@@ -35,7 +35,7 @@ describe.each([
 
       newTestMarkdownFile({
         directory: testDirectory,
-        content: applyTemplate(markdown.template, {
+        content: applyTemplate(markdown.fullTemplate, {
           link: `./${fileToLinkTo.fileName}#main-title`,
         }),
       });
@@ -49,7 +49,7 @@ describe.each([
       }, testDirectory);
     });
 
-    it(`Ignores local ${markdown.linkType} which point at headers in the same file and are preceded by space characters`, async () => {
+    it(`Ignores local ${markdown.name} which point at headers in the same file and are preceded by space characters`, async () => {
       const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
@@ -58,7 +58,7 @@ describe.each([
         directory: testDirectory,
         content: [
           "  # main-title\na story of foo and bar\nand baz",
-          applyTemplate(markdown.template, { link: "#main-title" }),
+          applyTemplate(markdown.fullTemplate, { link: "#main-title" }),
         ].join("\n"),
       });
 

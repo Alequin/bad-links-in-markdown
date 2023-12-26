@@ -1,5 +1,5 @@
 import { chain, chunk } from "lodash";
-import { findAllMarkdownFiles } from "../find-markdown/find-all-markdown-files";
+import { findMarkdownFilesInDirectory } from "../find-markdown/find-markdown-files-in-directory";
 import { findLinksInMarkdown } from "../find-markdown/find-links-in-markdown";
 import { identifyInvalidLocalLinks } from "../identify-bad-links/identify-invalid-local-links";
 import { logProgress } from "../../utils";
@@ -13,7 +13,9 @@ const BATCH_SIZE = 10;
  * @returns
  */
 export const badLinksInMarkdown = async (options) => {
-  const allMarkdownFiles = findAllMarkdownFiles(options.targetDirectory);
+  const allMarkdownFiles = findMarkdownFilesInDirectory(
+    options.targetDirectory
+  );
 
   const markdownFileBatches = chunk(allMarkdownFiles, BATCH_SIZE);
   const resultsForAllBatches = markdownFileBatches.map(

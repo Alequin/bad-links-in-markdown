@@ -1,4 +1,12 @@
-export const applyTemplate = (
+import { LINK_TYPE } from "../src/constants";
+
+export const applyTemplate = (template, options) => apply(template, options);
+
+export const applyTemplateWithoutNewlines = (template, options) => {
+  return applyTemplate(template, options).replaceAll("\n", "");
+};
+
+const apply = (
   template,
   { link, linkText = "some link text", displayText = "some display text" }
 ) => {
@@ -8,56 +16,99 @@ export const applyTemplate = (
     .replaceAll("$displayText", displayText);
 };
 
-export const inlineLinkTemplate = {
-  linkType: "inline link",
-  template: `Here is some text\n[$linkText]($link)`,
-  expectedLink: `[$linkText]($link)`,
+const newTemplate = ({
+  name,
+  contentTemplate,
+  markdownLinkTemplate,
+  linkType,
+  isImage,
+}) => {
+  return {
+    name,
+    contentTemplate,
+    fullTemplate: `${contentTemplate}\n${markdownLinkTemplate}`,
+    markdownLinkTemplate,
+    linkType,
+    isImage,
+  };
 };
 
-export const referenceLinkTemplate = {
-  linkType: "reference link",
-  template: `Here is some text\n[$displayText][$linkText]\n\n[$linkText]: $link`,
-  expectedLink: `[$linkText]: $link`,
-};
+/**
+ * About Templates - Be aware
+ *
+ * Some templated do not require both the content and the link to be value. However, some do.
+ * consider this when writing tests. Some situations may be a little annoying and need consideration
+ * regarding cost benifit
+ */
 
-export const shorthandReferenceLinkTemplate = {
-  linkType: "reference link",
-  template: `Here is some text\n[$linkText]\n\n[$linkText]: $link`,
-  expectedLink: `[$linkText]: $link`,
-};
+export const inlineLinkTemplate = newTemplate({
+  name: "inline link",
+  contentTemplate: "Here is some text",
+  markdownLinkTemplate: `[$linkText]($link)`,
+  linkType: LINK_TYPE.inlineLink,
+  isImage: false,
+});
 
-export const anchorLinkSingleQuoteTemplate = {
-  linkType: "anchor link with single quotes",
-  template: `Here is some text\n<a href='$link'>$linkText</a>`,
-  expectedLink: `<a href='$link'>$linkText</a>`,
-};
+export const referenceLinkTemplate = newTemplate({
+  name: "reference link",
+  contentTemplate: "Here is some text\n[$displayText][$linkText]",
+  markdownLinkTemplate: `[$linkText]: $link`,
+  linkType: LINK_TYPE.referenceLink,
+  isImage: false,
+});
 
-export const anchorLinkDoubleQuoteTemplate = {
-  linkType: "inline link with double quotes",
-  template: `Here is some text\n<a href="$link">$linkText</a>`,
-  expectedLink: `<a href="$link">$linkText</a>`,
-};
+export const shorthandReferenceLinkTemplate = newTemplate({
+  name: "reference link",
+  contentTemplate: `Here is some text\n[$linkText]`,
+  markdownLinkTemplate: `[$linkText]: $link`,
+  linkType: LINK_TYPE.referenceLink,
+  isImage: false,
+});
 
-export const anchorLinkUnquotesTemplate = {
-  linkType: "inline link with double quotes",
-  template: `Here is some text\n<a href=$link>$linkText</a>`,
-  expectedLink: `<a href=$link>$linkText</a>`,
-};
+export const anchorLinkSingleQuoteTemplate = newTemplate({
+  name: "anchor link with single quotes",
+  contentTemplate: `Here is some text`,
+  markdownLinkTemplate: `<a href='$link'>$linkText</a>`,
+  linkType: LINK_TYPE.quotedAnchorLink,
+  isImage: false,
+});
 
-export const inlineImageLinkTemplate = {
-  linkType: "inline image link",
-  template: `![$linkText]($link)`,
-  expectedLink: `![$linkText]($link)`,
-};
+export const anchorLinkDoubleQuoteTemplate = newTemplate({
+  name: "inline link with double quotes",
+  contentTemplate: `Here is some text`,
+  markdownLinkTemplate: `<a href="$link">$linkText</a>`,
+  linkType: LINK_TYPE.quotedAnchorLink,
+  isImage: false,
+});
 
-export const referenceImageLinkTemplate = {
-  linkType: "reference image link",
-  template: `![$displayText][$linkText]\n\n[$linkText]: $link`,
-  expectedLink: `[$linkText]: $link`,
-};
+export const anchorLinkUnquotesTemplate = newTemplate({
+  name: "inline link with double quotes",
+  contentTemplate: `Here is some text`,
+  markdownLinkTemplate: `<a href=$link>$linkText</a>`,
+  linkType: LINK_TYPE.unquotedAnchorLink,
+  isImage: false,
+});
 
-export const shorthandReferenceImageLinkTemplate = {
-  linkType: "reference link",
-  template: `![$linkText]\n\n[$linkText]: $link`,
-  expectedLink: `[$linkText]: $link`,
-};
+export const inlineImageLinkTemplate = newTemplate({
+  name: "inline image link",
+  contentTemplate: "",
+  markdownLinkTemplate: `![$linkText]($link)`,
+  linkType: LINK_TYPE.inlineLink,
+  isImage: true,
+});
+
+export const referenceImageLinkTemplate = newTemplate({
+  name: "reference image link",
+  contentTemplate: `![$displayText][$linkText]`,
+  markdownLinkTemplate: `[$linkText]: $link`,
+  linkType: LINK_TYPE.referenceLink,
+  isImage: true,
+});
+
+export const shorthandReferenceImageLinkTemplate = newTemplate({
+  name: "short hand reference link",
+  contentTemplate: `![$linkText]`,
+  markdownLinkTemplate: `[$linkText]: $link`,
+  linkType: LINK_TYPE.referenceLink,
+  isImage: true,
+});

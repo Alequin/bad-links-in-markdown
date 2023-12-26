@@ -20,7 +20,7 @@ describe("bad-links-in-markdown - windows specific", () => {
     referenceLinkTemplate,
     shorthandReferenceLinkTemplate,
   ])("$linkType", (markdown) => {
-    it(`Identifies a windows absolute ${markdown.linkType} that does not start with a forward slash`, async () => {
+    it(`Identifies a windows absolute ${markdown.name} that does not start with a forward slash`, async () => {
       const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
@@ -28,10 +28,10 @@ describe("bad-links-in-markdown - windows specific", () => {
       const absolutePath = "C:\\path\\to\\missing\\file.md";
       const { filePath } = newTestMarkdownFile({
         directory: testDirectory,
-        content: applyTemplate(markdown.template, { link: absolutePath }),
+        content: applyTemplate(markdown.fullTemplate, { link: absolutePath }),
       });
 
-      const expectedBadLink = applyTemplate(markdown.expectedLink, {
+      const expectedBadLink = applyTemplate(markdown.markdownLinkTemplate, {
         link: absolutePath,
       });
       await runTestWithDirectoryCleanup(async () => {
@@ -62,7 +62,7 @@ describe("bad-links-in-markdown - windows specific", () => {
     referenceImageLinkTemplate,
     shorthandReferenceImageLinkTemplate,
   ])("$linkType", (markdown) => {
-    it(`Identifies a windows absolute ${markdown.linkType} for an image that does not start with a forward slash`, async () => {
+    it(`Identifies a windows absolute ${markdown.name} for an image that does not start with a forward slash`, async () => {
       const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
@@ -70,10 +70,10 @@ describe("bad-links-in-markdown - windows specific", () => {
       const absolutePath = "C:\\path\\to\\missing\\image.png";
       const { filePath } = newTestMarkdownFile({
         directory: testDirectory,
-        content: applyTemplate(markdown.template, { link: absolutePath }),
+        content: applyTemplate(markdown.fullTemplate, { link: absolutePath }),
       });
 
-      const expectedBadLink = applyTemplate(markdown.expectedLink, {
+      const expectedBadLink = applyTemplate(markdown.markdownLinkTemplate, {
         link: absolutePath,
       });
       await runTestWithDirectoryCleanup(async () => {

@@ -27,7 +27,7 @@ describe("bad-links-in-markdown - links including parenthesis", () => {
     anchorLinkDoubleQuoteTemplate,
     anchorLinkUnquotesTemplate,
   ])("links of type $linkType ", (markdown) => {
-    it(`Identifies a local ${markdown.template} that points at a file that do not exist, even when the link description text contains parentheses`, async () => {
+    it(`Identifies a local ${markdown.fullTemplate} that points at a file that do not exist, even when the link description text contains parentheses`, async () => {
       const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
@@ -36,10 +36,10 @@ describe("bad-links-in-markdown - links including parenthesis", () => {
       const link = "./path/to/missing/file.md";
       const { filePath } = newTestMarkdownFile({
         directory: testDirectory,
-        content: applyTemplate(markdown.template, { linkText, link }),
+        content: applyTemplate(markdown.fullTemplate, { linkText, link }),
       });
 
-      const expectedBadLink = applyTemplate(markdown.expectedLink, {
+      const expectedBadLink = applyTemplate(markdown.markdownLinkTemplate, {
         linkText,
         link,
       });
@@ -62,7 +62,7 @@ describe("bad-links-in-markdown - links including parenthesis", () => {
       }, testDirectory);
     });
 
-    it(`Ignores a local ${markdown.template} which points at a file that exist, even when the link description text contains parentheses`, async () => {
+    it(`Ignores a local ${markdown.fullTemplate} which points at a file that exist, even when the link description text contains parentheses`, async () => {
       const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
@@ -74,7 +74,7 @@ describe("bad-links-in-markdown - links including parenthesis", () => {
 
       newTestMarkdownFile({
         directory: testDirectory,
-        content: applyTemplate(markdown.template, {
+        content: applyTemplate(markdown.fullTemplate, {
           linkText: "I am a local link (with parens)",
           link: `./${fileToLinkTo.fileName}`,
         }),
@@ -89,7 +89,7 @@ describe("bad-links-in-markdown - links including parenthesis", () => {
       }, testDirectory);
     });
 
-    it(`Identifies a local ${markdown.template} that points at a file that exists but do not contain the targeted header tag, even when the link description text contains parentheses`, async () => {
+    it(`Identifies a local ${markdown.fullTemplate} that points at a file that exists but do not contain the targeted header tag, even when the link description text contains parentheses`, async () => {
       const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
@@ -103,10 +103,10 @@ describe("bad-links-in-markdown - links including parenthesis", () => {
       const link = `./${fileToLinkTo.fileName}#main-title`;
       const { filePath } = newTestMarkdownFile({
         directory: testDirectory,
-        content: applyTemplate(markdown.template, { linkText, link }),
+        content: applyTemplate(markdown.fullTemplate, { linkText, link }),
       });
 
-      const expectedBadLink = applyTemplate(markdown.expectedLink, {
+      const expectedBadLink = applyTemplate(markdown.markdownLinkTemplate, {
         linkText,
         link,
       });
@@ -129,7 +129,7 @@ describe("bad-links-in-markdown - links including parenthesis", () => {
       }, testDirectory);
     });
 
-    it(`Ignores a local ${markdown.template} which points at a file that exists and contains the targeted header, even when the link description text contains parentheses`, async () => {
+    it(`Ignores a local ${markdown.fullTemplate} which points at a file that exists and contains the targeted header, even when the link description text contains parentheses`, async () => {
       const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
@@ -141,7 +141,7 @@ describe("bad-links-in-markdown - links including parenthesis", () => {
 
       newTestMarkdownFile({
         directory: testDirectory,
-        content: applyTemplate(markdown.template, {
+        content: applyTemplate(markdown.fullTemplate, {
           linkText: "I am a local link (with parens)",
           link: `./${fileToLinkTo.fileName}#main-title`,
         }),
@@ -163,7 +163,7 @@ describe("bad-links-in-markdown - links including parenthesis", () => {
 
       newTestMarkdownFile({
         directory: testDirectory,
-        content: applyTemplate(markdown.template, {
+        content: applyTemplate(markdown.fullTemplate, {
           linkText: "I am a local link (with parens)",
           link: "http://www.google.com",
         }),
@@ -184,7 +184,7 @@ describe("bad-links-in-markdown - links including parenthesis", () => {
     referenceImageLinkTemplate,
     shorthandReferenceImageLinkTemplate,
   ])("links of type $linkType ", (markdown) => {
-    it(`Identifies a local ${markdown.template} link that points at an image that does not exist, even when the link description text contains parentheses`, async () => {
+    it(`Identifies a local ${markdown.fullTemplate} link that points at an image that does not exist, even when the link description text contains parentheses`, async () => {
       const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
@@ -193,10 +193,10 @@ describe("bad-links-in-markdown - links including parenthesis", () => {
       const link = "./path/to/missing/image.png";
       const { filePath } = newTestMarkdownFile({
         directory: testDirectory,
-        content: applyTemplate(markdown.template, { linkText, link }),
+        content: applyTemplate(markdown.fullTemplate, { linkText, link }),
       });
 
-      const expectedBadLink = applyTemplate(markdown.expectedLink, {
+      const expectedBadLink = applyTemplate(markdown.markdownLinkTemplate, {
         linkText,
         link,
       });
@@ -219,7 +219,7 @@ describe("bad-links-in-markdown - links including parenthesis", () => {
       }, testDirectory);
     });
 
-    it(`Ignores a local ${markdown.template} link which points at an image which exist, even when the link description text contains parentheses`, async () => {
+    it(`Ignores a local ${markdown.fullTemplate} link which points at an image which exist, even when the link description text contains parentheses`, async () => {
       const { path: testDirectory } = await newTestDirectory({
         parentDirectory: TOP_LEVEL_TEST_DIRECTORY,
       });
@@ -232,7 +232,7 @@ describe("bad-links-in-markdown - links including parenthesis", () => {
 
       newTestMarkdownFile({
         directory: testDirectory,
-        content: applyTemplate(markdown.template, {
+        content: applyTemplate(markdown.fullTemplate, {
           linkText: "picture (check it out)",
           link: `./${imageFile.fileName}`,
         }),

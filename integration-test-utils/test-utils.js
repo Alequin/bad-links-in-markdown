@@ -82,6 +82,6 @@ export const newTestFile = ({
 
 const uniqueName = () => {
   const randomKey = uniqueId().toString();
-  const digitsToAdd = "0".repeat(5 - randomKey.length);
+  const digitsToAdd = "0".repeat(6 - randomKey.length);
   return `test-${digitsToAdd}${randomKey}`;
 };
