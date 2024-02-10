@@ -1,5 +1,9 @@
 # bad-links-in-markdown
 
+- [1: "Critical Business logic" only ⚠️](#1-critical-business-logic-only-️)
+- [1: "Critical Business logic" only ⚠️](#1-critical-business-logic-only-)
+- [1: "Critical Business logic" only ⚠️](#1-critical-business-logic-only)
+
 <a href=#syntax-notes file.md>an anchor link</a>
 <a href=      #syntax-notes file.md>an anchor link</a>
 <a href=#syntax-notes     file.md>an anchor link</a>
@@ -70,6 +74,16 @@ The script:
   - `![image text](./path/to/image/file.png)`
 - **File link**: a markdown link used to link to any file
   - `[image text](./path/to/file.md)`
+
+
+
+### 1: "Critical Business logic" only ⚠️
+
+- Is your business logic truly Critical? End-to-end tests must only exist to
+  cover critical business logic
+  - Will the presence of an end-to-end test protect against any P0 incident
+    types?
+  - [Check the definition of "Critical" for more details][What is Critical]
 
 ## TODO
 
