@@ -1,9 +1,9 @@
 import fs from "fs";
 import { isNil, uniqueId } from "lodash";
-import path from "path";
+import Path from "path";
 import { doesFileExist } from "../src/utils";
 
-export const TOP_LEVEL_TEST_DIRECTORY = path.resolve(
+export const TOP_LEVEL_TEST_DIRECTORY = Path.resolve(
   __dirname,
   "./test-generated-output"
 );
@@ -35,13 +35,18 @@ const forceRemoveDir = async (directory) =>
 export const newTestDirectory = async ({
   parentDirectory,
   name = uniqueName(),
+  asMockGitRepo = true,
 }) => {
-  const directoryPath = path.resolve(parentDirectory, `./${name}`);
+  const directoryPath = Path.resolve(parentDirectory, `./${name}`);
 
   if (doesFileExist(directoryPath)) await forceRemoveDir(directoryPath);
   fs.mkdirSync(directoryPath);
 
-  return { name: name, path: directoryPath };
+  if (asMockGitRepo) {
+    fs.mkdirSync(Path.resolve(directoryPath, "./.git"));
+  }
+
+  return { name, path: directoryPath };
 };
 
 export const newTestMarkdownFile = ({ directory, name, content }) => {
@@ -68,7 +73,7 @@ export const newTestFile = ({
   const fileName = `${name}${extension}`;
   const fileDetails = {
     fileName,
-    filePath: path.resolve(directory, `./${fileName}`),
+    filePath: Path.resolve(directory, `./${fileName}`),
   };
 
   if (isNil(content))

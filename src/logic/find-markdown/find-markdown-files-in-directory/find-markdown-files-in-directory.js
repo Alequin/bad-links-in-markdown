@@ -3,7 +3,7 @@ import path from "path";
 import {
   isDirectory,
   isIgnoredDirectoryName,
-  readFilesInDirectory,
+  readItemsInDirectory,
 } from "../../../utils";
 
 /**
@@ -25,7 +25,7 @@ export const findMarkdownFilesInDirectory = (directory) => {
 };
 
 const itemsInDirectory = (directory) => {
-  return readFilesInDirectory(directory).map((name) => ({
+  return readItemsInDirectory(directory).map((name) => ({
     name,
     directory,
     sourceFilePath: path.resolve(directory, `./${name}`),

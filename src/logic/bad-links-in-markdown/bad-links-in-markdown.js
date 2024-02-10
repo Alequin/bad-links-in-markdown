@@ -1,8 +1,9 @@
 import { chain, chunk } from "lodash";
-import { findMarkdownFilesInDirectory } from "../find-markdown/find-markdown-files-in-directory";
-import { findLinksInMarkdown } from "../find-markdown/find-links-in-markdown";
-import { identifyInvalidLocalLinks } from "../identify-bad-links/identify-invalid-local-links";
+import Path from "path";
 import { logProgress } from "../../utils";
+import { findLinksInMarkdown } from "../find-markdown/find-links-in-markdown";
+import { findMarkdownFilesInDirectory } from "../find-markdown/find-markdown-files-in-directory";
+import { identifyInvalidLocalLinks } from "../identify-bad-links/identify-invalid-local-links";
 
 const BATCH_SIZE = 10;
 
@@ -14,7 +15,7 @@ const BATCH_SIZE = 10;
  */
 export const badLinksInMarkdown = async (options) => {
   const allMarkdownFiles = findMarkdownFilesInDirectory(
-    options.targetDirectory
+    Path.resolve(options.targetDirectory)
   );
 
   const markdownFileBatches = chunk(allMarkdownFiles, BATCH_SIZE);
@@ -30,10 +31,10 @@ export const badLinksInMarkdown = async (options) => {
   );
 
   return {
-    badLocalLinks: chain(resultsForAllBatches)
-      .flatMap(({ badLocalLinks }) => badLocalLinks)
-      .orderBy(({ filePath }) => filePath)
-      .value(),
+    badLocalLinks: mergeBatchesResultsByKey(
+      resultsForAllBatches,
+      "badLocalLinks"
+    ),
   };
 };
 
@@ -50,4 +51,11 @@ const processBatchOfFiles = (markdownFileBatch, targetDirectory) => {
     badLocalLinks: identifyInvalidLocalLinks(markdownFilesWithLinks),
     // await identifyInvalidLinksToWebSites(markdownFilesWithLinks);
   };
+};
+
+const mergeBatchesResultsByKey = (resultsInBatches, keyToMerge) => {
+  return chain(resultsInBatches)
+    .flatMap((batch) => batch[keyToMerge])
+    .orderBy(({ filePath }) => filePath)
+    .value();
 };

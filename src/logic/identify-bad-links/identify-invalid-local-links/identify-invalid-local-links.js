@@ -15,17 +15,19 @@ import { newReasonObject } from "./reason-object";
 export const identifyInvalidLocalLinks = (fileObjects) => {
   return chain(fileObjects)
     .map(findIssuesInFile)
-    .filter(({ foundIssues }) => !isEmpty(foundIssues))
+    .reject(({ foundIssues }) => isEmpty(foundIssues))
     .value();
 };
 
 const findIssuesInFile = (fileObject) => {
+  const linkObjects = prepareLocalLinkObjects(fileObject);
+
   const {
     linksWithGoodSyntax,
     linksWithBadSyntax,
     internalFileLinks,
     externalFileLinks,
-  } = partitionLinksByType(prepareLocalLinkObjects(fileObject));
+  } = partitionLinksByType(linkObjects);
 
   return {
     filePath: fileObject.sourceFilePath,

@@ -1,13 +1,9 @@
 import { isEmpty, last } from "lodash";
 import path from "path";
-import { LINK_TYPE } from "../../../constants";
-import {
-  doesLinkStartWithRelativePath,
-  isDirectory,
-  isLocalLink,
-  match,
-} from "../../../utils";
-import { findMatchingFiles } from "./find-matching-files";
+import { LINK_TYPE } from "../../../../constants";
+import { isDirectory, isLocalLink, match } from "../../../../utils";
+import { findMatchingFiles } from "../find-matching-files";
+import { findGitRepoTopLevelDirectory } from "./find-git-repo-top-level-directory";
 
 const ABSOLUTE_PATH_REGEX = /^\//;
 
@@ -25,12 +21,16 @@ export const prepareLocalLinkObjects = ({
       const isAbsoluteLink = ABSOLUTE_PATH_REGEX.test(baseObject.link);
       const isTagOnlyLink = Boolean(!baseObject.linkPath && baseObject.linkTag);
 
+      // TODO update to also work with a single file
+      const gitRepositoryDirectory =
+        findGitRepoTopLevelDirectory(targetDirectory);
+
       const rawFullLinkPath = isTagOnlyLink
         ? sourceFilePath
         : getlinkRawFullPath({
             directory,
             isAbsoluteLink,
-            targetDirectory,
+            gitRepositoryDirectory,
             linkPath: baseObject.linkPath,
           });
 
@@ -50,7 +50,7 @@ export const prepareLocalLinkObjects = ({
         matchedFiles,
         containingFile: {
           directory,
-          targetDirectory,
+          gitRepositoryDirectory,
         },
         name,
         isTagOnlyLink,
@@ -66,16 +66,17 @@ export const prepareLocalLinkObjects = ({
 
 const getlinkRawFullPath = ({
   isAbsoluteLink,
-  targetDirectory,
+  gitRepositoryDirectory,
   linkPath,
   directory,
 }) => {
-  return isAbsoluteLink
-    ? path.resolve(targetDirectory, `./${linkPath}`)
-    : path.resolve(
-        directory,
-        doesLinkStartWithRelativePath(linkPath) ? linkPath : `./${linkPath}`
-      );
+  if (isAbsoluteLink && gitRepositoryDirectory) {
+    return path.resolve(gitRepositoryDirectory, `./${linkPath}`);
+  }
+
+  if (isAbsoluteLink) return path.resolve(linkPath);
+
+  return path.resolve(directory, `./${linkPath}`);
 };
 
 const getMatchingFiles = ({ fullPath, name, type }) => {

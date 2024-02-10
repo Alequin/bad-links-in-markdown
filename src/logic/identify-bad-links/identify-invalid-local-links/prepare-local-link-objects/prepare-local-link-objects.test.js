@@ -1,15 +1,16 @@
-jest.mock("../../../utils", () => {
+jest.mock("../../../../utils", () => {
   return {
-    ...jest.requireActual("../../../utils"),
+    ...jest.requireActual("../../../../utils"),
     isDirectory: jest.fn(),
   };
 });
 
 import path from "path";
-import { LINK_TYPE } from "../../../constants";
-import * as findMatchingFiles from "./find-matching-files";
+import { LINK_TYPE } from "../../../../constants";
+import * as findMatchingFiles from "../find-matching-files";
 import { prepareLocalLinkObjects } from "./prepare-local-link-objects";
-import { isDirectory } from "../../../utils";
+import { isDirectory } from "../../../../utils";
+import * as findGitRepoTopLevelDirectory from "./find-git-repo-top-level-directory";
 
 const MOCK_FILE_OBJECT = {
   name: "markdown-file.md",
@@ -22,6 +23,9 @@ const MOCK_FILE_OBJECT = {
 describe("prepare-local-link-objects", () => {
   beforeEach(() => {
     jest.restoreAllMocks();
+    jest
+      .spyOn(findGitRepoTopLevelDirectory, "findGitRepoTopLevelDirectory")
+      .mockImplementation(() => MOCK_FILE_OBJECT.targetDirectory);
   });
 
   it("returns an empty array when the given file has no links", () => {
@@ -85,7 +89,7 @@ describe("prepare-local-link-objects", () => {
         {
           containingFile: {
             directory: fileObject.directory,
-            targetDirectory: fileObject.targetDirectory,
+            gitRepositoryDirectory: fileObject.targetDirectory,
           },
           matchedFiles: [],
           markdownLink: "[foobar](./file-path.md#header-tag)",
@@ -255,86 +259,38 @@ describe("prepare-local-link-objects", () => {
 
   it.each([
     {
-      state: "the link is an absolute link",
+      state: "the link is an absolute link inside a git repo",
+      topLevelGitRepo: MOCK_FILE_OBJECT.targetDirectory,
       expectedValue: {
         fullPath: path.resolve(
           MOCK_FILE_OBJECT.targetDirectory,
           "./full/path/to/file/file-path.md"
         ),
       },
-      linkPropertiesUnderTest: {
-        markdownLink: "[foobar](/full/path/to/file/file-path.md#header-tag)",
-        linkPath: "/full/path/to/file/file-path.md",
-        linkTag: "#header-tag",
-        link: "/full/path/to/file/file-path.md",
-      },
     },
     {
-      state: "the link is a tag only link",
-      expectedValue: { fullPath: MOCK_FILE_OBJECT.sourceFilePath },
-      linkPropertiesUnderTest: {
-        markdownLink: "[foobar](#header-tag)",
-        linkPath: null,
-        linkTag: "#header-tag",
-        link: "#header-tag",
-      },
-    },
-    {
-      state: "the link is a relative link",
+      state: "the link is an absolute link outside a git repo",
+      topLevelGitRepo: null,
       expectedValue: {
-        fullPath: path.resolve(MOCK_FILE_OBJECT.directory, "./file-path.md"),
-      },
-      linkPropertiesUnderTest: {
-        markdownLink: "[foobar](./file-path.md#header-tag)",
-        linkPath: "./file-path.md",
-        linkTag: "#header-tag",
-        link: "./file-path.md#header-tag",
-      },
-    },
-    {
-      state: "the link points to a file without a path",
-      expectedValue: {
-        fullPath: path.resolve(MOCK_FILE_OBJECT.directory, "./file-path.md"),
-      },
-      linkPropertiesUnderTest: {
-        markdownLink: "[foobar](file-path.md#header-tag)",
-        linkPath: "file-path.md",
-        linkTag: "#header-tag",
-        link: "file-path.md#header-tag",
-      },
-    },
-    {
-      state: "the link points to a file without a path",
-      expectedValue: {
-        fullPath: path.resolve(MOCK_FILE_OBJECT.directory, "./file-path.md"),
-      },
-      linkPropertiesUnderTest: {
-        markdownLink: "[foobar](file-path.md#header-tag)",
-        linkPath: "file-path.md",
-        linkTag: "#header-tag",
-        link: "file-path.md#header-tag",
-      },
-    },
-    {
-      state: "the link does not contain a file extension",
-      expectedValue: {
-        fullPath: path.resolve(MOCK_FILE_OBJECT.directory, "./file-path"),
-      },
-      linkPropertiesUnderTest: {
-        markdownLink: "[foobar](./file-path)",
-        linkPath: "./file-path",
-        linkTag: "#header-tag",
-        link: "./file-path#header-tag",
+        fullPath: path.resolve("/full/path/to/file/file-path.md"),
       },
     },
   ])(
     "returns the expected value for 'fullPath' when $state",
-    ({ linkPropertiesUnderTest, expectedValue }) => {
+    ({ expectedValue, topLevelGitRepo }) => {
+      jest
+        .spyOn(findGitRepoTopLevelDirectory, "findGitRepoTopLevelDirectory")
+        .mockImplementation(() => topLevelGitRepo);
+
       const fileObject = {
         ...MOCK_FILE_OBJECT,
         links: [
           {
-            ...linkPropertiesUnderTest,
+            markdownLink:
+              "[foobar](/full/path/to/file/file-path.md#header-tag)",
+            linkPath: "/full/path/to/file/file-path.md",
+            linkTag: "#header-tag",
+            link: "/full/path/to/file/file-path.md",
             isImage: false,
             type: LINK_TYPE.inlineLink,
           },

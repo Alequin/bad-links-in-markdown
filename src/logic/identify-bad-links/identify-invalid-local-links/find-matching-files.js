@@ -1,10 +1,9 @@
-import fs from "fs";
-import { doesFileExist } from "../../../utils";
+import { doesFileExist, readItemsInDirectory } from "../../../utils";
 
 export const findMatchingFiles = ({ fullPath, name }) => {
   const directoryToCheckForMatchingFiles = fullPath.replace(name, "");
   const filesInDirectory = doesFileExist(directoryToCheckForMatchingFiles)
-    ? fs.readdirSync(directoryToCheckForMatchingFiles)
+    ? readItemsInDirectory(directoryToCheckForMatchingFiles)
     : null;
 
   return filesInDirectory?.filter((fileInDirectory) => {
