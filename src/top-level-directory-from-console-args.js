@@ -1,6 +1,8 @@
 import path from "path";
 import program from "commander";
+import { doesFileExist } from "./utils";
 
+// TODO test the logic to check if given directory is good
 export const targetDirectoryFromConsoleArgs = () => {
   program.requiredOption(
     "--directory <file-path>",
@@ -9,5 +11,12 @@ export const targetDirectoryFromConsoleArgs = () => {
 
   const { directory } = program.parse().opts();
 
-  return path.resolve(directory);
+  if (doesFileExist(directory)) return directory;
+
+  const resolvedDirectory = path.resolve(directory);
+  if (doesFileExist(resolvedDirectory)) return resolvedDirectory;
+
+  throw new Error(
+    `Given value for 'directory' is not valid. Consider wrapping the value in quotes / directory: ${directory} `
+  );
 };

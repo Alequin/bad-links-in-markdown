@@ -1,7 +1,7 @@
 import { orderBy, sumBy } from "lodash";
-import { badLinksInMarkdown } from "./src/bad-links-in-markdown";
 import { targetDirectoryFromConsoleArgs } from "./src/top-level-directory-from-console-args";
 import { logger } from "./src/utils";
+import { badLinksInMarkdown } from "./src/logic/bad-links-in-markdown";
 
 if (module === require.main) {
   badLinksInMarkdown({ targetDirectory: targetDirectoryFromConsoleArgs() })
