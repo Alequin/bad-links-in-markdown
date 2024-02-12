@@ -8,7 +8,6 @@ import { identifyInvalidLocalLinks } from "../identify-bad-links/identify-invali
 const BATCH_SIZE = 10;
 
 /**
- *
  * @param {object} options
  * @param {string} [options.targetDirectory] - All files contained in this directory will be reviewed, including subdirectories
  * @returns
@@ -16,7 +15,7 @@ const BATCH_SIZE = 10;
 export const badLinksInMarkdown = async (options) => {
   const allMarkdownFiles = findMarkdownFilesInDirectory(
     Path.resolve(options.targetDirectory)
-  );
+  ).filter(({ name }) => name); // TODO add regex logic in some form to filter by file name
 
   const markdownFileBatches = chunk(allMarkdownFiles, BATCH_SIZE);
   const resultsForAllBatches = markdownFileBatches.map(

@@ -1,5 +1,6 @@
 import { groupBy, mapValues, uniq } from "lodash";
 import { findHeadersInFile } from "./find-headers-in-file";
+import { markdownHeadersToTags } from "./markdown-headers-to-tags";
 
 export const badHeaderTags = (links) => {
   return links.filter((linkObject) => {
@@ -11,11 +12,12 @@ export const badHeaderTags = (links) => {
 
 const convertHeadersToLinkFormat = (headers) => {
   const headersAsTags = differentiateDuplicateHeaders(
-    headers.map(markdownHeaderToTag)
+    markdownHeadersToTags(headers)
   );
 
   return uniq([
     ...headersAsTags,
+    // Todo move this snake case logic into "markdownHeadersToTags" if possible
     ...headersAsTags.map((header) => header.replaceAll("_", "")), // account for variation of links for snake case headers
   ]);
 };
@@ -38,15 +40,4 @@ const differentiateDuplicateHeaders = (linksToHeaders) => {
       )
     )
   ).flat(Number.MAX_SAFE_INTEGER);
-};
-
-// https://stackoverflow.com/questions/51221730/markdown-link-to-header
-const markdownHeaderToTag = (header) => {
-  return header
-    .toLowerCase()
-    .replace(/<pre>|<\/pre>/g, "") // Remove pre HTML tags
-    .replace(/<code>|<\/code>/g, "") // Remove code HTML tags
-    .replace(/[^\w-\s]/g, "") // remove chars which are not alpha-numeric, dashes or spaces. Also deals with tripple tick code blocks
-    .trim()
-    .replace(/\s/g, "-"); // replace spaces with hyphens
 };
